@@ -1,0 +1,920 @@
+enum uint8 advice
+	1 dontneed
+	2 noreuse
+	3 normal
+	4 random
+	5 sequential
+	6 willneed
+
+alias uint32 auxtype
+	@cprefix AT_
+	256 argdata
+	257 argdatalen
+	258 canary
+	259 canarylen
+	260 ncpus
+	0   null
+	6   pagesz
+	3   phdr
+	4   phnum
+	261 tid
+
+alias uint32 backlog
+
+enum uint32 clockid
+	@cprefix CLOCK_
+	1 monotonic
+	2 process_cputime_id
+	3 realtime
+	4 thread_cputime_id
+
+opaque uint32 condvar
+	0 has_no_waiters
+
+opaque uint64 device
+
+opaque uint64 dircookie
+	0 start
+
+enum uint16 errno
+	@cprefix E
+	1  2big
+	2  acces
+	3  addrinuse
+	4  addrnotavail
+	5  afnosupport
+	6  again
+	7  already
+	8  badf
+	9  badmsg
+	10 busy
+	11 canceled
+	12 child
+	13 connaborted
+	14 connrefused
+	15 connreset
+	16 deadlk
+	17 destaddrreq
+	18 dom
+	19 dquot
+	20 exist
+	21 fault
+	22 fbig
+	23 hostunreach
+	24 idrm
+	25 ilseq
+	26 inprogress
+	27 intr
+	28 inval
+	29 io
+	30 isconn
+	31 isdir
+	32 loop
+	33 mfile
+	34 mlink
+	35 msgsize
+	36 multihop
+	37 nametoolong
+	38 netdown
+	39 netreset
+	40 netunreach
+	41 nfile
+	42 nobufs
+	43 nodev
+	44 noent
+	45 noexec
+	46 nolck
+	47 nolink
+	48 nomem
+	49 nomsg
+	50 noprotoopt
+	51 nospc
+	52 nosys
+	53 notconn
+	54 notdir
+	55 notempty
+	56 notrecoverable
+	57 notsock
+	58 notsup
+	59 notty
+	60 nxio
+	61 overflow
+	62 ownerdead
+	63 perm
+	64 pipe
+	65 proto
+	66 protonosupport
+	67 prototype
+	68 range
+	69 rofs
+	70 spipe
+	71 srch
+	72 stale
+	73 timedout
+	74 txtbsy
+	75 xdev
+	76 notcapable
+
+flags uint16 eventrwflags
+	@cprefix EVENT_FD_READWRITE_
+	0x01 hangup
+
+enum uint8 eventtype
+	1 clock
+	2 condvar
+	3 fd_read
+	4 fd_write
+	5 lock_rdlock
+	6 lock_wrlock
+	7 proc_terminate
+
+alias uint32 exitcode
+
+opaque uint32 fd
+	@cprefix
+	0xffffffff process_child
+	0xffffffff map_anon_fd
+
+flags uint16 fdflags
+	@cprefix FDFLAG_
+	0x01 append
+	0x02 dsync
+	0x04 nonblock
+	0x08 rsync
+	0x10 sync
+
+flags uint16 fdsflags
+	@cprefix FDSTAT_
+	0x01 flags
+	0x02 rights
+
+alias int64 filedelta
+
+alias uint64 filesize
+
+flags uint16 fsflags
+	@cprefix FILESTAT_
+	0x01 atim
+	0x02 atim_now
+	0x04 mtim
+	0x08 mtim_now
+	0x10 size
+
+enum uint8 filetype
+	0x00 unknown
+	0x10 block_device
+	0x11 character_device
+	0x20 directory
+	0x30 fifo
+	0x40 poll
+	0x50 process
+	0x60 regular_file
+	0x70 shared_memory
+	0x80 socket_dgram
+	0x81 socket_seqpacket
+	0x82 socket_stream
+	0x90 symbolic_link
+
+opaque uint64 inode
+
+alias uint32 linkcount
+
+opaque uint32 lock
+	0          unlocked
+	0x40000000 wrlocked
+	0x80000000 kernel_managed
+	0x80000000 bogus
+
+flags uint32 lookupflags
+	@cprefix LOOKUP_
+	1 symlink_follow
+
+flags uint8 mflags
+	@cprefix MAP_
+	0x01 anon
+	0x02 fixed
+	0x04 private
+	0x08 shared
+
+flags uint8 msflags
+	@cprefix MS_
+	0x01 async
+	0x02 invalidate
+	0x04 sync
+
+flags uint16 msgflags
+	@cprefix MSG_
+	0x01 ctrunc
+	0x02 eor
+	0x04 peek
+	0x08 trunc
+	0x10 waitall
+
+alias uint32 nthreads
+
+flags uint16 oflags
+	@cprefix O_
+	0x01 creat
+	0x02 directory
+	0x04 excl
+	0x08 trunc
+
+flags uint64 rights
+	@cprefix RIGHT_
+	0x0000000000000001 fd_datasync
+	0x0000000000000002 fd_read
+	0x0000000000000004 fd_seek
+	0x0000000000000008 fd_stat_put_flags
+	0x0000000000000010 fd_sync
+	0x0000000000000020 fd_tell
+	0x0000000000000040 fd_write
+	0x0000000000000080 file_advise
+	0x0000000000000100 file_allocate
+	0x0000000000000200 file_create_directory
+	0x0000000000000400 file_create_file
+	0x0000000000000800 file_create_fifo
+	0x0000000000001000 file_link_source
+	0x0000000000002000 file_link_target
+	0x0000000000004000 file_open
+	0x0000000000008000 file_readdir
+	0x0000000000010000 file_readlink
+	0x0000000000020000 file_rename_source
+	0x0000000000040000 file_rename_target
+	0x0000000000080000 file_stat_fget
+	0x0000000000100000 file_stat_fput_size
+	0x0000000000200000 file_stat_fput_times
+	0x0000000000400000 file_stat_get
+	0x0000000000800000 file_stat_put_times
+	0x0000000001000000 file_symlink
+	0x0000000002000000 file_unlink
+	0x0000000004000000 mem_map
+	0x0000000008000000 mem_map_exec
+	0x0000000010000000 poll_fd_readwrite
+	0x0000000020000000 poll_modify
+	0x0000000040000000 poll_proc_terminate
+	0x0000000080000000 poll_wait
+	0x0000000100000000 proc_exec
+	0x0000000200000000 sock_accept
+	0x0000000400000000 sock_bind_directory
+	0x0000000800000000 sock_bind_socket
+	0x0000001000000000 sock_connect_directory
+	0x0000002000000000 sock_connect_socket
+	0x0000004000000000 sock_listen
+	0x0000008000000000 sock_shutdown
+	0x0000010000000000 sock_stat_get
+
+enum uint8 sa_family
+	@cprefix AF_
+	0 unspec
+	1 inet
+	2 inet6
+	3 unix
+
+flags uint8 sdflags
+	@cprefix SHUT_
+	0x01 rd
+	0x02 wr
+
+enum uint8 signal
+	@cprefix SIG
+	1  abrt
+	2  alrm
+	3  bus
+	4  chld
+	5  cont
+	6  fpe
+	7  hup
+	8  ill
+	9  int
+	10 kill
+	11 pipe
+	12 quit
+	13 segv
+	14 stop
+	15 sys
+	16 term
+	17 trap
+	18 tstp
+	19 ttin
+	20 ttou
+	21 urg
+	22 usr1
+	23 usr2
+	24 vtalrm
+	25 xcpu
+	26 xfsz
+
+flags uint8 ssflags
+	@cprefix SOCKSTAT_
+	0x01 clear_error
+
+flags uint32 sstate
+	@cprefix SOCKSTATE_
+	0x01 acceptconn
+
+flags uint16 subflags
+	@cprefix SUBSCRIPTION_
+	0x01 add
+	0x02 clear
+	0x04 delete
+	0x08 disable
+	0x10 enable
+	0x20 oneshot
+
+flags uint16 subclockflags
+	@cprefix SUBSCRIPTION_CLOCK_
+	0x01 abstime
+
+flags uint16 subrwflags
+	@cprefix SUBSCRIPTION_FD_READWRITE
+	0x01 poll
+
+opaque uint32 tid
+
+alias uint64 timestamp
+
+flags uint8 ulflags
+	@cprefix UNLINK_
+	0x01 removedir
+
+alias uint64 userdata
+
+enum uint8 whence
+	1 cur
+	2 end
+	3 set
+
+
+
+struct lookup
+	fd          fd
+	lookupflags flags
+
+
+
+
+struct auxv
+	@cprefix a_
+	auxtype type
+	variant type
+		argdatalen canarylen ncpus pagesz phnum tid
+			size val
+		argdata canary null phdr
+			ptr void ptr
+
+struct ciovec
+	@cprefix iov_
+	cptr void base
+	size len
+	range base len data
+
+struct event
+	userdata  userdata
+	errno     error
+	eventtype type
+	variant type
+		clock
+			struct clock
+				userdata identifier
+		condvar
+			struct condvar
+				ptr atomic condvar condvar
+		fd_read fd_write
+			struct fd_readwrite
+				filesize     nbytes
+				fd           fd
+				eventrwflags flags
+		lock_rdlock lock_wrlock
+			struct lock
+				ptr atomic lock lock
+		proc_terminate
+			struct proc_terminate
+				fd       fd
+				signal   signal
+				exitcode exitcode
+
+struct fdstat
+	@cprefix fs_
+	filetype filetype
+	fdflags  flags
+	rights   rights_base
+	rights   rights_inheriting
+
+struct filestat
+	@cprefix st_
+	device    dev
+	inode     ino
+	filetype  filetype
+	linkcount nlink
+	filesize  size
+	timestamp atim
+	timestamp mtim
+	timestamp ctim
+
+struct iovec
+	@cprefix iov_
+	ptr void base
+	size len
+	@range base len data
+
+struct recv_in
+	@cprefix ri_
+	cptr iovec          data
+	size                datalen
+	@range data datalen data
+	ptr fd              fds
+	size                fdslen
+	@range fds fdslen   fds
+	msgflags            flags
+
+struct recv_out
+	@cprefix ro_
+	size datalen
+	size fdslen
+	sockaddr sockname
+	sockaddr peername
+	msgflags flags
+
+struct send_in
+	@cprefix si_
+	cptr ciovec         data
+	size                datalen
+	@range data datalen data
+	cptr fd             fds
+	size                fdslen
+	@range fds fdslen   fds
+	msgflags            flags
+
+struct send_out
+	@cprefix so_
+	size datalen
+
+struct sockaddr
+	@cprefix sa_
+	sa_family family
+	variant family
+		inet
+			struct inet
+				array uint8 4 addr
+				uint16        port
+		inet6
+			struct inet6
+				array uint8 16 addr
+				uint16         port
+
+struct sockstat
+	@cprefix cc_
+	sockaddr sockname
+	sockaddr peername
+	errno    error
+	sstate   state
+
+struct subscription
+	userdata  userdata
+	subflags  flags
+	eventtype type
+	variant type
+		clock
+			struct clock
+				userdata identifier
+				clockid  clock_id
+				timestamp timeout
+				timestamp precision
+				subclockflags flags
+		condvar
+			struct condvar
+				ptr atomic condvar condvar
+				ptr atomic lock    lock
+				mflags             condvar_scope
+				mflags             lock_scope
+		fd_read fd_write
+			struct fd_readwrite
+				fd         fd
+				subrwflags flags
+		lock_rdlock lock_wrlock
+			struct lock
+				ptr atomic lock lock
+				mflags          lock_scope
+		proc_terminate
+			struct proc_terminate
+				fd       fd
+
+struct threadattr
+	ptr threadentry         entry_point
+	ptr void                stack
+	size                    stack_size
+	@range stack stack_size stack
+	ptr void                argument
+
+
+
+syscall 0 clock_res_get
+	in
+		clockid   clock_id
+	out
+		timestamp resolution
+
+syscall 1 clock_time_get
+	in
+		clockid   clock
+		timestamp precision
+	out
+		timestamp time
+
+syscall 2 condvar_signal
+	in
+		ptr atomic condvar condvar
+		mflags             scope
+		nthreads           nwaiters
+
+syscall 3 fd_close
+	in
+		fd fd
+
+syscall 4 fd_create1
+	in
+		filetype type
+	out
+		fd       fd
+
+syscall 5 fd_create2
+	in
+		filetype type
+	out
+		fd       fd1
+		fd       fd2
+
+syscall 6 fd_datasync
+	in fd fd
+
+syscall 7 fd_dup
+	in
+		fd from
+	out
+		fd fd
+
+syscall 8 fd_pread
+	in
+		fd                fd
+		cptr iovec        iov
+		size              iovcnt
+		@range iov iovcnt iovs
+		filesize          offset
+	out
+		size              nread
+
+syscall 9 fd_pwrite
+	in
+		fd                fd
+		cptr ciovec       iov
+		size              iovcnt
+		@range iov iovcnt iovs
+		filesize          offset
+	out
+		size              nwritten
+
+syscall 10 fd_read
+	in
+		fd                fd
+		cptr iovec        iov
+		size              iovcnt
+		@range iov iovcnt iovs
+	out
+		size              nread
+
+syscall 11 fd_replace
+	in
+		fd from
+		fd to
+
+syscall 12 fd_seek
+	in
+		fd        fd
+		filedelta offset
+		whence    whence
+	out
+		filesize newoffset
+
+syscall 13 fd_stat_get
+	in
+		fd         fd
+		ptr fdstat buf
+
+syscall 14 fd_stat_put
+	in
+		fd          fd
+		cptr fdstat buf
+		fdsflags    flags
+
+syscall 15 fd_sync
+	in
+		fd fd
+
+syscall 16 fd_write
+	in
+		fd                fd
+		cptr ciovec       iov
+		size              iovcnt
+		@range iov iovcnt iovs
+	out
+		size
+
+syscall 17 file_advise
+	in
+		fd       fd
+		filesize offset
+		filesize len
+		advice   advice
+
+syscall 18 file_allocate
+	in
+		fd       fd
+		filesize offset
+		filesize len
+
+syscall 19 file_create
+	in
+		fd                  fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		filetype            type
+
+syscall 20 file_link
+	in
+		lookup                fd1
+		cptr char             path1
+		size                  path1len
+		@range path1 path1len path1
+		fd                    fd2
+		cptr char             path2
+		size                  path2len
+		@range path2 path2len path2
+
+syscall 21 file_open
+	in
+		lookup              fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		oflags              oflags
+		cptr fdstat         fds
+	out
+		fd fd
+
+syscall 22 file_readdir
+	in
+		fd               fd
+		ptr void         buf
+		size             nbyte
+		@range buf nbyte buf
+		dircookie        cookie
+	out
+		size bufused
+
+syscall 23 file_readlink
+	in
+		fd                  fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		ptr char            buf
+		size                bufsize
+		@range buf bufsize  buf
+	out
+		size bufused
+
+syscall 24 file_rename
+	in
+		fd                oldfd
+		cptr char         old
+		size              oldlen
+		@range old oldlen old
+		fd                newfd
+		cptr char         new
+		size              newlen
+		@range new newlen new
+
+syscall 25 file_stat_fget
+	in
+		fd           fd
+		ptr filestat buf
+
+syscall 26 file_stat_fput
+	in
+		fd            fd
+		cptr filestat buf
+		fsflags       flags
+
+syscall 27 file_stat_get
+	in
+		lookup              fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		ptr filestat        buf
+
+syscall 28 file_stat_put
+	in
+		lookup              fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		cptr filestat       buf
+		fsflags             flags
+
+syscall 29 file_symlink
+	in
+		cptr char             path1
+		size                  path1len
+		@range path1 path1len path1
+		fd                    fd
+		cptr char             path2
+		size                  path2len
+		@range path2 path2len path2
+
+syscall 30 file_unlink
+	in
+		fd                  fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+		ulflags             flags
+
+syscall 31 lock_unlock
+	in
+		ptr atomic lock lock
+		mflags          scope
+
+syscall 32 mem_advise
+	in
+		ptr void        addr
+		size            len
+		@range addr len mem
+		advice          advice
+
+syscall 33 mem_lock
+	in
+		cptr void       addr
+		size            len
+		@range addr len mem
+
+syscall 34 mem_map
+	in
+		ptr void        addr
+		size            len
+		@range addr len mem
+		mprot           prot
+		mflags          flags
+		fd              fd
+		filesize        off
+	out
+		ptr void        mem
+
+syscall 35 mem_protect
+	in
+		ptr void        addr
+		size            len
+		@range addr len mem
+		mprot           prot
+
+syscall 36 mem_sync
+	in
+		ptr void        addr
+		size            len
+		@range addr len mem
+		msflags         flags
+
+syscall 37 mem_unlock
+	in
+		cptr void       addr
+		size            len
+		@range addr len mem
+		@range
+
+syscall 38 mem_unmap
+	in
+		ptr void        addr
+		size            len
+		@range addr len mem
+
+syscall 39 poll
+	in
+		cptr subscription  in
+		ptr event          out
+		size               nevents
+		@range out nevents out
+	out
+		size nevents
+
+syscall 40 proc_exec
+	in
+		fd                  fd
+		cptr void           data
+		size                datalen
+		@range data datalen data
+		cptr fd             fds
+		size                fdslen
+		@range fds fdslen   fds
+
+syscall 41 proc_exit
+	in
+		exitcode rval
+	noreturn
+
+syscall 42 proc_fork
+	out
+		fd  fd
+		tid tid
+
+syscall 43 proc_raise
+	in
+		signal sig
+
+syscall 44 random_get
+	in
+		ptr void         buf
+		size             nbyte
+		@range buf nbyte buf
+
+syscall 45 sock_accept
+	in
+		fd           sock
+		ptr sockstat buf
+	out
+		fd conn
+
+syscall 46 sock_bind
+	in
+		fd                  sock
+		fd                  fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+
+syscall 47 sock_connect
+	in
+		fd                  sock
+		fd                  fd
+		cptr char           path
+		size                pathlen
+		@range path pathlen path
+
+syscall 48 sock_listen
+	in
+		fd      sock
+		backlog backlog
+
+syscall 49 sock_recv
+	in
+		fd           sock
+		cptr recv_in in
+		ptr recv_out out
+
+syscall 50 sock_send
+	in
+		fd           sock
+		cptr send_in in
+		ptr send_out out
+
+syscall 51 sock_shutdown
+	in
+		fd      sock
+		sdflags how
+
+syscall 52 sock_stat_get
+	in
+		fd           sock
+		ptr sockstat buf
+		ssflags      flags
+
+syscall 53 thread_create
+	in
+		ptr threadattr attr
+	out
+		tid tid
+
+syscall 54 thread_exit
+	in
+		ptr atomic lock lock
+		mflags          scope
+	noreturn
+
+syscall 55 thread_tcb_set
+	in
+		ptr void tcb
+
+syscall 56 thread_yield
+
+syscall 57 poll_fd
+	in
+		fd                fd
+		cptr subscription in
+		size              nin
+		@range in nin     in
+		ptr event         out
+		size              nout
+		@range out nout   out
+		cptr subscription timeout
+	out
+		size ntriggered
