@@ -345,6 +345,10 @@ class Abi:
                     raise Exception(
                         'No such member to use as variant tag: {}.'.format(tag_member_name))
                 mem = self.parse_variant(tag_member, node.children)
+                if 'cprefix' in attr:
+                    for m in mem.members:
+                        if m.name == None:
+                            m.type.cprefix = attr['cprefix']
                 members.append(mem)
                 pass
             elif mem_decl[0] in {'range', 'crange'}:
