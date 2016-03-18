@@ -7,7 +7,7 @@ from ..abi import *
 from ..generator import *
 
 
-class CHeaderGenerator(Generator):
+class CGenerator(Generator):
 
     def __init__(self, prefix):
         super().__init__(comment_start='//')
@@ -58,6 +58,19 @@ class CHeaderGenerator(Generator):
             raise Exception(
                 'Unable to generate C type declaration for type: {}'.format(type))
 
+    def syscall_params(self, syscall):
+        params = []
+        for p in syscall.input.raw_members:
+            params.append(self.cdecl(p.type, p.name))
+        for p in syscall.output.raw_members:
+            params.append(self.cdecl(PointerType(False, p.type), p.name))
+        if params == []:
+            params = ['void']
+        return params
+
+
+class CHeaderGenerator(CGenerator):
+
     def generate_struct_members(self, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
@@ -101,24 +114,63 @@ class CHeaderGenerator(Generator):
             pass
 
         elif isinstance(type, StructType):
+            typename = self.ctypename(type)
+
             print('typedef struct {')
             self.generate_struct_members(type, '\t')
-            print('}} {};'.format(self.ctypename(type)))
+            print('}} {};'.format(typename))
+
+            self.generate_offset_asserts(typename, type.raw_members)
+
+            if type.layout is not None:
+                self.generate_size_assert(typename, type.layout.size)
 
         else:
             raise Exception('Unknown class of type: {}'.format(type))
 
         print()
 
-    def generate_syscall(self, syscall):
-        params = []
-        for p in syscall.input.raw_members:
-            params.append(self.cdecl(p.type, p.name))
-        for p in syscall.output.raw_members:
-            params.append(self.cdecl(PointerType(False, p.type), p.name))
-        if params == []:
-            params = ['void']
+    def generate_offset_asserts(
+            self, type_name, members, prefix='', offset=(0, 0)):
+        for m in members:
+            if isinstance(m, VariantMember):
+                mprefix = prefix
+                if m.name is not None:
+                    mprefix += m.name + '.'
+                self.generate_offset_asserts(
+                    type_name, m.type.members, mprefix, offset)
+            elif m.offset is not None:
+                moffset = (offset[0] + m.offset[0], offset[1] + m.offset[1])
+                if isinstance(m, VariantStructMember):
+                    self.generate_offset_asserts(
+                        type_name, m.members, prefix, moffset)
+                else:
+                    self.generate_offset_assert(
+                        type_name, prefix + m.name, moffset)
 
-        print('{}errno_t {}sys_{}({});'.format(
+    def generate_offset_assert(self, type_name, member_name, offset):
+        offsetof = 'offsetof({}, {})'.format(type_name, member_name)
+        static_assert = '_Static_assert({}, "Offset incorrect");'
+        if offset[0] == offset[1]:
+            print(static_assert.format('{} == {}'.format(offsetof, offset[0])))
+        else:
+            print(static_assert.format('sizeof(void*) != 4 || {} == {}'.format(
+                offsetof, offset[0])))
+            print(static_assert.format('sizeof(void*) != 8 || {} == {}'.format(
+                offsetof, offset[1])))
+
+    def generate_size_assert(self, type_name, size):
+        sizeof = 'sizeof({})'.format(type_name)
+        static_assert = '_Static_assert({}, "Size incorrect");'
+        if size[0] == size[1]:
+            print(static_assert.format('{} == {}'.format(sizeof, size[0])))
+        else:
+            print(static_assert.format('sizeof(void*) != 4 || {} == {}'.format(
+                sizeof, size[0])))
+            print(static_assert.format('sizeof(void*) != 8 || {} == {}'.format(
+                sizeof, size[1])))
+
+    def generate_syscall(self, syscall):
+        print('inline static {}errno_t {}sys_{}({});'.format(
             self.prefix, self.prefix,
-            syscall.name, ', '.join(params)))
+            syscall.name, ', '.join(self.syscall_params(syscall))))
