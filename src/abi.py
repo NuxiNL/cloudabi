@@ -107,6 +107,15 @@ class StructType(UserDefinedType):
         self.members = members
         self.cprefix = cprefix
         self.dependencies = _compute_dependencies(self)
+        self.raw_members = []
+        for m in self.members:
+            if isinstance(m, RangeStructMember):
+                self.raw_members.append(SimpleStructMember(
+                    m.base_name, PointerType(m.const, m.target_type)))
+                self.raw_members.append(SimpleStructMember(
+                    m.length_name, int_types['size']))
+            else:
+                self.raw_members.append(m)
 
 
 class StructMember:
