@@ -11,7 +11,7 @@ class Generator:
     def generate_type(self, type):
         pass
 
-    def generate_syscall(self, type):
+    def generate_syscall(self, syscall):
         pass
 
     def generate_types(self, types):
