@@ -5,10 +5,8 @@
 # See the LICENSE file for details.
 
 from src.abi import *
+from src.generators.c import *
 
 abi = Abi('cloudabi.txt')
 
-print('Got {} types and {} syscalls.'.format(
-    len(abi.types), len(abi.syscalls_by_number)))
-
-# TODO: Do something with the abi.
+CHeaderGenerator(prefix='cloudabi_').generate_abi(abi)
