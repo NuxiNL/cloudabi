@@ -10,6 +10,7 @@ from ..generator import *
 class CHeaderGenerator(Generator):
 
     def __init__(self, prefix):
+        super().__init__(comment_start='//')
         self.prefix = prefix
 
     def ctypename(self, type):
