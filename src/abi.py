@@ -40,13 +40,17 @@ int_types = {
 }
 
 
-class IntLikeType(Type):
+class UserDefinedType(Type):
+    pass
 
-    def __init__(self, name, int_type, values):
+
+class IntLikeType(UserDefinedType):
+
+    def __init__(self, name, int_type, values, cprefix=None):
         super().__init__(name)
         self.int_type = int_type
         self.values = values
-        self.cprefix = name.upper() + '_'
+        self.cprefix = cprefix if cprefix is not None else name.upper() + '_'
 
 
 class AliasType(IntLikeType):
@@ -75,33 +79,33 @@ int_like_types = {
 
 class ArrayType(Type):
 
-    def __init__(self, count, type):
-        super().__init__('array {} {}'.format(count, type.name))
+    def __init__(self, count, element_type):
+        super().__init__('array {} {}'.format(count, element_type.name))
         self.count = count
-        self.type = type
+        self.element_type = element_type
 
 
 class PointerType(Type):
 
-    def __init__(self, const, type):
-        super().__init__(('cptr ' if const else 'ptr ') + type.name)
+    def __init__(self, const, target_type):
+        super().__init__(('cptr ' if const else 'ptr ') + target_type.name)
         self.const = const
-        self.type = type
+        self.target_type = target_type
 
 
 class AtomicType(Type):
 
-    def __init__(self, type):
-        super().__init__('atomic ' + type.name)
-        self.type = type
+    def __init__(self, target_type):
+        super().__init__('atomic ' + target_type.name)
+        self.target_type = target_type
 
 
-class StructType(Type):
+class StructType(UserDefinedType):
 
-    def __init__(self, name, members):
+    def __init__(self, name, members, cprefix=''):
         super().__init__(name)
         self.members = members
-        self.cprefix = ''
+        self.cprefix = cprefix
 
 
 class StructMember:
@@ -119,13 +123,13 @@ class SimpleStructMember(StructMember):
 
 class RangeStructMember(StructMember):
 
-    def __init__(self, base_name, length_name, name, const, type):
+    def __init__(self, base_name, length_name, name, const, target_type):
         self.type = type
         self.base_name = base_name
         self.length_name = length_name
         self.name = name
         self.const = const
-        self.type = type
+        self.target_type = target_type
 
 
 class VariantStructMember(StructMember):
@@ -143,7 +147,7 @@ class VariantMember:
         self.type = type
 
 
-class FunctionPointerType(Type):
+class FunctionPointerType(UserDefinedType):
 
     def __init__(self, name, parameters, return_type):
         self.name = name
@@ -153,12 +157,12 @@ class FunctionPointerType(Type):
 
 class Syscall:
 
-    def __init__(self, number, name, input, output):
+    def __init__(self, number, name, input, output, noreturn=False):
         self.number = number
         self.name = name
         self.input = input
         self.output = output
-        self.noreturn = False
+        self.noreturn = noreturn
 
 
 class Abi:
@@ -186,21 +190,22 @@ class Abi:
                 if int_type not in int_types:
                     raise Exception('Invalid int type: {}'.format(int_type))
 
-                type = int_like_types[decl[0]](name, int_type, [])
+                values = []
+                attr = {}
 
                 for child in node.children:
                     self.__expect_no_children(child)
                     value_decl = child.text.split()
                     if value_decl[0] == '@cprefix' and len(value_decl) <= 2:
-                        type.cprefix = value_decl[1] if len(
-                            value_decl) == 2 else ''
+                        attr['cprefix'] = (value_decl[1]
+                                           if len(value_decl) == 2 else '')
                     elif len(value_decl) == 2:
-                        type.values.append(
-                            (int(value_decl[0], 0), value_decl[1]))
+                        values.append((int(value_decl[0], 0), value_decl[1]))
                     else:
                         raise Exception('Invalid value: {}'.format(child.text))
 
-                self.types[name] = type
+                self.types[name] = int_like_types[decl[0]](
+                    name, int_types[int_type], values, **attr)
 
             elif decl[0] == 'struct':
 
@@ -222,11 +227,12 @@ class Abi:
                 if name in self.types:
                     raise Exception('Duplicate definition of {}'.format(name))
 
-                type = FunctionPointerType(name, [], VoidType())
+                parameters = []
+                return_type = VoidType()
 
                 if len(node.children) > 0 and node.children[0].text == 'in':
                     param_spec = node.children.pop(0)
-                    type.parameters = self.parse_struct(
+                    parameters = self.parse_struct(
                         None, param_spec.children)
 
                 if len(node.children) > 0 and node.children[0].text == 'out':
@@ -234,9 +240,10 @@ class Abi:
                     if len(out_spec.children) != 1:
                         raise Exception(
                             'Expected a single return type in `out\' section of funptr.')
-                    type.return_type = self.parse_type(out_spec.children[0])
+                    return_type = self.parse_type(out_spec.children[0])
 
-                self.types[name] = type
+                self.types[name] = FunctionPointerType(
+                    name, parameters, return_type)
 
             elif decl[0] == 'syscall':
 
@@ -251,24 +258,28 @@ class Abi:
                 if name in self.syscalls_by_name:
                     raise Exception('Duplicate syscall name: {}'.format(name))
 
-                syscall = Syscall(num, name, [], [])
+                input = []
+                output = []
+                attr = {}
 
                 if len(node.children) > 0 and node.children[0].text == 'in':
                     in_spec = node.children.pop(0)
-                    syscall.input = self.parse_struct(None, in_spec.children)
+                    input = self.parse_struct(None, in_spec.children)
 
                 if len(node.children) > 0:
                     if node.children[0].text == 'out':
                         out_spec = node.children.pop(0)
-                        syscall.output = self.parse_struct(
+                        output = self.parse_struct(
                             None, out_spec.children)
 
                     elif node.children[0].text == 'noreturn':
                         noreturn_spec = node.children.pop(0)
                         self.__expect_no_children(noreturn_spec)
-                        syscall.noreturn = True
+                        attr['noreturn'] = True
 
                 self.__expect_no_children(node)
+
+                syscall = Syscall(num, name, input, output, **attr)
 
                 self.syscalls_by_name[name] = syscall
                 self.syscalls_by_number[num] = syscall
@@ -298,17 +309,18 @@ class Abi:
 
     def parse_struct(self, name, spec):
 
-        type = StructType(name, [])
+        members = []
+        attr = {}
 
         for node in spec:
             mem_decl = node.text.split()
             if mem_decl[0] == '@cprefix' and len(mem_decl) == 2:
                 self.__expect_no_children(node)
-                type.cprefix = mem_decl[1]
+                attr['cprefix'] = mem_decl[1]
             elif mem_decl[0] == 'variant' and len(mem_decl) == 2:
                 tag_member_name = mem_decl[1]
                 tag_member = None
-                for m in type.members:
+                for m in members:
                     if m.name == tag_member_name:
                         if (isinstance(m, SimpleStructMember) and
                             (isinstance(m.type, EnumType) or
@@ -323,7 +335,7 @@ class Abi:
                     raise Exception(
                         'No such member to use as variant tag: {}.'.format(tag_member_name))
                 mem = self.parse_variant(tag_member, node.children)
-                type.members.append(mem)
+                members.append(mem)
                 pass
             elif mem_decl[0] in {'range', 'crange'}:
                 self.__expect_no_children(node)
@@ -331,7 +343,7 @@ class Abi:
                     raise Exception('Invalid range: {}'.format(node.text))
                 mem_type = self.parse_type(mem_decl[1:-3])
                 mem_base_name, mem_length_name, mem_name = mem_decl[-3:]
-                type.members.append(
+                members.append(
                     RangeStructMember(
                         mem_base_name,
                         mem_length_name,
@@ -342,15 +354,15 @@ class Abi:
                 self.__expect_no_children(node)
                 mem_name = mem_decl[-1]
                 mem_type = self.parse_type(mem_decl[:-1])
-                type.members.append(SimpleStructMember(mem_name, mem_type))
+                members.append(SimpleStructMember(mem_name, mem_type))
 
-        return type
+        return StructType(name, members, **attr)
 
     def parse_variant(self, tag_member, spec):
 
         tag_type = tag_member.type
 
-        variant = VariantStructMember([])
+        members = []
 
         for node in spec:
             tag_values = node.text.split()
@@ -371,9 +383,9 @@ class Abi:
                 name = None
                 spec = node.children
             type = self.parse_struct(None, spec)
-            variant.members.append(VariantMember(name, tag_values, type))
+            members.append(VariantMember(name, tag_values, type))
 
-        return variant
+        return VariantStructMember(members)
 
     @staticmethod
     def __expect_no_children(node):
