@@ -641,7 +641,7 @@ syscall 20 file_link
 
 syscall 21 file_open
 	in
-		lookup      fd
+		lookup      dirfd
 		crange char path pathlen path
 		oflags      oflags
 		cptr fdstat fds
@@ -754,7 +754,7 @@ syscall 39 poll
 		cptr subscription in
 		range event       out nevents out
 	out
-		size nevents
+		size ntriggered
 
 syscall 40 proc_exec
 	in
