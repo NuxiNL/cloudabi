@@ -268,8 +268,8 @@ class Abi:
                 if name in self.syscalls_by_name:
                     raise Exception('Duplicate syscall name: {}'.format(name))
 
-                input = []
-                output = []
+                input = StructType('', [])
+                output = StructType('', [])
                 attr = {}
 
                 if len(node.children) > 0 and node.children[0].text == 'in':
