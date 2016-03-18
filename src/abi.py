@@ -3,13 +3,15 @@
 # This file is distributed under a 2-clause BSD license.
 # See the LICENSE file for details.
 
-from src.itf import read_itf
+from .itf import read_itf
+from .layout import Layout
 
 
 class Type:
 
-    def __init__(self, name):
+    def __init__(self, name, layout=None):
         self.name = name
+        self.layout = layout
 
 
 class VoidType(Type):
@@ -20,10 +22,8 @@ class VoidType(Type):
 
 class IntType(Type):
 
-    def __init__(self, name, width, alignment=None):
-        super().__init__(name)
-        self.width = width
-        self.alignment = alignment if alignment is not None else width
+    def __init__(self, name, size):
+        super().__init__(name, layout=Layout(size))
 
 
 int_types = {
@@ -36,7 +36,7 @@ int_types = {
     'int16': IntType('int16', 2),
     'int32': IntType('int32', 4),
     'int64': IntType('int64', 8),
-    'size': IntType('size', 'dep'),
+    'size': IntType('size', (4, 8)),
 }
 
 
@@ -47,7 +47,7 @@ class UserDefinedType(Type):
 class IntLikeType(UserDefinedType):
 
     def __init__(self, name, int_type, values, cprefix=None):
-        super().__init__(name)
+        super().__init__(name, layout=int_type.layout)
         self.int_type = int_type
         self.values = values
         self.cprefix = cprefix if cprefix is not None else name.upper() + '_'
@@ -80,7 +80,8 @@ int_like_types = {
 class ArrayType(Type):
 
     def __init__(self, count, element_type):
-        super().__init__('array {} {}'.format(count, element_type.name))
+        super().__init__('array {} {}'.format(count, element_type.name),
+                         layout=Layout.array(element_type, count))
         self.count = count
         self.element_type = element_type
 
@@ -88,7 +89,8 @@ class ArrayType(Type):
 class PointerType(Type):
 
     def __init__(self, const, target_type):
-        super().__init__(('cptr ' if const else 'ptr ') + target_type.name)
+        super().__init__(('cptr ' if const else 'ptr ') + target_type.name,
+                         layout=Layout((4, 8), (4, 8)))
         self.const = const
         self.target_type = target_type
 
@@ -96,55 +98,58 @@ class PointerType(Type):
 class AtomicType(Type):
 
     def __init__(self, target_type):
-        super().__init__('atomic ' + target_type.name)
+        super().__init__('atomic ' + target_type.name,
+                         layout=target_type.layout)
         self.target_type = target_type
 
 
 class StructType(UserDefinedType):
 
     def __init__(self, name, members):
-        super().__init__(name)
         self.members = members
-        self.dependencies = _compute_dependencies(self)
         self.raw_members = []
         for m in self.members:
             if isinstance(m, RangeStructMember):
-                self.raw_members.append(SimpleStructMember(
-                    m.base_name, PointerType(m.const, m.target_type)))
-                self.raw_members.append(SimpleStructMember(
-                    m.length_name, int_types['size']))
+                self.raw_members.extend(m.raw_members)
             else:
                 self.raw_members.append(m)
+        super().__init__(name, layout=Layout.struct(self.raw_members))
+        self.dependencies = _compute_dependencies(self)
 
 
 class StructMember:
 
-    def __init__(self, name):
+    def __init__(self, name, layout=None):
         self.name = name
+        self.layout = layout
+        self.offset = None
 
 
 class SimpleStructMember(StructMember):
 
     def __init__(self, name, type):
-        super().__init__(name)
+        super().__init__(name, layout=type.layout)
         self.type = type
 
 
 class RangeStructMember(StructMember):
 
     def __init__(self, base_name, length_name, name, const, target_type):
+        super().__init__(name, layout=None)
         self.type = type
         self.base_name = base_name
         self.length_name = length_name
-        self.name = name
         self.const = const
         self.target_type = target_type
+        self.raw_members = [
+            SimpleStructMember(base_name, PointerType(const, target_type)),
+            SimpleStructMember(length_name, int_types['size'])]
 
 
 class VariantStructMember(StructMember):
 
     def __init__(self, members):
-        super().__init__(None)
+        super().__init__(None, layout=Layout.union(members))
         self.members = members
 
 
@@ -154,12 +159,13 @@ class VariantMember:
         self.name = name
         self.tag_values = tag_values
         self.type = type
+        self.layout = type.layout
 
 
 class FunctionPointerType(UserDefinedType):
 
     def __init__(self, name, parameters, return_type):
-        self.name = name
+        super().__init__(name, layout=Layout((4, 8), (4, 8)))
         self.parameters = parameters
         self.return_type = return_type
 
