@@ -24,7 +24,7 @@ class Generator:
             for type_name in generate_now:
                 type = types[type_name]
 
-                if (getattr(type, 'dependencies', set()) > generated or
+                if (not (getattr(type, 'dependencies', set()) <= generated) or
                         (first_pass and not isinstance(type, IntLikeType))):
                     generate_later.append(type_name)
                 else:
