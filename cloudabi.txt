@@ -466,7 +466,7 @@ struct recv_out
 	msgflags flags
 
 struct sockstat
-	@cprefix cc_
+	@cprefix ss_
 	sockaddr sockname
 	sockaddr peername
 	errno    error
