@@ -201,6 +201,12 @@ flags uint8 mflags
 	0x04 private
 	0x08 shared
 
+flags uint8 mprot
+	@cprefix PROT_
+	0x01 exec
+	0x02 write
+	0x04 read
+
 flags uint8 msflags
 	@cprefix MS_
 	0x01 async
@@ -351,10 +357,10 @@ enum uint8 whence
 
 
 
-struct lookup
-	fd          fd
-	lookupflags flags
-
+funptr threadentry
+	in
+		tid      tid
+		ptr void aux
 
 
 
@@ -369,9 +375,7 @@ struct auxv
 
 struct ciovec
 	@cprefix iov_
-	cptr void base
-	size len
-	range base len data
+	crange void base len data
 
 struct event
 	userdata  userdata
@@ -418,37 +422,23 @@ struct filestat
 
 struct iovec
 	@cprefix iov_
-	ptr void base
-	size len
-	@range base len data
+	range void base len data
+
+struct lookup
+	fd          fd
+	lookupflags flags
 
 struct recv_in
 	@cprefix ri_
-	cptr iovec          data
-	size                datalen
-	@range data datalen data
-	ptr fd              fds
-	size                fdslen
-	@range fds fdslen   fds
-	msgflags            flags
-
-struct recv_out
-	@cprefix ro_
-	size datalen
-	size fdslen
-	sockaddr sockname
-	sockaddr peername
-	msgflags flags
+	crange iovec data datalen data
+	range fd     fds  fdslen  fds
+	msgflags     flags
 
 struct send_in
 	@cprefix si_
-	cptr ciovec         data
-	size                datalen
-	@range data datalen data
-	cptr fd             fds
-	size                fdslen
-	@range fds fdslen   fds
-	msgflags            flags
+	crange ciovec data datalen data
+	crange fd     fds  fdslen  fds
+	msgflags      flags
 
 struct send_out
 	@cprefix so_
@@ -460,12 +450,20 @@ struct sockaddr
 	variant family
 		inet
 			struct inet
-				array uint8 4 addr
+				array 4 uint8 addr
 				uint16        port
 		inet6
 			struct inet6
-				array uint8 16 addr
+				array 16 uint8 addr
 				uint16         port
+
+struct recv_out
+	@cprefix ro_
+	size datalen
+	size fdslen
+	sockaddr sockname
+	sockaddr peername
+	msgflags flags
 
 struct sockstat
 	@cprefix cc_
@@ -505,11 +503,9 @@ struct subscription
 				fd       fd
 
 struct threadattr
-	ptr threadentry         entry_point
-	ptr void                stack
-	size                    stack_size
-	@range stack stack_size stack
-	ptr void                argument
+	ptr threadentry entry_point
+	range void      stack stack_size stack
+	ptr void        argument
 
 
 
@@ -550,7 +546,8 @@ syscall 5 fd_create2
 		fd       fd2
 
 syscall 6 fd_datasync
-	in fd fd
+	in
+		fd fd
 
 syscall 7 fd_dup
 	in
@@ -560,32 +557,26 @@ syscall 7 fd_dup
 
 syscall 8 fd_pread
 	in
-		fd                fd
-		cptr iovec        iov
-		size              iovcnt
-		@range iov iovcnt iovs
-		filesize          offset
+		fd           fd
+		crange iovec iov iovcnt iovs
+		filesize     offset
 	out
-		size              nread
+		size         nread
 
 syscall 9 fd_pwrite
 	in
-		fd                fd
-		cptr ciovec       iov
-		size              iovcnt
-		@range iov iovcnt iovs
-		filesize          offset
+		fd            fd
+		crange ciovec iov iovcnt iovs
+		filesize      offset
 	out
-		size              nwritten
+		size          nwritten
 
 syscall 10 fd_read
 	in
-		fd                fd
-		cptr iovec        iov
-		size              iovcnt
-		@range iov iovcnt iovs
+		fd           fd
+		crange iovec iov iovcnt iovs
 	out
-		size              nread
+		size         nread
 
 syscall 11 fd_replace
 	in
@@ -617,12 +608,10 @@ syscall 15 fd_sync
 
 syscall 16 fd_write
 	in
-		fd                fd
-		cptr ciovec       iov
-		size              iovcnt
-		@range iov iovcnt iovs
+		fd            fd
+		crange ciovec iov iovcnt iovs
 	out
-		size
+		size nwritten
 
 syscall 17 file_advise
 	in
@@ -639,66 +628,48 @@ syscall 18 file_allocate
 
 syscall 19 file_create
 	in
-		fd                  fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		filetype            type
+		fd          fd
+		crange char path pathlen path
+		filetype    type
 
 syscall 20 file_link
 	in
-		lookup                fd1
-		cptr char             path1
-		size                  path1len
-		@range path1 path1len path1
-		fd                    fd2
-		cptr char             path2
-		size                  path2len
-		@range path2 path2len path2
+		lookup      fd1
+		crange char path1 path1len path1
+		fd          fd2
+		crange char path2 path2len path2
 
 syscall 21 file_open
 	in
-		lookup              fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		oflags              oflags
-		cptr fdstat         fds
+		lookup      fd
+		crange char path pathlen path
+		oflags      oflags
+		cptr fdstat fds
 	out
 		fd fd
 
 syscall 22 file_readdir
 	in
-		fd               fd
-		ptr void         buf
-		size             nbyte
-		@range buf nbyte buf
-		dircookie        cookie
+		fd         fd
+		range void buf nbyte buf
+		dircookie  cookie
 	out
 		size bufused
 
 syscall 23 file_readlink
 	in
-		fd                  fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		ptr char            buf
-		size                bufsize
-		@range buf bufsize  buf
+		fd          fd
+		crange char path pathlen path
+		range char  buf bufsize  buf
 	out
 		size bufused
 
 syscall 24 file_rename
 	in
-		fd                oldfd
-		cptr char         old
-		size              oldlen
-		@range old oldlen old
-		fd                newfd
-		cptr char         new
-		size              newlen
-		@range new newlen new
+		fd          oldfd
+		crange char old oldlen old
+		fd          newfd
+		crange char new newlen new
 
 syscall 25 file_stat_fget
 	in
@@ -713,38 +684,28 @@ syscall 26 file_stat_fput
 
 syscall 27 file_stat_get
 	in
-		lookup              fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		ptr filestat        buf
+		lookup       fd
+		crange char  path pathlen path
+		ptr filestat buf
 
 syscall 28 file_stat_put
 	in
-		lookup              fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		cptr filestat       buf
-		fsflags             flags
+		lookup        fd
+		crange char   path pathlen path
+		cptr filestat buf
+		fsflags       flags
 
 syscall 29 file_symlink
 	in
-		cptr char             path1
-		size                  path1len
-		@range path1 path1len path1
-		fd                    fd
-		cptr char             path2
-		size                  path2len
-		@range path2 path2len path2
+		crange char path1 path1len path1
+		fd          fd
+		crange char path2 path2len path2
 
 syscall 30 file_unlink
 	in
-		fd                  fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
-		ulflags             flags
+		fd          fd
+		crange char path pathlen path
+		ulflags     flags
 
 syscall 31 lock_unlock
 	in
@@ -753,74 +714,53 @@ syscall 31 lock_unlock
 
 syscall 32 mem_advise
 	in
-		ptr void        addr
-		size            len
-		@range addr len mem
-		advice          advice
+		range void addr len mem
+		advice     advice
 
 syscall 33 mem_lock
 	in
-		cptr void       addr
-		size            len
-		@range addr len mem
+		crange void addr len mem
 
 syscall 34 mem_map
 	in
-		ptr void        addr
-		size            len
-		@range addr len mem
-		mprot           prot
-		mflags          flags
-		fd              fd
-		filesize        off
+		range void addr len mem
+		mprot      prot
+		mflags     flags
+		fd         fd
+		filesize   off
 	out
-		ptr void        mem
+		ptr void   mem
 
 syscall 35 mem_protect
 	in
-		ptr void        addr
-		size            len
-		@range addr len mem
-		mprot           prot
+		range void addr len mem
+		mprot      prot
 
 syscall 36 mem_sync
 	in
-		ptr void        addr
-		size            len
-		@range addr len mem
-		msflags         flags
+		range void addr len mem
+		msflags    flags
 
 syscall 37 mem_unlock
 	in
-		cptr void       addr
-		size            len
-		@range addr len mem
-		@range
+		crange void addr len mem
 
 syscall 38 mem_unmap
 	in
-		ptr void        addr
-		size            len
-		@range addr len mem
+		range void addr len mem
 
 syscall 39 poll
 	in
-		cptr subscription  in
-		ptr event          out
-		size               nevents
-		@range out nevents out
+		cptr subscription in
+		range event       out nevents out
 	out
 		size nevents
 
 syscall 40 proc_exec
 	in
-		fd                  fd
-		cptr void           data
-		size                datalen
-		@range data datalen data
-		cptr fd             fds
-		size                fdslen
-		@range fds fdslen   fds
+		fd          fd
+		crange void data datalen data
+		crange fd   fds fdslen fds
 
 syscall 41 proc_exit
 	in
@@ -838,9 +778,7 @@ syscall 43 proc_raise
 
 syscall 44 random_get
 	in
-		ptr void         buf
-		size             nbyte
-		@range buf nbyte buf
+		range void buf nbyte buf
 
 syscall 45 sock_accept
 	in
@@ -851,19 +789,15 @@ syscall 45 sock_accept
 
 syscall 46 sock_bind
 	in
-		fd                  sock
-		fd                  fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
+		fd          sock
+		fd          fd
+		crange char path pathlen path
 
 syscall 47 sock_connect
 	in
-		fd                  sock
-		fd                  fd
-		cptr char           path
-		size                pathlen
-		@range path pathlen path
+		fd          sock
+		fd          fd
+		crange char path pathlen path
 
 syscall 48 sock_listen
 	in
@@ -913,13 +847,9 @@ syscall 56 thread_yield
 
 syscall 57 poll_fd
 	in
-		fd                fd
-		cptr subscription in
-		size              nin
-		@range in nin     in
-		ptr event         out
-		size              nout
-		@range out nout   out
-		cptr subscription timeout
+		fd                  fd
+		crange subscription in nin in
+		range event         out nout out
+		cptr subscription   timeout
 	out
 		size ntriggered
