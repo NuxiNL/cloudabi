@@ -60,7 +60,7 @@ class CHeaderGenerator(Generator):
     def generate_struct_members(self, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
-                print('{}{};'.format(indent, self.cdecl(m.type, type.cprefix + m.name)))
+                print('{}{};'.format(indent, self.cdecl(m.type, m.name)))
             elif isinstance(m, VariantStructMember):
                 print('{}union {{'.format(indent))
                 for x in m.members:
@@ -69,7 +69,7 @@ class CHeaderGenerator(Generator):
                     else:
                         print('{}\tstruct {{'.format(indent))
                         self.generate_struct_members(x.type, indent + '\t\t')
-                        print('{}\t}} {};'.format(indent, type.cprefix + x.name))
+                        print('{}\t}} {};'.format(indent, x.name))
                 print('{}}};'.format(indent))
             else:
                 raise Exception('Unknown struct member: {}'.format(m))

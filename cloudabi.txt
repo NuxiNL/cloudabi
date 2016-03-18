@@ -365,17 +365,15 @@ funptr threadentry
 
 
 struct auxv
-	@cprefix a_
-	auxtype type
-	variant type
+	auxtype a_type
+	variant a_type
 		argdatalen canarylen ncpus pagesz phnum tid
-			size val
+			size a_val
 		argdata canary null phdr
-			ptr void ptr
+			ptr void a_ptr
 
 struct ciovec
-	@cprefix iov_
-	crange void base len data
+	crange void iov_base iov_len iov_data
 
 struct event
 	userdata  userdata
@@ -403,74 +401,65 @@ struct event
 				exitcode exitcode
 
 struct fdstat
-	@cprefix fs_
-	filetype filetype
-	fdflags  flags
-	rights   rights_base
-	rights   rights_inheriting
+	filetype fs_filetype
+	fdflags  fs_flags
+	rights   fs_rights_base
+	rights   fs_rights_inheriting
 
 struct filestat
-	@cprefix st_
-	device    dev
-	inode     ino
-	filetype  filetype
-	linkcount nlink
-	filesize  size
-	timestamp atim
-	timestamp mtim
-	timestamp ctim
+	device    st_dev
+	inode     st_ino
+	filetype  st_filetype
+	linkcount st_nlink
+	filesize  st_size
+	timestamp st_atim
+	timestamp st_mtim
+	timestamp st_ctim
 
 struct iovec
-	@cprefix iov_
-	range void base len data
+	range void iov_base iov_len iov_data
 
 struct lookup
 	fd          fd
 	lookupflags flags
 
 struct recv_in
-	@cprefix ri_
-	crange iovec data datalen data
-	range fd     fds  fdslen  fds
-	msgflags     flags
+	crange iovec ri_data ri_datalen ri_data
+	range fd     ri_fds  ri_fdslen  ri_fds
+	msgflags     ri_flags
 
 struct send_in
-	@cprefix si_
-	crange ciovec data datalen data
-	crange fd     fds  fdslen  fds
-	msgflags      flags
+	crange ciovec si_data si_datalen si_data
+	crange fd     si_fds  si_fdslen  si_fds
+	msgflags      si_flags
 
 struct send_out
-	@cprefix so_
-	size datalen
+	size so_datalen
 
 struct sockaddr
-	@cprefix sa_
-	sa_family family
-	variant family
+	sa_family sa_family
+	variant sa_family
 		inet
-			struct inet
+			struct sa_inet
 				array 4 uint8 addr
 				uint16        port
 		inet6
-			struct inet6
+			struct sa_inet6
 				array 16 uint8 addr
 				uint16         port
 
 struct recv_out
-	@cprefix ro_
-	size datalen
-	size fdslen
-	sockaddr sockname
-	sockaddr peername
-	msgflags flags
+	size     ro_datalen
+	size     ro_fdslen
+	sockaddr ro_sockname
+	sockaddr ro_peername
+	msgflags ro_flags
 
 struct sockstat
-	@cprefix ss_
-	sockaddr sockname
-	sockaddr peername
-	errno    error
-	sstate   state
+	sockaddr ss_sockname
+	sockaddr ss_peername
+	errno    ss_error
+	sstate   ss_state
 
 struct subscription
 	userdata  userdata

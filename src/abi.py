@@ -102,10 +102,9 @@ class AtomicType(Type):
 
 class StructType(UserDefinedType):
 
-    def __init__(self, name, members, cprefix=''):
+    def __init__(self, name, members):
         super().__init__(name)
         self.members = members
-        self.cprefix = cprefix
         self.dependencies = _compute_dependencies(self)
         self.raw_members = []
         for m in self.members:
@@ -320,14 +319,10 @@ class Abi:
     def parse_struct(self, name, spec):
 
         members = []
-        attr = {}
 
         for node in spec:
             mem_decl = node.text.split()
-            if mem_decl[0] == '@cprefix' and len(mem_decl) == 2:
-                self.__expect_no_children(node)
-                attr['cprefix'] = mem_decl[1]
-            elif mem_decl[0] == 'variant' and len(mem_decl) == 2:
+            if mem_decl[0] == 'variant' and len(mem_decl) == 2:
                 tag_member_name = mem_decl[1]
                 tag_member = None
                 for m in members:
@@ -345,10 +340,6 @@ class Abi:
                     raise Exception(
                         'No such member to use as variant tag: {}.'.format(tag_member_name))
                 mem = self.parse_variant(tag_member, node.children)
-                if 'cprefix' in attr:
-                    for m in mem.members:
-                        if m.name == None:
-                            m.type.cprefix = attr['cprefix']
                 members.append(mem)
                 pass
             elif mem_decl[0] in {'range', 'crange'}:
@@ -370,7 +361,7 @@ class Abi:
                 mem_type = self.parse_type(mem_decl[:-1])
                 members.append(SimpleStructMember(mem_name, mem_type))
 
-        return StructType(name, members, **attr)
+        return StructType(name, members)
 
     def parse_variant(self, tag_member, spec):
 
