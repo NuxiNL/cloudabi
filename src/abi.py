@@ -106,6 +106,7 @@ class StructType(UserDefinedType):
         super().__init__(name)
         self.members = members
         self.cprefix = cprefix
+        self.dependencies = _compute_dependencies(self)
 
 
 class StructMember:
@@ -393,3 +394,25 @@ class Abi:
             raise Exception(
                 'Unexpected node inside {}: {}'.format(
                     node.text, node.children[0].text))
+
+
+def _compute_dependencies(thing):
+
+    if hasattr(thing, 'dependencies'):
+        return thing.dependencies
+
+    deps = set()
+
+    members = set(getattr(thing, 'members', []))
+    for attr in ['type', 'target_type', 'element_type']:
+        m = getattr(thing, attr, None)
+        if m is not None:
+            members.add(m)
+
+    for m in members:
+        if isinstance(m, UserDefinedType) and m.name is not None:
+            deps.add(m.name)
+
+        deps.update(_compute_dependencies(m))
+
+    return deps
