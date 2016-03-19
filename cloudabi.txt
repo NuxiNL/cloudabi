@@ -337,7 +337,7 @@ flags uint16 subclockflags
 	0x01 abstime
 
 flags uint16 subrwflags
-	@cprefix SUBSCRIPTION_FD_READWRITE
+	@cprefix SUBSCRIPTION_FD_READWRITE_
 	0x01 poll
 
 opaque uint32 tid
