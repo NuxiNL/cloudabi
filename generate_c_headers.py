@@ -5,11 +5,12 @@
 # See the LICENSE file for details.
 
 from contextlib import redirect_stdout
+import os
 
 from src.abi import *
 from src.generators.c import *
 
-abi = Abi('cloudabi.txt')
+abi = Abi(os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
 with open('syscalldefs-mi.h', 'w') as f:
     with redirect_stdout(f):
