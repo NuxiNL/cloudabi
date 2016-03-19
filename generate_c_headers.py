@@ -9,8 +9,10 @@ import os
 
 from src.abi import *
 from src.generators.c import *
+from src.parser import *
 
-abi = Abi(os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
+abi = AbiParser().parse_abi_file(
+        os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
 with open('syscalldefs-mi.h', 'w') as f:
     with redirect_stdout(f):
