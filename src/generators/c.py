@@ -170,6 +170,7 @@ class CSyscalldefsGenerator(CGenerator):
 
             self.generate_offset_asserts(typename, type.raw_members)
             self.generate_size_assert(typename, type.layout.size)
+            self.generate_align_assert(typename, type.layout.align)
 
         else:
             raise Exception('Unknown class of type: {}'.format(type))
@@ -200,6 +201,9 @@ class CSyscalldefsGenerator(CGenerator):
 
     def generate_size_assert(self, type_name, size):
         self.generate_layout_assert('sizeof({})'.format(type_name), size)
+
+    def generate_align_assert(self, type_name, align):
+        self.generate_layout_assert('_Alignof({})'.format(type_name), align)
 
     def generate_layout_assert(self, expression, value):
         static_assert = '_Static_assert({}, "Incorrect layout");'
