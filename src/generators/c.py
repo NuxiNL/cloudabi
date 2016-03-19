@@ -82,7 +82,7 @@ class CGenerator(Generator):
         return params
 
 
-class CHeaderGenerator(CGenerator):
+class CSyscalldefsGenerator(CGenerator):
 
     def generate_struct_members(self, type, indent=''):
         for m in type.raw_members:
@@ -188,7 +188,27 @@ class CHeaderGenerator(CGenerator):
             print(static_assert.format('sizeof(void*) != 8 || {} == {}'.format(
                 sizeof, size[1])))
 
+    def generate_syscalls(self, syscalls):
+        pass
+
+
+class CSyscallsGenerator(CGenerator):
+
     def generate_syscall(self, syscall):
-        print('inline static {}errno_t {}sys_{}({});'.format(
-            self.prefix, self.prefix,
-            syscall.name, ', '.join(self.syscall_params(syscall))))
+        print('inline static {}errno_t'.format(self.prefix))
+        print('{}sys_{}('.format(self.prefix, syscall.name), end='')
+        params = self.syscall_params(syscall)
+        if params == ['void']:
+            print('void', end='')
+        else:
+            print()
+            for p in params[:-1]:
+                print('\t{},'.format(p))
+            print('\t{}'.format(params[-1]))
+        print(') {')
+        print('\t// TODO')
+        print('}')
+        print()
+
+    def generate_types(self, types):
+        pass
