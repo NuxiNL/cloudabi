@@ -15,7 +15,7 @@ class Layout:
             align = (align, align)
         self.size = size
         self.align = align
-        if machine_dep == None:
+        if machine_dep is None:
             machine_dep = size[0] != size[1] or align[0] != align[1]
         self.machine_dep = machine_dep
 

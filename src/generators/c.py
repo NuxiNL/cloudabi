@@ -41,7 +41,7 @@ class CGenerator(Generator):
               isinstance(type, FunctionPointerType) or
               isinstance(type, StructType)):
             prefix = self.prefix
-            if self.md_prefix != None and type.layout.machine_dep:
+            if self.md_prefix is not None and type.layout.machine_dep:
                 prefix = self.md_prefix
             return '{}{}_t'.format(prefix, type.name)
 
@@ -122,7 +122,7 @@ class CSyscalldefsGenerator(CGenerator):
 
     def generate_type(self, type):
 
-        if self.machine_dep != None:
+        if self.machine_dep is not None:
             if type.layout.machine_dep != self.machine_dep:
                 return
 
