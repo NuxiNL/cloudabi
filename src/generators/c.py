@@ -9,11 +9,14 @@ from ..generator import *
 
 class CGenerator(Generator):
 
-    def __init__(self, prefix, header_guard=None, machine_dep=None):
+    def __init__(self, prefix, header_guard=None, machine_dep=None,
+                 md_prefix=None, md_type=None):
         super().__init__(comment_start='//')
         self.prefix = prefix
         self.header_guard = header_guard
         self.machine_dep = machine_dep
+        self.md_prefix = md_prefix
+        self.md_type = md_type
 
     def generate_head(self):
         super().generate_head()
@@ -37,7 +40,10 @@ class CGenerator(Generator):
         elif (isinstance(type, IntLikeType) or
               isinstance(type, FunctionPointerType) or
               isinstance(type, StructType)):
-            return '{}{}_t'.format(self.prefix, type.name)
+            prefix = self.prefix
+            if self.md_prefix != None and type.layout.machine_dep:
+                prefix = self.md_prefix
+            return '{}{}_t'.format(prefix, type.name)
 
         else:
             raise Exception(
@@ -52,6 +58,9 @@ class CGenerator(Generator):
             return '{} {}'.format(self.ctypename(type), name).rstrip()
 
         elif isinstance(type, PointerType):
+            if self.md_type != None:
+                return '{} {}'.format(self.md_type, name).rstrip()
+
             decl = self.cdecl(type.target_type, '*{}'.format(name))
             if type.const:
                 decl = 'const ' + decl
@@ -184,26 +193,23 @@ class CSyscalldefsGenerator(CGenerator):
                         type_name, prefix + m.name, moffset)
 
     def generate_offset_assert(self, type_name, member_name, offset):
-        offsetof = 'offsetof({}, {})'.format(type_name, member_name)
-        static_assert = '_Static_assert({}, "Offset incorrect");'
-        if offset[0] == offset[1]:
-            print(static_assert.format('{} == {}'.format(offsetof, offset[0])))
-        else:
-            print(static_assert.format('sizeof(void*) != 4 || {} == {}'.format(
-                offsetof, offset[0])))
-            print(static_assert.format('sizeof(void*) != 8 || {} == {}'.format(
-                offsetof, offset[1])))
+        self.generate_layout_assert(
+            'offsetof({}, {})'.format(type_name, member_name), offset)
 
     def generate_size_assert(self, type_name, size):
-        sizeof = 'sizeof({})'.format(type_name)
-        static_assert = '_Static_assert({}, "Size incorrect");'
-        if size[0] == size[1]:
-            print(static_assert.format('{} == {}'.format(sizeof, size[0])))
+        self.generate_layout_assert('sizeof({})'.format(type_name), size)
+
+    def generate_layout_assert(self, expression, value):
+        static_assert = '_Static_assert({}, "Incorrect layout");'
+        if value[0] == value[1] or self.md_type in {'uint32_t', 'uint64_t'}:
+            value = value[0] if self.md_type == 'uint32_t' else value[1]
+            print(static_assert.format('{} == {}'.format(expression, value)))
         else:
-            print(static_assert.format('sizeof(void*) != 4 || {} == {}'.format(
-                sizeof, size[0])))
-            print(static_assert.format('sizeof(void*) != 8 || {} == {}'.format(
-                sizeof, size[1])))
+            voidptr = self.cdecl(PointerType(False, VoidType()))
+            print(static_assert.format('sizeof({}) != 4 || {} == {}'.format(
+                voidptr, expression, value[0])))
+            print(static_assert.format('sizeof({}) != 8 || {} == {}'.format(
+                voidptr, expression, value[1])))
 
     def generate_syscalls(self, syscalls):
         pass
