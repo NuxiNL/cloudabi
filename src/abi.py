@@ -196,8 +196,7 @@ class Abi:
 
                 if len(decl) != 3:
                     raise Exception(
-                        'Invalid declaration: {}'.format(
-                            node.text))
+                        'Invalid declaration: {}'.format(node.text))
 
                 name = decl[2]
                 if name in self.types:
