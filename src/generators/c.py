@@ -38,7 +38,7 @@ class CGenerator(Generator):
                 return 'char'
             return '{}_t'.format(type.name)
         elif (isinstance(type, IntLikeType) or
-              isinstance(type, FunctionPointerType) or
+              isinstance(type, FunctionType) or
               isinstance(type, StructType)):
             prefix = self.prefix
             if self.md_prefix is not None and type.layout.machine_dep:
@@ -54,7 +54,7 @@ class CGenerator(Generator):
                 isinstance(type, IntType) or
                 isinstance(type, IntLikeType) or
                 isinstance(type, StructType) or
-                isinstance(type, FunctionPointerType)):
+                isinstance(type, FunctionType)):
             return '{} {}'.format(self.ctypename(type), name).rstrip()
 
         elif isinstance(type, PointerType):
@@ -150,11 +150,11 @@ class CSyscalldefsGenerator(CGenerator):
                               val=val,
                               val_format=val_format))
 
-        elif isinstance(type, FunctionPointerType):
+        elif isinstance(type, FunctionType):
             parameters = []
             for p in type.parameters.raw_members:
                 parameters.append(self.cdecl(self.mi_type(p.type), p.name))
-            print('typedef {} (*{})({});'.format(
+            print('typedef {} ({})({});'.format(
                 self.cdecl(self.mi_type(type.return_type)),
                 self.cdecl(type), ', '.join(parameters)))
 

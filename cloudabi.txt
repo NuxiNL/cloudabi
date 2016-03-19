@@ -357,7 +357,7 @@ enum uint8 whence
 
 
 
-funptr threadentry
+function threadentry
 	in
 		tid      tid
 		ptr void aux

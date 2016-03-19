@@ -17,7 +17,7 @@ class Type:
 class VoidType(Type):
 
     def __init__(self):
-        super().__init__('void')
+        super().__init__('void', layout=Layout(None))
 
 
 class IntType(Type):
@@ -162,10 +162,12 @@ class VariantMember:
         self.layout = type.layout
 
 
-class FunctionPointerType(UserDefinedType):
+class FunctionType(UserDefinedType):
 
     def __init__(self, name, parameters, return_type):
-        super().__init__(name, layout=Layout((4, 8), (4, 8)))
+        machine_dep = (parameters.layout.machine_dep or
+                       return_type.layout.machine_dep)
+        super().__init__(name, layout=Layout(None, None, machine_dep))
         self.parameters = parameters
         self.return_type = return_type
 
@@ -233,7 +235,7 @@ class Abi:
 
                 self.types[name] = self.parse_struct(name, node.children)
 
-            elif decl[0] == 'funptr':
+            elif decl[0] == 'function':
 
                 if len(decl) != 2:
                     raise Exception('Invalid declaration: {}'.format(decl))
@@ -254,10 +256,10 @@ class Abi:
                     out_spec = node.children.pop(0)
                     if len(out_spec.children) != 1:
                         raise Exception(
-                            'Expected a single return type in `out\' section of funptr.')
+                            'Expected a single return type in `out\' section of function.')
                     return_type = self.parse_type(out_spec.children[0])
 
-                self.types[name] = FunctionPointerType(
+                self.types[name] = FunctionType(
                     name, parameters, return_type)
 
             elif decl[0] == 'syscall':
