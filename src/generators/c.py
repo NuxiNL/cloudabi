@@ -36,6 +36,8 @@ class CGenerator(Generator):
         elif isinstance(type, IntType):
             if type.name == 'char':
                 return 'char'
+            if type.name == 'size' and self.md_type != None:
+                return self.md_type
             return '{}_t'.format(type.name)
         elif (isinstance(type, IntLikeType) or
               isinstance(type, FunctionPointerType) or
