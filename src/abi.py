@@ -244,7 +244,7 @@ class Abi:
                 if name in self.types:
                     raise Exception('Duplicate definition of {}'.format(name))
 
-                parameters = []
+                parameters = StructType('', [])
                 return_type = VoidType()
 
                 if len(node.children) > 0 and node.children[0].text == 'in':
@@ -257,7 +257,9 @@ class Abi:
                     if len(out_spec.children) != 1:
                         raise Exception(
                             'Expected a single return type in `out\' section of function.')
-                    return_type = self.parse_type(out_spec.children[0])
+                    self.__expect_no_children(out_spec.children[0])
+                    return_type = (
+                        self.parse_type(out_spec.children[0].text.split()))
 
                 self.types[name] = FunctionType(
                     name, parameters, return_type)
