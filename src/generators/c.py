@@ -267,8 +267,9 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         check_okay = len(syscall.output.raw_members) > 0
 
         n_regs = max(len(syscall.input.raw_members) + 1,
-                     len(syscall.output.raw_members) +
-                     self.output_register_start)
+                     max(len(syscall.output.raw_members), 1) +
+                     self.output_register_start,
+                     )
         for i in range(0, n_regs):
             print('\tregister {} asm("{}")'.format(
                   self.cdecl(self.register_t, "reg{}".format(i)),
@@ -350,4 +351,4 @@ class CSyscallsAarch64Generator(CSyscallsImplGenerator):
     register_t = int_types['uint64']
 
     asm = '\t\t"\\tsvc 0\\n"'
-    asm_check = '\t\t"\\tcset %0, cc\\n"'
+    asm_check = '\t\t"\\tcset %w0, cc\\n"'
