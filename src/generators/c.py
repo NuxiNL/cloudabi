@@ -64,7 +64,8 @@ class CGenerator(Generator):
             return decl
 
         elif isinstance(type, ArrayType):
-            if name.startswith('*'):
+            if name.startswith('*') or (
+                    name.endswith(')') and not name.startswith('(')):
                 name = '({})'.format(name)
             return self.cdecl(
                 type.element_type, '{}[{}]'.format(
@@ -154,9 +155,10 @@ class CSyscalldefsGenerator(CGenerator):
             parameters = []
             for p in type.parameters.raw_members:
                 parameters.append(self.cdecl(self.mi_type(p.type), p.name))
-            print('typedef {} {}({});'.format(
-                self.cdecl(self.mi_type(type.return_type)),
-                self.cdecl(type), ', '.join(parameters)))
+            print('typedef {};'.format(
+                self.cdecl(self.mi_type(type.return_type),
+                           '{}({})'.format(
+                               self.ctypename(type), ', '.join(parameters)))))
 
         elif isinstance(type, StructType):
             typename = self.ctypename(type)
