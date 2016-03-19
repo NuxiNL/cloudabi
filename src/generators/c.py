@@ -78,15 +78,13 @@ class CGenerator(Generator):
             raise Exception(
                 'Unable to generate C type declaration for type: {}'.format(type))
 
-    def syscall_params(self, syscall):
-        params = []
-        for p in syscall.input.raw_members:
-            params.append(self.cdecl(p.type, p.name))
-        for p in syscall.output.raw_members:
-            params.append(self.cdecl(PointerType(False, p.type), p.name))
-        if params == []:
-            params = ['void']
-        return params
+    def ccast(self, type_from, type_to, name):
+        if (isinstance(type_from, StructType) or
+                isinstance(type_to, StructType)):
+            return '*({})&{}'.format(
+                self.cdecl(PointerType(False, type_to)), name)
+        else:
+            return '({}){}'.format(self.cdecl(type_to), name)
 
     def mi_type(self, mtype):
         if self.md_type is not None:
@@ -227,21 +225,129 @@ class CSyscalldefsGenerator(CGenerator):
 
 class CSyscallsGenerator(CGenerator):
 
+    def syscall_params(self, syscall):
+        params = []
+        for p in syscall.input.raw_members:
+            params.append(self.cdecl(p.type, p.name))
+        for p in syscall.output.raw_members:
+            params.append(self.cdecl(PointerType(False, p.type), p.name))
+        return params
+
     def generate_syscall(self, syscall):
-        print('inline static {}errno_t'.format(self.prefix))
+        if syscall.noreturn:
+            return_type = '_Noreturn void'
+        else:
+            return_type = '{}errno_t'.format(self.prefix)
+        print('static inline {}'.format(return_type))
         print('{}sys_{}('.format(self.prefix, syscall.name), end='')
         params = self.syscall_params(syscall)
-        if params == ['void']:
+        if params == []:
             print('void', end='')
         else:
             print()
             for p in params[:-1]:
                 print('\t{},'.format(p))
             print('\t{}'.format(params[-1]))
-        print(') {')
-        print('\t// TODO')
-        print('}')
+        print(')', end='')
+        self.generate_syscall_body(syscall)
         print()
+
+    def generate_syscall_body(self, syscall):
+        print(';')
 
     def generate_types(self, types):
         pass
+
+
+class CSyscallsImplGenerator(CSyscallsGenerator):
+
+    def generate_syscall_body(self, syscall):
+        print(' {')
+
+        check_okay = len(syscall.output.raw_members) > 0
+
+        n_regs = max(len(syscall.input.raw_members) + 1,
+                     len(syscall.output.raw_members) +
+                     self.output_register_start)
+        for i in range(0, n_regs):
+            print('\tregister {} asm("{}")'.format(
+                  self.cdecl(self.register_t, "reg{}".format(i)),
+                  self.registers[i]), end='')
+            if i == 0:
+                print(' = {};'.format(syscall.number))
+            elif i - 1 < len(syscall.input.raw_members):
+                p = syscall.input.raw_members[i - 1]
+                print(' = {};'.format(
+                      self.ccast(p.type, self.register_t, p.name)))
+            else:
+                print(';')
+        if check_okay:
+            print('\tregister char okay;')
+
+        print('\tasm volatile (')
+        print(self.asm)
+        if check_okay:
+            print(self.asm_check)
+
+        first = True
+        if check_okay:
+            print('\t\t: "=r"(okay)')
+            first = False
+        for i in range(len(syscall.output.raw_members)):
+            print('\t\t{} "=r"(reg{})'.format(':' if first else ',',
+                                              i + self.output_register_start))
+            first = False
+        if first:
+            print('\t\t:')
+
+        for i in range(len(syscall.input.raw_members) + 1):
+            print('\t\t{} "r"(reg{})'.format(':' if i == 0 else ',', i))
+
+        print('\t\t: {});'.format(self.clobbers))
+        if check_okay:
+            print('\tif (okay) {')
+            for i, p in enumerate(syscall.output.raw_members):
+                print('\t\t*{} = {};'.format(
+                    p.name,
+                    self.ccast(self.register_t, p.type, "reg{}".format(
+                        i + self.output_register_start))))
+            print('\t\treturn 0;')
+            print('\t}')
+
+        if syscall.noreturn:
+            print('\tfor (;;);')
+        else:
+            print('\treturn reg{};'.format(self.output_register_start))
+
+        print('}')
+
+
+class CSyscallsX86_64Generator(CSyscallsImplGenerator):
+
+    registers = ['rax', 'rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
+
+    output_register_start = 0
+
+    clobbers = '"memory", "rcx", "rdx", "r8", "r9", "r10", "r11"'
+
+    register_t = int_types['uint64']
+
+    asm = '\t\t"\\tsyscall\\n"'
+    asm_check = '\t\t"\\tsetnc %0\\n"'
+
+class CSyscallsAarch64Generator(CSyscallsImplGenerator):
+
+    registers = ['x8', 'x0', 'x1', 'x2', 'x3', 'x4', 'x5']
+
+    output_register_start = 1
+
+    clobbers = ('"memory"\n'
+        '\t\t, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7"\n'
+        '\t\t, "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"\n'
+        '\t\t, "x16", "x17", "x18"\n'
+        '\t\t, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7"')
+
+    register_t = int_types['uint64']
+
+    asm = '\t\t"\\tsvc 0\\n"'
+    asm_check = '\t\t"\\tcset %0, cc\\n"'

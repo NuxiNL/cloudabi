@@ -53,3 +53,17 @@ with open('syscalls.h', 'w') as f:
             prefix='cloudabi_',
             header_guard='CLOUDABI_SYSCALLS_H',
         ).generate_abi(abi)
+
+with open('syscalls-x86_64.h', 'w') as f:
+    with redirect_stdout(f):
+        CSyscallsX86_64Generator(
+            prefix='cloudabi_',
+            header_guard='CLOUDABI_SYSCALLS_X86_64_H',
+        ).generate_abi(abi)
+
+with open('syscalls-aarch64.h', 'w') as f:
+    with redirect_stdout(f):
+        CSyscallsAarch64Generator(
+            prefix='cloudabi_',
+            header_guard='CLOUDABI_SYSCALLS_AARCH64_H',
+        ).generate_abi(abi)
