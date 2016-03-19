@@ -34,7 +34,7 @@ with open('syscalldefs-md-32.h', 'w') as f:
             header_guard='CLOUDABI_SYSCALLDEFS_MD_32_H',
             machine_dep=True,
             md_prefix='cloudabi32_',
-            md_type='uint32_t'
+            md_type=int_types['uint32']
         ).generate_abi(abi)
 
 with open('syscalldefs-md-64.h', 'w') as f:
@@ -44,7 +44,7 @@ with open('syscalldefs-md-64.h', 'w') as f:
             header_guard='CLOUDABI_SYSCALLDEFS_MD_64_H',
             machine_dep=True,
             md_prefix='cloudabi64_',
-            md_type='uint64_t'
+            md_type=int_types['uint64']
         ).generate_abi(abi)
 
 with open('syscalls.h', 'w') as f:

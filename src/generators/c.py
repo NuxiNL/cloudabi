@@ -36,8 +36,6 @@ class CGenerator(Generator):
         elif isinstance(type, IntType):
             if type.name == 'char':
                 return 'char'
-            if type.name == 'size' and self.md_type != None:
-                return self.md_type
             return '{}_t'.format(type.name)
         elif (isinstance(type, IntLikeType) or
               isinstance(type, FunctionPointerType) or
@@ -60,9 +58,6 @@ class CGenerator(Generator):
             return '{} {}'.format(self.ctypename(type), name).rstrip()
 
         elif isinstance(type, PointerType):
-            if self.md_type != None:
-                return '{} {}'.format(self.md_type, name).rstrip()
-
             decl = self.cdecl(type.target_type, '*{}'.format(name))
             if type.const:
                 decl = 'const ' + decl
@@ -93,18 +88,25 @@ class CGenerator(Generator):
             params = ['void']
         return params
 
+    def mi_type(self, mtype):
+        if self.md_type is not None:
+            if isinstance(mtype, PointerType) or mtype.name == 'size':
+                return self.md_type
+        return mtype
+
 
 class CSyscalldefsGenerator(CGenerator):
 
     def generate_struct_members(self, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
-                if m.type.layout.align[0] == m.type.layout.align[1]:
-                    alignas = '_Alignas({}) '.format(m.type.layout.align[0])
+                mtype = self.mi_type(m.type)
+                if mtype.layout.align[0] == mtype.layout.align[1]:
+                    alignas = '_Alignas({}) '.format(mtype.layout.align[0])
                 else:
                     alignas = ''
                 print('{}{}{};'.format(
-                    indent, alignas, self.cdecl(m.type, m.name)))
+                    indent, alignas, self.cdecl(mtype, m.name)))
             elif isinstance(m, VariantStructMember):
                 print('{}union {{'.format(indent))
                 for x in m.members:
@@ -153,9 +155,9 @@ class CSyscalldefsGenerator(CGenerator):
         elif isinstance(type, FunctionPointerType):
             parameters = []
             for p in type.parameters.raw_members:
-                parameters.append(self.cdecl(p.type, p.name))
+                parameters.append(self.cdecl(self.mi_type(p.type), p.name))
             print('typedef {} (*{})({});'.format(
-                self.cdecl(type.return_type),
+                self.cdecl(self.mi_type(type.return_type)),
                 self.cdecl(type), ', '.join(parameters)))
             pass
 
@@ -203,9 +205,13 @@ class CSyscalldefsGenerator(CGenerator):
 
     def generate_layout_assert(self, expression, value):
         static_assert = '_Static_assert({}, "Incorrect layout");'
-        if value[0] == value[1] or self.md_type in {'uint32_t', 'uint64_t'}:
-            value = value[0] if self.md_type == 'uint32_t' else value[1]
-            print(static_assert.format('{} == {}'.format(expression, value)))
+        if value[0] == value[1] or (
+                self.md_type is not None and
+                self.md_type.layout.size in ((4, 4), (8, 8))):
+            v = value[1]
+            if self.md_type is not None and self.md_type.layout.size == (4, 4):
+                v = value[0]
+            print(static_assert.format('{} == {}'.format(expression, v)))
         else:
             voidptr = self.cdecl(PointerType(False, VoidType()))
             print(static_assert.format('sizeof({}) != 4 || {} == {}'.format(
