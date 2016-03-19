@@ -9,9 +9,22 @@ from ..generator import *
 
 class CGenerator(Generator):
 
-    def __init__(self, prefix):
+    def __init__(self, prefix, header_guard=None):
         super().__init__(comment_start='//')
         self.prefix = prefix
+        self.header_guard = header_guard
+
+    def generate_head(self):
+        super().generate_head()
+        if self.header_guard is not None:
+            print('#ifndef {}'.format(self.header_guard))
+            print('#define {}'.format(self.header_guard))
+            print()
+
+    def generate_foot(self):
+        if self.header_guard is not None:
+            print('#endif')
+        super().generate_foot()
 
     def ctypename(self, type):
         if isinstance(type, VoidType):
