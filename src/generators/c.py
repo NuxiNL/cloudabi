@@ -9,10 +9,11 @@ from ..generator import *
 
 class CGenerator(Generator):
 
-    def __init__(self, prefix, header_guard=None):
+    def __init__(self, prefix, header_guard=None, machine_dep=None):
         super().__init__(comment_start='//')
         self.prefix = prefix
         self.header_guard = header_guard
+        self.machine_dep = machine_dep
 
     def generate_head(self):
         super().generate_head()
@@ -107,6 +108,10 @@ class CSyscalldefsGenerator(CGenerator):
                 raise Exception('Unknown struct member: {}'.format(m))
 
     def generate_type(self, type):
+
+        if self.machine_dep != None:
+            if type.layout.machine_dep != self.machine_dep:
+                return
 
         if isinstance(type, IntLikeType):
             print('typedef {};'.format(self.cdecl(type.int_type,

@@ -11,11 +11,20 @@ from src.generators.c import *
 
 abi = Abi('cloudabi.txt')
 
-with open('syscalldefs.h', 'w') as f:
+with open('syscalldefs-mi.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             prefix='cloudabi_',
-            header_guard='CLOUDABI_SYSCALLDEFS_H',
+            header_guard='CLOUDABI_SYSCALLDEFS_MI_H',
+            machine_dep=False
+        ).generate_abi(abi)
+
+with open('syscalldefs-md.h', 'w') as f:
+    with redirect_stdout(f):
+        CSyscalldefsGenerator(
+            prefix='cloudabi_',
+            header_guard='CLOUDABI_SYSCALLDEFS_MD_H',
+            machine_dep=True
         ).generate_abi(abi)
 
 with open('syscalls.h', 'w') as f:
