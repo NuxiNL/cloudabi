@@ -6,7 +6,7 @@
 
 class Layout:
 
-    def __init__(self, size, align=None):
+    def __init__(self, size, align=None, machine_dep=None):
         if align is None:
             align = size
         if not isinstance(size, tuple):
@@ -15,6 +15,9 @@ class Layout:
             align = (align, align)
         self.size = size
         self.align = align
+        if machine_dep == None:
+            machine_dep = size[0] != size[1] or align[0] != align[1]
+        self.machine_dep = machine_dep
 
     @staticmethod
     def struct(members):
@@ -34,7 +37,9 @@ class Layout:
         size = (_align(offset[0], align[0]),
                 _align(offset[1], align[1]))
 
-        return Layout(size, align)
+        machine_dep = any(m.layout.machine_dep for m in members)
+
+        return Layout(size, align, machine_dep)
 
     @staticmethod
     def array(type, count):
@@ -44,7 +49,7 @@ class Layout:
         size = (type.layout.size[0] * count,
                 type.layout.size[1] * count)
 
-        return Layout(size, type.layout.align)
+        return Layout(size, type.layout.align, type.layout.machine_dep)
 
     @staticmethod
     def union(members):
@@ -57,7 +62,9 @@ class Layout:
         align = (max(m.layout.align[0] for m in members),
                  max(m.layout.align[1] for m in members))
 
-        return Layout(size, align)
+        machine_dep = any(m.layout.machine_dep for m in members)
+
+        return Layout(size, align, machine_dep)
 
 
 def _align(size, align):
