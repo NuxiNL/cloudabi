@@ -375,6 +375,12 @@ struct auxv
 struct ciovec
 	crange void iov_base iov_len iov_data
 
+struct dirent
+	dircookie d_next
+	inode     d_ino
+	uint32    d_namlen
+	filetype  d_type
+
 struct event
 	userdata  userdata
 	errno     error
