@@ -288,7 +288,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
             else:
                 print(';')
         if check_okay:
-            print('\tregister char okay;')
+            print('\tregister {};'.format(self.cdecl(self.okay_t, 'okay')))
 
         print('\tasm volatile (')
         print(self.asm)
@@ -337,6 +337,7 @@ class CSyscallsX86_64Generator(CSyscallsImplGenerator):
     clobbers = '"memory", "rcx", "rdx", "r8", "r9", "r10", "r11"'
 
     register_t = int_types['uint64']
+    okay_t = int_types['char']
 
     asm = '\t\t"\\tsyscall\\n"'
     asm_check = '\t\t"\\tsetnc %0\\n"'
@@ -355,6 +356,7 @@ class CSyscallsAarch64Generator(CSyscallsImplGenerator):
                 '\t\t, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7"')
 
     register_t = int_types['uint64']
+    okay_t = register_t
 
     asm = '\t\t"\\tsvc 0\\n"'
-    asm_check = '\t\t"\\tcset %w0, cc\\n"'
+    asm_check = '\t\t"\\tcset %0, cc\\n"'
