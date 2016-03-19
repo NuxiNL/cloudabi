@@ -336,6 +336,7 @@ class CSyscallsX86_64Generator(CSyscallsImplGenerator):
     asm = '\t\t"\\tsyscall\\n"'
     asm_check = '\t\t"\\tsetnc %0\\n"'
 
+
 class CSyscallsAarch64Generator(CSyscallsImplGenerator):
 
     registers = ['x8', 'x0', 'x1', 'x2', 'x3', 'x4', 'x5']
@@ -343,10 +344,10 @@ class CSyscallsAarch64Generator(CSyscallsImplGenerator):
     output_register_start = 1
 
     clobbers = ('"memory"\n'
-        '\t\t, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7"\n'
-        '\t\t, "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"\n'
-        '\t\t, "x16", "x17", "x18"\n'
-        '\t\t, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7"')
+                '\t\t, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7"\n'
+                '\t\t, "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"\n'
+                '\t\t, "x16", "x17", "x18"\n'
+                '\t\t, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7"')
 
     register_t = int_types['uint64']
 
