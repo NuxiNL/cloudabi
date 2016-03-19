@@ -15,7 +15,6 @@ class Layout:
             align = (align, align)
         self.size = size
         self.align = align
-        self.offset = None
 
     @staticmethod
     def struct(members):
