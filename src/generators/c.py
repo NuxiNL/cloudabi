@@ -169,9 +169,7 @@ class CSyscalldefsGenerator(CGenerator):
             print('}} {};'.format(typename))
 
             self.generate_offset_asserts(typename, type.raw_members)
-
-            if type.layout is not None:
-                self.generate_size_assert(typename, type.layout.size)
+            self.generate_size_assert(typename, type.layout.size)
 
         else:
             raise Exception('Unknown class of type: {}'.format(type))
