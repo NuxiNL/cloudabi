@@ -91,6 +91,10 @@ class CGenerator(Generator):
         if self.md_type is not None:
             if isinstance(mtype, PointerType) or mtype.name == 'size':
                 return self.md_type
+            elif isinstance(mtype, ArrayType):
+                return ArrayType(mtype.count, self.mi_type(mtype.element_type))
+            elif isinstance(mtype, AtomicType):
+                return AtomicType(self.mi_type(mtype.target_type))
         return mtype
 
 
