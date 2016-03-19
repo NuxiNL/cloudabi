@@ -226,7 +226,8 @@ class Abi:
             elif decl[0] == 'struct':
 
                 if len(decl) != 2:
-                    raise Exception('Invalid declaration: {}'.format(decl))
+                    raise Exception(
+                        'Invalid declaration: {}'.format(node.text))
 
                 name = decl[1]
                 if name in self.types:
@@ -237,7 +238,8 @@ class Abi:
             elif decl[0] == 'function':
 
                 if len(decl) != 2:
-                    raise Exception('Invalid declaration: {}'.format(decl))
+                    raise Exception(
+                        'Invalid declaration: {}'.format(node.text))
 
                 name = decl[1]
                 if name in self.types:
@@ -266,7 +268,8 @@ class Abi:
             elif decl[0] == 'syscall':
 
                 if len(decl) != 3:
-                    raise Exception('Invalid declaration: {}'.format(decl))
+                    raise Exception(
+                        'Invalid declaration: {}'.format(node.text))
 
                 num = int(decl[1], 0)
                 if num in self.syscalls_by_number:
