@@ -154,7 +154,7 @@ class CSyscalldefsGenerator(CGenerator):
             parameters = []
             for p in type.parameters.raw_members:
                 parameters.append(self.cdecl(self.mi_type(p.type), p.name))
-            print('typedef {} ({})({});'.format(
+            print('typedef {} {}({});'.format(
                 self.cdecl(self.mi_type(type.return_type)),
                 self.cdecl(type), ', '.join(parameters)))
 
