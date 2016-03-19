@@ -78,7 +78,8 @@ class CHeaderGenerator(CGenerator):
                     alignas = '_Alignas({}) '.format(m.type.layout.align[0])
                 else:
                     alignas = ''
-                print('{}{}{};'.format(indent, alignas, self.cdecl(m.type, m.name)))
+                print('{}{}{};'.format(
+                    indent, alignas, self.cdecl(m.type, m.name)))
             elif isinstance(m, VariantStructMember):
                 print('{}union {{'.format(indent))
                 for x in m.members:

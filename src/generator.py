@@ -55,7 +55,7 @@ class Generator:
 
     def generate_license(self):
         import os
-        license = os.path.dirname(__file__) + '/../LICENSE';
+        license = os.path.dirname(__file__) + '/../LICENSE'
         with open(license) as f:
             skipping = True
             for line in f:

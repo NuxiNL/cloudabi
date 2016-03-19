@@ -3,6 +3,7 @@
 # This file is distributed under a 2-clause BSD license.
 # See the LICENSE file for details.
 
+
 class Layout:
 
     def __init__(self, size, align=None):
@@ -18,7 +19,7 @@ class Layout:
 
     @staticmethod
     def struct(members):
-        if members == [] or any(m.layout == None for m in members):
+        if members == [] or any(m.layout is None for m in members):
             return None
 
         align = (max(m.layout.align[0] for m in members),
@@ -27,7 +28,7 @@ class Layout:
         offset = (0, 0)
         for m in members:
             m.offset = (_align(offset[0], m.layout.align[0]),
-                       _align(offset[1], m.layout.align[1]))
+                        _align(offset[1], m.layout.align[1]))
             offset = (m.offset[0] + m.layout.size[0],
                       m.offset[1] + m.layout.size[1])
 
@@ -38,7 +39,7 @@ class Layout:
 
     @staticmethod
     def array(type, count):
-        if type.layout == None:
+        if type.layout is None:
             return None
 
         size = (type.layout.size[0] * count,
@@ -48,11 +49,11 @@ class Layout:
 
     @staticmethod
     def union(members):
-        if members == [] or any(m.layout == None for m in members):
+        if members == [] or any(m.layout is None for m in members):
             return None
 
         size = (max(m.layout.size[0] for m in members),
-                 max(m.layout.size[1] for m in members))
+                max(m.layout.size[1] for m in members))
 
         align = (max(m.layout.align[0] for m in members),
                  max(m.layout.align[1] for m in members))
