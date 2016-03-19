@@ -21,7 +21,10 @@ class Layout:
 
     @staticmethod
     def struct(members):
-        if members == [] or any(m.layout is None for m in members):
+        if members == []:
+            return Layout(1, 1, False)
+
+        if any(m.layout is None for m in members):
             return None
 
         align = (max(m.layout.align[0] for m in members),
@@ -43,6 +46,9 @@ class Layout:
 
     @staticmethod
     def array(type, count):
+        if count == 0:
+            return Layout(0, 1, False)
+
         if type.layout is None:
             return None
 
@@ -53,7 +59,10 @@ class Layout:
 
     @staticmethod
     def union(members):
-        if members == [] or any(m.layout is None for m in members):
+        if members == []:
+            return Layout(1, 1, False)
+
+        if any(m.layout is None for m in members):
             return None
 
         size = (max(m.layout.size[0] for m in members),
