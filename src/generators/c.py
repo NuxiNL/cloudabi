@@ -157,7 +157,6 @@ class CSyscalldefsGenerator(CGenerator):
             print('typedef {} (*{})({});'.format(
                 self.cdecl(self.mi_type(type.return_type)),
                 self.cdecl(type), ', '.join(parameters)))
-            pass
 
         elif isinstance(type, StructType):
             typename = self.ctypename(type)
