@@ -232,7 +232,7 @@ class AbiParser:
                 return int_types[decl[0]]
             if decl[0] in abi.types:
                 return abi.types[decl[0]]
-            raise Exception('Unknown type {}'.format(decl[0]))
+            raise Exception('Unknown type {}'.format(' '.join(decl)))
         elif decl[:1] == ['array'] and len(decl) > 2:
             return ArrayType(int(decl[1], 0), self.parse_type(abi, decl[2:]))
         elif decl[:1] == ['ptr']:
@@ -242,7 +242,7 @@ class AbiParser:
         elif decl[:1] == ['atomic']:
             return AtomicType(self.parse_type(abi, decl[1:]))
         else:
-            raise Exception('Invalid type: {}'.format(decl))
+            raise Exception('Invalid type: {}'.format(' '.join(decl)))
 
     @staticmethod
     def __expect_no_children(node):
