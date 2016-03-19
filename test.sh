@@ -16,7 +16,9 @@ trap cleanup EXIT
 
 $SRCDIR/generate_c_headers.py
 
-x86_64-unknown-cloudabi-cc -x c -c -fsyntax-only - <<EOF
+for m in 32 64; do
+
+x86_64-unknown-cloudabi-cc -m$m -x c -c -fsyntax-only - <<EOF
 #include <stdint.h>
 #include <stddef.h>
 
@@ -28,6 +30,8 @@ x86_64-unknown-cloudabi-cc -x c -c -fsyntax-only - <<EOF
 #include "syscalls.h"
 #include "syscalls-x86_64.h"
 EOF
+
+done
 
 aarch64-unknown-cloudabi-cc -x c -c -fsyntax-only - <<EOF
 #include <stdint.h>
