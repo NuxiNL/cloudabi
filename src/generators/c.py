@@ -74,7 +74,11 @@ class CHeaderGenerator(CGenerator):
     def generate_struct_members(self, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
-                print('{}{};'.format(indent, self.cdecl(m.type, m.name)))
+                if m.type.layout.align[0] == m.type.layout.align[1]:
+                    alignas = '_Alignas({}) '.format(m.type.layout.align[0])
+                else:
+                    alignas = ''
+                print('{}{}{};'.format(indent, alignas, self.cdecl(m.type, m.name)))
             elif isinstance(m, VariantStructMember):
                 print('{}union {{'.format(indent))
                 for x in m.members:
