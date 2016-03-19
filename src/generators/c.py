@@ -111,16 +111,28 @@ class CSyscalldefsGenerator(CGenerator):
         if isinstance(type, IntLikeType):
             print('typedef {};'.format(self.cdecl(type.int_type,
                                                   self.ctypename(type))))
-            use_hex = (isinstance(type, FlagsType) or
-                       isinstance(type, OpaqueType))
-            for val, name in type.values:
-                if use_hex:
-                    val = hex(val)
-                print('#define {}{}{} {}'.format(
-                    self.prefix.upper(),
-                    type.cprefix,
-                    name.upper(),
-                    val))
+            if len(type.values) > 0:
+                width = max(len(name) for val, name in type.values)
+                if (isinstance(type, FlagsType) or
+                        isinstance(type, OpaqueType)):
+                    if len(type.values) == 1 and type.values[0][0] == 0:
+                        val_format = 'd'
+                    else:
+                        val_format = '#0{}x'.format(
+                            type.layout.size[0] * 2 + 2)
+                else:
+                    val_width = max(len(str(val)) for val, name in type.values)
+                    val_format = '{}d'.format(val_width)
+
+                for val, name in type.values:
+                    print('#define {prefix}{cprefix}{name:{width}} '
+                          '{val:{val_format}}'.format(
+                              prefix=self.prefix.upper(),
+                              cprefix=type.cprefix,
+                              name=name.upper(),
+                              width=width,
+                              val=val,
+                              val_format=val_format))
 
         elif isinstance(type, FunctionPointerType):
             parameters = []
