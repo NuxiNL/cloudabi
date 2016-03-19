@@ -62,7 +62,8 @@ class AbiParser:
                 attr['cprefix'] = (value_decl[1]
                                    if len(value_decl) == 2 else '')
             elif len(value_decl) == 2:
-                values.append((int(value_decl[0], 0), value_decl[1]))
+                values.append(SpecialValue(
+                    value_decl[1], int(value_decl[0], 0)))
             else:
                 raise Exception('Invalid value: {}'.format(child.text))
 
@@ -203,7 +204,7 @@ class AbiParser:
         for node in children:
             tag_values = node.text.split()
             for v in tag_values:
-                if not any(v == tv[1] for tv in tag_type.values):
+                if not any(v == x.name for x in tag_type.values):
                     raise Exception(
                         'Variant tag type {} has no value {}'.format(
                             tag_type.name, v))

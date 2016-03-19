@@ -53,6 +53,13 @@ class IntLikeType(UserDefinedType):
         self.cprefix = cprefix if cprefix is not None else name.upper() + '_'
 
 
+class SpecialValue:
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+
 class AliasType(IntLikeType):
     pass
 

@@ -133,26 +133,26 @@ class CSyscalldefsGenerator(CGenerator):
             print('typedef {};'.format(self.cdecl(type.int_type,
                                                   self.ctypename(type))))
             if len(type.values) > 0:
-                width = max(len(name) for val, name in type.values)
+                width = max(len(v.name) for v in type.values)
                 if (isinstance(type, FlagsType) or
                         isinstance(type, OpaqueType)):
-                    if len(type.values) == 1 and type.values[0][0] == 0:
+                    if len(type.values) == 1 and type.values[0].value == 0:
                         val_format = 'd'
                     else:
                         val_format = '#0{}x'.format(
                             type.layout.size[0] * 2 + 2)
                 else:
-                    val_width = max(len(str(val)) for val, name in type.values)
+                    val_width = max(len(str(v.value)) for v in type.values)
                     val_format = '{}d'.format(val_width)
 
-                for val, name in type.values:
+                for v in type.values:
                     print('#define {prefix}{cprefix}{name:{width}} '
                           '{val:{val_format}}'.format(
                               prefix=self.prefix.upper(),
                               cprefix=type.cprefix,
-                              name=name.upper(),
+                              name=v.name.upper(),
                               width=width,
-                              val=val,
+                              val=v.value,
                               val_format=val_format))
 
         elif isinstance(type, FunctionType):
