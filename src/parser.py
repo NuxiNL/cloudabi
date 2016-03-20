@@ -222,12 +222,15 @@ class AbiParser:
         members = []
 
         for node in children:
-            tag_values = node.text.split()
-            for v in tag_values:
-                if not any(v == x.name for x in tag_type.values):
+            tag_value_names = node.text.split()
+            tag_values = []
+            for vname in tag_value_names:
+                val = [v for v in tag_type.values if vname == v.name]
+                if len(val) != 1:
                     raise Exception(
                         'Variant tag type {} has no value {}'.format(
                             tag_type.name, v))
+                tag_values.append(val[0])
             if len(node.children) != 1:
                 raise Exception(
                     'Excepted a single member in variant member `{}\'.'.format(

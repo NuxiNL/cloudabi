@@ -14,21 +14,7 @@ class CNaming:
         self.md_prefix = md_prefix
 
     def typename(self, type):
-        if isinstance(type, VoidType):
-            return 'void'
-        elif isinstance(type, IntType):
-            if type.name == 'char':
-                return 'char'
-            return '{}_t'.format(type.name)
-        elif isinstance(type, UserDefinedType):
-            prefix = self.prefix
-            if self.md_prefix is not None and type.layout.machine_dep:
-                prefix = self.md_prefix
-            return '{}{}_t'.format(prefix, type.name)
-
-        else:
-            raise Exception('Unable to generate C type name '
-                            'for type: {}'.format(type))
+        return self.vardecl(type, '')
 
     def valname(self, type, value):
         return '{}{}{}'.format(self.prefix, type.cprefix, value.name).upper()
@@ -36,11 +22,18 @@ class CNaming:
     def syscallname(self, syscall):
         return '{}sys_{}'.format(self.prefix, syscall.name)
 
-    def vardecl(self, type, name='', array_need_parens=False):
-        if (isinstance(type, VoidType) or
-                isinstance(type, IntType) or
-                isinstance(type, UserDefinedType)):
-            return '{} {}'.format(self.typename(type), name).rstrip()
+    def vardecl(self, type, name, array_need_parens=False):
+        if isinstance(type, VoidType):
+            return 'void {}'.format(name).rstrip()
+        elif isinstance(type, IntType):
+            if type.name == 'char':
+                return 'char {}'.format(name).rstrip()
+            return '{}_t {}'.format(type.name, name).rstrip()
+        elif isinstance(type, UserDefinedType):
+            prefix = self.prefix
+            if self.md_prefix is not None and type.layout.machine_dep:
+                prefix = self.md_prefix
+            return '{}{}_t {}'.format(prefix, type.name, name).rstrip()
 
         elif isinstance(type, PointerType):
             decl = self.vardecl(type.target_type, '*{}'.format(name),
@@ -58,7 +51,7 @@ class CNaming:
 
         elif isinstance(type, AtomicType):
             return '_Atomic({}) {}'.format(
-                self.vardecl(type.target_type), name).rstrip()
+                self.typename(type.target_type), name).rstrip()
 
         else:
             raise Exception('Unable to generate C declaration '
@@ -220,7 +213,7 @@ class CSyscalldefsGenerator(CGenerator):
                 v = value[0]
             print(static_assert.format('{} == {}'.format(expression, v)))
         else:
-            voidptr = self.naming.vardecl(PointerType(False, VoidType()))
+            voidptr = self.naming.typename(PointerType(False, VoidType()))
             print(static_assert.format('sizeof({}) != 4 || {} == {}'.format(
                 voidptr, expression, value[0])))
             print(static_assert.format('sizeof({}) != 8 || {} == {}'.format(
@@ -356,9 +349,9 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         if (isinstance(type_from, StructType) or
                 isinstance(type_to, StructType)):
             return '*({})&{}'.format(
-                self.naming.vardecl(PointerType(False, type_to)), name)
+                self.naming.typename(PointerType(False, type_to)), name)
         else:
-            return '({}){}'.format(self.naming.vardecl(type_to), name)
+            return '({}){}'.format(self.naming.typename(type_to), name)
 
 
 class CSyscallsX86_64Generator(CSyscallsImplGenerator):
