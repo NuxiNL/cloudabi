@@ -47,21 +47,21 @@ class CGenerator(Generator):
             raise Exception(
                 'Unable to generate C type name for type: {}'.format(type))
 
-    def cdecl(self, type, name=''):
+    def cdecl(self, type, name='', array_need_parens=False):
         if (isinstance(type, VoidType) or
                 isinstance(type, IntType) or
                 isinstance(type, UserDefinedType)):
             return '{} {}'.format(self.ctypename(type), name).rstrip()
 
         elif isinstance(type, PointerType):
-            decl = self.cdecl(type.target_type, '*{}'.format(name))
+            decl = self.cdecl(type.target_type, '*{}'.format(name),
+                              array_need_parens=True)
             if type.const:
                 decl = 'const ' + decl
             return decl
 
         elif isinstance(type, ArrayType):
-            if name.startswith('*') or (
-                    name.endswith(')') and not name.startswith('(')):
+            if array_need_parens:
                 name = '({})'.format(name)
             return self.cdecl(
                 type.element_type, '{}[{}]'.format(
@@ -158,7 +158,8 @@ class CSyscalldefsGenerator(CGenerator):
             print('typedef {};'.format(
                 self.cdecl(self.mi_type(type.return_type),
                            '{}({})'.format(
-                               self.ctypename(type), ', '.join(parameters)))))
+                               self.ctypename(type), ', '.join(parameters)),
+                           array_need_parens=True)))
 
         elif isinstance(type, StructType):
             typename = self.ctypename(type)
