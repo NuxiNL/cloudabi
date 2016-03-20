@@ -976,16 +976,28 @@ syscall 28 file_stat_put
 		fsflags       flags
 
 syscall 29 file_symlink
+	| Creates a symbolic link.
 	in
 		crange char path1 path1len path1
+			| The contents of the symbolic link.
 		fd          fd
+			| The working directory at which the resolution
+			| of the destination path starts.
 		crange char path2 path2len path2
+			| The destination path at which the symbolic
+			| link should be created.
 
 syscall 30 file_unlink
+	| Unlinks a file, or removes a directory.
 	in
 		fd          fd
+			| The working directory at which the resolution
+			| of the path starts.
 		crange char path pathlen path
+			| The path that needs to be unlinked or removed.
 		ulflags     flags
+			| If [ulflags.removedir] is set, attempt to
+			| remove a directory. Otherwise, unlink a file.
 
 syscall 31 lock_unlock
 	| Unlocks a write-locked userspace lock.
@@ -1015,8 +1027,12 @@ syscall 32 mem_advise
 		advice     advice
 
 syscall 33 mem_lock
+	| Increments the lock count on a region of memory, which
+	| prevents it from leaving system memory.
 	in
 		crange void addr len mem
+			| The pages that need its lock count
+			| incremented.
 
 syscall 34 mem_map
 	in
@@ -1039,25 +1055,56 @@ syscall 36 mem_sync
 		msflags    flags
 
 syscall 37 mem_unlock
+	| Decrements the lock count on a region of memory, which
+	| prevents it from leaving system memory.
 	in
 		crange void addr len mem
+			| The pages that need its lock count
+			| decremented.
 
 syscall 38 mem_unmap
+	| Unmaps a region of memory.
 	in
 		range void addr len mem
+			| The pages that needs to be unmapped.
 
 syscall 39 poll
 	in
 		cptr subscription in
-		range event       out nevents out
+		cptr event        out
+		size              nsubscriptions
 	out
-		size ntriggered
+		size nevents
 
 syscall 40 proc_exec
+	| Replaces the process by a new executable.
+	|
+	| Process execution in CloudABI differs from POSIX in two ways:
+	| handling of arguments and inheritance of file descriptors.
+	|
+	| CloudABI does not use string command line arguments. A buffer
+	| with binary data is copied into the new executable instead.
+	| The kernel does not enforce any specific structure to this
+	| data, although CloudABI's C library uses it to store a tree
+	| structure that is semantically identical to YAML.
+	|
+	| Due to the strong focus on thread safety, file descriptors
+	| aren't inherited through close-on-exec flags. An explicit
+	| list of file descriptors that need to be retained needs to be
+	| provided. After execution, file descriptors are placed in the
+	| order in which they are stored in the array. This not only
+	| makes the execution process deterministic. It also prevents
+	| potential information disclosures about the layout of the
+	| original process.
 	in
 		fd          fd
+			| A file descriptor of the new executable.
 		crange void data datalen data
+			| Binary argument data that is passed on to the
+			| new executable.
 		crange fd   fds fdslen fds
+			| The layout of the file descriptor table after
+			| execution.
 
 syscall 41 proc_exit
 	| Terminates the process normally.
@@ -1198,4 +1245,4 @@ syscall 57 poll_fd
 		range event         out nout out
 		cptr subscription   timeout
 	out
-		size ntriggered
+		size nevents
