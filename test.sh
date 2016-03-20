@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -8,7 +8,7 @@ DIR="$(mktemp -d)"
 
 cd "$DIR"
 
-function cleanup {
+cleanup() {
 	rm -rf "$DIR"
 }
 
