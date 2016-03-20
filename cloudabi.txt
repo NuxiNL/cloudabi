@@ -24,7 +24,7 @@ enum uint8 advice
 		| The application expects to access the specified data
 		| in the near future.
 
-alias uint32 auxtype
+enum uint32 auxtype
 	@cprefix AT_
 	256 argdata
 	257 argdatalen
@@ -874,22 +874,53 @@ syscall 40 proc_exec
 		crange fd   fds fdslen fds
 
 syscall 41 proc_exit
+	| Terminates the process normally.
 	in
 		exitcode rval
+			| The exit code returned by the process. The
+			| exit code can be obtained by other processes
+			| through [event.proc_terminate.exitcode].
 	noreturn
 
 syscall 42 proc_fork
+	| Forks the process of the calling thread.
+	|
+	| After forking, a new process shall be created, having only a
+	| copy of the calling thread. The parent process will obtain a
+	| process descriptor. When closed, the child process is
+	| automatically signalled with [signal.kill].
 	out
 		fd  fd
+			| In the parent process: the file descriptor
+			| number of the process descriptor.
+			|
+			| In the child process: [fd.process_child].
 		tid tid
+			| In the parent process: undefined.
+			|
+			| In the child process: the thread ID of the
+			| initial thread of the child process.
 
 syscall 43 proc_raise
+	| Sends a signal to the process of the calling thread.
 	in
 		signal sig
+			| The signal condition that should be triggered.
+			| If the signal causes the process to terminate,
+			| its condition can be obtained by other
+			| processes through
+			| [event.proc_terminate.signal].
 
 syscall 44 random_get
+	| Obtains random data from the kernel random number generator.
+	|
+	| As this interface is not guaranteed to be fast, it is advised
+	| that the random data obtained through this system call is used
+	| as the seed for a userspace pseudo-random number generator.
 	in
 		range void buf nbyte buf
+			| The buffer that needs to be filled with random
+			| data.
 
 syscall 45 sock_accept
 	in
@@ -951,10 +982,18 @@ syscall 54 thread_exit
 	noreturn
 
 syscall 55 thread_tcb_set
+	| Adjusts the machine-dependent TLS base address register.
+	|
+	| On certain architectures (e.g., %fs on x86), the TLS base
+	| address register can only be modified through privileged
+	| instructions. This system call can be used on those
+	| architectures to adjust the contents of this register.
 	in
 		ptr void tcb
+			| The new register contents.
 
 syscall 56 thread_yield
+	| Temporarily yields execution of the calling thread.
 
 syscall 57 poll_fd
 	in
