@@ -42,11 +42,20 @@ alias uint32 backlog
 	| in its backlog.
 
 enum uint32 clockid
+	| Identifiers for clocks.
 	@cprefix CLOCK_
 	1 monotonic
+		| The system-wide monotonic clock, which is defined as a
+		| clock measuring real time, whose value cannot be
+		| adjusted and which cannot have negative clock jumps.
 	2 process_cputime_id
+		| The CPU-time clock associated with the current
+		| process.
 	3 realtime
+		| The system-wide clock measuring real time. Time value
+		| zero corresponds with 1970-01-01T00:00:00Z.
 	4 thread_cputime_id
+		| The CPU-time clock associated with the current thread.
 
 opaque uint32 condvar
 	| A userspace condition variable.
@@ -273,9 +282,15 @@ flags uint16 fdflags
 		| completion.
 
 flags uint16 fdsflags
+	| Which file descriptor attributes to adjust.
 	@cprefix FDSTAT_
 	0x01 flags
+		| Adjust the file descriptor flags stored in
+		| [fdstat.fs_flags].
 	0x02 rights
+		| Restrict the rights of the file descriptor to the
+		| rights stored in [fdstat.fs_rights_base] and
+		| [fdstat.fs_rights_inheriting].
 
 alias int64 filedelta
 	| Relative offset within a file.
@@ -605,9 +620,13 @@ enum uint8 whence
 
 
 function threadentry
+	| Entry point for additionally created threads.
 	in
 		tid      tid
+			| Thread ID of the current thread.
 		ptr void aux
+			| Copy of the value stored in
+			| [threadattr.argument].
 
 
 
@@ -620,13 +639,23 @@ struct auxv
 			ptr void a_ptr
 
 struct ciovec
+	| A region of memory for scather/gather writes.
 	crange void iov_base iov_len iov_data
+		| The address and length of the buffer to be written.
 
 struct dirent
+	| A directory entry.
 	dircookie d_next
+		| The offset of the next directory entry stored in this
+		| directory.
 	inode     d_ino
+		| The serial number of the file referred to by this
+		| directory entry.
 	uint32    d_namlen
+		| The length of the name of the directory entry.
 	filetype  d_type
+		| The type of the file referred to by this directory
+		| entry.
 
 struct event
 	userdata  userdata
@@ -688,7 +717,9 @@ struct filestat
 		| Last file status change timestamp.
 
 struct iovec
+	| A region of memory for scather/gather reads.
 	range void iov_base iov_len iov_data
+		| The address and length of the buffer to be filled.
 
 struct lookup
 	fd          fd
@@ -733,10 +764,16 @@ struct recv_out
 	msgflags ro_flags
 
 struct sockstat
+	| Socket attributes.
 	sockaddr ss_sockname
+		| The address to which this socket is bound.
 	sockaddr ss_peername
+		| The address to which this socket is connected.
 	errno    ss_error
+		| Error code of the last completed asynchronous
+		| operation performed on this socket.
 	sstate   ss_state
+		| Flags describing the state of the socket.
 
 struct subscription
 	userdata  userdata
@@ -1025,43 +1062,90 @@ syscall 22 file_readdir
 		size bufused
 
 syscall 23 file_readlink
+	| Reads the contents of a symbolic link.
 	in
 		fd          fd
+			| The working directory at which the resolution
+			| of the path of the symbolic starts.
 		crange char path pathlen path
+			| The path of the symbolic link whose contents
+			| should be read.
 		range char  buf bufsize  buf
+			| The buffer where the contents of the symbolic
+			| link should be stored.
 	out
 		size bufused
+			| The number of bytes placed in the buffer.
 
 syscall 24 file_rename
+	| Renames a file.
 	in
 		fd          oldfd
+			| The working directory at which the resolution
+			| of the source path starts.
 		crange char old oldlen old
+			| The source path of the file that should be
+			| renamed.
 		fd          newfd
+			| The working directory at which the resolution
+			| of the destination path starts.
 		crange char new newlen new
+			| The destination path to which the file should
+			| be renamed.
 
 syscall 25 file_stat_fget
+	| Gets attributes of a file by file descriptor.
 	in
 		fd           fd
+			| The file descriptor whose attributes have to
+			| be obtained.
 		ptr filestat buf
+			| The buffer where the file's attributes are
+			| stored.
 
 syscall 26 file_stat_fput
+	| Adjusts attributes of a file by file descriptor.
 	in
 		fd            fd
+			| The file descriptor whose attributes have to
+			| be adjusted.
 		cptr filestat buf
+			| The desired values of the file attributes that
+			| are adjusted.
 		fsflags       flags
+			| A bitmask indicating which attributes have to
+			| be adjusted.
 
 syscall 27 file_stat_get
+	| Gets attributes of a file by path.
 	in
 		lookup       fd
+			| The working directory at which the resolution
+			| of the path whose attributes have to be
+			| obtained starts.
 		crange char  path pathlen path
+			| The path of the file whose attributes have to
+			| be obtained.
 		ptr filestat buf
+			| The buffer where the file's attributes are
+			| stored.
 
 syscall 28 file_stat_put
+	| Adjusts attributes of a file by path.
 	in
 		lookup        fd
+			| The working directory at which the resolution
+			| of the path whose attributes have to be
+			| adjusted starts.
 		crange char   path pathlen path
+			| The path of the file whose attributes have to
+			| be adjusted.
 		cptr filestat buf
+			| The desired values of the file attributes that
+			| are adjusted.
 		fsflags       flags
+			| A bitmask indicating which attributes have to
+			| be adjusted.
 
 syscall 29 file_symlink
 	| Creates a symbolic link.
@@ -1251,16 +1335,26 @@ syscall 45 sock_accept
 		fd conn
 
 syscall 46 sock_bind
+	| Binds a UNIX socket to a path.
 	in
 		fd          sock
+			| The file descriptor of the socket to be bound.
 		fd          fd
+			| The working directory at which the resolution
+			| of the path to which to bind starts.
 		crange char path pathlen path
+			| The path to which the socket should bind.
 
 syscall 47 sock_connect
+	| Connects a UNIX socket to another UNIX socket bound at a path.
 	in
 		fd          sock
+			| The file descriptor of the socket to connect.
 		fd          fd
+			| The working directory at which the resolution
+			| of the path to which to connect starts.
 		crange char path pathlen path
+			| The path to which the socket should onnect.
 
 syscall 48 sock_listen
 	| Listen for incoming connections on a socket.
@@ -1296,10 +1390,13 @@ syscall 52 sock_stat_get
 		ssflags      flags
 
 syscall 53 thread_create
+	| Creates a new thread within the current process.
 	in
 		ptr threadattr attr
+			| The desired attributes of the new thread.
 	out
 		tid tid
+			| The thread ID of the new thread.
 
 syscall 54 thread_exit
 	| Terminates the calling thread.
