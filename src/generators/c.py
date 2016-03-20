@@ -37,9 +37,7 @@ class CGenerator(Generator):
             if type.name == 'char':
                 return 'char'
             return '{}_t'.format(type.name)
-        elif (isinstance(type, IntLikeType) or
-              isinstance(type, FunctionType) or
-              isinstance(type, StructType)):
+        elif isinstance(type, UserDefinedType):
             prefix = self.prefix
             if self.md_prefix is not None and type.layout.machine_dep:
                 prefix = self.md_prefix
@@ -52,9 +50,7 @@ class CGenerator(Generator):
     def cdecl(self, type, name=''):
         if (isinstance(type, VoidType) or
                 isinstance(type, IntType) or
-                isinstance(type, IntLikeType) or
-                isinstance(type, StructType) or
-                isinstance(type, FunctionType)):
+                isinstance(type, UserDefinedType)):
             return '{} {}'.format(self.ctypename(type), name).rstrip()
 
         elif isinstance(type, PointerType):
