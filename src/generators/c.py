@@ -271,22 +271,31 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
 
         check_okay = len(syscall.output.raw_members) > 0
 
-        n_regs = max(len(syscall.input.raw_members) + 1,
-                     max(len(syscall.output.raw_members), 1) +
-                     self.output_register_start,
-                     )
-        for i in range(0, n_regs):
-            print('\tregister {} asm("{}")'.format(
-                  self.cdecl(self.register_t, "reg{}".format(i)),
-                  self.registers[i]), end='')
-            if i == 0:
-                print(' = {};'.format(syscall.number))
-            elif i - 1 < len(syscall.input.raw_members):
-                p = syscall.input.raw_members[i - 1]
-                print(' = {};'.format(
-                      self.ccast(p.type, self.register_t, p.name)))
+        defined_regs = set()
+        def define_reg(register, value=None):
+            if value is None:
+                if register in defined_regs:
+                    return
+                defn = ''
             else:
-                print(';')
+                assert(register not in defined_regs)
+                defn = ' = {}'.format(value)
+            print('\tregister {decl} asm("{reg}"){defn};'.format(
+                decl=self.cdecl(self.register_t, 'reg_{}'.format(register)),
+                reg=register, defn=defn))
+            defined_regs.add(register);
+
+        define_reg(self.syscall_num_register, syscall.number)
+
+        for i, p in enumerate(syscall.input.raw_members):
+            define_reg(self.input_registers[i], self.ccast(
+                p.type, self.register_t, p.name))
+
+        for i in range(len(syscall.output.raw_members)):
+            define_reg(self.output_registers[i])
+
+        define_reg(self.errno_register)
+
         if check_okay:
             print('\tregister {};'.format(self.cdecl(self.okay_t, 'okay')))
 
@@ -299,38 +308,43 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         if check_okay:
             print('\t\t: "=r"(okay)')
             first = False
-        for i in range(max(len(syscall.output.raw_members), 1)):
-            print('\t\t{} "=r"(reg{})'.format(':' if first else ',',
-                                              i + self.output_register_start))
+        for i in range(len(syscall.output.raw_members)):
+            print('\t\t{} "=r"(reg_{})'.format(
+                ':' if first else ',', self.output_registers[i]))
             first = False
+        if (self.errno_register not in
+            self.output_registers[:len(syscall.output.raw_members)]):
+            print('\t\t{} "=r"(reg_{})'.format(
+                ':' if first else ',', self.errno_register))
 
-        for i in range(len(syscall.input.raw_members) + 1):
-            print('\t\t{} "r"(reg{})'.format(':' if i == 0 else ',', i))
+        print('\t\t: "r"(reg_{})'.format(self.syscall_num_register))
+        for i in range(len(syscall.input.raw_members)):
+            print('\t\t, "r"(reg_{})'.format(self.input_registers[i]))
 
         print('\t\t: {});'.format(self.clobbers))
         if check_okay:
             print('\tif (okay) {')
             for i, p in enumerate(syscall.output.raw_members):
                 print('\t\t*{} = {};'.format(
-                    p.name,
-                    self.ccast(self.register_t, p.type, "reg{}".format(
-                        i + self.output_register_start))))
+                    p.name, self.ccast(self.register_t, p.type,
+                        "reg_{}".format(self.output_registers[i]))))
             print('\t\treturn 0;')
             print('\t}')
 
         if syscall.noreturn:
             print('\tfor (;;);')
         else:
-            print('\treturn reg{};'.format(self.output_register_start))
+            print('\treturn reg_{};'.format(self.errno_register))
 
         print('}')
 
 
 class CSyscallsX86_64Generator(CSyscallsImplGenerator):
 
-    registers = ['rax', 'rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
-
-    output_register_start = 0
+    syscall_num_register = 'rax'
+    input_registers = ['rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
+    output_registers = ['rax', 'rdx']
+    errno_register = 'rax'
 
     clobbers = '"memory", "rcx", "rdx", "r8", "r9", "r10", "r11"'
 
@@ -343,7 +357,10 @@ class CSyscallsX86_64Generator(CSyscallsImplGenerator):
 
 class CSyscallsAarch64Generator(CSyscallsImplGenerator):
 
-    registers = ['x8', 'x0', 'x1', 'x2', 'x3', 'x4', 'x5']
+    syscall_num_register = 'x8'
+    input_registers = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
+    output_registers = ['x0', 'x1']
+    errno_register = 'x0'
 
     output_register_start = 1
 
