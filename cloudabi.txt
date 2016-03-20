@@ -38,6 +38,8 @@ enum uint32 auxtype
 	261 tid
 
 alias uint32 backlog
+	| Number of incoming connections a socket is capable of keeping
+	| in its backlog.
 
 enum uint32 clockid
 	@cprefix CLOCK_
@@ -55,6 +57,7 @@ opaque uint32 condvar
 		| must be called to wake up any sleeping threads.
 
 opaque uint64 device
+	| Device identifier that is unique within the system.
 
 opaque uint64 dircookie
 	| A reference to the offset of a directory entry.
@@ -748,11 +751,18 @@ syscall 0 clock_res_get
 			| The resolution of the clock.
 
 syscall 1 clock_time_get
+	| Obtains the time value of a clock.
 	in
 		clockid   clock
+			| The clock for which the time needs to be
+			| returned.
 		timestamp precision
+			| The maximum lag (exclusive) that the returned
+			| time value may have, compared to its actual
+			| value.
 	out
 		timestamp time
+			| The time value of the clock.
 
 syscall 2 condvar_signal
 	| Wakes up threads waiting on a userspace condition variable.
@@ -930,17 +940,33 @@ syscall 18 file_allocate
 		filesize len
 
 syscall 19 file_create
+	| Creates a file of a specified type.
 	in
 		fd          fd
+			| The working directory at which the resolution
+			| of the file to be created starts.
 		crange char path pathlen path
+			| The path at which the file should be created.
 		filetype    type
+			| [filetype.directory]: Creates a directory.
+			|
+			| [filetype.fifo]: Creates a FIFO.
 
 syscall 20 file_link
+	| Creates a hard link.
 	in
 		lookup      fd1
+			| The working directory at which the resolution
+			| of the source path starts.
 		crange char path1 path1len path1
+			| The source path of the file that should be
+			| hard linked.
 		fd          fd2
+			| The working directory at which the resolution
+			| of the destination path starts.
 		crange char path2 path2len path2
+			| The destination path at which the hard link
+			| should be created.
 
 syscall 21 file_open
 	in
@@ -1198,9 +1224,14 @@ syscall 47 sock_connect
 		crange char path pathlen path
 
 syscall 48 sock_listen
+	| Listen for incoming connections on a socket.
 	in
 		fd      sock
+			| The socket on which listening should be
+			| enabled.
 		backlog backlog
+			| Number of incoming connections the socket is
+			| capable of keeping in its backlog.
 
 syscall 49 sock_recv
 	in
