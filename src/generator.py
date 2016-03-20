@@ -16,8 +16,8 @@ class Generator:
         self.comment_prefix = comment_prefix
         self.comment_end = comment_end
 
-    def generate_head(self):
-        self.generate_license()
+    def generate_head(self, abi):
+        self.generate_license(abi)
         print()
         if self.comment_begin is not None:
             print(self.comment_begin)
@@ -26,16 +26,16 @@ class Generator:
             print(self.comment_end)
         print()
 
-    def generate_foot(self):
+    def generate_foot(self, abi):
         pass
 
-    def generate_type(self, type):
+    def generate_type(self, abi, type):
         pass
 
-    def generate_syscall(self, syscall):
+    def generate_syscall(self, abi, syscall):
         pass
 
-    def generate_types(self, types):
+    def generate_types(self, abi, types):
         first_pass = True
         generate_now = [name for name in sorted(types)]
         generate_later = []
@@ -49,7 +49,7 @@ class Generator:
                         (first_pass and not isinstance(type, IntLikeType))):
                     generate_later.append(type_name)
                 else:
-                    self.generate_type(type)
+                    self.generate_type(abi, type)
                     generated.add(type_name)
 
             generate_now = generate_later
@@ -58,11 +58,11 @@ class Generator:
 
         assert(generated == {n for n in types})
 
-    def generate_syscalls(self, syscalls):
+    def generate_syscalls(self, abi, syscalls):
         for syscall in sorted(syscalls):
-            self.generate_syscall(syscalls[syscall])
+            self.generate_syscall(abi, syscalls[syscall])
 
-    def generate_license(self):
+    def generate_license(self, abi):
         import os
         license = os.path.dirname(__file__) + '/../LICENSE'
         if self.comment_begin is not None:
@@ -79,7 +79,7 @@ class Generator:
             print(self.comment_end)
 
     def generate_abi(self, abi):
-        self.generate_head()
-        self.generate_types(abi.types)
-        self.generate_syscalls(abi.syscalls_by_name)
-        self.generate_foot()
+        self.generate_head(abi)
+        self.generate_types(abi, abi.types)
+        self.generate_syscalls(abi, abi.syscalls_by_name)
+        self.generate_foot(abi)

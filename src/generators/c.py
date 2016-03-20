@@ -68,17 +68,17 @@ class CGenerator(Generator):
         self.machine_dep = machine_dep
         self.md_type = md_type
 
-    def generate_head(self):
-        super().generate_head()
+    def generate_head(self, abi):
+        super().generate_head(abi)
         if self.header_guard is not None:
             print('#ifndef {}'.format(self.header_guard))
             print('#define {}'.format(self.header_guard))
             print()
 
-    def generate_foot(self):
+    def generate_foot(self, abi):
         if self.header_guard is not None:
             print('#endif')
-        super().generate_foot()
+        super().generate_foot(abi)
 
     def mi_type(self, mtype):
         if self.md_type is not None:
@@ -93,7 +93,7 @@ class CGenerator(Generator):
 
 class CSyscalldefsGenerator(CGenerator):
 
-    def generate_struct_members(self, type, indent=''):
+    def generate_struct_members(self, abi, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
                 mtype = self.mi_type(m.type)
@@ -107,16 +107,18 @@ class CSyscalldefsGenerator(CGenerator):
                 print('{}union {{'.format(indent))
                 for x in m.members:
                     if x.name is None:
-                        self.generate_struct_members(x.type, indent + '\t')
+                        self.generate_struct_members(
+                            abi, x.type, indent + '\t')
                     else:
                         print('{}\tstruct {{'.format(indent))
-                        self.generate_struct_members(x.type, indent + '\t\t')
+                        self.generate_struct_members(
+                            abi, x.type, indent + '\t\t')
                         print('{}\t}} {};'.format(indent, x.name))
                 print('{}}};'.format(indent))
             else:
                 raise Exception('Unknown struct member: {}'.format(m))
 
-    def generate_type(self, type):
+    def generate_type(self, abi, type):
 
         if self.machine_dep is not None:
             if type.layout.machine_dep != self.machine_dep:
@@ -163,7 +165,7 @@ class CSyscalldefsGenerator(CGenerator):
             typename = self.naming.typename(type)
 
             print('typedef struct {')
-            self.generate_struct_members(type, '\t')
+            self.generate_struct_members(abi, type, '\t')
             print('}} {};'.format(typename))
 
             self.generate_offset_asserts(typename, type.raw_members)
@@ -219,7 +221,7 @@ class CSyscalldefsGenerator(CGenerator):
             print(static_assert.format('sizeof({}) != 8 || {} == {}'.format(
                 voidptr, expression, value[1])))
 
-    def generate_syscalls(self, syscalls):
+    def generate_syscalls(self, abi, syscalls):
         pass
 
 
@@ -234,7 +236,7 @@ class CSyscallsGenerator(CGenerator):
                 PointerType(False, p.type), p.name))
         return params
 
-    def generate_syscall(self, syscall):
+    def generate_syscall(self, abi, syscall):
         if syscall.noreturn:
             noreturn = '_Noreturn '
             return_type = VoidType()
@@ -253,19 +255,19 @@ class CSyscallsGenerator(CGenerator):
                 print('\t{},'.format(p))
             print('\t{}'.format(params[-1]))
         print(')', end='')
-        self.generate_syscall_body(syscall)
+        self.generate_syscall_body(abi, syscall)
         print()
 
-    def generate_syscall_body(self, syscall):
+    def generate_syscall_body(self, abi,syscall):
         print(';')
 
-    def generate_types(self, types):
+    def generate_types(self, abi, types):
         pass
 
 
 class CSyscallsImplGenerator(CSyscallsGenerator):
 
-    def generate_syscall_body(self, syscall):
+    def generate_syscall_body(self, abi, syscall):
         print(' {')
 
         check_okay = len(syscall.output.raw_members) > 0
