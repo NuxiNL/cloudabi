@@ -802,9 +802,26 @@ syscall 30 file_unlink
 		ulflags     flags
 
 syscall 31 lock_unlock
+	| Unlocks a write-locked userspace lock.
+	|
+	| If a userspace lock is unlocked while having its
+	| [lock.kernel_managed] flag set, the lock cannot be unlocked in
+	| userspace directly. This system call needs to be performed
+	| instead, so that any waiting threads can be woken up.
+	|
+	| To prevent spurious invocations of this system call, the lock
+	| must be locked for writing. This prevents other threads from
+	| acquiring additional read locks while the system call is in
+	| progress. If the lock is acquired for reading, it must first
+	| be upgraded to a write lock.
 	in
 		ptr atomic lock lock
+		| The userspace lock that is locked for writing by the
+		| calling thread.
 		mflags          scope
+		| [mflags.private] if the lock is stored in private
+		| memory. [mflags.shared] if the lock is stored in
+		| shared memory.
 
 syscall 32 mem_advise
 	in
