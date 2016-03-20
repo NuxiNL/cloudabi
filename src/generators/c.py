@@ -312,10 +312,14 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
             print('\t\t{} "=r"(reg_{})'.format(
                 ':' if first else ',', self.output_registers[i]))
             first = False
-        if (self.errno_register not in
-            self.output_registers[:len(syscall.output.raw_members)]):
-            print('\t\t{} "=r"(reg_{})'.format(
-                ':' if first else ',', self.errno_register))
+        if not syscall.noreturn:
+            if (self.errno_register not in
+                self.output_registers[:len(syscall.output.raw_members)]):
+                print('\t\t{} "=r"(reg_{})'.format(
+                    ':' if first else ',', self.errno_register))
+                first = False
+        if first:
+            print('\t\t:')
 
         print('\t\t: "r"(reg_{})'.format(self.syscall_num_register))
         for i in range(len(syscall.input.raw_members)):
