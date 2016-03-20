@@ -244,7 +244,7 @@ class AbiParser:
             type.doc = doc
             members.append(VariantMember(name, tag_values, type))
 
-        return VariantStructMember(members)
+        return VariantStructMember(tag_member, members)
 
     def parse_type(self, abi, decl):
         if decl == ['void']:

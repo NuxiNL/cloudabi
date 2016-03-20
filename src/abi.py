@@ -155,8 +155,9 @@ class RangeStructMember(StructMember):
 
 class VariantStructMember(StructMember):
 
-    def __init__(self, members):
+    def __init__(self, tag, members):
         super().__init__(None, layout=Layout.union(members))
+        self.tag = tag
         self.members = members
 
 
