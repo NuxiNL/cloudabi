@@ -57,6 +57,13 @@ class CNaming:
             raise Exception('Unable to generate C declaration '
                             'for type: {}'.format(type))
 
+    def memname(self, obj, *members):
+        if isinstance(obj, Type):
+            obj = self.typename(obj)
+        for m in members:
+            obj += '.' + m.name
+        return obj
+
 
 class CGenerator(Generator):
 

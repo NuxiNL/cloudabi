@@ -32,29 +32,34 @@ class MarkdownGenerator(Generator):
                 if isinstance(type, OpaqueType) or isinstance(type, AliasType):
                     print('Special values:\n')
                 for v in type.values:
-                    print('- `{}`\n'.format(self.naming.valname(type, v)))
+                    print('- {}`{}`\n'.format(
+                        self.anchor(type, v),
+                        self.naming.valname(type, v)))
                     self.generate_doc(abi, v, '    ')
         elif isinstance(type, StructType):
             print('Members:\n')
             for m in type.members:
-                self.generate_struct_member(abi, m)
+                self.generate_struct_member(abi, m, [type])
         elif isinstance(type, FunctionType):
             pass
         else:
             assert(False)
 
-    def generate_struct_member(self, abi, m, indent=''):
+    def generate_struct_member(self, abi, m, parents, indent=''):
         print(indent, end='')
         if isinstance(m, SimpleStructMember):
-            print('- <code>{}</code>\n'.format(
+            print('- {}<code>{}</code>\n'.format(
+                self.anchor(*parents, m),
                 self.naming.vardecl(
                     m.type, '<strong>{}</strong>'.format(m.name))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, RangeStructMember):
-            print('- <code>{}</code> and <code>{}</code>\n'.format(
+            print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
+                self.anchor(*parents, m.raw_members[0]),
                 self.naming.vardecl(
                     m.raw_members[0].type,
                     '<strong>{}</strong>'.format(m.raw_members[0].name)),
+                self.anchor(*parents, m.raw_members[1]),
                 self.naming.vardecl(
                     m.raw_members[1].type,
                     '<strong>{}</strong>'.format(m.raw_members[1].name))))
@@ -65,16 +70,18 @@ class MarkdownGenerator(Generator):
                 print('- When `{}` {} {}:\n'.format(
                     m.tag.name,
                     'is' if len(vm.tag_values) == 1 else 'is one of:',
-                    ', '.join(['`{}`'.format(
-                            self.naming.valname(m.tag.type, v))
-                            for v in vm.tag_values])))
+                    ', '.join([self.link(m.tag.type, v)
+                               for v in vm.tag_values])))
                 if vm.name is None:
                     for mm in vm.type.members:
-                        self.generate_struct_member(abi, mm, indent + '  ')
+                        self.generate_struct_member(
+                            abi, mm, parents, indent + '  ')
                 else:
-                    print('  - `{}`\n'.format(vm.name))
+                    print('  - {}**`{}`**\n'.format(
+                        self.anchor(*parents, vm), vm.name))
                     for mm in vm.type.members:
-                        self.generate_struct_member(abi, mm, indent + '    ')
+                        self.generate_struct_member(
+                            abi, mm, parents + [vm], indent + '    ')
 
     def generate_syscalls(self, abi, syscalls):
         print('## Syscalls\n')
@@ -89,7 +96,7 @@ class MarkdownGenerator(Generator):
             print('- *None*\n')
         else:
             for m in syscall.input.members:
-                self.generate_struct_member(abi, m)
+                self.generate_struct_member(abi, m, [syscall])
 
         print('Outputs:\n')
         if syscall.output.members == []:
@@ -99,7 +106,7 @@ class MarkdownGenerator(Generator):
                 print('- *None*\n')
         else:
             for m in syscall.output.members:
-                self.generate_struct_member(abi, m)
+                self.generate_struct_member(abi, m, [syscall])
 
     def generate_doc(self, abi, thing, indent=''):
         if thing.doc != '':
@@ -107,6 +114,41 @@ class MarkdownGenerator(Generator):
                 if line == '':
                     print()
                 else:
-                    line = re.sub(r'\[([\w.]+)\](?!\()', r'[\1](#\1)', line)
+                    def fix_link(match):
+                        path = abi.resolve_path(match.group(1))
+                        if path is None:
+                            raise Exception(
+                                'Unable to resolve link: '
+                                '{}'.format(match.group(1)))
+                        return self.link(*path)
+                    line = re.sub(r'\[([\w.]+)\](?!\()', fix_link, line)
                     print('{}{}'.format(indent, line))
             print()
+
+    def link_name(self, *path):
+        if len(path) == 2 and isinstance(path[1], SpecialValue):
+            name = self.naming.valname(path[0], path[1])
+
+        elif len(path) == 1 and isinstance(path[0], Syscall):
+            name = self.naming.syscallname(path[0])
+
+        elif len(path) == 1 and isinstance(path[0], Type):
+            name = self.naming.typename(path[0])
+
+        elif len(path) > 1 and isinstance(path[0], StructType):
+            name = self.naming.memname(path[0], *path[1:])
+
+        else:
+            raise Exception('Unable to generate link to: {}'.format(path))
+
+        return name
+
+    def link(self, *path):
+        name = self.link_name(*path)
+        return '[`{}`](#{})'.format(name, name)
+
+    def anchor(self, *path):
+        if len(path) > 1 and isinstance(path[0], Syscall):
+            return ''
+        name = self.link_name(*path)
+        return '<a name="{}"></a>'.format(name)

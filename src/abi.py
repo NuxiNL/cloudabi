@@ -197,6 +197,45 @@ class Abi:
         self.syscalls_by_name = {}
         self.syscalls_by_number = {}
 
+    def resolve_name(self, name, root=None):
+        if root is None:
+            if name in self.types:
+                return self.types[name]
+            elif name in self.syscalls_by_name:
+                return self.syscalls_by_name[name]
+        elif isinstance(root, IntLikeType):
+            for v in root.values:
+                if v.name == name:
+                    return v
+        elif isinstance(root, StructType):
+            for m in root.members:
+                if m.name == name:
+                    return m
+                elif m.name == None and isinstance(m, VariantStructMember):
+                    for mm in m.members:
+                        if mm.name == name:
+                            return mm
+                        elif mm.name == None:
+                            o = self.resolve_name(name, mm)
+                            if o is not None:
+                                return o
+        elif isinstance(root, VariantMember):
+            for m in root.type.members:
+                if m.name == name:
+                    return m
+
+    def resolve_path(self, path, root=None):
+        name, dot, rest = path.partition('.')
+        obj = self.resolve_name(name, root)
+        if obj is None:
+            return None
+        if dot == '.':
+            objs = self.resolve_path(rest, obj)
+            if objs is None:
+                return None
+            return [obj] + objs
+        return [obj]
+
 
 def _compute_dependencies(thing):
 
