@@ -16,9 +16,9 @@ trap cleanup EXIT
 
 $SRCDIR/generate_c_headers.py
 
-for m in 32 64; do
+for compiler in x86_64-unknown-cloudabi-cc aarch64-unknown-cloudabi-cc cc 'cc -m32'; do
 
-x86_64-unknown-cloudabi-cc -m$m -x c -c -fsyntax-only - <<EOF
+$compiler -x c -c -fsyntax-only - <<EOF
 #include <stdint.h>
 #include <stddef.h>
 
@@ -28,22 +28,14 @@ x86_64-unknown-cloudabi-cc -m$m -x c -c -fsyntax-only - <<EOF
 #include "syscalldefs-md-64.h"
 
 #include "syscalls.h"
+#ifdef __aarch64__
+#include "syscalls-aarch64.h"
+#endif
+#ifdef __x86_64__
 #include "syscalls-x86_64.h"
+#endif
 EOF
 
 done
-
-aarch64-unknown-cloudabi-cc -x c -c -fsyntax-only - <<EOF
-#include <stdint.h>
-#include <stddef.h>
-
-#include "syscalldefs-mi.h"
-#include "syscalldefs-md.h"
-#include "syscalldefs-md-32.h"
-#include "syscalldefs-md-64.h"
-
-#include "syscalls.h"
-#include "syscalls-aarch64.h"
-EOF
 
 echo "Generated C header files compiled succesfully."
