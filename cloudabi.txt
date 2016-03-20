@@ -816,12 +816,12 @@ syscall 31 lock_unlock
 	| be upgraded to a write lock.
 	in
 		ptr atomic lock lock
-		| The userspace lock that is locked for writing by the
-		| calling thread.
+			| The userspace lock that is locked for writing
+			| by the calling thread.
 		mflags          scope
-		| [mflags.private] if the lock is stored in private
-		| memory. [mflags.shared] if the lock is stored in
-		| shared memory.
+			| [mflags.private] if the lock is stored in
+			| private memory. [mflags.shared] if the lock is
+			| stored in shared memory.
 
 syscall 32 mem_advise
 	in
