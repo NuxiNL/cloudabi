@@ -11,7 +11,7 @@ class CGenerator(Generator):
 
     def __init__(self, prefix, header_guard=None, machine_dep=None,
                  md_prefix=None, md_type=None):
-        super().__init__(comment_start='//')
+        super().__init__(comment_prefix='// ')
         self.prefix = prefix
         self.header_guard = header_guard
         self.machine_dep = machine_dep
