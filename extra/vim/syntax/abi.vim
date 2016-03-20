@@ -6,7 +6,10 @@ let b:current_syntax = "cel"
 
 syn match abiComment "#.*$"
 
-syn match abiDoc "|.*$"
+syn match abiDoc "| .*$" contains=abiDocLink
+syn match abiDoc "|$"
+
+syn match abiDocLink '\[[a-zA-Z0-9_.]\+\]' contained
 
 syn match abiDecl '^syscall\s'
 syn match abiDecl '^alias\s'
@@ -35,6 +38,7 @@ syn match abiNum '\<0[bO][01]\+\>'
 
 hi def link abiComment Comment
 hi def link abiDoc Comment
+hi def link abiDocLink PreProc
 hi def link abiDecl Statement
 hi def link abiAnn PreProc
 hi def link abiType Type
