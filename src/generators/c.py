@@ -299,12 +299,10 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         if check_okay:
             print('\t\t: "=r"(okay)')
             first = False
-        for i in range(len(syscall.output.raw_members)):
+        for i in range(max(len(syscall.output.raw_members), 1)):
             print('\t\t{} "=r"(reg{})'.format(':' if first else ',',
                                               i + self.output_register_start))
             first = False
-        if first:
-            print('\t\t:')
 
         for i in range(len(syscall.input.raw_members) + 1):
             print('\t\t{} "r"(reg{})'.format(':' if i == 0 else ',', i))
