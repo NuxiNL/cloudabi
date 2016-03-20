@@ -738,10 +738,14 @@ struct threadattr
 
 
 syscall 0 clock_res_get
+	| Obtains the resolution of a clock.
 	in
 		clockid   clock_id
+			| The clock for which the resultion needs to be
+			| returned.
 	out
 		timestamp resolution
+			| The resolution of the clock.
 
 syscall 1 clock_time_get
 	in
@@ -751,10 +755,26 @@ syscall 1 clock_time_get
 		timestamp time
 
 syscall 2 condvar_signal
+	| Wakes up threads waiting on a userspace condition variable.
+	|
+	| If an invocation of this system call causes all waiting
+	| threads to be woken up, the value of the condition variable
+	| is set to [condvar.has_no_waiters]. As long as the condition
+	| variable is set to this value, it is not needed to invoke this
+	| system call.
 	in
 		ptr atomic condvar condvar
+			| The userspace condition variable that has
+			| waiting threads.
 		mflags             scope
+			| [mflags.private] if the condition variable is
+			| stored in private memory. [mflags.shared] if
+			| the condition variable is stored in shared
+			| memory.
 		nthreads           nwaiters
+			| The number of threads that need to be woken
+			| up. If it exceeds the number of waiting
+			| threads, all threads are woken up.
 
 syscall 3 fd_close
 	| Closes a file descriptor.
@@ -807,8 +827,11 @@ syscall 5 fd_create2
 			| pipes, this corresponds to the write end.
 
 syscall 6 fd_datasync
+	| Synchronizes the data of a file to disk.
 	in
 		fd fd
+			| The file descriptor of the file whose data
+			| needs to be synchronized to disk.
 
 syscall 7 fd_dup
 	| Duplicates a file descriptor.
@@ -1231,6 +1254,10 @@ syscall 55 thread_tcb_set
 	| address register can only be modified through privileged
 	| instructions. This system call can be used on those
 	| architectures to adjust the contents of this register.
+	|
+	| The results are undefined if this system call is invoked on
+	| architectures that do have writable TLS base address registers
+	| (e.g., aarch64).
 	in
 		ptr void tcb
 			| The new register contents.
