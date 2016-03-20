@@ -68,5 +68,5 @@ class Generator:
     def generate_abi(self, abi):
         self.generate_head()
         self.generate_types(abi.types)
-        self.generate_syscalls(abi.syscalls_by_number)
+        self.generate_syscalls(abi.syscalls_by_name)
         self.generate_foot()
