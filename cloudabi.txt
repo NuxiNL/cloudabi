@@ -741,7 +741,7 @@ syscall 0 clock_res_get
 	| Obtains the resolution of a clock.
 	in
 		clockid   clock_id
-			| The clock for which the resultion needs to be
+			| The clock for which the resolution needs to be
 			| returned.
 	out
 		timestamp resolution
@@ -1250,10 +1250,10 @@ syscall 54 thread_exit
 syscall 55 thread_tcb_set
 	| Adjusts the machine-dependent TLS base address register.
 	|
-	| On certain architectures (e.g., %fs on x86), the TLS base
-	| address register can only be modified through privileged
-	| instructions. This system call can be used on those
-	| architectures to adjust the contents of this register.
+	| On certain architectures, the TLS base address register can
+	| only be modified through privileged instructions (e.g., %fs on
+	| x86). This system call can be used on those architectures to
+	| adjust the contents of this register.
 	|
 	| The results are undefined if this system call is invoked on
 	| architectures that do have writable TLS base address registers
