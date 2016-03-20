@@ -17,7 +17,7 @@ abi = AbiParser().parse_abi_file(
 with open('syscalldefs-mi.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLDEFS_MI_H',
             machine_dep=False
         ).generate_abi(abi)
@@ -25,7 +25,7 @@ with open('syscalldefs-mi.h', 'w') as f:
 with open('syscalldefs-md.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLDEFS_MD_H',
             machine_dep=True
         ).generate_abi(abi)
@@ -33,40 +33,38 @@ with open('syscalldefs-md.h', 'w') as f:
 with open('syscalldefs-md-32.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_', 'cloudabi32_'),
             header_guard='CLOUDABI_SYSCALLDEFS_MD_32_H',
             machine_dep=True,
-            md_prefix='cloudabi32_',
             md_type=int_types['uint32']
         ).generate_abi(abi)
 
 with open('syscalldefs-md-64.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_', 'cloudabi64_'),
             header_guard='CLOUDABI_SYSCALLDEFS_MD_64_H',
             machine_dep=True,
-            md_prefix='cloudabi64_',
             md_type=int_types['uint64']
         ).generate_abi(abi)
 
 with open('syscalls.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsGenerator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_H',
         ).generate_abi(abi)
 
 with open('syscalls-x86_64.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsX86_64Generator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_X86_64_H',
         ).generate_abi(abi)
 
 with open('syscalls-aarch64.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsAarch64Generator(
-            prefix='cloudabi_',
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_AARCH64_H',
         ).generate_abi(abi)
