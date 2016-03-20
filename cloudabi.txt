@@ -284,12 +284,23 @@ alias uint64 filesize
 	| Non-negative file size or length of a region within a file.
 
 flags uint16 fsflags
+	| Which file attributes to adjust.
 	@cprefix FILESTAT_
 	0x01 atim
+		| Adjust the last data access timestamp to the value
+		| stored in [filestat.st_atim].
 	0x02 atim_now
+		| Adjust the last data access timestamp to the time
+		| of clock [clockid.realtime].
 	0x04 mtim
+		| Adjust the last data modification timestamp to the
+		| value stored in [filestat.st_mtim].
 	0x08 mtim_now
+		| Adjust the last data modification timestamp to the
+		| time of clock [clockid.realtime].
 	0x10 size
+		| Truncate or extend the file to the size stored in
+		| [filestat.st_size].
 
 enum uint8 filetype
 	| The type of a file descriptor or file.
@@ -643,20 +654,38 @@ struct event
 				exitcode exitcode
 
 struct fdstat
+	| File descriptor attributes.
 	filetype fs_filetype
+		| File type.
 	fdflags  fs_flags
+		| File descriptor flags.
 	rights   fs_rights_base
+		| Rights that apply to this file descriptor.
 	rights   fs_rights_inheriting
+		| Maximum set of rights that can be installed on new
+		| file descriptors that are created through this file
+		| descriptor, e.g., through [file_open].
 
 struct filestat
+	| File attributes.
 	device    st_dev
+		| Device ID of device containing the file.
 	inode     st_ino
+		| File serial number.
 	filetype  st_filetype
+		| File type.
 	linkcount st_nlink
+		| Number of hard links to the file.
 	filesize  st_size
+		| For regular files, the file size in bytes. For
+		| symbolic links, the length in bytes of the pathname
+		| contained in the symbolic link.
 	timestamp st_atim
+		| Last data access timestamp.
 	timestamp st_mtim
+		| Last data modification timestamp.
 	timestamp st_ctim
+		| Last file status change timestamp.
 
 struct iovec
 	range void iov_base iov_len iov_data
@@ -679,16 +708,22 @@ struct send_out
 	size so_datalen
 
 struct sockaddr
+	| Network address of a bound socket or its peer.
 	sa_family sa_family
+		| Address family.
 	variant sa_family
 		inet
 			struct sa_inet
 				array 4 uint8 addr
+					| IPv4 address.
 				uint16        port
+					| IPv4 port number.
 		inet6
 			struct sa_inet6
 				array 16 uint8 addr
+					| IPv6 address.
 				uint16         port
+					| IPv6 port number.
 
 struct recv_out
 	size     ro_datalen
@@ -734,9 +769,13 @@ struct subscription
 				fd       fd
 
 struct threadattr
+	| Attributes for thread creation.
 	ptr threadentry entry_point
+		| Initial program counter value.
 	range void      stack stack_size stack
+		| Region allocated to serve as stack space.
 	ptr void        argument
+		| Argument to be forwarded to the entry point function.
 
 
 
