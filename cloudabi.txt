@@ -253,12 +253,21 @@ opaque uint32 fd
 		| anonymous memory.
 
 flags uint16 fdflags
+	| File descriptor flags.
 	@cprefix FDFLAG_
 	0x01 append
+		| Append mode: data written to the file is always
+		| appended to the file's end.
 	0x02 dsync
+		| Write according to synchronized I/O data integrity
+		| completion.
 	0x04 nonblock
+		| Non-blocking mode.
 	0x08 rsync
+		| Synchronized read I/O operations.
 	0x10 sync
+		| Write according to synchronized I/O file integrity
+		| completion.
 
 flags uint16 fdsflags
 	@cprefix FDSTAT_
@@ -266,8 +275,10 @@ flags uint16 fdsflags
 	0x02 rights
 
 alias int64 filedelta
+	| Relative offset within a file.
 
 alias uint64 filesize
+	| Non-negative file size or length of a region within a file.
 
 flags uint16 fsflags
 	@cprefix FILESTAT_
@@ -393,11 +404,16 @@ alias uint32 nthreads
 	| variable that should be woken up.
 
 flags uint16 oflags
+	| Open flags used by [file_open].
 	@cprefix O_
 	0x01 creat
+		| Create file if it does not exist.
 	0x02 directory
+		| Fail if not a directory.
 	0x04 excl
+		| Fail if file already exists.
 	0x08 trunc
+		| Truncate file to size 0.
 
 flags uint64 rights
 	@cprefix RIGHT_
@@ -454,7 +470,8 @@ enum uint8 sa_family
 	2 inet6
 		| An IPv6 address.
 	3 unix
-		| The socket is bound to the file system.
+		| The socket is local to the system, and may be bound to
+		| the file system.
 
 flags uint8 sdflags
 	@cprefix SHUT_
@@ -462,33 +479,60 @@ flags uint8 sdflags
 	0x02 wr
 
 enum uint8 signal
+	| Signal condition.
 	@cprefix SIG
 	1  abrt
+		| Process abort signal.
 	2  alrm
+		| Alarm clock.
 	3  bus
+		| Access to an undefined portion of a memory object.
 	4  chld
+		| Child process terminated, stopped, or continued.
 	5  cont
+		| Continue executing, if stopped.
 	6  fpe
+		| Erroneous arithmetic operation.
 	7  hup
+		| Hangup.
 	8  ill
+		| Illegal instruction.
 	9  int
+		| Terminale interrupt signal.
 	10 kill
+		| Kill (cannot be caught or ignored).
 	11 pipe
+		| Write on a pipe with no one to read it.
 	12 quit
+		| Terminal quit signal.
 	13 segv
+		| Invalid memory reference.
 	14 stop
+		| Stop executing (cannot becaught or ignored).
 	15 sys
+		| Bad system call.
 	16 term
+		| Termination signal.
 	17 trap
+		| Trace/breakpoint trap.
 	18 tstp
+		| Terminal stop signal.
 	19 ttin
+		| Background process attempting read.
 	20 ttou
+		| Background process attempting write.
 	21 urg
+		| High bandwidth data is available at a socket.
 	22 usr1
+		| User-defined signal 1.
 	23 usr2
+		| User-defined signal 2.
 	24 vtalrm
+		| Virtual timer expired.
 	25 xcpu
+		| CPU time limit exceeded.
 	26 xfsz
+		| File size limit exceeded.
 
 flags uint8 ssflags
 	@cprefix SOCKSTAT_
@@ -713,31 +757,68 @@ syscall 2 condvar_signal
 		nthreads           nwaiters
 
 syscall 3 fd_close
+	| Closes a file descriptor.
 	in
 		fd fd
+			| The file descriptor that needs to be closed.
 
 syscall 4 fd_create1
+	| Creates a file descriptor.
 	in
 		filetype type
+			| [filetype.poll]: Creates a polling event
+			| queue.
+			|
+			| [filetype.shared_memory]: Creates an anonymous
+			| shared memory object.
+			|
+			| [filetype.socket_dgram]: Creates a datagram
+			| socket.
+			|
+			| [filetype.socket_seqpacket]: Creates a
+			| sequenced-packet socket.
+			|
+			| [filetype.socket_stream]: Creates a
+			| byte-stream socket.
 	out
 		fd       fd
+			| The file descriptor that has been created.
 
 syscall 5 fd_create2
+	| Creates a pair of file descriptors.
 	in
 		filetype type
+			| [filetype.fifo]: Creates a pipe.
+			|
+			| [filetype.socket_dgram]: Creates a datagram
+			| socket pair.
+			|
+			| [filetype.socket_seqpacket]: Creates a
+			| sequenced-packet socket pair.
+			|
+			| [filetype.socket_stream]: Creates a
+			| byte-stream socket pair.
 	out
 		fd       fd1
+			| The first file descriptor of the pair. For
+			| pipes, this corresponds to the read end.
 		fd       fd2
+			| The second file descriptor of the pair. For
+			| pipes, this corresponds to the write end.
 
 syscall 6 fd_datasync
 	in
 		fd fd
 
 syscall 7 fd_dup
+	| Duplicates a file descriptor.
 	in
 		fd from
+			| The file descriptor that needs to be
+			| duplicated.
 	out
 		fd fd
+			| The new file descriptor.
 
 syscall 8 fd_pread
 	in
@@ -763,9 +844,24 @@ syscall 10 fd_read
 		size         nread
 
 syscall 11 fd_replace
+	| Atomically replaces a file descriptor by a copy of another
+	| file descriptor.
+	|
+	| Due to the strong focus on thread safety, this environment
+	| does not provide a mechanism to duplicate a file descriptor to
+	| an arbitrary number, like dup2(). This would be prone to race
+	| conditions, as an actual file descriptor with the same number
+	| could be allocated by a different thread at the same time.
+	|
+	| This system call provides a way to atomically replace file
+	| descriptors, which would disappear if dup2() were to be
+	| removed entirely.
 	in
 		fd from
+			| The file descriptor that needs to be copied.
 		fd to
+			| The file descriptor that needs to be
+			| overwritten.
 
 syscall 12 fd_seek
 	in
