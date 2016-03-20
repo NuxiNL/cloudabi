@@ -6,6 +6,7 @@
 from .itf import read_itf
 from .abi import *
 
+
 class AbiParser:
 
     def parse_abi_file(self, file_name):
@@ -129,11 +130,11 @@ class AbiParser:
                 mem_type = self.parse_type(abi, mem_decl[1:-3])
                 mem_base_name, mem_length_name, mem_name = mem_decl[-3:]
                 mem = RangeStructMember(
-                        mem_base_name,
-                        mem_length_name,
-                        mem_name,
-                        mem_decl[0] == 'crange',
-                        mem_type)
+                    mem_base_name,
+                    mem_length_name,
+                    mem_name,
+                    mem_decl[0] == 'crange',
+                    mem_type)
 
             else:
                 self.__expect_no_children(node)
@@ -210,7 +211,7 @@ class AbiParser:
 
         if children != []:
             raise Exception('Invalid node under syscall: {}'.format(
-                    children[0].text))
+                children[0].text))
 
         syscall = Syscall(num, name, input, output, **attr)
 
@@ -269,8 +270,8 @@ class AbiParser:
     def pop_documentation(self, node):
         doc = ''
         while len(node.children) > 0 and (
-               node.children[0].text.startswith('| ') or
-               node.children[0].text == '|'):
+                node.children[0].text.startswith('| ') or
+                node.children[0].text == '|'):
             n = node.children.pop(0)
             if n.children != []:
                 raise Exception(
@@ -282,4 +283,4 @@ class AbiParser:
     def __expect_no_children(node):
         if len(node.children) > 0:
             raise Exception('Unexpected node inside {}: {}'.format(
-                    node.text, node.children[0].text))
+                node.text, node.children[0].text))

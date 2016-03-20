@@ -12,7 +12,7 @@ from src.generators.c import *
 from src.parser import *
 
 abi = AbiParser().parse_abi_file(
-        os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
+    os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
 with open('syscalldefs-mi.h', 'w') as f:
     with redirect_stdout(f):

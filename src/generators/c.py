@@ -65,7 +65,6 @@ class CNaming:
                             'for type: {}'.format(type))
 
 
-
 class CGenerator(Generator):
 
     def __init__(self, naming, header_guard=None, machine_dep=None,
@@ -279,6 +278,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         check_okay = len(syscall.output.raw_members) > 0
 
         defined_regs = set()
+
         def define_reg(register, value=None):
             if value is None:
                 if register in defined_regs:
@@ -291,7 +291,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
                 decl=self.naming.vardecl(self.register_t,
                                          'reg_{}'.format(register)),
                 reg=register, defn=defn))
-            defined_regs.add(register);
+            defined_regs.add(register)
 
         define_reg(self.syscall_num_register, syscall.number)
 
@@ -323,7 +323,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
             first = False
         if not syscall.noreturn:
             if (self.errno_register not in
-                self.output_registers[:len(syscall.output.raw_members)]):
+                    self.output_registers[:len(syscall.output.raw_members)]):
                 print('\t\t{} "=r"(reg_{})'.format(
                     ':' if first else ',', self.errno_register))
                 first = False
@@ -338,9 +338,10 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         if check_okay:
             print('\tif (okay) {')
             for i, p in enumerate(syscall.output.raw_members):
-                print('\t\t*{} = {};'.format(
-                    p.name, self._ccast(self.register_t, p.type,
-                        "reg_{}".format(self.output_registers[i]))))
+                print('\t\t*{} = {};'.format(p.name, self._ccast(
+                    self.register_t,
+                    p.type,
+                    "reg_{}".format(self.output_registers[i]))))
             print('\t\treturn 0;')
             print('\t}')
 

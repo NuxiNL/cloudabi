@@ -12,7 +12,7 @@ class Generator:
                  comment_prefix='',
                  comment_begin=None,
                  comment_end=None):
-        self.comment_begin= comment_begin
+        self.comment_begin = comment_begin
         self.comment_prefix = comment_prefix
         self.comment_end = comment_end
 
