@@ -674,7 +674,7 @@ struct auxv
 			ptr void a_ptr
 
 struct ciovec
-	| A region of memory for scather/gather writes.
+	| A region of memory for scatter/gather writes.
 	crange void iov_base iov_len iov_data
 		| The address and length of the buffer to be written.
 
@@ -752,7 +752,7 @@ struct filestat
 		| Last file status change timestamp.
 
 struct iovec
-	| A region of memory for scather/gather reads.
+	| A region of memory for scatter/gather reads.
 	range void iov_base iov_len iov_data
 		| The address and length of the buffer to be filled.
 
@@ -811,9 +811,15 @@ struct sockstat
 		| Flags describing the state of the socket.
 
 struct subscription
+	| Subscription to an event.
 	userdata  userdata
+		| User-provided value that is attached to the
+		| subscription in the kernel and returned through
+		| [event.userdata].
 	subflags  flags
+		| Subscription adjustment flags used by [poll_fd].
 	eventtype type
+		| The type of the event to which to subscribe.
 	variant type
 		clock
 			struct clock
@@ -981,11 +987,17 @@ syscall 9 fd_pwrite
 		size          nwritten
 
 syscall 10 fd_read
+	| Reads from a file descriptor.
 	in
 		fd           fd
+			| The file descriptor from which data should be
+			| read.
 		crange iovec iov iovcnt iovs
+			| List of scatter/gather vectors where data
+			| should be stored.
 	out
 		size         nread
+			| The number of bytes read.
 
 syscall 11 fd_replace
 	| Atomically replaces a file descriptor by a copy of another
@@ -1252,9 +1264,12 @@ syscall 34 mem_map
 		ptr void   mem
 
 syscall 35 mem_protect
+	| Change the protection of a memory mapping.
 	in
 		range void addr len mem
+			| The pages that need their protection changed.
 		mprot      prot
+			| New protection options.
 
 syscall 36 mem_sync
 	in
