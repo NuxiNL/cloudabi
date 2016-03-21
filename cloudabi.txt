@@ -506,7 +506,7 @@ flags uint64 rights
 		| The right to invoke [fd_datasync].
 		|
 		| If [rights.file_open] is set, the right to invoke
-		| [file_open] with [oflags.dsync].
+		| [file_open] with [fdflags.dsync].
 	0x0000000000000002 fd_read
 		| The right to invoke [fd_read] and [sock_recv].
 		|
@@ -524,7 +524,7 @@ flags uint64 rights
 		| The right to invoke [fd_sync].
 		|
 		| If [rights.file_open] is set, the right to invoke
-		| [file_open] with [oflags.rsync] and [oflags.dsync].
+		| [file_open] with [fdflags.rsync] and [fdflags.dsync].
 	0x0000000000000020 fd_tell
 		| The right to invoke [fd_seek} in such a way that the
 		| file offset remains unaltered (i.e., [whence.cur] with
