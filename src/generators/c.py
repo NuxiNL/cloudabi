@@ -60,8 +60,8 @@ class CNaming:
     def memname(self, obj, *members):
         if isinstance(obj, Type):
             obj = self.typename(obj)
-        for m in members:
-            obj += '.' + m.name
+        obj += '::'
+        obj += '.'.join(m.name for m in members)
         return obj
 
 
