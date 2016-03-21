@@ -1689,7 +1689,7 @@ syscall 47 sock_connect
 			| The path to which the socket should onnect.
 
 syscall 48 sock_listen
-	| Listen for incoming connections on a socket.
+	| Listens for incoming connections on a socket.
 	in
 		fd      sock
 			| The socket on which listening should be
