@@ -1255,8 +1255,7 @@ syscall 21 file_open
 		crange char path pathlen path
 			| The path of the file that should be opened.
 		oflags      oflags
-			| The method at which the file file should be
-			| opened.
+			| The method at which the file should be opened.
 		cptr fdstat fds
 			| The initial attributes of the file descriptor
 			| that is returned by this system call.
