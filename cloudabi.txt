@@ -255,8 +255,12 @@ enum uint16 errno
 		| Extension: Capabilities insufficient.
 
 flags uint16 eventrwflags
+	| The state of the file descriptor subscribed to with
+	| [eventtype.fd_read] or [eventtype.fd_write].
 	@cprefix EVENT_FD_READWRITE_
 	0x01 hangup
+		| The peer of this FIFO or socket has closed or
+		| disconnected.
 
 enum uint8 eventtype
 	| Type of a subscription to an event or its occurence.
@@ -433,11 +437,19 @@ flags uint32 lookupflags
 		| link, it is expanded.
 
 flags uint8 mflags
+	| Memory mapping flags.
 	@cprefix MAP_
 	0x01 anon
+		| Instead of mapping the contents of the file provided,
+		| create a mapping to anonymous memory. The file
+		| descriptor argument must be set to [fd.map_anon_fd].
 	0x02 fixed
+		| Require that the mapping is performed at the base
+		| address provided.
 	0x04 private
+		| Changes are private.
 	0x08 shared
+		| Changes are shared.
 
 flags uint8 mprot
 	| Memory page protection options.
@@ -496,7 +508,7 @@ flags uint64 rights
 		| If [rights.file_open] is set, the right to invoke
 		| [file_open] with [oflags.dsync].
 	0x0000000000000002 fd_read
-		| The right to invoke [fd_read].
+		| The right to invoke [fd_read] and [sock_recv].
 		|
 		| If [rights.mem_map] is set, the right to invoke
 		| [mem_map] with memory protection option [mprot.read].
@@ -518,7 +530,7 @@ flags uint64 rights
 		| file offset remains unaltered (i.e., [whence.cur] with
 		| offset zero).
 	0x0000000000000040 fd_write
-		| The right to invoke [fd_write].
+		| The right to invoke [fd_write] and [sock_send].
 		|
 		| If [rights.mem_map] is set, the right to invoke
 		| [mem_map] with memory protection option [mprot.write].
@@ -637,9 +649,12 @@ enum uint8 sa_family
 		| the file system.
 
 flags uint8 sdflags
+	| Which channels on a socket need to be shut down.
 	@cprefix SHUT_
 	0x01 rd
+		| Disables further receive operations.
 	0x02 wr
+		| Disables further send operations.
 
 enum uint8 signal
 	| Signal condition.
@@ -698,8 +713,11 @@ enum uint8 signal
 		| File size limit exceeded.
 
 flags uint8 ssflags
+	| Specifies which socket attributes need to be altered when
+	| calling [sock_stat_get].
 	@cprefix SOCKSTAT_
 	0x01 clear_error
+		| Clear [sockstat.ss_error].
 
 flags uint32 sstate
 	@cprefix SOCKSTATE_
@@ -1171,19 +1189,34 @@ syscall 12 fd_seek
 			| relative to the start of the file.
 
 syscall 13 fd_stat_get
+	| Gets attributes of a file descriptor.
 	in
 		fd         fd
+			| The file descriptor whose attributes have to
+			| be obtained.
 		ptr fdstat buf
+			| The buffer where the file descriptor's
+			| attributes are stored.
 
 syscall 14 fd_stat_put
+	| Adjusts attributes of a file descriptor.
 	in
 		fd          fd
+			| The file descriptor whose attributes have to
+			| be adjusted.
 		cptr fdstat buf
+			| The desired values of the file descriptor
+			| attributes that are adjusted.
 		fdsflags    flags
+			| A bitmask indicating which attributes have to
+			| be adjusted.
 
 syscall 15 fd_sync
+	| Synchronizes the data and metadata of a file to disk.
 	in
 		fd fd
+			| The file descriptor of the file whose data
+			| and metadata needs to be synchronized to disk.
 
 syscall 16 fd_write
 	| Writes to a file descriptor.
@@ -1199,11 +1232,19 @@ syscall 16 fd_write
 			| The number of bytes written.
 
 syscall 17 file_advise
+	| Provides file advisory information on a file descriptor.
 	in
 		fd       fd
+			| The file descriptor for which to provide file
+			| advisory information.
 		filesize offset
+			| The offset within the file to which the
+			| advisory applies.
 		filesize len
+			| The length of the region to which the advisory
+			| applies.
 		advice   advice
+			| The advice.
 
 syscall 18 file_allocate
 	| Forces the allocation of space in a file.
@@ -1480,12 +1521,17 @@ syscall 38 mem_unmap
 			| The pages that needs to be unmapped.
 
 syscall 39 poll
+	| Concurrently polls for the occurrence of a set of events.
 	in
 		cptr subscription in
+			| The events to which to subscribe.
 		cptr event        out
+			| The events that have occurred.
 		size              nsubscriptions
+			| Both the number of subscriptions and events.
 	out
 		size nevents
+			| The number of events stored.
 
 syscall 40 proc_exec
 	| Replaces the process by a new executable.
@@ -1612,27 +1658,47 @@ syscall 48 sock_listen
 			| capable of keeping in its backlog.
 
 syscall 49 sock_recv
+	| Receives a message on a socket.
 	in
 		fd           sock
+			| The socket on which a message should be
+			| received.
 		cptr recv_in in
+			| Input parameters.
 		ptr recv_out out
+			| Output parameters.
 
 syscall 50 sock_send
+	| Sends a message on a socket.
 	in
 		fd           sock
+			| The socket on which a message should be sent.
 		cptr send_in in
+			| Input parameters.
 		ptr send_out out
+			| Output parameters.
 
 syscall 51 sock_shutdown
+	| Shuts down socket send and receive channels.
 	in
 		fd      sock
+			| The socket that needs its channels shut down.
 		sdflags how
+			| Which channels on the socket need to be shut
+			| down.
 
 syscall 52 sock_stat_get
+	| Gets attributes of a socket.
 	in
 		fd           sock
+			| The socket whose attributes have to be
+			| obtained.
 		ptr sockstat buf
+			| The buffer where the socket's attributes are
+			| stored.
 		ssflags      flags
+			| Flags indicating how the existing socket
+			| attributes need to be changed.
 
 syscall 53 thread_create
 	| Creates a new thread within the current process.
