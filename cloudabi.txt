@@ -450,10 +450,14 @@ flags uint8 mprot
 		| Page can be read.
 
 flags uint8 msflags
+	| Methods of synchronizing memory with physical storage.
 	@cprefix MS_
 	0x01 async
+		| Perform asynchronous writes.
 	0x02 invalidate
+		| Perform synchronous writes.
 	0x04 sync
+		| Invalidate cached data.
 
 flags uint16 msgflags
 	@cprefix MSG_
@@ -971,20 +975,38 @@ syscall 7 fd_dup
 			| The new file descriptor.
 
 syscall 8 fd_pread
+	| Reads from a file descriptor, without using and updating the
+	| file descriptor's offset.
 	in
 		fd           fd
+			| The file descriptor from which data should be
+			| read.
 		crange iovec iov iovcnt iovs
+			| List of scatter/gather vectors where data
+			| should be stored.
 		filesize     offset
+			| The offset within the file at which reading
+			| should start.
 	out
 		size         nread
+			| The number of bytes read.
 
 syscall 9 fd_pwrite
+	| Writes to a file descriptor, without using and updating the
+	| file descriptor's offset.
 	in
 		fd            fd
+			| The file descriptor to which data should be
+			| written.
 		crange ciovec iov iovcnt iovs
+			| List of scatter/gather vectors where data
+			| should be retrieved.
 		filesize      offset
+			| The offset within the file at which writing
+			| should start.
 	out
 		size          nwritten
+			| The number of bytes written.
 
 syscall 10 fd_read
 	| Reads from a file descriptor.
@@ -1043,11 +1065,17 @@ syscall 15 fd_sync
 		fd fd
 
 syscall 16 fd_write
+	| Writes to a file descriptor.
 	in
 		fd            fd
+			| The file descriptor to which data should be
+			| written.
 		crange ciovec iov iovcnt iovs
+			| List of scatter/gather vectors where data
+			| should be retrieved.
 	out
 		size nwritten
+			| The number of bytes written.
 
 syscall 17 file_advise
 	in
@@ -1101,12 +1129,30 @@ syscall 21 file_open
 		fd fd
 
 syscall 22 file_readdir
+	| Reads directory entries from a directory.
+	|
+	| When successful, the contents of the output buffer consist of
+	| a sequence of directory entries. Each directory entry consists
+	| of a [dirent] object, followed by [dirent.d_namlen] bytes
+	| holding the name of the directory entry.
+	|
+	| This system call fills the output buffer as much as possible,
+	| potentially truncating the last directory entry. This allows
+	| the caller to grow its read buffer size in case it's too small
+	| to fit a single large directory entry, or skip the oversized
+	| directory entry.
 	in
 		fd         fd
+			| The directory from which to read the directory
+			| entries.
 		range void buf nbyte buf
+			| The buffer where directory entries are stored.
 		dircookie  cookie
 	out
 		size bufused
+			| The number of bytes stored in the read buffer.
+			| If less than the size of the read buffer, the
+			| end of the directory has been reached.
 
 syscall 23 file_readlink
 	| Reads the contents of a symbolic link.
@@ -1241,9 +1287,13 @@ syscall 31 lock_unlock
 			| stored in shared memory.
 
 syscall 32 mem_advise
+	| Provides memory advisory information on a region of memory.
 	in
 		range void addr len mem
+			| The pages for which to provide memory advisory
+			| information.
 		advice     advice
+			| The advice.
 
 syscall 33 mem_lock
 	| Increments the lock count on a region of memory, which
@@ -1272,9 +1322,12 @@ syscall 35 mem_protect
 			| New protection options.
 
 syscall 36 mem_sync
+	| Synchronize a region of memory with its physical storage.
 	in
 		range void addr len mem
+			| The pages that need to be synchronized.
 		msflags    flags
+			| The method of synchronization.
 
 syscall 37 mem_unlock
 	| Decrements the lock count on a region of memory, which
