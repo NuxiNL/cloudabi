@@ -724,17 +724,36 @@ flags uint32 sstate
 	0x01 acceptconn
 
 flags uint16 subflags
+	| Flags for [poll_fd] to determine how to process a
+	| subscription request.
 	@cprefix SUBSCRIPTION_
 	0x01 add
+		| Adds and enables the subscription.
 	0x02 clear
+		| Sets the event back to the initial state, so that it
+		| no longer triggers.
 	0x04 delete
+		| Deletes the subscription.
 	0x08 disable
+		| Disables the subscription so that it does not trigger,
+		| but does not delete it.
 	0x10 enable
+		| Enables the subscription so that it triggers.
 	0x20 oneshot
+		| Automatically deletes the subscription once triggered.
 
 flags uint16 subclockflags
+	| Flags determining how the timestamp provided in
+	| [subscription.clock.timeout] should be interpreted.
 	@cprefix SUBSCRIPTION_CLOCK_
 	0x01 abstime
+		| If set, treat the timestamp provided in
+		| [subscription.clock.timeout] as an absolute timestamp
+		| of clock [subscription.clock.clock_id].
+		|
+		| If clear, treat the timestamp provided in
+		| [subscription.clock.timeout] relative to the current
+		| time value of clock [subscription.clock.clock_id].
 
 flags uint16 subrwflags
 	@cprefix SUBSCRIPTION_FD_READWRITE_
@@ -752,8 +771,12 @@ alias uint64 timestamp
 	| Timestamp in nanoseconds.
 
 flags uint8 ulflags
+	| Specifies whether files are unlinked or directories are
+	| removed.
 	@cprefix UNLINK_
 	0x01 removedir
+		| If set, removes a directory. Otherwise, unlinks any
+		| non-directory file.
 
 alias uint64 userdata
 	| User-provided value that can be attached to objects that is
@@ -1481,14 +1504,32 @@ syscall 33 mem_lock
 			| incremented.
 
 syscall 34 mem_map
+	| Creates a memory mapping, making the contents of a file
+	| accessible through memory.
 	in
 		range void addr len mem
+			| If [mflags.fixed] is set, specifies to which
+			| address the file region is mapped. Otherwise,
+			| the mapping is performed at an unused
+			| location.
 		mprot      prot
+			| Initial memory protection options for the
+			| memory mapping.
 		mflags     flags
+			| Memory mapping flags.
 		fd         fd
+			| If [mflags.anon] is set, this argument must be
+			| [fd.map_anon_fd]. Otherwise, this argument
+			| specifies the file whose contents need to be
+			| mapped.
 		filesize   off
+			| If [mflags.anon] is set, this argument must be
+			| zero. Otherwise, this argument specifies the
+			| offset within the file at which the mapping
+			| starts.
 	out
 		ptr void   mem
+			| The starting address of the memory mapping.
 
 syscall 35 mem_protect
 	| Change the protection of a memory mapping.
