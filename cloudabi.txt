@@ -513,7 +513,7 @@ flags uint64 rights
 		| If [rights.mem_map] is set, the right to invoke
 		| [mem_map] with memory protection option [mprot.read].
 		|
-		| If [rights.seek] is set, the right to invoke
+		| If [rights.fd_seek] is set, the right to invoke
 		| [fd_pread].
 	0x0000000000000004 fd_seek
 		| The right to invoke [fd_seek].
@@ -535,7 +535,7 @@ flags uint64 rights
 		| If [rights.mem_map] is set, the right to invoke
 		| [mem_map] with memory protection option [mprot.write].
 		|
-		| If [rights.seek] is set, the right to invoke
+		| If [rights.fd_seek] is set, the right to invoke
 		| [fd_pwrite].
 	0x0000000000000080 file_advise
 		| The right to invoke [file_advise].
