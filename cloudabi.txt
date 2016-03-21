@@ -426,8 +426,11 @@ opaque uint32 lock
 		| while also managed by the kernel.
 
 flags uint32 lookupflags
+	| Flags determining the method of how paths are resolved.
 	@cprefix LOOKUP_
 	1 symlink_follow
+		| As long as the resolved path corresponds to a symbolic
+		| link, it is expanded.
 
 flags uint8 mflags
 	@cprefix MAP_
@@ -484,48 +487,140 @@ flags uint16 oflags
 		| Truncate file to size 0.
 
 flags uint64 rights
+	| File descriptor rights, determining which actions may be
+	| performed.
 	@cprefix RIGHT_
 	0x0000000000000001 fd_datasync
+		| The right to invoke [fd_datasync].
+		|
+		| If [rights.file_open] is set, the right to invoke
+		| [file_open] with [oflags.dsync].
 	0x0000000000000002 fd_read
+		| The right to invoke [fd_read].
+		|
+		| If [rights.mem_map] is set, the right to invoke
+		| [mem_map] with memory protection option [mprot.read].
+		|
+		| If [rights.seek] is set, the right to invoke
+		| [fd_pread].
 	0x0000000000000004 fd_seek
+		| The right to invoke [fd_seek].
 	0x0000000000000008 fd_stat_put_flags
+		| The right to invoke [fd_stat_put] with
+		| [fdsflags.flags].
 	0x0000000000000010 fd_sync
+		| The right to invoke [fd_sync].
+		|
+		| If [rights.file_open] is set, the right to invoke
+		| [file_open] with [oflags.rsync] and [oflags.dsync].
 	0x0000000000000020 fd_tell
+		| The right to invoke [fd_seek} in such a way that the
+		| file offset remains unaltered (i.e., [whence.cur] with
+		| offset zero).
 	0x0000000000000040 fd_write
+		| The right to invoke [fd_write].
+		|
+		| If [rights.mem_map] is set, the right to invoke
+		| [mem_map] with memory protection option [mprot.write].
+		|
+		| If [rights.seek] is set, the right to invoke
+		| [fd_pwrite].
 	0x0000000000000080 file_advise
+		| The right to invoke [file_advise].
 	0x0000000000000100 file_allocate
+		| The right to invoke [file_allocate].
 	0x0000000000000200 file_create_directory
+		| The right to invoke [file_create] with
+		| [filetype.directory].
 	0x0000000000000400 file_create_file
+		| If [rights.file_open] is set, the right to invoke
+		| [file_open] with [oflags.creat].
 	0x0000000000000800 file_create_fifo
+		| The right to invoke [file_create] with
+		| [filetype.fifo].
 	0x0000000000001000 file_link_source
+		| The right to invoke [file_link] with the file
+		| descriptor as the source directory.
 	0x0000000000002000 file_link_target
+		| The right to invoke [file_link] with the file
+		| descriptor as the target directory.
 	0x0000000000004000 file_open
+		| The right to invoke [file_open].
 	0x0000000000008000 file_readdir
+		| The right to invoke [file_readdir].
 	0x0000000000010000 file_readlink
+		| The right to invoke [file_readlink].
 	0x0000000000020000 file_rename_source
+		| The right to invoke [file_rename] with the file
+		| descriptor as the source directory.
 	0x0000000000040000 file_rename_target
+		| The right to invoke [file_rename] with the file
+		| descriptor as the target directory.
 	0x0000000000080000 file_stat_fget
+		| The right to invoke [file_stat_fget].
 	0x0000000000100000 file_stat_fput_size
+		| The right to invoke [file_stat_fput] with
+		| [fsflags.size].
+		|
+		| If [rights.file_open] is set, the right to invoke
+		| [file_open] with [oflags.trunc].
 	0x0000000000200000 file_stat_fput_times
+		| The right to invoke [file_stat_fput] with
+		| [fsflags.atim], [fsflags.atim_now], [fsflags.mtim],
+		| and [fsflags.mtim_now].
 	0x0000000000400000 file_stat_get
+		| The right to invoke [file_stat_get].
 	0x0000000000800000 file_stat_put_times
+		| The right to invoke [file_stat_put] with
+		| [fsflags.atim], [fsflags.atim_now], [fsflags.mtim],
+		| and [fsflags.mtim_now].
 	0x0000000001000000 file_symlink
+		| The right to invoke [file_symlink].
 	0x0000000002000000 file_unlink
+		| The right to invoke [file_unlink].
 	0x0000000004000000 mem_map
+		| The right to invoke [mem_map].
 	0x0000000008000000 mem_map_exec
+		| If [rights.mem_map] is set, the right to invoke
+		| [mem_map] with [mprot.exec].
 	0x0000000010000000 poll_fd_readwrite
+		| If [rights.fd_read] is set, the right to invoke [poll]
+		| and [poll_fd] to subscribe to [eventtype.fd_read].
+		|
+		| If [rights.fd_write] is set, the right to invoke
+		| [poll] and [poll_fd] to subscribe to
+		| [eventtype.fd_write].
 	0x0000000020000000 poll_modify
+		| The right to modify the events a polling event queue
+		| is subscribed to.
 	0x0000000040000000 poll_proc_terminate
+		| The right to invoke [poll] and [poll_fd] to
+		| subscribe to [eventtype.proc_terminate].
 	0x0000000080000000 poll_wait
+		| The right to wait for events on a polling event queue
+		| and extract them.
 	0x0000000100000000 proc_exec
+		| The right to invoke [proc_exec].
 	0x0000000200000000 sock_accept
+		| The right to invoke [sock_accept].
 	0x0000000400000000 sock_bind_directory
+		| The right to invoke [sock_bind] with the file
+		| descriptor as the directory.
 	0x0000000800000000 sock_bind_socket
+		| The right to invoke [sock_bind] with the file
+		| descriptor as the socket.
 	0x0000001000000000 sock_connect_directory
+		| The right to invoke [sock_connect] with the file
+		| descriptor as the directory.
 	0x0000002000000000 sock_connect_socket
+		| The right to invoke [sock_connect] with the file
+		| descriptor as the socket.
 	0x0000004000000000 sock_listen
+		| The right to invoke [sock_listen].
 	0x0000008000000000 sock_shutdown
+		| The right to invoke [sock_shutdown].
 	0x0000010000000000 sock_stat_get
+		| The right to invoke [sock_stat_get].
 
 enum uint8 sa_family
 	| Socket address family.
@@ -670,12 +765,25 @@ function threadentry
 
 
 struct auxv
+	| Auxiliary vector entry.
+	|
+	| The auxiliary vector is a list of key-value pairs that is
+	| provided to the process on startup. Unlike structures, it is
+	| extensible, as it is possible to add new records later on.
+	| The auxiliary vector is always terminated by an entry having
+	| type [auxtype.null].
+	|
+	| The auxiliary vector is part of the x86-64 ABI, but is used by
+	| this environment on all architectures.
 	auxtype a_type
+		| The type of the auxiliary vector entry.
 	variant a_type
 		argdatalen canarylen ncpus pagesz phnum tid
 			size a_val
+				| A numerical value.
 		argdata canary null phdr
 			ptr void a_ptr
+				| A pointer value.
 
 struct ciovec
 	| A region of memory for scatter/gather writes.
@@ -761,8 +869,13 @@ struct iovec
 		| The address and length of the buffer to be filled.
 
 struct lookup
+	| Path lookup properties.
 	fd          fd
+		| The working directory at which the resolution of the
+		| path starts.
 	lookupflags flags
+		| Flags determining the method of how the path is
+		| resolved.
 
 struct recv_in
 	crange iovec ri_data ri_datalen ri_data
@@ -1042,12 +1155,20 @@ syscall 11 fd_replace
 			| overwritten.
 
 syscall 12 fd_seek
+	| Moves the offset of the file descriptor.
 	in
 		fd        fd
+			| The file descriptor whose offset has to be
+			| moved.
 		filedelta offset
+			| The number of bytes to move.
 		whence    whence
+			| Relative to which position the move should
+			| take place.
 	out
 		filesize newoffset
+			| The new offset of the file descriptor,
+			| relative to the start of the file.
 
 syscall 13 fd_stat_get
 	in
@@ -1085,10 +1206,16 @@ syscall 17 file_advise
 		advice   advice
 
 syscall 18 file_allocate
+	| Forces the allocation of space in a file.
 	in
 		fd       fd
+			| The file in which the space should be
+			| allocated.
 		filesize offset
+			| The offset at which the allocation should
+			| start.
 		filesize len
+			| The length of the area that is allocated.
 
 syscall 19 file_create
 	| Creates a file of a specified type.
@@ -1120,13 +1247,23 @@ syscall 20 file_link
 			| should be created.
 
 syscall 21 file_open
+	| Opens a file.
 	in
 		lookup      dirfd
+			| The working directory at which the resolution
+			| of the file to be opened starts.
 		crange char path pathlen path
+			| The path of the file that should be opened.
 		oflags      oflags
+			| The method at which the file file should be
+			| opened.
 		cptr fdstat fds
+			| The initial attributes of the file descriptor
+			| that is returned by this system call.
 	out
 		fd fd
+			| The file descriptor of the file that has been
+			| opened.
 
 syscall 22 file_readdir
 	| Reads directory entries from a directory.
