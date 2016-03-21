@@ -91,22 +91,17 @@ class MarkdownGenerator(Generator):
         print('### {}\n'.format(self.naming.syscallname(syscall)))
         self.generate_doc(abi, syscall)
 
-        if syscall.input.members == []:
-            print('No inputs.\n')
-        else:
+        if syscall.input.members:
             print('Inputs:\n')
             for m in syscall.input.members:
                 self.generate_struct_member(abi, m, [syscall])
 
-        if syscall.output.members == []:
-            if syscall.noreturn:
-                print('Does not return.\n')
-            else:
-                print('No outputs.\n')
-        else:
+        if syscall.output.members:
             print('Outputs:\n')
             for m in syscall.output.members:
                 self.generate_struct_member(abi, m, [syscall])
+        elif syscall.noreturn:
+            print('Does not return.\n')
 
     def generate_doc(self, abi, thing, indent=''):
         if thing.doc != '':
