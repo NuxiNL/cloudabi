@@ -34,7 +34,8 @@ class MarkdownGenerator(Generator):
 
     def generate_types(self, abi, types):
         print('## Types\n')
-        super().generate_types(abi, types)
+        for type in sorted(types):
+            self.generate_type(abi, types[type])
 
     def generate_type(self, abi, type):
         print('### {}\n'.format(self.naming.typename(type)))
