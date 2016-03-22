@@ -280,6 +280,9 @@ class AbiParser:
                 raise Exception(
                     'Documentation nodes should not have children.')
             doc += n.text[2:] + '\n'
+        if doc == '':
+            import sys
+            sys.stderr.write('Missing documentation for: {}'.format(node.text))
         return doc
 
     @staticmethod
