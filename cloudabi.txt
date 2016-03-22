@@ -442,7 +442,8 @@ flags uint8 mflags
 	0x01 anon
 		| Instead of mapping the contents of the file provided,
 		| create a mapping to anonymous memory. The file
-		| descriptor argument must be set to [fd.map_anon_fd].
+		| descriptor argument must be set to [fd.map_anon_fd],
+		| and the offset must be set to zero.
 	0x02 fixed
 		| Require that the mapping is performed at the base
 		| address provided.
