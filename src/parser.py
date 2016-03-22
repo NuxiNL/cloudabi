@@ -100,7 +100,6 @@ class AbiParser:
         members = []
 
         for node in children:
-            doc = self.pop_documentation(node)
             mem_decl = node.text.split()
             mem = None
 
@@ -124,6 +123,7 @@ class AbiParser:
                 mem = self.parse_variant(abi, tag_member, node.children)
 
             elif mem_decl[0] in {'range', 'crange'}:
+                doc = self.pop_documentation(node)
                 self.__expect_no_children(node)
                 if len(mem_decl) < 5:
                     raise Exception('Invalid range: {}'.format(node.text))
@@ -135,14 +135,16 @@ class AbiParser:
                     mem_name,
                     mem_decl[0] == 'crange',
                     mem_type)
+                mem.doc = doc
 
             else:
+                doc = self.pop_documentation(node)
                 self.__expect_no_children(node)
                 mem_name = mem_decl[-1]
                 mem_type = self.parse_type(abi, mem_decl[:-1])
                 mem = SimpleStructMember(mem_name, mem_type)
+                mem.doc = doc
 
-            mem.doc = doc
             members.append(mem)
 
         return members
@@ -242,10 +244,8 @@ class AbiParser:
             else:
                 name = None
                 spec = node
-            doc = self.pop_documentation(spec)
             type = StructType(None, self.parse_struct_members(
                 abi, spec.children))
-            type.doc = doc
             members.append(VariantMember(name, tag_values, type))
 
         return VariantStructMember(tag_member, members)
@@ -280,6 +280,9 @@ class AbiParser:
                 raise Exception(
                     'Documentation nodes should not have children.')
             doc += n.text[2:] + '\n'
+        if doc == '':
+            import sys
+            sys.stderr.write('Missing documentation for: {}'.format(node.text))
         return doc
 
     @staticmethod

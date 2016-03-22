@@ -78,7 +78,6 @@ class MarkdownGenerator(Generator):
                     '<strong>{}</strong>'.format(m.raw_members[1].name))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, VariantStructMember):
-            self.generate_doc(abi, m)
             for vm in m.members:
                 print('- When `{}` {} {}:\n'.format(
                     m.tag.name,
