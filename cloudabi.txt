@@ -475,12 +475,25 @@ flags uint8 msflags
 		| Invalidate cached data.
 
 flags uint16 msgflags
+	| Flags provided to and returned by [sock_recv] and [sock_send].
 	@cprefix MSG_
 	0x01 ctrunc
+		| Returned by [sock_recv]: File descriptors truncated.
 	0x02 eor
+		| Provided to [sock_send]: Terminates a record (if
+		| supported by the protocol).
+		|
+		| Returned by [sock_recv]: End-of-record was received
+		| (if supported by the protocol).
 	0x04 peek
+		| Provided to [sock_recv]: Returns the message without
+		| removing it from the socket's receive queue.
 	0x08 trunc
+		| Returned by [sock_recv]: Message data has been
+		| truncated.
 	0x10 waitall
+		| On byte-stream sockets, block until the full amount of
+		| data can be returned.
 
 alias uint32 nthreads
 	| Specifies the number of threads sleeping on a condition
@@ -720,12 +733,15 @@ flags uint8 ssflags
 		| Clear [sockstat.ss_error].
 
 flags uint32 sstate
+	| State of the socket.
 	@cprefix SOCKSTATE_
 	0x01 acceptconn
+		| [sock_listen] has been called on the socket. The
+		| socket is accepting incoming connections.
 
 flags uint16 subflags
 	| Flags for [poll_fd] to determine how to process a
-	| subscription request.
+	| subscription request. These flags are ignored by [poll].
 	@cprefix SUBSCRIPTION_
 	0x01 add
 		| Adds and enables the subscription.
@@ -756,8 +772,13 @@ flags uint16 subclockflags
 		| time value of clock [subscription.clock.clock_id].
 
 flags uint16 subrwflags
+	| Flags influencing the method of polling for read or writing on
+	| a file descriptor.
 	@cprefix SUBSCRIPTION_FD_READWRITE_
 	0x01 poll
+		| If set, trigger immediately when polling for reading
+		| on a regular file, just like the POSIX poll function.
+		| Otherwise, only trigger when not at the end-of-file.
 
 opaque uint32 tid
 	| Unique system-local identifier of a thread. This identifier is
@@ -846,29 +867,58 @@ struct dirent
 		| entry.
 
 struct event
+	| An event that occurred.
 	userdata  userdata
+		| User-provided value that got attached to
+		| [subscription.userdata].
 	errno     error
+		| If non-zero, an error that occurred while processing
+		| the subscription request.
 	eventtype type
+		| The type of the event that occurred.
 	variant type
 		clock
 			struct clock
 				userdata identifier
+					| The user-defined unique
+					| identifier of the clock.
 		condvar
 			struct condvar
 				ptr atomic condvar condvar
+					| The condition variable that
+					| got woken up.
 		fd_read fd_write
 			struct fd_readwrite
 				filesize     nbytes
+					| The number of bytes available
+					| for reading or writing.
 				fd           fd
+					| The file descriptor that has
+					| data available for reading or
+					| writing.
 				eventrwflags flags
+					| The state of the file
+					| descriptor.
 		lock_rdlock lock_wrlock
 			struct lock
 				ptr atomic lock lock
+					| The lock that has been
+					| acquired for reading or
+					| writing.
 		proc_terminate
 			struct proc_terminate
 				fd       fd
+					| The process descriptor of the
+					| process that has terminated.
 				signal   signal
+					| If zero, the process has
+					| terminated normally.
+					| Otherwise, the signal
+					| condition causing it to
+					| terminate abnormally.
 				exitcode exitcode
+					| If terminated normally, the
+					| exit code of the process.
 
 struct fdstat
 	| File descriptor attributes.
@@ -919,17 +969,31 @@ struct lookup
 		| resolved.
 
 struct recv_in
+	| Arguments of [sock_recv].
 	crange iovec ri_data ri_datalen ri_data
+		| List of scatter/gather vectors where message data
+		| should be stored.
 	range fd     ri_fds  ri_fdslen  ri_fds
+		| Buffer where numbers of incoming file descriptors
+		| should be stored.
 	msgflags     ri_flags
+		| Message flags. Only [msgflags.peek] is valid.
 
 struct send_in
+	| Arguments of [sock_send].
 	crange ciovec si_data si_datalen si_data
+		| List of scatter/gather vectors where message data
+		| should be retrieved.
 	crange fd     si_fds  si_fdslen  si_fds
+		| File descriptors that need to be attached to the
+		| message.
 	msgflags      si_flags
+		| Message flags. Only [msgflags.eor] is valid.
 
 struct send_out
+	| Results of [sock_send].
 	size so_datalen
+		| Number of bytes transmitted.
 
 struct sockaddr
 	| Network address of a bound socket or its peer.
@@ -950,11 +1014,18 @@ struct sockaddr
 					| IPv6 port number.
 
 struct recv_out
+	| Results of [sock_recv].
 	size     ro_datalen
+		| Number of bytes stored in [recv_in.ri_data].
 	size     ro_fdslen
+		| Number of file descriptors stored in [recv_in.ri_fds].
 	sockaddr ro_sockname
+		| Address on which the message was received.
 	sockaddr ro_peername
+		| Address of the peer sending the message.
 	msgflags ro_flags
+		| Message flags. Only [msgflags.ctrunc], [msgflags.eor],
+		| and [msgflags.trunc] are valid.
 
 struct sockstat
 	| Socket attributes.
@@ -982,27 +1053,68 @@ struct subscription
 		clock
 			struct clock
 				userdata identifier
+					| The user-defined unique
+					| identifier of the clock.
 				clockid  clock_id
+					| The clock against which the
+					| timestamp should be compared.
 				timestamp timeout
+					| The absolute or relative
+					| timestamp.
 				timestamp precision
+					| The amount of time that the
+					| kernel may wait additionally
+					| to coalesce with other events.
 				subclockflags flags
+					| Flags specifying whether the
+					| timeout is absolute or
+					| relative.
 		condvar
 			struct condvar
 				ptr atomic condvar condvar
+					| The condition variable on
+					| which to wait to be woken up.
 				ptr atomic lock    lock
+					| The lock that should be
+					| released while waiting.
 				mflags             condvar_scope
+					| [mflags.private] if the
+					| condition variable is stored
+					| in private memory.
+					| [mflags.shared] if the
+					| condition variable is stored
+					| in shared memory.
 				mflags             lock_scope
+					| [mflags.private] if the lock
+					| is stored in private memory.
+					| [mflags.shared] if the lock is
+					| stored in shared memory.
 		fd_read fd_write
 			struct fd_readwrite
 				fd         fd
+					| The file descriptor on which
+					| to wait for it to become ready
+					| for reading or writing.
 				subrwflags flags
+					| Under which conditions to
+					| trigger.
 		lock_rdlock lock_wrlock
 			struct lock
 				ptr atomic lock lock
+					| The lock that should be
+					| acquired for reading or
+					| writing.
 				mflags          lock_scope
+					| [mflags.private] if the lock
+					| is stored in private memory.
+					| [mflags.shared] if the lock is
+					| stored in shared memory.
 		proc_terminate
 			struct proc_terminate
 				fd       fd
+					| The process descriptor on
+					| which to wait for process
+					| termination.
 
 struct threadattr
 	| Attributes for thread creation.
@@ -1348,6 +1460,8 @@ syscall 22 file_readdir
 		range void buf nbyte buf
 			| The buffer where directory entries are stored.
 		dircookie  cookie
+			| The location within the directory to start
+			| reading.
 	out
 		size bufused
 			| The number of bytes stored in the read buffer.
@@ -1785,10 +1899,22 @@ syscall 56 thread_yield
 	| Temporarily yields execution of the calling thread.
 
 syscall 57 poll_fd
+	| Concurrently polls for the occurrence of a set of events,
+	| while retaining subscriptions across calls.
 	in
 		fd                  fd
+			| The polling event queue.
 		crange subscription in nin in
+			| Changes that need to be made to the polling
+			| event queue.
 		range event         out nout out
+			| The events that have occurred.
 		cptr subscription   timeout
+			| Subscription of type [eventtype.clock] to
+			| serve as a timeout for the system call. The
+			| subscription is local to this invocation of
+			| this system call and is automatically purged
+			| upon completion.
 	out
 		size nevents
+			| The number of events stored.
