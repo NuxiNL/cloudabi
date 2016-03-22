@@ -16,6 +16,12 @@ class MarkdownGenerator(Generator):
         self.title = title
         self.naming = naming
 
+    def generate_abi(self, abi):
+        self.generate_head(abi)
+        self.generate_syscalls(abi, abi.syscalls_by_name)
+        self.generate_types(abi, abi.types)
+        self.generate_foot(abi)
+
     def generate_head(self, abi):
         super().generate_head(abi)
         print('# {}\n'.format(self.title))
@@ -23,13 +29,13 @@ class MarkdownGenerator(Generator):
 
     def generate_toc(self, abi):
         print('## Contents\n')
-        print('**Types**\n')
-        for n in sorted(abi.types):
-            print(self.link(abi.types[n]))
-        print()
         print('**Syscalls**\n')
         for n in sorted(abi.syscalls_by_name):
             print(self.link(abi.syscalls_by_name[n]))
+        print()
+        print('**Types**\n')
+        for n in sorted(abi.types):
+            print(self.link(abi.types[n]))
         print()
 
     def generate_types(self, abi, types):
