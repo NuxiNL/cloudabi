@@ -1190,13 +1190,13 @@ syscall 4 fd_create1
 			| [filetype.shared_memory]: Creates an anonymous
 			| shared memory object.
 			|
-			| [filetype.socket_dgram]: Creates a datagram
-			| socket.
+			| [filetype.socket_dgram]: Creates a UNIX
+			| datagram socket.
 			|
-			| [filetype.socket_seqpacket]: Creates a
+			| [filetype.socket_seqpacket]: Creates a UNIX
 			| sequenced-packet socket.
 			|
-			| [filetype.socket_stream]: Creates a
+			| [filetype.socket_stream]: Creates a UNIX
 			| byte-stream socket.
 	out
 		fd       fd
@@ -1208,13 +1208,13 @@ syscall 5 fd_create2
 		filetype type
 			| [filetype.fifo]: Creates a pipe.
 			|
-			| [filetype.socket_dgram]: Creates a datagram
-			| socket pair.
+			| [filetype.socket_dgram]: Creates a UNIX
+			| datagram socket pair.
 			|
-			| [filetype.socket_seqpacket]: Creates a
+			| [filetype.socket_seqpacket]: Creates a UNIX
 			| sequenced-packet socket pair.
 			|
-			| [filetype.socket_stream]: Creates a
+			| [filetype.socket_stream]: Creates a UNIX
 			| byte-stream socket pair.
 	out
 		fd       fd1
