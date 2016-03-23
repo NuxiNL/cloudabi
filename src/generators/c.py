@@ -109,7 +109,7 @@ class CSyscalldefsGenerator(CGenerator):
             if isinstance(m, SimpleStructMember):
                 mtype = self.mi_type(m.type)
                 if mtype.layout.align[0] == mtype.layout.align[1]:
-                    alignas = '_Alignas({}) '.format(mtype.layout.align[0])
+                    alignas = 'alignas({}) '.format(mtype.layout.align[0])
                 else:
                     alignas = ''
                 print('{}{}{};'.format(
@@ -214,10 +214,10 @@ class CSyscalldefsGenerator(CGenerator):
         self.generate_layout_assert('sizeof({})'.format(type_name), size)
 
     def generate_align_assert(self, type_name, align):
-        self.generate_layout_assert('_Alignof({})'.format(type_name), align)
+        self.generate_layout_assert('alignof({})'.format(type_name), align)
 
     def generate_layout_assert(self, expression, value):
-        static_assert = '_Static_assert({}, "Incorrect layout");'
+        static_assert = 'static_assert({}, "Incorrect layout");'
         if value[0] == value[1] or (
                 self.md_type is not None and
                 self.md_type.layout.size in ((4, 4), (8, 8))):
