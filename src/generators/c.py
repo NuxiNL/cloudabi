@@ -269,7 +269,7 @@ class CSyscallsGenerator(CGenerator):
         self.generate_syscall_body(abi, syscall)
         print()
 
-    def generate_syscall_body(self, abi,syscall):
+    def generate_syscall_body(self, abi, syscall):
         print(';')
 
     def generate_types(self, abi, types):

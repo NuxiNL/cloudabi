@@ -211,11 +211,11 @@ class Abi:
             for m in root.members:
                 if m.name == name:
                     return m
-                elif m.name == None and isinstance(m, VariantStructMember):
+                elif m.name is None and isinstance(m, VariantStructMember):
                     for mm in m.members:
                         if mm.name == name:
                             return mm
-                        elif mm.name == None:
+                        elif mm.name is None:
                             o = self.resolve_name(name, mm)
                             if o is not None:
                                 return o
