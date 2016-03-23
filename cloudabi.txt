@@ -1682,7 +1682,7 @@ syscall 39 poll
 	in
 		cptr subscription in
 			| The events to which to subscribe.
-		cptr event        out
+		ptr event         out
 			| The events that have occurred.
 		size              nsubscriptions
 			| Both the number of subscriptions and events.
