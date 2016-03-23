@@ -9,9 +9,10 @@ from ..generator import *
 
 class CNaming:
 
-    def __init__(self, prefix, md_prefix=None):
+    def __init__(self, prefix, md_prefix=None, c11=True):
         self.prefix = prefix
         self.md_prefix = md_prefix
+        self.c11 = c11
 
     def typename(self, type):
         return self.vardecl(type, '')
@@ -50,8 +51,11 @@ class CNaming:
                     name, type.count))
 
         elif isinstance(type, AtomicType):
-            return '_Atomic({}) {}'.format(
-                self.typename(type.target_type), name).rstrip()
+            if self.c11:
+                return '_Atomic({}) {}'.format(
+                    self.typename(type.target_type), name).rstrip()
+            else:
+                return self.vardecl(type.target_type, name)
 
         else:
             raise Exception('Unable to generate C declaration '
