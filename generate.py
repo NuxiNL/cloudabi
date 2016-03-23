@@ -9,6 +9,8 @@ import os
 
 from src.abi import *
 from src.generators.c import *
+from src.generators.markdown import *
+from src.generators.syscalls_master import *
 from src.parser import *
 
 abi = AbiParser().parse_abi_file(
@@ -60,4 +62,17 @@ with open('cloudabi_syscalls_aarch64.h', 'w') as f:
         CSyscallsAarch64Generator(
             naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_AARCH64_H',
+        ).generate_abi(abi)
+
+with open('syscalls.master', 'w') as f:
+    with redirect_stdout(f):
+        SyscallsMasterGenerator(
+            naming=CNaming('cloudabi_', 'cloudabi64_', c11=False),
+        ).generate_abi(abi)
+
+with open('cloudabi.md', 'w') as f:
+    with redirect_stdout(f):
+        MarkdownGenerator(
+            title='CloudABI',
+            naming=CNaming('cloudabi_'),
         ).generate_abi(abi)
