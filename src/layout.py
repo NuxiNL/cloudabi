@@ -75,6 +75,10 @@ class Layout:
 
         return Layout(size, align, machine_dep)
 
+    def fits_in(self, other_layout):
+        return (self.size[0] <= other_layout.size[0] and
+                self.size[1] <= other_layout.size[1])
+
 
 def _align(size, align):
     misalignment = size % align

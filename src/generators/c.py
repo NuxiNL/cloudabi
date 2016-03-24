@@ -21,7 +21,10 @@ class CNaming:
         return '{}{}{}'.format(self.prefix, type.cprefix, value.name).upper()
 
     def syscallname(self, syscall):
-        return '{}sys_{}'.format(self.prefix, syscall.name)
+        prefix = self.prefix
+        if self.md_prefix is not None and syscall.machine_dep:
+            prefix = self.md_prefix
+        return '{}sys_{}'.format(prefix, syscall.name)
 
     def vardecl(self, type, name, array_need_parens=False):
         if isinstance(type, VoidType):

@@ -188,6 +188,17 @@ class Syscall:
         self.input = input
         self.output = output
         self.noreturn = noreturn
+        self.machine_dep = self.__is_machine_dep(input, output)
+
+    @staticmethod
+    def __is_machine_dep(input, output):
+        for p in input.raw_members + output.raw_members:
+            if isinstance(p.type, PointerType):
+                if p.type.target_type.layout.machine_dep:
+                    return True
+            # TODO: Uncomment this to do it correctly.
+            #elif not p.type.layout.fits_in(PointerType().layout):
+            #    return True
 
 
 class Abi:
