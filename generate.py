@@ -36,7 +36,7 @@ with open('headers/cloudabi_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
-            header_guard='CLOUDABI_TYPES_NATIVE_H',
+            header_guard='CLOUDABI_TYPES_H',
             machine_dep=True,
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
