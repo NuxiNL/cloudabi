@@ -365,6 +365,9 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
     def _ccast(self, type_from, type_to, name):
         if (isinstance(type_from, StructType) or
                 isinstance(type_to, StructType)):
+            if type_from.layout.size != type_to.layout.size:
+                raise Exception('Can\'t cast {} to {}.'.format(
+                    type_from, type_to))
             return '*({})&{}'.format(
                 self.naming.typename(PointerType(type_to)), name)
         else:
