@@ -95,7 +95,7 @@ class ArrayType(Type):
 
 class PointerType(Type):
 
-    def __init__(self, const, target_type):
+    def __init__(self, const=False, target_type=VoidType()):
         super().__init__(('cptr ' if const else 'ptr ') + target_type.name,
                          layout=Layout((4, 8), (4, 8)))
         self.const = const
