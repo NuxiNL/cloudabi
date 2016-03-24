@@ -87,17 +87,15 @@ int_like_types = {
 class ArrayType(Type):
 
     def __init__(self, count, element_type):
-        super().__init__('array {} {}'.format(count, element_type.name),
-                         layout=Layout.array(element_type, count))
+        super().__init__(None, layout=Layout.array(element_type, count))
         self.count = count
         self.element_type = element_type
 
 
 class PointerType(Type):
 
-    def __init__(self, const=False, target_type=VoidType()):
-        super().__init__(('cptr ' if const else 'ptr ') + target_type.name,
-                         layout=Layout((4, 8), (4, 8)))
+    def __init__(self, target_type=VoidType(), const=False):
+        super().__init__(None, layout=Layout((4, 8), (4, 8)))
         self.const = const
         self.target_type = target_type
 
@@ -105,8 +103,7 @@ class PointerType(Type):
 class AtomicType(Type):
 
     def __init__(self, target_type):
-        super().__init__('atomic ' + target_type.name,
-                         layout=target_type.layout)
+        super().__init__(None, layout=target_type.layout)
         self.target_type = target_type
 
 
@@ -149,7 +146,7 @@ class RangeStructMember(StructMember):
         self.const = const
         self.target_type = target_type
         self.raw_members = [
-            SimpleStructMember(base_name, PointerType(const, target_type)),
+            SimpleStructMember(base_name, PointerType(target_type, const)),
             SimpleStructMember(length_name, int_types['size'])]
 
 
@@ -197,7 +194,7 @@ class Syscall:
                 if p.type.target_type.layout.machine_dep:
                     return True
             # TODO: Uncomment this to do it correctly.
-            #elif not p.type.layout.fits_in(PointerType().layout):
+            # elif not p.type.layout.fits_in(PointerType().layout):
             #    return True
 
 

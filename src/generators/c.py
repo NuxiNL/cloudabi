@@ -231,7 +231,7 @@ class CSyscalldefsGenerator(CGenerator):
                 v = value[0]
             print(static_assert.format('{} == {}'.format(expression, v)))
         else:
-            voidptr = self.naming.typename(PointerType(False, VoidType()))
+            voidptr = self.naming.typename(PointerType())
             print(static_assert.format('sizeof({}) != 4 || {} == {}'.format(
                 voidptr, expression, value[0])))
             print(static_assert.format('sizeof({}) != 8 || {} == {}'.format(
@@ -248,8 +248,7 @@ class CSyscallsGenerator(CGenerator):
         for p in syscall.input.raw_members:
             params.append(self.naming.vardecl(p.type, p.name))
         for p in syscall.output.raw_members:
-            params.append(self.naming.vardecl(
-                PointerType(False, p.type), p.name))
+            params.append(self.naming.vardecl(PointerType(p.type), p.name))
         return params
 
     def generate_syscall(self, abi, syscall):
@@ -367,7 +366,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
         if (isinstance(type_from, StructType) or
                 isinstance(type_to, StructType)):
             return '*({})&{}'.format(
-                self.naming.typename(PointerType(False, type_to)), name)
+                self.naming.typename(PointerType(type_to)), name)
         else:
             return '({}){}'.format(self.naming.typename(type_to), name)
 

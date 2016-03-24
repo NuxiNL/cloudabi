@@ -262,9 +262,9 @@ class AbiParser:
         elif decl[:1] == ['array'] and len(decl) > 2:
             return ArrayType(int(decl[1], 0), self.parse_type(abi, decl[2:]))
         elif decl[:1] == ['ptr']:
-            return PointerType(False, self.parse_type(abi, decl[1:]))
+            return PointerType(self.parse_type(abi, decl[1:]))
         elif decl[:1] == ['cptr']:
-            return PointerType(True, self.parse_type(abi, decl[1:]))
+            return PointerType(self.parse_type(abi, decl[1:]), const=True)
         elif decl[:1] == ['atomic']:
             return AtomicType(self.parse_type(abi, decl[1:]))
         else:
