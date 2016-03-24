@@ -1245,7 +1245,7 @@ syscall 0 clock_res_get
 syscall 1 clock_time_get
 	| Obtains the time value of a clock.
 	in
-		clockid   clock
+		clockid   clock_id
 			| The clock for which the time needs to be
 			| returned.
 		timestamp precision
