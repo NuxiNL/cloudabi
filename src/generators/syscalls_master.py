@@ -28,7 +28,8 @@ class SyscallsMasterGenerator(Generator):
         print('#include <sys/sysent.h>')
         print('#include <sys/sysproto.h>')
         print()
-        print('#include <compat/cloudabi64/cloudabi64_types.h>')
+        print('#include <contrib/cloudabi/cloudabi64_types.h>')
+        print()
         print('#include <compat/cloudabi64/cloudabi64_proto.h>')
 
     def generate_types(self, abi, types):
