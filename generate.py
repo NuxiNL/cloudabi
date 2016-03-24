@@ -16,7 +16,7 @@ from src.parser import *
 abi = AbiParser().parse_abi_file(
     os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
-with open('cloudabi_types_common.h', 'w') as f:
+with open('headers/cloudabi_types_common.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
@@ -32,7 +32,7 @@ with open('cloudabi_types_common.h', 'w') as f:
                      '#endif\n'
         ).generate_abi(abi)
 
-with open('cloudabi_types.h', 'w') as f:
+with open('headers/cloudabi_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
@@ -41,7 +41,7 @@ with open('cloudabi_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('cloudabi32_types.h', 'w') as f:
+with open('headers/cloudabi32_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi32_'),
@@ -51,7 +51,7 @@ with open('cloudabi32_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('cloudabi64_types.h', 'w') as f:
+with open('headers/cloudabi64_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_'),
@@ -61,7 +61,7 @@ with open('cloudabi64_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('cloudabi_syscalls_x86_64.h', 'w') as f:
+with open('headers/cloudabi_syscalls_x86_64.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsX86_64Generator(
             naming=CNaming('cloudabi_'),
@@ -69,7 +69,7 @@ with open('cloudabi_syscalls_x86_64.h', 'w') as f:
             preamble='#include "cloudabi_types.h"\n'
         ).generate_abi(abi)
 
-with open('cloudabi_syscalls_aarch64.h', 'w') as f:
+with open('headers/cloudabi_syscalls_aarch64.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsAarch64Generator(
             naming=CNaming('cloudabi_'),
@@ -77,13 +77,13 @@ with open('cloudabi_syscalls_aarch64.h', 'w') as f:
             preamble='#include "cloudabi_types.h"\n'
         ).generate_abi(abi)
 
-with open('syscalls.master', 'w') as f:
+with open('freebsd/syscalls.master', 'w') as f:
     with redirect_stdout(f):
         SyscallsMasterGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False),
         ).generate_abi(abi)
 
-with open('cloudabi.md', 'w') as f:
+with open('docs/cloudabi.md', 'w') as f:
     with redirect_stdout(f):
         MarkdownGenerator(
             title='CloudABI',
