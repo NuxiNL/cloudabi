@@ -72,12 +72,13 @@ class CNaming:
 class CGenerator(Generator):
 
     def __init__(self, naming, header_guard=None, machine_dep=None,
-                 md_type=None):
+                 md_type=None, preamble=''):
         super().__init__(comment_prefix='// ')
         self.naming = naming
         self.header_guard = header_guard
         self.machine_dep = machine_dep
         self.md_type = md_type
+        self.preamble = preamble
 
     def generate_head(self, abi):
         super().generate_head(abi)
@@ -85,6 +86,7 @@ class CGenerator(Generator):
             print('#ifndef {}'.format(self.header_guard))
             print('#define {}'.format(self.header_guard))
             print()
+            print(self.preamble)
 
     def generate_foot(self, abi):
         if self.header_guard is not None:
