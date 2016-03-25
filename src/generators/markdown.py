@@ -107,7 +107,15 @@ class MarkdownGenerator(Generator):
             for m in type.members:
                 self.generate_struct_member(abi, m, [type])
         elif isinstance(type, FunctionType):
-            pass
+            if type.parameters.members:
+                print('Parameters:\n')
+                for m in type.parameters.members:
+                    self.generate_struct_member(abi, m, [type])
+            if not isinstance(type.return_type, VoidType):
+                print('Returns:\n')
+                print('- <code>{}</code>\n'.format(
+                    self.naming.typename(type.return_type)))
+                self.generate_doc(abi, type.return_type.doc, '    ')
 
     def generate_struct_member(self, abi, m, parents, indent=''):
         print(indent, end='')

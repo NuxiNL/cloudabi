@@ -3282,6 +3282,17 @@ Members:
 
 Entry point for additionally created threads.
 
+Parameters:
+
+- <code>[cloudabi_tid_t](#cloudabi_tid_t) <strong>tid</strong></code>
+
+    Thread ID of the current thread.
+
+- <code>void *<strong>aux</strong></code>
+
+    Copy of the value stored in
+    [`cloudabi_threadattr_t::argument`](#cloudabi_threadattr_t.argument).
+
 #### cloudabi_tid_t (uint32_t)
 
 Unique system-local identifier of a thread. This identifier is
