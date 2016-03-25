@@ -5,9 +5,10 @@
 
 import re
 
-from ..abi import *
-from ..generator import *
+from .abi import *
+from .generator import *
 from .c import CNaming
+
 
 class MarkdownNaming:
 

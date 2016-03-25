@@ -7,11 +7,11 @@
 from contextlib import redirect_stdout
 import os
 
-from src.abi import *
-from src.generators.c import *
-from src.generators.markdown import *
-from src.generators.syscalls_master import *
-from src.parser import *
+from generator.abi import *
+from generator.c import *
+from generator.markdown import *
+from generator.parser import *
+from generator.syscalls_master import *
 
 abi = AbiParser().parse_abi_file(
     os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))

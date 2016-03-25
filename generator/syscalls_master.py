@@ -3,8 +3,8 @@
 # This file is distributed under a 2-clause BSD license.
 # See the LICENSE and CONTRIBUTORS files for details.
 
-from ..abi import *
-from ..generator import *
+from .abi import *
+from .generator import *
 
 
 class SyscallsMasterGenerator(Generator):
