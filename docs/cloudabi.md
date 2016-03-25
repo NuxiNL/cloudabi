@@ -226,10 +226,17 @@ Inputs:
 
 - <a name="condvar_signal.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
 
-    [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the condition variable is
-    stored in private memory. [`CLOUDABI_MAP_SHARED`](#mflags.shared) if
-    the condition variable is stored in shared
-    memory.
+    Possible values:
+
+    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
+
+        The condition variable is stored in
+        private memory.
+
+    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
+
+        The condition variable is stored in
+        shared memory.
 
 - <a name="condvar_signal.nwaiters"></a><code>[cloudabi\_nthreads\_t](#nthreads) <strong>nwaiters</strong></code>
 
@@ -255,20 +262,29 @@ Inputs:
 
 - <a name="fd_create1.type"></a><code>[cloudabi\_filetype\_t](#filetype) <strong>type</strong></code>
 
-    [`CLOUDABI_FILETYPE_POLL`](#filetype.poll): Creates a polling event
-    queue.
+    Possible values:
 
-    [`CLOUDABI_FILETYPE_SHARED_MEMORY`](#filetype.shared_memory): Creates an anonymous
-    shared memory object.
+    - [`CLOUDABI_FILETYPE_POLL`](#filetype.poll)
 
-    [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram): Creates a UNIX
-    datagram socket.
+        Creates a polling event queue.
 
-    [`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket): Creates a UNIX
-    sequenced-packet socket.
+    - [`CLOUDABI_FILETYPE_SHARED_MEMORY`](#filetype.shared_memory)
 
-    [`CLOUDABI_FILETYPE_SOCKET_STREAM`](#filetype.socket_stream): Creates a UNIX
-    byte-stream socket.
+        Creates an anonymous shared memory
+        object.
+
+    - [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
+
+        Creates a UNIX datagram socket.
+
+    - [`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket)
+
+        Creates a UNIX sequenced-packet
+        socket.
+
+    - [`CLOUDABI_FILETYPE_SOCKET_STREAM`](#filetype.socket_stream)
+
+        Creates a UNIX byte-stream socket.
 
 Outputs:
 
@@ -284,16 +300,25 @@ Inputs:
 
 - <a name="fd_create2.type"></a><code>[cloudabi\_filetype\_t](#filetype) <strong>type</strong></code>
 
-    [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo): Creates a pipe.
+    Possible values:
 
-    [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram): Creates a UNIX
-    datagram socket pair.
+    - [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo)
 
-    [`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket): Creates a UNIX
-    sequenced-packet socket pair.
+        Creates a pipe.
 
-    [`CLOUDABI_FILETYPE_SOCKET_STREAM`](#filetype.socket_stream): Creates a UNIX
-    byte-stream socket pair.
+    - [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
+
+        Creates a UNIX datagram socket pair.
+
+    - [`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket)
+
+        Creates a UNIX sequenced-packet socket
+        pair.
+
+    - [`CLOUDABI_FILETYPE_SOCKET_STREAM`](#filetype.socket_stream)
+
+        Creates a UNIX byte-stream socket
+        pair.
 
 Outputs:
 
@@ -598,9 +623,15 @@ Inputs:
 
 - <a name="file_create.type"></a><code>[cloudabi\_filetype\_t](#filetype) <strong>type</strong></code>
 
-    [`CLOUDABI_FILETYPE_DIRECTORY`](#filetype.directory): Creates a directory.
+    Possible values:
 
-    [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo): Creates a FIFO.
+    - [`CLOUDABI_FILETYPE_DIRECTORY`](#filetype.directory)
+
+        Creates a directory.
+
+    - [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo)
+
+        Creates a FIFO.
 
 #### <a name="file_link"></a>`cloudabi_sys_file_link`
 
@@ -874,8 +905,12 @@ Inputs:
 
 - <a name="file_unlink.flags"></a><code>[cloudabi\_ulflags\_t](#ulflags) <strong>flags</strong></code>
 
-    If [`CLOUDABI_UNLINK_REMOVEDIR`](#ulflags.removedir) is set, attempt to
-    remove a directory. Otherwise, unlink a file.
+    Possible values:
+
+    - [`CLOUDABI_UNLINK_REMOVEDIR`](#ulflags.removedir)
+
+        If set, attempt to remove a directory.
+        Otherwise, unlink a file.
 
 #### <a name="lock_unlock"></a>`cloudabi_sys_lock_unlock`
 
@@ -901,9 +936,15 @@ Inputs:
 
 - <a name="lock_unlock.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
 
-    [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock is stored in
-    private memory. [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-    stored in shared memory.
+    Possible values:
+
+    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
+
+        The lock is stored in private memory.
+
+    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
+
+        The lock is stored in shared memory.
 
 #### <a name="mem_advise"></a>`cloudabi_sys_mem_advise`
 
@@ -1376,9 +1417,15 @@ Inputs:
 
 - <a name="thread_exit.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
 
-    [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock is stored in
-    private memory. [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-    stored in shared memory.
+    Possible values:
+
+    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
+
+        The lock is stored in private memory.
+
+    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
+
+        The lock is stored in shared memory.
 
 Does not return.
 

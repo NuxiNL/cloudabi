@@ -1341,10 +1341,12 @@ syscall 2 condvar_signal
 			| The userspace condition variable that has
 			| waiting threads.
 		mflags             scope
-			| [mflags.private] if the condition variable is
-			| stored in private memory. [mflags.shared] if
-			| the condition variable is stored in shared
-			| memory.
+			private
+				| The condition variable is stored in
+				| private memory.
+			shared
+				| The condition variable is stored in
+				| shared memory.
 		nthreads           nwaiters
 			| The number of threads that need to be woken
 			| up. If it exceeds the number of waiting
@@ -1360,20 +1362,18 @@ syscall 4 fd_create1
 	| Creates a file descriptor.
 	in
 		filetype type
-			| [filetype.poll]: Creates a polling event
-			| queue.
-			|
-			| [filetype.shared_memory]: Creates an anonymous
-			| shared memory object.
-			|
-			| [filetype.socket_dgram]: Creates a UNIX
-			| datagram socket.
-			|
-			| [filetype.socket_seqpacket]: Creates a UNIX
-			| sequenced-packet socket.
-			|
-			| [filetype.socket_stream]: Creates a UNIX
-			| byte-stream socket.
+			poll
+				| Creates a polling event queue.
+			shared_memory
+				| Creates an anonymous shared memory
+				| object.
+			socket_dgram
+				| Creates a UNIX datagram socket.
+			socket_seqpacket
+				| Creates a UNIX sequenced-packet
+				| socket.
+			socket_stream
+				| Creates a UNIX byte-stream socket.
 	out
 		fd       fd
 			| The file descriptor that has been created.
@@ -1382,16 +1382,16 @@ syscall 5 fd_create2
 	| Creates a pair of file descriptors.
 	in
 		filetype type
-			| [filetype.fifo]: Creates a pipe.
-			|
-			| [filetype.socket_dgram]: Creates a UNIX
-			| datagram socket pair.
-			|
-			| [filetype.socket_seqpacket]: Creates a UNIX
-			| sequenced-packet socket pair.
-			|
-			| [filetype.socket_stream]: Creates a UNIX
-			| byte-stream socket pair.
+			fifo
+				| Creates a pipe.
+			socket_dgram
+				| Creates a UNIX datagram socket pair.
+			socket_seqpacket
+				| Creates a UNIX sequenced-packet socket
+				| pair.
+			socket_stream
+				| Creates a UNIX byte-stream socket
+				| pair.
 	out
 		fd       fd1
 			| The first file descriptor of the pair. For
@@ -1579,11 +1579,10 @@ syscall 19 file_create
 		crange char path pathlen path
 			| The path at which the file should be created.
 		filetype    type
-			| [filetype.directory]: Creates a directory.
-			|
-			| [filetype.fifo]: Creates a FIFO.
-			# Not regular files? Those have to be created
-			# with file_open?
+			directory
+				| Creates a directory.
+			fifo
+				| Creates a FIFO.
 
 syscall 20 file_link
 	| Creates a hard link.
@@ -1754,8 +1753,9 @@ syscall 30 file_unlink
 		crange char path pathlen path
 			| The path that needs to be unlinked or removed.
 		ulflags     flags
-			| If [ulflags.removedir] is set, attempt to
-			| remove a directory. Otherwise, unlink a file.
+			removedir
+				| If set, attempt to remove a directory.
+				| Otherwise, unlink a file.
 
 syscall 31 lock_unlock
 	| Unlocks a write-locked userspace lock.
@@ -1775,9 +1775,10 @@ syscall 31 lock_unlock
 			| The userspace lock that is locked for writing
 			| by the calling thread.
 		mflags          scope
-			| [mflags.private] if the lock is stored in
-			| private memory. [mflags.shared] if the lock is
-			| stored in shared memory.
+			private
+				| The lock is stored in private memory.
+			shared
+				| The lock is stored in shared memory.
 
 syscall 32 mem_advise
 	| Provides memory advisory information on a region of memory.
@@ -2057,9 +2058,10 @@ syscall 54 thread_exit
 			| Userspace lock that is locked for writing by
 			| the calling thread.
 		mflags          scope
-			| [mflags.private] if the lock is stored in
-			| private memory. [mflags.shared] if the lock is
-			| stored in shared memory.
+			private
+				| The lock is stored in private memory.
+			shared
+				| The lock is stored in shared memory.
 	noreturn
 
 syscall 55 thread_tcb_set

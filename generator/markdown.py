@@ -129,6 +129,11 @@ class MarkdownGenerator(Generator):
                 self.naming.vardecl(
                     m.type, '<strong>{}</strong>'.format(_escape(m.name)))))
             self.generate_doc(abi, m, indent + '    ')
+            if m.special_values:
+                print('    Possible values:\n')
+                for v in m.special_values:
+                    print('    - {}\n'.format(self.naming.link(m.type, v)))
+                    self.generate_doc(abi, v, indent + '        ')
         elif isinstance(m, RangeStructMember):
             print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
                 self.anchor(*parents, m.raw_members[0]),

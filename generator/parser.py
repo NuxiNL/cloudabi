@@ -140,11 +140,26 @@ class AbiParser:
                 mem.doc = doc
 
             else:
-                doc = self.pop_documentation(node)
-                self.__expect_no_children(node)
                 mem_name = mem_decl[-1]
                 mem_type = self.parse_type(abi, mem_decl[:-1])
-                mem = SimpleStructMember(mem_name, mem_type)
+                mem_vals = []
+                if isinstance(mem_type, IntLikeType):
+                    doc = self.pop_documentation(node, optional=True)
+                    for n in node.children:
+                        vname = n.text
+                        val = [v for v in mem_type.values if vname == v.name]
+                        if len(val) != 1:
+                            raise Exception(
+                                'Struct member type {} has no value {}'.format(
+                                    mem_type.name, vname))
+                        v = SpecialValue(val[0].name, val[0].value)
+                        v.doc = self.pop_documentation(n)
+                        self.__expect_no_children(n)
+                        mem_vals.append(v)
+                else:
+                    doc = self.pop_documentation(node)
+                    self.__expect_no_children(node)
+                mem = SimpleStructMember(mem_name, mem_type, mem_vals)
                 mem.doc = doc
 
             members.append(mem)
@@ -272,7 +287,7 @@ class AbiParser:
         else:
             raise Exception('Invalid type: {}'.format(' '.join(decl)))
 
-    def pop_documentation(self, node):
+    def pop_documentation(self, node, optional=False):
         doc = ''
         while len(node.children) > 0 and (
                 node.children[0].text.startswith('| ') or
@@ -282,7 +297,7 @@ class AbiParser:
                 raise Exception(
                     'Documentation nodes should not have children.')
             doc += n.text[2:] + '\n'
-        if doc == '':
+        if doc == '' and not optional:
             import sys
             sys.stderr.write(
                 'Missing documentation for: {}\n'.format(node.text))

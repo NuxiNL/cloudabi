@@ -131,9 +131,10 @@ class StructMember:
 
 class SimpleStructMember(StructMember):
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, special_values = None):
         super().__init__(name, layout=type.layout)
         self.type = type
+        self.special_values = special_values or []
 
 
 class RangeStructMember(StructMember):
