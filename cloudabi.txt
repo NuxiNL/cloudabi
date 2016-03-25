@@ -3,6 +3,82 @@
 # This file is distributed under a 2-clause BSD license.
 # See the LICENSE and CONTRIBUTORS files for details.
 
+| # Nuxi CloudABI
+|
+| CloudABI is what you get if you take POSIX, add capability-based
+| security, and remove everything that's incompatible with that. The
+| result is a minimal ABI consisting of only 58 syscalls.
+|
+| CloudABI doesn't have its own kernel, but instead is implemented in existing
+| kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
+| for NetBSD](https://github.com/NuxiNL/netbsd) and [a patch-set for
+| Linux](https://github.com/NuxiNL/linux) are available as well. This means that
+| CloudABI binaries can be executed in different operating systems, without any
+| modification.
+|
+| ## Capability-Based Security
+|
+| Capability-based security means that processes can only perform
+| actions that have no global impact. Processes cannot open files by
+| their absolute path, cannot open network connections, and cannot
+| observe global system state such as the process table.
+|
+| The capabilities of a process are fully determined by its set of open
+| file descriptors (fds). For example, files can only be opened if the
+| process already has a file descriptor to a directory the file is in.
+|
+| Unlike in POSIX, where processes are normally started with file
+| descriptors 0, 1, and 2 reserved for standard input, output, and
+| error, CloudABI does not reserve any file descriptor numbers for
+| specific purposes.
+|
+| In CloudABI, a process depends on its parent process to launch it with
+| the right set of resources, since the process will not be able to open
+| any new resources. For example, a simple static web server would need
+| to be started with an fd to a listening socket, and an fd to the
+| directory to serve files out of. The web server will then be unable to
+| do anything other than reading files in that directory, and accept
+| connections on the given socket.
+|
+| So, unknown CloudABI binaries can safely be executed without the need
+| for containers, virtual machines, or other sandboxing techonologies.
+|
+| Watch [Ed Schouten's Talk at
+| 32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
+| information about what capability-based security for UNIX means.
+|
+| ## Cloudlibc
+|
+| [Cloudlibc](https://github.com/NuxiNL/cloudlibc) is an implementation
+| of the C standard library, without all CloudABI-incompatible
+| functions. For example, Cloudlibc does not have `open`, but does have
+| `openat`.
+|
+| ## Cloudabi-Ports
+|
+| [Cloudabi-Ports](https://github.com/NuxiNL/cloudabi-ports) is a
+| collection of ports of commonly used libraries and applications to
+| CloudABI. It contains software such as `zlib`, `libpng`, `boost`,
+| `memcached`, and much more. The software is patched to not depend on
+| any global state, such as files in `/etc` or `/dev`, using `open()`,
+| etc.
+|
+| ## Using CloudABI
+|
+| Instructions for using CloudABI (including kernel modules/patches,
+| toolchain, and ports) are available for several operating systems:
+|
+| - Arch Linux: https://nuxi.nl/doc/archlinux/
+| - Debian, Ubuntu, and other Debian derivatives: https://nuxi.nl/doc/debian/
+| - FreeBSD, PC-BSD and DragonFly BSD: https://nuxi.nl/doc/freebsd/
+| - NetBSD: https://nuxi.nl/doc/netbsd/
+|
+| ## Specification of the ABI
+|
+| The entire ABI is specified in a a file called `cloudabi.txt`, from
+| which all headers and documentation (including the one you're reading
+| now) is generated.
+
 enum uint8 advice
 	| File or memory access pattern advisory information.
 	1 dontneed
