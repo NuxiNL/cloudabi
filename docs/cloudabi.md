@@ -1411,32 +1411,32 @@ Temporarily yields execution of the calling thread.
 
 File or memory access pattern advisory information.
 
-- <a name="CLOUDABI_ADVICE_DONTNEED"></a>`CLOUDABI_ADVICE_DONTNEED`
+- <a name="CLOUDABI_ADVICE_DONTNEED"></a>**`CLOUDABI_ADVICE_DONTNEED`**
 
     The application expects that it will not access the
     specified data in the near future.
 
-- <a name="CLOUDABI_ADVICE_NOREUSE"></a>`CLOUDABI_ADVICE_NOREUSE`
+- <a name="CLOUDABI_ADVICE_NOREUSE"></a>**`CLOUDABI_ADVICE_NOREUSE`**
 
     The application expects to access the specified data
     once and then not reuse it thereafter.
 
-- <a name="CLOUDABI_ADVICE_NORMAL"></a>`CLOUDABI_ADVICE_NORMAL`
+- <a name="CLOUDABI_ADVICE_NORMAL"></a>**`CLOUDABI_ADVICE_NORMAL`**
 
     The application has no advice to give on its behavior
     with respect to the specified data.
 
-- <a name="CLOUDABI_ADVICE_RANDOM"></a>`CLOUDABI_ADVICE_RANDOM`
+- <a name="CLOUDABI_ADVICE_RANDOM"></a>**`CLOUDABI_ADVICE_RANDOM`**
 
     The application expects to access the specified data
     in a random order.
 
-- <a name="CLOUDABI_ADVICE_SEQUENTIAL"></a>`CLOUDABI_ADVICE_SEQUENTIAL`
+- <a name="CLOUDABI_ADVICE_SEQUENTIAL"></a>**`CLOUDABI_ADVICE_SEQUENTIAL`**
 
     The application expects to access the specified data
     sequentially from lower offsets to higher offsets.
 
-- <a name="CLOUDABI_ADVICE_WILLNEED"></a>`CLOUDABI_ADVICE_WILLNEED`
+- <a name="CLOUDABI_ADVICE_WILLNEED"></a>**`CLOUDABI_ADVICE_WILLNEED`**
 
     The application expects to access the specified data
     in the near future.
@@ -1445,52 +1445,52 @@ File or memory access pattern advisory information.
 
 Enumeration describing the kind of value stored in [`cloudabi_auxv_t`](#cloudabi_auxv_t).
 
-- <a name="CLOUDABI_AT_ARGDATA"></a>`CLOUDABI_AT_ARGDATA`
+- <a name="CLOUDABI_AT_ARGDATA"></a>**`CLOUDABI_AT_ARGDATA`**
 
     Base address of the binary argument data provided to
     [`cloudabi_sys_proc_exec`](#cloudabi_sys_proc_exec).
 
-- <a name="CLOUDABI_AT_ARGDATALEN"></a>`CLOUDABI_AT_ARGDATALEN`
+- <a name="CLOUDABI_AT_ARGDATALEN"></a>**`CLOUDABI_AT_ARGDATALEN`**
 
     Length of the binary argument data provided to
     [`cloudabi_sys_proc_exec`](#cloudabi_sys_proc_exec).
 
-- <a name="CLOUDABI_AT_CANARY"></a>`CLOUDABI_AT_CANARY`
+- <a name="CLOUDABI_AT_CANARY"></a>**`CLOUDABI_AT_CANARY`**
 
     Base address of a buffer of random data that may be
     used for non-cryptographic purposes, for example as a
     canary for stack smashing protection.
 
-- <a name="CLOUDABI_AT_CANARYLEN"></a>`CLOUDABI_AT_CANARYLEN`
+- <a name="CLOUDABI_AT_CANARYLEN"></a>**`CLOUDABI_AT_CANARYLEN`**
 
     Length of a buffer of random data that may be used
     for non-cryptographic purposes, for example as a
     canary for stack smashing protection.
 
-- <a name="CLOUDABI_AT_NCPUS"></a>`CLOUDABI_AT_NCPUS`
+- <a name="CLOUDABI_AT_NCPUS"></a>**`CLOUDABI_AT_NCPUS`**
 
     Number of CPUs that the system this process is running
     on has.
 
-- <a name="CLOUDABI_AT_NULL"></a>`CLOUDABI_AT_NULL`
+- <a name="CLOUDABI_AT_NULL"></a>**`CLOUDABI_AT_NULL`**
 
     Terminator of the auxiliary vector.
 
-- <a name="CLOUDABI_AT_PAGESZ"></a>`CLOUDABI_AT_PAGESZ`
+- <a name="CLOUDABI_AT_PAGESZ"></a>**`CLOUDABI_AT_PAGESZ`**
 
     Smallest memory object size for which individual
     memory protection controls can be configured.
 
-- <a name="CLOUDABI_AT_PHDR"></a>`CLOUDABI_AT_PHDR`
+- <a name="CLOUDABI_AT_PHDR"></a>**`CLOUDABI_AT_PHDR`**
 
     Address of the first ELF program header of the
     executable.
 
-- <a name="CLOUDABI_AT_PHNUM"></a>`CLOUDABI_AT_PHNUM`
+- <a name="CLOUDABI_AT_PHNUM"></a>**`CLOUDABI_AT_PHNUM`**
 
     Number of ELF program headers of the executable.
 
-- <a name="CLOUDABI_AT_TID"></a>`CLOUDABI_AT_TID`
+- <a name="CLOUDABI_AT_TID"></a>**`CLOUDABI_AT_TID`**
 
     Thread ID of the initial thread of the process.
 
@@ -1544,7 +1544,7 @@ Members:
 
 Identifiers for clocks.
 
-- <a name="CLOUDABI_CLOCK_MONOTONIC"></a>`CLOUDABI_CLOCK_MONOTONIC`
+- <a name="CLOUDABI_CLOCK_MONOTONIC"></a>**`CLOUDABI_CLOCK_MONOTONIC`**
 
     The system-wide monotonic clock, which is defined as a
     clock measuring real time, whose value cannot be
@@ -1553,17 +1553,17 @@ Identifiers for clocks.
     The epoch of this clock is undefined. The absolute
     time value of this clock therefore has no meaning.
 
-- <a name="CLOUDABI_CLOCK_PROCESS_CPUTIME_ID"></a>`CLOUDABI_CLOCK_PROCESS_CPUTIME_ID`
+- <a name="CLOUDABI_CLOCK_PROCESS_CPUTIME_ID"></a>**`CLOUDABI_CLOCK_PROCESS_CPUTIME_ID`**
 
     The CPU-time clock associated with the current
     process.
 
-- <a name="CLOUDABI_CLOCK_REALTIME"></a>`CLOUDABI_CLOCK_REALTIME`
+- <a name="CLOUDABI_CLOCK_REALTIME"></a>**`CLOUDABI_CLOCK_REALTIME`**
 
     The system-wide clock measuring real time. Time value
     zero corresponds with 1970-01-01T00:00:00Z.
 
-- <a name="CLOUDABI_CLOCK_THREAD_CPUTIME_ID"></a>`CLOUDABI_CLOCK_THREAD_CPUTIME_ID`
+- <a name="CLOUDABI_CLOCK_THREAD_CPUTIME_ID"></a>**`CLOUDABI_CLOCK_THREAD_CPUTIME_ID`**
 
     The CPU-time clock associated with the current thread.
 
@@ -1573,7 +1573,7 @@ A userspace condition variable.
 
 Special values:
 
-- <a name="CLOUDABI_CONDVAR_HAS_NO_WAITERS"></a>`CLOUDABI_CONDVAR_HAS_NO_WAITERS`
+- <a name="CLOUDABI_CONDVAR_HAS_NO_WAITERS"></a>**`CLOUDABI_CONDVAR_HAS_NO_WAITERS`**
 
     The condition variable is in its initial state. There
     are no threads waiting to be woken up. If the
@@ -1592,7 +1592,7 @@ A reference to the offset of a directory entry.
 
 Special values:
 
-- <a name="CLOUDABI_DIRCOOKIE_START"></a>`CLOUDABI_DIRCOOKIE_START`
+- <a name="CLOUDABI_DIRCOOKIE_START"></a>**`CLOUDABI_DIRCOOKIE_START`**
 
     Permanent reference to the first directory entry
     within a directory.
@@ -1630,307 +1630,307 @@ Not all of these error codes are returned by the system calls
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.
 
-- <a name="CLOUDABI_E2BIG"></a>`CLOUDABI_E2BIG`
+- <a name="CLOUDABI_E2BIG"></a>**`CLOUDABI_E2BIG`**
 
     Argument list too long.
 
-- <a name="CLOUDABI_EACCES"></a>`CLOUDABI_EACCES`
+- <a name="CLOUDABI_EACCES"></a>**`CLOUDABI_EACCES`**
 
     Permission denied.
 
-- <a name="CLOUDABI_EADDRINUSE"></a>`CLOUDABI_EADDRINUSE`
+- <a name="CLOUDABI_EADDRINUSE"></a>**`CLOUDABI_EADDRINUSE`**
 
     Address in use.
 
-- <a name="CLOUDABI_EADDRNOTAVAIL"></a>`CLOUDABI_EADDRNOTAVAIL`
+- <a name="CLOUDABI_EADDRNOTAVAIL"></a>**`CLOUDABI_EADDRNOTAVAIL`**
 
     Address not available.
 
-- <a name="CLOUDABI_EAFNOSUPPORT"></a>`CLOUDABI_EAFNOSUPPORT`
+- <a name="CLOUDABI_EAFNOSUPPORT"></a>**`CLOUDABI_EAFNOSUPPORT`**
 
     Address family not supported.
 
-- <a name="CLOUDABI_EAGAIN"></a>`CLOUDABI_EAGAIN`
+- <a name="CLOUDABI_EAGAIN"></a>**`CLOUDABI_EAGAIN`**
 
     Resource unavailable, or operation would block.
 
-- <a name="CLOUDABI_EALREADY"></a>`CLOUDABI_EALREADY`
+- <a name="CLOUDABI_EALREADY"></a>**`CLOUDABI_EALREADY`**
 
     Connection already in progress.
 
-- <a name="CLOUDABI_EBADF"></a>`CLOUDABI_EBADF`
+- <a name="CLOUDABI_EBADF"></a>**`CLOUDABI_EBADF`**
 
     Bad file descriptor.
 
-- <a name="CLOUDABI_EBADMSG"></a>`CLOUDABI_EBADMSG`
+- <a name="CLOUDABI_EBADMSG"></a>**`CLOUDABI_EBADMSG`**
 
     Bad message.
 
-- <a name="CLOUDABI_EBUSY"></a>`CLOUDABI_EBUSY`
+- <a name="CLOUDABI_EBUSY"></a>**`CLOUDABI_EBUSY`**
 
     Device or resource busy.
 
-- <a name="CLOUDABI_ECANCELED"></a>`CLOUDABI_ECANCELED`
+- <a name="CLOUDABI_ECANCELED"></a>**`CLOUDABI_ECANCELED`**
 
     Operation canceled.
 
-- <a name="CLOUDABI_ECHILD"></a>`CLOUDABI_ECHILD`
+- <a name="CLOUDABI_ECHILD"></a>**`CLOUDABI_ECHILD`**
 
     No child processes.
 
-- <a name="CLOUDABI_ECONNABORTED"></a>`CLOUDABI_ECONNABORTED`
+- <a name="CLOUDABI_ECONNABORTED"></a>**`CLOUDABI_ECONNABORTED`**
 
     Connection aborted.
 
-- <a name="CLOUDABI_ECONNREFUSED"></a>`CLOUDABI_ECONNREFUSED`
+- <a name="CLOUDABI_ECONNREFUSED"></a>**`CLOUDABI_ECONNREFUSED`**
 
     Connection refused.
 
-- <a name="CLOUDABI_ECONNRESET"></a>`CLOUDABI_ECONNRESET`
+- <a name="CLOUDABI_ECONNRESET"></a>**`CLOUDABI_ECONNRESET`**
 
     Connection reset.
 
-- <a name="CLOUDABI_EDEADLK"></a>`CLOUDABI_EDEADLK`
+- <a name="CLOUDABI_EDEADLK"></a>**`CLOUDABI_EDEADLK`**
 
     Resource deadlock would occur.
 
-- <a name="CLOUDABI_EDESTADDRREQ"></a>`CLOUDABI_EDESTADDRREQ`
+- <a name="CLOUDABI_EDESTADDRREQ"></a>**`CLOUDABI_EDESTADDRREQ`**
 
     Destination address required.
 
-- <a name="CLOUDABI_EDOM"></a>`CLOUDABI_EDOM`
+- <a name="CLOUDABI_EDOM"></a>**`CLOUDABI_EDOM`**
 
     Mathematics argument out of domain of function.
 
-- <a name="CLOUDABI_EDQUOT"></a>`CLOUDABI_EDQUOT`
+- <a name="CLOUDABI_EDQUOT"></a>**`CLOUDABI_EDQUOT`**
 
     Reserved.
 
-- <a name="CLOUDABI_EEXIST"></a>`CLOUDABI_EEXIST`
+- <a name="CLOUDABI_EEXIST"></a>**`CLOUDABI_EEXIST`**
 
     File exists.
 
-- <a name="CLOUDABI_EFAULT"></a>`CLOUDABI_EFAULT`
+- <a name="CLOUDABI_EFAULT"></a>**`CLOUDABI_EFAULT`**
 
     Bad address.
 
-- <a name="CLOUDABI_EFBIG"></a>`CLOUDABI_EFBIG`
+- <a name="CLOUDABI_EFBIG"></a>**`CLOUDABI_EFBIG`**
 
     File too large.
 
-- <a name="CLOUDABI_EHOSTUNREACH"></a>`CLOUDABI_EHOSTUNREACH`
+- <a name="CLOUDABI_EHOSTUNREACH"></a>**`CLOUDABI_EHOSTUNREACH`**
 
     Host is unreachable.
 
-- <a name="CLOUDABI_EIDRM"></a>`CLOUDABI_EIDRM`
+- <a name="CLOUDABI_EIDRM"></a>**`CLOUDABI_EIDRM`**
 
     Identifier removed.
 
-- <a name="CLOUDABI_EILSEQ"></a>`CLOUDABI_EILSEQ`
+- <a name="CLOUDABI_EILSEQ"></a>**`CLOUDABI_EILSEQ`**
 
     Illegal byte sequence.
 
-- <a name="CLOUDABI_EINPROGRESS"></a>`CLOUDABI_EINPROGRESS`
+- <a name="CLOUDABI_EINPROGRESS"></a>**`CLOUDABI_EINPROGRESS`**
 
     Operation in progress.
 
-- <a name="CLOUDABI_EINTR"></a>`CLOUDABI_EINTR`
+- <a name="CLOUDABI_EINTR"></a>**`CLOUDABI_EINTR`**
 
     Interrupted function.
 
-- <a name="CLOUDABI_EINVAL"></a>`CLOUDABI_EINVAL`
+- <a name="CLOUDABI_EINVAL"></a>**`CLOUDABI_EINVAL`**
 
     Invalid argument.
 
-- <a name="CLOUDABI_EIO"></a>`CLOUDABI_EIO`
+- <a name="CLOUDABI_EIO"></a>**`CLOUDABI_EIO`**
 
     I/O error.
 
-- <a name="CLOUDABI_EISCONN"></a>`CLOUDABI_EISCONN`
+- <a name="CLOUDABI_EISCONN"></a>**`CLOUDABI_EISCONN`**
 
     Socket is connected.
 
-- <a name="CLOUDABI_EISDIR"></a>`CLOUDABI_EISDIR`
+- <a name="CLOUDABI_EISDIR"></a>**`CLOUDABI_EISDIR`**
 
     Is a directory.
 
-- <a name="CLOUDABI_ELOOP"></a>`CLOUDABI_ELOOP`
+- <a name="CLOUDABI_ELOOP"></a>**`CLOUDABI_ELOOP`**
 
     Too many levels of symbolic links.
 
-- <a name="CLOUDABI_EMFILE"></a>`CLOUDABI_EMFILE`
+- <a name="CLOUDABI_EMFILE"></a>**`CLOUDABI_EMFILE`**
 
     File descriptor value too large.
 
-- <a name="CLOUDABI_EMLINK"></a>`CLOUDABI_EMLINK`
+- <a name="CLOUDABI_EMLINK"></a>**`CLOUDABI_EMLINK`**
 
     Too many links.
 
-- <a name="CLOUDABI_EMSGSIZE"></a>`CLOUDABI_EMSGSIZE`
+- <a name="CLOUDABI_EMSGSIZE"></a>**`CLOUDABI_EMSGSIZE`**
 
     Message too large.
 
-- <a name="CLOUDABI_EMULTIHOP"></a>`CLOUDABI_EMULTIHOP`
+- <a name="CLOUDABI_EMULTIHOP"></a>**`CLOUDABI_EMULTIHOP`**
 
     Reserved.
 
-- <a name="CLOUDABI_ENAMETOOLONG"></a>`CLOUDABI_ENAMETOOLONG`
+- <a name="CLOUDABI_ENAMETOOLONG"></a>**`CLOUDABI_ENAMETOOLONG`**
 
     Filename too long.
 
-- <a name="CLOUDABI_ENETDOWN"></a>`CLOUDABI_ENETDOWN`
+- <a name="CLOUDABI_ENETDOWN"></a>**`CLOUDABI_ENETDOWN`**
 
     Network is down.
 
-- <a name="CLOUDABI_ENETRESET"></a>`CLOUDABI_ENETRESET`
+- <a name="CLOUDABI_ENETRESET"></a>**`CLOUDABI_ENETRESET`**
 
     Connection aborted by network.
 
-- <a name="CLOUDABI_ENETUNREACH"></a>`CLOUDABI_ENETUNREACH`
+- <a name="CLOUDABI_ENETUNREACH"></a>**`CLOUDABI_ENETUNREACH`**
 
     Network unreachable.
 
-- <a name="CLOUDABI_ENFILE"></a>`CLOUDABI_ENFILE`
+- <a name="CLOUDABI_ENFILE"></a>**`CLOUDABI_ENFILE`**
 
     Too many files open in system.
 
-- <a name="CLOUDABI_ENOBUFS"></a>`CLOUDABI_ENOBUFS`
+- <a name="CLOUDABI_ENOBUFS"></a>**`CLOUDABI_ENOBUFS`**
 
     No buffer space available.
 
-- <a name="CLOUDABI_ENODEV"></a>`CLOUDABI_ENODEV`
+- <a name="CLOUDABI_ENODEV"></a>**`CLOUDABI_ENODEV`**
 
     No such device.
 
-- <a name="CLOUDABI_ENOENT"></a>`CLOUDABI_ENOENT`
+- <a name="CLOUDABI_ENOENT"></a>**`CLOUDABI_ENOENT`**
 
     No such file or directory.
 
-- <a name="CLOUDABI_ENOEXEC"></a>`CLOUDABI_ENOEXEC`
+- <a name="CLOUDABI_ENOEXEC"></a>**`CLOUDABI_ENOEXEC`**
 
     Executable file format error.
 
-- <a name="CLOUDABI_ENOLCK"></a>`CLOUDABI_ENOLCK`
+- <a name="CLOUDABI_ENOLCK"></a>**`CLOUDABI_ENOLCK`**
 
     No locks available.
 
-- <a name="CLOUDABI_ENOLINK"></a>`CLOUDABI_ENOLINK`
+- <a name="CLOUDABI_ENOLINK"></a>**`CLOUDABI_ENOLINK`**
 
     Reserved.
 
-- <a name="CLOUDABI_ENOMEM"></a>`CLOUDABI_ENOMEM`
+- <a name="CLOUDABI_ENOMEM"></a>**`CLOUDABI_ENOMEM`**
 
     Not enough space.
 
-- <a name="CLOUDABI_ENOMSG"></a>`CLOUDABI_ENOMSG`
+- <a name="CLOUDABI_ENOMSG"></a>**`CLOUDABI_ENOMSG`**
 
     No message of the desired type.
 
-- <a name="CLOUDABI_ENOPROTOOPT"></a>`CLOUDABI_ENOPROTOOPT`
+- <a name="CLOUDABI_ENOPROTOOPT"></a>**`CLOUDABI_ENOPROTOOPT`**
 
     Protocol not available.
 
-- <a name="CLOUDABI_ENOSPC"></a>`CLOUDABI_ENOSPC`
+- <a name="CLOUDABI_ENOSPC"></a>**`CLOUDABI_ENOSPC`**
 
     No space left on device.
 
-- <a name="CLOUDABI_ENOSYS"></a>`CLOUDABI_ENOSYS`
+- <a name="CLOUDABI_ENOSYS"></a>**`CLOUDABI_ENOSYS`**
 
     Function not supported.
 
-- <a name="CLOUDABI_ENOTCONN"></a>`CLOUDABI_ENOTCONN`
+- <a name="CLOUDABI_ENOTCONN"></a>**`CLOUDABI_ENOTCONN`**
 
     The socket is not connected.
 
-- <a name="CLOUDABI_ENOTDIR"></a>`CLOUDABI_ENOTDIR`
+- <a name="CLOUDABI_ENOTDIR"></a>**`CLOUDABI_ENOTDIR`**
 
     Not a directory or a symbolic link to a directory.
 
-- <a name="CLOUDABI_ENOTEMPTY"></a>`CLOUDABI_ENOTEMPTY`
+- <a name="CLOUDABI_ENOTEMPTY"></a>**`CLOUDABI_ENOTEMPTY`**
 
     Directory not empty.
 
-- <a name="CLOUDABI_ENOTRECOVERABLE"></a>`CLOUDABI_ENOTRECOVERABLE`
+- <a name="CLOUDABI_ENOTRECOVERABLE"></a>**`CLOUDABI_ENOTRECOVERABLE`**
 
     State not recoverable.
 
-- <a name="CLOUDABI_ENOTSOCK"></a>`CLOUDABI_ENOTSOCK`
+- <a name="CLOUDABI_ENOTSOCK"></a>**`CLOUDABI_ENOTSOCK`**
 
     Not a socket.
 
-- <a name="CLOUDABI_ENOTSUP"></a>`CLOUDABI_ENOTSUP`
+- <a name="CLOUDABI_ENOTSUP"></a>**`CLOUDABI_ENOTSUP`**
 
     Not supported, or operation not supported on socket.
 
-- <a name="CLOUDABI_ENOTTY"></a>`CLOUDABI_ENOTTY`
+- <a name="CLOUDABI_ENOTTY"></a>**`CLOUDABI_ENOTTY`**
 
     Inappropriate I/O control operation.
 
-- <a name="CLOUDABI_ENXIO"></a>`CLOUDABI_ENXIO`
+- <a name="CLOUDABI_ENXIO"></a>**`CLOUDABI_ENXIO`**
 
     No such device or address.
 
-- <a name="CLOUDABI_EOVERFLOW"></a>`CLOUDABI_EOVERFLOW`
+- <a name="CLOUDABI_EOVERFLOW"></a>**`CLOUDABI_EOVERFLOW`**
 
     Value too large to be stored in data type.
 
-- <a name="CLOUDABI_EOWNERDEAD"></a>`CLOUDABI_EOWNERDEAD`
+- <a name="CLOUDABI_EOWNERDEAD"></a>**`CLOUDABI_EOWNERDEAD`**
 
     Previous owner died.
 
-- <a name="CLOUDABI_EPERM"></a>`CLOUDABI_EPERM`
+- <a name="CLOUDABI_EPERM"></a>**`CLOUDABI_EPERM`**
 
     Operation not permitted.
 
-- <a name="CLOUDABI_EPIPE"></a>`CLOUDABI_EPIPE`
+- <a name="CLOUDABI_EPIPE"></a>**`CLOUDABI_EPIPE`**
 
     Broken pipe.
 
-- <a name="CLOUDABI_EPROTO"></a>`CLOUDABI_EPROTO`
+- <a name="CLOUDABI_EPROTO"></a>**`CLOUDABI_EPROTO`**
 
     Protocol error.
 
-- <a name="CLOUDABI_EPROTONOSUPPORT"></a>`CLOUDABI_EPROTONOSUPPORT`
+- <a name="CLOUDABI_EPROTONOSUPPORT"></a>**`CLOUDABI_EPROTONOSUPPORT`**
 
     Protocol not supported.
 
-- <a name="CLOUDABI_EPROTOTYPE"></a>`CLOUDABI_EPROTOTYPE`
+- <a name="CLOUDABI_EPROTOTYPE"></a>**`CLOUDABI_EPROTOTYPE`**
 
     Protocol wrong type for socket.
 
-- <a name="CLOUDABI_ERANGE"></a>`CLOUDABI_ERANGE`
+- <a name="CLOUDABI_ERANGE"></a>**`CLOUDABI_ERANGE`**
 
     Result too large.
 
-- <a name="CLOUDABI_EROFS"></a>`CLOUDABI_EROFS`
+- <a name="CLOUDABI_EROFS"></a>**`CLOUDABI_EROFS`**
 
     Read-only file system.
 
-- <a name="CLOUDABI_ESPIPE"></a>`CLOUDABI_ESPIPE`
+- <a name="CLOUDABI_ESPIPE"></a>**`CLOUDABI_ESPIPE`**
 
     Invalid seek.
 
-- <a name="CLOUDABI_ESRCH"></a>`CLOUDABI_ESRCH`
+- <a name="CLOUDABI_ESRCH"></a>**`CLOUDABI_ESRCH`**
 
     No such process.
 
-- <a name="CLOUDABI_ESTALE"></a>`CLOUDABI_ESTALE`
+- <a name="CLOUDABI_ESTALE"></a>**`CLOUDABI_ESTALE`**
 
     Reserved.
 
-- <a name="CLOUDABI_ETIMEDOUT"></a>`CLOUDABI_ETIMEDOUT`
+- <a name="CLOUDABI_ETIMEDOUT"></a>**`CLOUDABI_ETIMEDOUT`**
 
     Connection timed out.
 
-- <a name="CLOUDABI_ETXTBSY"></a>`CLOUDABI_ETXTBSY`
+- <a name="CLOUDABI_ETXTBSY"></a>**`CLOUDABI_ETXTBSY`**
 
     Text file busy.
 
-- <a name="CLOUDABI_EXDEV"></a>`CLOUDABI_EXDEV`
+- <a name="CLOUDABI_EXDEV"></a>**`CLOUDABI_EXDEV`**
 
     Cross-device link.
 
-- <a name="CLOUDABI_ENOTCAPABLE"></a>`CLOUDABI_ENOTCAPABLE`
+- <a name="CLOUDABI_ENOTCAPABLE"></a>**`CLOUDABI_ENOTCAPABLE`**
 
     Extension: Capabilities insufficient.
 
@@ -2029,7 +2029,7 @@ Members:
 The state of the file descriptor subscribed to with
 [`CLOUDABI_EVENTTYPE_FD_READ`](#CLOUDABI_EVENTTYPE_FD_READ) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#CLOUDABI_EVENTTYPE_FD_WRITE).
 
-- <a name="CLOUDABI_EVENT_FD_READWRITE_HANGUP"></a>`CLOUDABI_EVENT_FD_READWRITE_HANGUP`
+- <a name="CLOUDABI_EVENT_FD_READWRITE_HANGUP"></a>**`CLOUDABI_EVENT_FD_READWRITE_HANGUP`**
 
     The peer of this FIFO or socket has closed or
     disconnected.
@@ -2038,37 +2038,37 @@ The state of the file descriptor subscribed to with
 
 Type of a subscription to an event or its occurence.
 
-- <a name="CLOUDABI_EVENTTYPE_CLOCK"></a>`CLOUDABI_EVENTTYPE_CLOCK`
+- <a name="CLOUDABI_EVENTTYPE_CLOCK"></a>**`CLOUDABI_EVENTTYPE_CLOCK`**
 
     The time value of clock [`cloudabi_subscription_t::clock.clock_id`](#cloudabi_subscription_t.clock.clock_id)
     has reached timestamp [`cloudabi_subscription_t::clock.timeout`](#cloudabi_subscription_t.clock.timeout).
 
-- <a name="CLOUDABI_EVENTTYPE_CONDVAR"></a>`CLOUDABI_EVENTTYPE_CONDVAR`
+- <a name="CLOUDABI_EVENTTYPE_CONDVAR"></a>**`CLOUDABI_EVENTTYPE_CONDVAR`**
 
     Condition variable [`cloudabi_subscription_t::condvar.condvar`](#cloudabi_subscription_t.condvar.condvar) has
     been woken up.
 
-- <a name="CLOUDABI_EVENTTYPE_FD_READ"></a>`CLOUDABI_EVENTTYPE_FD_READ`
+- <a name="CLOUDABI_EVENTTYPE_FD_READ"></a>**`CLOUDABI_EVENTTYPE_FD_READ`**
 
     File descriptor [`cloudabi_subscription_t::fd_readwrite.fd`](#cloudabi_subscription_t.fd_readwrite.fd) has
     data available for reading.
 
-- <a name="CLOUDABI_EVENTTYPE_FD_WRITE"></a>`CLOUDABI_EVENTTYPE_FD_WRITE`
+- <a name="CLOUDABI_EVENTTYPE_FD_WRITE"></a>**`CLOUDABI_EVENTTYPE_FD_WRITE`**
 
     File descriptor [`cloudabi_subscription_t::fd_readwrite.fd`](#cloudabi_subscription_t.fd_readwrite.fd) has
     capacity available for writing.
 
-- <a name="CLOUDABI_EVENTTYPE_LOCK_RDLOCK"></a>`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`
+- <a name="CLOUDABI_EVENTTYPE_LOCK_RDLOCK"></a>**`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`**
 
     Lock [`cloudabi_subscription_t::lock.lock`](#cloudabi_subscription_t.lock.lock) has been acquired for
     reading.
 
-- <a name="CLOUDABI_EVENTTYPE_LOCK_WRLOCK"></a>`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`
+- <a name="CLOUDABI_EVENTTYPE_LOCK_WRLOCK"></a>**`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`**
 
     Lock [`cloudabi_subscription_t::lock.lock`](#cloudabi_subscription_t.lock.lock) has been acquired for
     writing.
 
-- <a name="CLOUDABI_EVENTTYPE_PROC_TERMINATE"></a>`CLOUDABI_EVENTTYPE_PROC_TERMINATE`
+- <a name="CLOUDABI_EVENTTYPE_PROC_TERMINATE"></a>**`CLOUDABI_EVENTTYPE_PROC_TERMINATE`**
 
     The process associated with process descriptor
     [`cloudabi_subscription_t::proc_terminate.fd`](#cloudabi_subscription_t.proc_terminate.fd) has terminated.
@@ -2088,11 +2088,11 @@ file descriptors in ascending order.
 
 Special values:
 
-- <a name="CLOUDABI_PROCESS_CHILD"></a>`CLOUDABI_PROCESS_CHILD`
+- <a name="CLOUDABI_PROCESS_CHILD"></a>**`CLOUDABI_PROCESS_CHILD`**
 
     Returned to the child process by [`cloudabi_sys_proc_fork`](#cloudabi_sys_proc_fork).
 
-- <a name="CLOUDABI_MAP_ANON_FD"></a>`CLOUDABI_MAP_ANON_FD`
+- <a name="CLOUDABI_MAP_ANON_FD"></a>**`CLOUDABI_MAP_ANON_FD`**
 
     Passed to [`cloudabi_sys_mem_map`](#cloudabi_sys_mem_map) when creating a mapping to
     anonymous memory.
@@ -2101,26 +2101,26 @@ Special values:
 
 File descriptor flags.
 
-- <a name="CLOUDABI_FDFLAG_APPEND"></a>`CLOUDABI_FDFLAG_APPEND`
+- <a name="CLOUDABI_FDFLAG_APPEND"></a>**`CLOUDABI_FDFLAG_APPEND`**
 
     Append mode: Data written to the file is always
     appended to the file's end.
 
-- <a name="CLOUDABI_FDFLAG_DSYNC"></a>`CLOUDABI_FDFLAG_DSYNC`
+- <a name="CLOUDABI_FDFLAG_DSYNC"></a>**`CLOUDABI_FDFLAG_DSYNC`**
 
     Write according to synchronized I/O data integrity
     completion. Only the data stored in the file is
     synchronized.
 
-- <a name="CLOUDABI_FDFLAG_NONBLOCK"></a>`CLOUDABI_FDFLAG_NONBLOCK`
+- <a name="CLOUDABI_FDFLAG_NONBLOCK"></a>**`CLOUDABI_FDFLAG_NONBLOCK`**
 
     Non-blocking mode.
 
-- <a name="CLOUDABI_FDFLAG_RSYNC"></a>`CLOUDABI_FDFLAG_RSYNC`
+- <a name="CLOUDABI_FDFLAG_RSYNC"></a>**`CLOUDABI_FDFLAG_RSYNC`**
 
     Synchronized read I/O operations.
 
-- <a name="CLOUDABI_FDFLAG_SYNC"></a>`CLOUDABI_FDFLAG_SYNC`
+- <a name="CLOUDABI_FDFLAG_SYNC"></a>**`CLOUDABI_FDFLAG_SYNC`**
 
     Write according to synchronized I/O file integrity
     completion. In addition to synchronizing the data
@@ -2131,12 +2131,12 @@ File descriptor flags.
 
 Which file descriptor attributes to adjust.
 
-- <a name="CLOUDABI_FDSTAT_FLAGS"></a>`CLOUDABI_FDSTAT_FLAGS`
+- <a name="CLOUDABI_FDSTAT_FLAGS"></a>**`CLOUDABI_FDSTAT_FLAGS`**
 
     Adjust the file descriptor flags stored in
     [`cloudabi_fdstat_t::fs_flags`](#cloudabi_fdstat_t.fs_flags).
 
-- <a name="CLOUDABI_FDSTAT_RIGHTS"></a>`CLOUDABI_FDSTAT_RIGHTS`
+- <a name="CLOUDABI_FDSTAT_RIGHTS"></a>**`CLOUDABI_FDSTAT_RIGHTS`**
 
     Restrict the rights of the file descriptor to the
     rights stored in [`cloudabi_fdstat_t::fs_rights_base`](#cloudabi_fdstat_t.fs_rights_base) and
@@ -2218,64 +2218,64 @@ Members:
 
 The type of a file descriptor or file.
 
-- <a name="CLOUDABI_FILETYPE_UNKNOWN"></a>`CLOUDABI_FILETYPE_UNKNOWN`
+- <a name="CLOUDABI_FILETYPE_UNKNOWN"></a>**`CLOUDABI_FILETYPE_UNKNOWN`**
 
     The type of the file descriptor or file is unknown or
     is different from any of the other types specified.
 
-- <a name="CLOUDABI_FILETYPE_BLOCK_DEVICE"></a>`CLOUDABI_FILETYPE_BLOCK_DEVICE`
+- <a name="CLOUDABI_FILETYPE_BLOCK_DEVICE"></a>**`CLOUDABI_FILETYPE_BLOCK_DEVICE`**
 
     The file descriptor or file refers to a block device
     inode.
 
-- <a name="CLOUDABI_FILETYPE_CHARACTER_DEVICE"></a>`CLOUDABI_FILETYPE_CHARACTER_DEVICE`
+- <a name="CLOUDABI_FILETYPE_CHARACTER_DEVICE"></a>**`CLOUDABI_FILETYPE_CHARACTER_DEVICE`**
 
     The file descriptor or file refers to a character
     device inode.
 
-- <a name="CLOUDABI_FILETYPE_DIRECTORY"></a>`CLOUDABI_FILETYPE_DIRECTORY`
+- <a name="CLOUDABI_FILETYPE_DIRECTORY"></a>**`CLOUDABI_FILETYPE_DIRECTORY`**
 
     The file descriptor or file refers to a directory
     inode.
 
-- <a name="CLOUDABI_FILETYPE_FIFO"></a>`CLOUDABI_FILETYPE_FIFO`
+- <a name="CLOUDABI_FILETYPE_FIFO"></a>**`CLOUDABI_FILETYPE_FIFO`**
 
     The file descriptor or file refers to a FIFO inode or
     one of the two endpoints of a pipe.
 
-- <a name="CLOUDABI_FILETYPE_POLL"></a>`CLOUDABI_FILETYPE_POLL`
+- <a name="CLOUDABI_FILETYPE_POLL"></a>**`CLOUDABI_FILETYPE_POLL`**
 
     The file descriptor refers to a polling event queue.
 
-- <a name="CLOUDABI_FILETYPE_PROCESS"></a>`CLOUDABI_FILETYPE_PROCESS`
+- <a name="CLOUDABI_FILETYPE_PROCESS"></a>**`CLOUDABI_FILETYPE_PROCESS`**
 
     The file descriptor refers to a process handle.
 
-- <a name="CLOUDABI_FILETYPE_REGULAR_FILE"></a>`CLOUDABI_FILETYPE_REGULAR_FILE`
+- <a name="CLOUDABI_FILETYPE_REGULAR_FILE"></a>**`CLOUDABI_FILETYPE_REGULAR_FILE`**
 
     The file descriptor or file refers to a regular file
     inode.
 
-- <a name="CLOUDABI_FILETYPE_SHARED_MEMORY"></a>`CLOUDABI_FILETYPE_SHARED_MEMORY`
+- <a name="CLOUDABI_FILETYPE_SHARED_MEMORY"></a>**`CLOUDABI_FILETYPE_SHARED_MEMORY`**
 
     The file descriptor refers to a shared memory object.
 
-- <a name="CLOUDABI_FILETYPE_SOCKET_DGRAM"></a>`CLOUDABI_FILETYPE_SOCKET_DGRAM`
+- <a name="CLOUDABI_FILETYPE_SOCKET_DGRAM"></a>**`CLOUDABI_FILETYPE_SOCKET_DGRAM`**
 
     The file descriptor or file refers to a datagram
     socket.
 
-- <a name="CLOUDABI_FILETYPE_SOCKET_SEQPACKET"></a>`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`
+- <a name="CLOUDABI_FILETYPE_SOCKET_SEQPACKET"></a>**`CLOUDABI_FILETYPE_SOCKET_SEQPACKET`**
 
     The file descriptor or file refers to a
     sequenced-packet socket.
 
-- <a name="CLOUDABI_FILETYPE_SOCKET_STREAM"></a>`CLOUDABI_FILETYPE_SOCKET_STREAM`
+- <a name="CLOUDABI_FILETYPE_SOCKET_STREAM"></a>**`CLOUDABI_FILETYPE_SOCKET_STREAM`**
 
     The file descriptor or file refers to a byte-stream
     socket.
 
-- <a name="CLOUDABI_FILETYPE_SYMBOLIC_LINK"></a>`CLOUDABI_FILETYPE_SYMBOLIC_LINK`
+- <a name="CLOUDABI_FILETYPE_SYMBOLIC_LINK"></a>**`CLOUDABI_FILETYPE_SYMBOLIC_LINK`**
 
     The file refers to a symbolic link inode.
 
@@ -2283,27 +2283,27 @@ The type of a file descriptor or file.
 
 Which file attributes to adjust.
 
-- <a name="CLOUDABI_FILESTAT_ATIM"></a>`CLOUDABI_FILESTAT_ATIM`
+- <a name="CLOUDABI_FILESTAT_ATIM"></a>**`CLOUDABI_FILESTAT_ATIM`**
 
     Adjust the last data access timestamp to the value
     stored in [`cloudabi_filestat_t::st_atim`](#cloudabi_filestat_t.st_atim).
 
-- <a name="CLOUDABI_FILESTAT_ATIM_NOW"></a>`CLOUDABI_FILESTAT_ATIM_NOW`
+- <a name="CLOUDABI_FILESTAT_ATIM_NOW"></a>**`CLOUDABI_FILESTAT_ATIM_NOW`**
 
     Adjust the last data access timestamp to the time
     of clock [`CLOUDABI_CLOCK_REALTIME`](#CLOUDABI_CLOCK_REALTIME).
 
-- <a name="CLOUDABI_FILESTAT_MTIM"></a>`CLOUDABI_FILESTAT_MTIM`
+- <a name="CLOUDABI_FILESTAT_MTIM"></a>**`CLOUDABI_FILESTAT_MTIM`**
 
     Adjust the last data modification timestamp to the
     value stored in [`cloudabi_filestat_t::st_mtim`](#cloudabi_filestat_t.st_mtim).
 
-- <a name="CLOUDABI_FILESTAT_MTIM_NOW"></a>`CLOUDABI_FILESTAT_MTIM_NOW`
+- <a name="CLOUDABI_FILESTAT_MTIM_NOW"></a>**`CLOUDABI_FILESTAT_MTIM_NOW`**
 
     Adjust the last data modification timestamp to the
     time of clock [`CLOUDABI_CLOCK_REALTIME`](#CLOUDABI_CLOCK_REALTIME).
 
-- <a name="CLOUDABI_FILESTAT_SIZE"></a>`CLOUDABI_FILESTAT_SIZE`
+- <a name="CLOUDABI_FILESTAT_SIZE"></a>**`CLOUDABI_FILESTAT_SIZE`**
 
     Truncate or extend the file to the size stored in
     [`cloudabi_filestat_t::st_size`](#cloudabi_filestat_t.st_size).
@@ -2333,18 +2333,18 @@ Linux futex or a FreeBSD umtx.
 
 Special values:
 
-- <a name="CLOUDABI_LOCK_UNLOCKED"></a>`CLOUDABI_LOCK_UNLOCKED`
+- <a name="CLOUDABI_LOCK_UNLOCKED"></a>**`CLOUDABI_LOCK_UNLOCKED`**
 
     Value indicating that the lock is in its initial
     unlocked state.
 
-- <a name="CLOUDABI_LOCK_WRLOCKED"></a>`CLOUDABI_LOCK_WRLOCKED`
+- <a name="CLOUDABI_LOCK_WRLOCKED"></a>**`CLOUDABI_LOCK_WRLOCKED`**
 
     Bitmask indicating that the lock is write-locked. The
     lower 30 bits of the lock contain the identifier of
     the thread that owns the write lock.
 
-- <a name="CLOUDABI_LOCK_KERNEL_MANAGED"></a>`CLOUDABI_LOCK_KERNEL_MANAGED`
+- <a name="CLOUDABI_LOCK_KERNEL_MANAGED"></a>**`CLOUDABI_LOCK_KERNEL_MANAGED`**
 
     Bitmask indicating that the lock is either read locked
     or write locked, and that one or more threads have
@@ -2360,7 +2360,7 @@ Special values:
     preferred to suspend execution, as this prevents
     starvation of writers.
 
-- <a name="CLOUDABI_LOCK_BOGUS"></a>`CLOUDABI_LOCK_BOGUS`
+- <a name="CLOUDABI_LOCK_BOGUS"></a>**`CLOUDABI_LOCK_BOGUS`**
 
     Value indicating that the lock is in an incorrect
     state. A lock cannot be in its initial unlocked state,
@@ -2386,7 +2386,7 @@ Members:
 
 Flags determining the method of how paths are resolved.
 
-- <a name="CLOUDABI_LOOKUP_SYMLINK_FOLLOW"></a>`CLOUDABI_LOOKUP_SYMLINK_FOLLOW`
+- <a name="CLOUDABI_LOOKUP_SYMLINK_FOLLOW"></a>**`CLOUDABI_LOOKUP_SYMLINK_FOLLOW`**
 
     As long as the resolved path corresponds to a symbolic
     link, it is expanded.
@@ -2395,23 +2395,23 @@ Flags determining the method of how paths are resolved.
 
 Memory mapping flags.
 
-- <a name="CLOUDABI_MAP_ANON"></a>`CLOUDABI_MAP_ANON`
+- <a name="CLOUDABI_MAP_ANON"></a>**`CLOUDABI_MAP_ANON`**
 
     Instead of mapping the contents of the file provided,
     create a mapping to anonymous memory. The file
     descriptor argument must be set to [`CLOUDABI_MAP_ANON_FD`](#CLOUDABI_MAP_ANON_FD),
     and the offset must be set to zero.
 
-- <a name="CLOUDABI_MAP_FIXED"></a>`CLOUDABI_MAP_FIXED`
+- <a name="CLOUDABI_MAP_FIXED"></a>**`CLOUDABI_MAP_FIXED`**
 
     Require that the mapping is performed at the base
     address provided.
 
-- <a name="CLOUDABI_MAP_PRIVATE"></a>`CLOUDABI_MAP_PRIVATE`
+- <a name="CLOUDABI_MAP_PRIVATE"></a>**`CLOUDABI_MAP_PRIVATE`**
 
     Changes are private.
 
-- <a name="CLOUDABI_MAP_SHARED"></a>`CLOUDABI_MAP_SHARED`
+- <a name="CLOUDABI_MAP_SHARED"></a>**`CLOUDABI_MAP_SHARED`**
 
     Changes are shared.
 
@@ -2422,15 +2422,15 @@ Memory page protection options.
 This implementation enforces the W^X property: Pages cannot be
 mapped for execution while also mapped for writing.
 
-- <a name="CLOUDABI_PROT_EXEC"></a>`CLOUDABI_PROT_EXEC`
+- <a name="CLOUDABI_PROT_EXEC"></a>**`CLOUDABI_PROT_EXEC`**
 
     Page can be executed.
 
-- <a name="CLOUDABI_PROT_WRITE"></a>`CLOUDABI_PROT_WRITE`
+- <a name="CLOUDABI_PROT_WRITE"></a>**`CLOUDABI_PROT_WRITE`**
 
     Page can be written.
 
-- <a name="CLOUDABI_PROT_READ"></a>`CLOUDABI_PROT_READ`
+- <a name="CLOUDABI_PROT_READ"></a>**`CLOUDABI_PROT_READ`**
 
     Page can be read.
 
@@ -2438,15 +2438,15 @@ mapped for execution while also mapped for writing.
 
 Methods of synchronizing memory with physical storage.
 
-- <a name="CLOUDABI_MS_ASYNC"></a>`CLOUDABI_MS_ASYNC`
+- <a name="CLOUDABI_MS_ASYNC"></a>**`CLOUDABI_MS_ASYNC`**
 
     Perform asynchronous writes.
 
-- <a name="CLOUDABI_MS_INVALIDATE"></a>`CLOUDABI_MS_INVALIDATE`
+- <a name="CLOUDABI_MS_INVALIDATE"></a>**`CLOUDABI_MS_INVALIDATE`**
 
     Perform synchronous writes.
 
-- <a name="CLOUDABI_MS_SYNC"></a>`CLOUDABI_MS_SYNC`
+- <a name="CLOUDABI_MS_SYNC"></a>**`CLOUDABI_MS_SYNC`**
 
     Invalidate cached data.
 
@@ -2454,11 +2454,11 @@ Methods of synchronizing memory with physical storage.
 
 Flags provided to and returned by [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv) and [`cloudabi_sys_sock_send`](#cloudabi_sys_sock_send).
 
-- <a name="CLOUDABI_MSG_CTRUNC"></a>`CLOUDABI_MSG_CTRUNC`
+- <a name="CLOUDABI_MSG_CTRUNC"></a>**`CLOUDABI_MSG_CTRUNC`**
 
     Returned by [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv): File descriptors truncated.
 
-- <a name="CLOUDABI_MSG_EOR"></a>`CLOUDABI_MSG_EOR`
+- <a name="CLOUDABI_MSG_EOR"></a>**`CLOUDABI_MSG_EOR`**
 
     Provided to [`cloudabi_sys_sock_send`](#cloudabi_sys_sock_send): Terminates a record (if
     supported by the protocol).
@@ -2466,17 +2466,17 @@ Flags provided to and returned by [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_
     Returned by [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv): End-of-record was received
     (if supported by the protocol).
 
-- <a name="CLOUDABI_MSG_PEEK"></a>`CLOUDABI_MSG_PEEK`
+- <a name="CLOUDABI_MSG_PEEK"></a>**`CLOUDABI_MSG_PEEK`**
 
     Provided to [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv): Returns the message without
     removing it from the socket's receive queue.
 
-- <a name="CLOUDABI_MSG_TRUNC"></a>`CLOUDABI_MSG_TRUNC`
+- <a name="CLOUDABI_MSG_TRUNC"></a>**`CLOUDABI_MSG_TRUNC`**
 
     Returned by [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv): Message data has been
     truncated.
 
-- <a name="CLOUDABI_MSG_WAITALL"></a>`CLOUDABI_MSG_WAITALL`
+- <a name="CLOUDABI_MSG_WAITALL"></a>**`CLOUDABI_MSG_WAITALL`**
 
     Provided to [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv): On byte-stream sockets, block
     until the full amount of data can be returned.
@@ -2490,19 +2490,19 @@ variable that should be woken up.
 
 Open flags used by [`cloudabi_sys_file_open`](#cloudabi_sys_file_open).
 
-- <a name="CLOUDABI_O_CREAT"></a>`CLOUDABI_O_CREAT`
+- <a name="CLOUDABI_O_CREAT"></a>**`CLOUDABI_O_CREAT`**
 
     Create file if it does not exist.
 
-- <a name="CLOUDABI_O_DIRECTORY"></a>`CLOUDABI_O_DIRECTORY`
+- <a name="CLOUDABI_O_DIRECTORY"></a>**`CLOUDABI_O_DIRECTORY`**
 
     Fail if not a directory.
 
-- <a name="CLOUDABI_O_EXCL"></a>`CLOUDABI_O_EXCL`
+- <a name="CLOUDABI_O_EXCL"></a>**`CLOUDABI_O_EXCL`**
 
     Fail if file already exists.
 
-- <a name="CLOUDABI_O_TRUNC"></a>`CLOUDABI_O_TRUNC`
+- <a name="CLOUDABI_O_TRUNC"></a>**`CLOUDABI_O_TRUNC`**
 
     Truncate file to size 0.
 
@@ -2559,14 +2559,14 @@ Members:
 File descriptor rights, determining which actions may be
 performed.
 
-- <a name="CLOUDABI_RIGHT_FD_DATASYNC"></a>`CLOUDABI_RIGHT_FD_DATASYNC`
+- <a name="CLOUDABI_RIGHT_FD_DATASYNC"></a>**`CLOUDABI_RIGHT_FD_DATASYNC`**
 
     The right to invoke [`cloudabi_sys_fd_datasync`](#cloudabi_sys_fd_datasync).
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#CLOUDABI_RIGHT_FILE_OPEN) is set, includes the right to
     invoke [`cloudabi_sys_file_open`](#cloudabi_sys_file_open) with [`CLOUDABI_FDFLAG_DSYNC`](#CLOUDABI_FDFLAG_DSYNC).
 
-- <a name="CLOUDABI_RIGHT_FD_READ"></a>`CLOUDABI_RIGHT_FD_READ`
+- <a name="CLOUDABI_RIGHT_FD_READ"></a>**`CLOUDABI_RIGHT_FD_READ`**
 
     The right to invoke [`cloudabi_sys_fd_read`](#cloudabi_sys_fd_read) and [`cloudabi_sys_sock_recv`](#cloudabi_sys_sock_recv).
 
@@ -2577,17 +2577,17 @@ performed.
     If [`CLOUDABI_RIGHT_FD_SEEK`](#CLOUDABI_RIGHT_FD_SEEK) is set, includes the right to invoke
     [`cloudabi_sys_fd_pread`](#cloudabi_sys_fd_pread).
 
-- <a name="CLOUDABI_RIGHT_FD_SEEK"></a>`CLOUDABI_RIGHT_FD_SEEK`
+- <a name="CLOUDABI_RIGHT_FD_SEEK"></a>**`CLOUDABI_RIGHT_FD_SEEK`**
 
     The right to invoke [`cloudabi_sys_fd_seek`](#cloudabi_sys_fd_seek). This flag implies
     [`CLOUDABI_RIGHT_FD_TELL`](#CLOUDABI_RIGHT_FD_TELL).
 
-- <a name="CLOUDABI_RIGHT_FD_STAT_PUT_FLAGS"></a>`CLOUDABI_RIGHT_FD_STAT_PUT_FLAGS`
+- <a name="CLOUDABI_RIGHT_FD_STAT_PUT_FLAGS"></a>**`CLOUDABI_RIGHT_FD_STAT_PUT_FLAGS`**
 
     The right to invoke [`cloudabi_sys_fd_stat_put`](#cloudabi_sys_fd_stat_put) with
     [`CLOUDABI_FDSTAT_FLAGS`](#CLOUDABI_FDSTAT_FLAGS).
 
-- <a name="CLOUDABI_RIGHT_FD_SYNC"></a>`CLOUDABI_RIGHT_FD_SYNC`
+- <a name="CLOUDABI_RIGHT_FD_SYNC"></a>**`CLOUDABI_RIGHT_FD_SYNC`**
 
     The right to invoke [`cloudabi_sys_fd_sync`](#cloudabi_sys_fd_sync).
 
@@ -2595,13 +2595,13 @@ performed.
     invoke [`cloudabi_sys_file_open`](#cloudabi_sys_file_open) with [`CLOUDABI_FDFLAG_RSYNC`](#CLOUDABI_FDFLAG_RSYNC) and
     [`CLOUDABI_FDFLAG_DSYNC`](#CLOUDABI_FDFLAG_DSYNC).
 
-- <a name="CLOUDABI_RIGHT_FD_TELL"></a>`CLOUDABI_RIGHT_FD_TELL`
+- <a name="CLOUDABI_RIGHT_FD_TELL"></a>**`CLOUDABI_RIGHT_FD_TELL`**
 
     The right to invoke [`cloudabi_sys_fd_seek`](#cloudabi_sys_fd_seek) in such a way that the
     file offset remains unaltered (i.e., [`CLOUDABI_WHENCE_CUR`](#CLOUDABI_WHENCE_CUR) with
     offset zero).
 
-- <a name="CLOUDABI_RIGHT_FD_WRITE"></a>`CLOUDABI_RIGHT_FD_WRITE`
+- <a name="CLOUDABI_RIGHT_FD_WRITE"></a>**`CLOUDABI_RIGHT_FD_WRITE`**
 
     The right to invoke [`cloudabi_sys_fd_write`](#cloudabi_sys_fd_write) and [`cloudabi_sys_sock_send`](#cloudabi_sys_sock_send).
 
@@ -2612,66 +2612,66 @@ performed.
     If [`CLOUDABI_RIGHT_FD_SEEK`](#CLOUDABI_RIGHT_FD_SEEK) is set, includes the right to
     invoke [`cloudabi_sys_fd_pwrite`](#cloudabi_sys_fd_pwrite).
 
-- <a name="CLOUDABI_RIGHT_FILE_ADVISE"></a>`CLOUDABI_RIGHT_FILE_ADVISE`
+- <a name="CLOUDABI_RIGHT_FILE_ADVISE"></a>**`CLOUDABI_RIGHT_FILE_ADVISE`**
 
     The right to invoke [`cloudabi_sys_file_advise`](#cloudabi_sys_file_advise).
 
-- <a name="CLOUDABI_RIGHT_FILE_ALLOCATE"></a>`CLOUDABI_RIGHT_FILE_ALLOCATE`
+- <a name="CLOUDABI_RIGHT_FILE_ALLOCATE"></a>**`CLOUDABI_RIGHT_FILE_ALLOCATE`**
 
     The right to invoke [`cloudabi_sys_file_allocate`](#cloudabi_sys_file_allocate).
 
-- <a name="CLOUDABI_RIGHT_FILE_CREATE_DIRECTORY"></a>`CLOUDABI_RIGHT_FILE_CREATE_DIRECTORY`
+- <a name="CLOUDABI_RIGHT_FILE_CREATE_DIRECTORY"></a>**`CLOUDABI_RIGHT_FILE_CREATE_DIRECTORY`**
 
     The right to invoke [`cloudabi_sys_file_create`](#cloudabi_sys_file_create) with
     [`CLOUDABI_FILETYPE_DIRECTORY`](#CLOUDABI_FILETYPE_DIRECTORY).
 
-- <a name="CLOUDABI_RIGHT_FILE_CREATE_FILE"></a>`CLOUDABI_RIGHT_FILE_CREATE_FILE`
+- <a name="CLOUDABI_RIGHT_FILE_CREATE_FILE"></a>**`CLOUDABI_RIGHT_FILE_CREATE_FILE`**
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#CLOUDABI_RIGHT_FILE_OPEN) is set, the right to invoke
     [`cloudabi_sys_file_open`](#cloudabi_sys_file_open) with [`CLOUDABI_O_CREAT`](#CLOUDABI_O_CREAT).
 
-- <a name="CLOUDABI_RIGHT_FILE_CREATE_FIFO"></a>`CLOUDABI_RIGHT_FILE_CREATE_FIFO`
+- <a name="CLOUDABI_RIGHT_FILE_CREATE_FIFO"></a>**`CLOUDABI_RIGHT_FILE_CREATE_FIFO`**
 
     The right to invoke [`cloudabi_sys_file_create`](#cloudabi_sys_file_create) with
     [`CLOUDABI_FILETYPE_FIFO`](#CLOUDABI_FILETYPE_FIFO).
 
-- <a name="CLOUDABI_RIGHT_FILE_LINK_SOURCE"></a>`CLOUDABI_RIGHT_FILE_LINK_SOURCE`
+- <a name="CLOUDABI_RIGHT_FILE_LINK_SOURCE"></a>**`CLOUDABI_RIGHT_FILE_LINK_SOURCE`**
 
     The right to invoke [`cloudabi_sys_file_link`](#cloudabi_sys_file_link) with the file
     descriptor as the source directory.
 
-- <a name="CLOUDABI_RIGHT_FILE_LINK_TARGET"></a>`CLOUDABI_RIGHT_FILE_LINK_TARGET`
+- <a name="CLOUDABI_RIGHT_FILE_LINK_TARGET"></a>**`CLOUDABI_RIGHT_FILE_LINK_TARGET`**
 
     The right to invoke [`cloudabi_sys_file_link`](#cloudabi_sys_file_link) with the file
     descriptor as the target directory.
 
-- <a name="CLOUDABI_RIGHT_FILE_OPEN"></a>`CLOUDABI_RIGHT_FILE_OPEN`
+- <a name="CLOUDABI_RIGHT_FILE_OPEN"></a>**`CLOUDABI_RIGHT_FILE_OPEN`**
 
     The right to invoke [`cloudabi_sys_file_open`](#cloudabi_sys_file_open).
 
-- <a name="CLOUDABI_RIGHT_FILE_READDIR"></a>`CLOUDABI_RIGHT_FILE_READDIR`
+- <a name="CLOUDABI_RIGHT_FILE_READDIR"></a>**`CLOUDABI_RIGHT_FILE_READDIR`**
 
     The right to invoke [`cloudabi_sys_file_readdir`](#cloudabi_sys_file_readdir).
 
-- <a name="CLOUDABI_RIGHT_FILE_READLINK"></a>`CLOUDABI_RIGHT_FILE_READLINK`
+- <a name="CLOUDABI_RIGHT_FILE_READLINK"></a>**`CLOUDABI_RIGHT_FILE_READLINK`**
 
     The right to invoke [`cloudabi_sys_file_readlink`](#cloudabi_sys_file_readlink).
 
-- <a name="CLOUDABI_RIGHT_FILE_RENAME_SOURCE"></a>`CLOUDABI_RIGHT_FILE_RENAME_SOURCE`
+- <a name="CLOUDABI_RIGHT_FILE_RENAME_SOURCE"></a>**`CLOUDABI_RIGHT_FILE_RENAME_SOURCE`**
 
     The right to invoke [`cloudabi_sys_file_rename`](#cloudabi_sys_file_rename) with the file
     descriptor as the source directory.
 
-- <a name="CLOUDABI_RIGHT_FILE_RENAME_TARGET"></a>`CLOUDABI_RIGHT_FILE_RENAME_TARGET`
+- <a name="CLOUDABI_RIGHT_FILE_RENAME_TARGET"></a>**`CLOUDABI_RIGHT_FILE_RENAME_TARGET`**
 
     The right to invoke [`cloudabi_sys_file_rename`](#cloudabi_sys_file_rename) with the file
     descriptor as the target directory.
 
-- <a name="CLOUDABI_RIGHT_FILE_STAT_FGET"></a>`CLOUDABI_RIGHT_FILE_STAT_FGET`
+- <a name="CLOUDABI_RIGHT_FILE_STAT_FGET"></a>**`CLOUDABI_RIGHT_FILE_STAT_FGET`**
 
     The right to invoke [`cloudabi_sys_file_stat_fget`](#cloudabi_sys_file_stat_fget).
 
-- <a name="CLOUDABI_RIGHT_FILE_STAT_FPUT_SIZE"></a>`CLOUDABI_RIGHT_FILE_STAT_FPUT_SIZE`
+- <a name="CLOUDABI_RIGHT_FILE_STAT_FPUT_SIZE"></a>**`CLOUDABI_RIGHT_FILE_STAT_FPUT_SIZE`**
 
     The right to invoke [`cloudabi_sys_file_stat_fput`](#cloudabi_sys_file_stat_fput) with
     [`CLOUDABI_FILESTAT_SIZE`](#CLOUDABI_FILESTAT_SIZE).
@@ -2679,41 +2679,41 @@ performed.
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#CLOUDABI_RIGHT_FILE_OPEN) is set, includes the right to
     invoke [`cloudabi_sys_file_open`](#cloudabi_sys_file_open) with [`CLOUDABI_O_TRUNC`](#CLOUDABI_O_TRUNC).
 
-- <a name="CLOUDABI_RIGHT_FILE_STAT_FPUT_TIMES"></a>`CLOUDABI_RIGHT_FILE_STAT_FPUT_TIMES`
+- <a name="CLOUDABI_RIGHT_FILE_STAT_FPUT_TIMES"></a>**`CLOUDABI_RIGHT_FILE_STAT_FPUT_TIMES`**
 
     The right to invoke [`cloudabi_sys_file_stat_fput`](#cloudabi_sys_file_stat_fput) with
     [`CLOUDABI_FILESTAT_ATIM`](#CLOUDABI_FILESTAT_ATIM), [`CLOUDABI_FILESTAT_ATIM_NOW`](#CLOUDABI_FILESTAT_ATIM_NOW), [`CLOUDABI_FILESTAT_MTIM`](#CLOUDABI_FILESTAT_MTIM),
     and [`CLOUDABI_FILESTAT_MTIM_NOW`](#CLOUDABI_FILESTAT_MTIM_NOW).
 
-- <a name="CLOUDABI_RIGHT_FILE_STAT_GET"></a>`CLOUDABI_RIGHT_FILE_STAT_GET`
+- <a name="CLOUDABI_RIGHT_FILE_STAT_GET"></a>**`CLOUDABI_RIGHT_FILE_STAT_GET`**
 
     The right to invoke [`cloudabi_sys_file_stat_get`](#cloudabi_sys_file_stat_get).
 
-- <a name="CLOUDABI_RIGHT_FILE_STAT_PUT_TIMES"></a>`CLOUDABI_RIGHT_FILE_STAT_PUT_TIMES`
+- <a name="CLOUDABI_RIGHT_FILE_STAT_PUT_TIMES"></a>**`CLOUDABI_RIGHT_FILE_STAT_PUT_TIMES`**
 
     The right to invoke [`cloudabi_sys_file_stat_put`](#cloudabi_sys_file_stat_put) with
     [`CLOUDABI_FILESTAT_ATIM`](#CLOUDABI_FILESTAT_ATIM), [`CLOUDABI_FILESTAT_ATIM_NOW`](#CLOUDABI_FILESTAT_ATIM_NOW), [`CLOUDABI_FILESTAT_MTIM`](#CLOUDABI_FILESTAT_MTIM),
     and [`CLOUDABI_FILESTAT_MTIM_NOW`](#CLOUDABI_FILESTAT_MTIM_NOW).
 
-- <a name="CLOUDABI_RIGHT_FILE_SYMLINK"></a>`CLOUDABI_RIGHT_FILE_SYMLINK`
+- <a name="CLOUDABI_RIGHT_FILE_SYMLINK"></a>**`CLOUDABI_RIGHT_FILE_SYMLINK`**
 
     The right to invoke [`cloudabi_sys_file_symlink`](#cloudabi_sys_file_symlink).
 
-- <a name="CLOUDABI_RIGHT_FILE_UNLINK"></a>`CLOUDABI_RIGHT_FILE_UNLINK`
+- <a name="CLOUDABI_RIGHT_FILE_UNLINK"></a>**`CLOUDABI_RIGHT_FILE_UNLINK`**
 
     The right to invoke [`cloudabi_sys_file_unlink`](#cloudabi_sys_file_unlink).
 
-- <a name="CLOUDABI_RIGHT_MEM_MAP"></a>`CLOUDABI_RIGHT_MEM_MAP`
+- <a name="CLOUDABI_RIGHT_MEM_MAP"></a>**`CLOUDABI_RIGHT_MEM_MAP`**
 
     The right to invoke [`cloudabi_sys_mem_map`](#cloudabi_sys_mem_map) with [`cloudabi_mprot_t`](#cloudabi_mprot_t) set to
     zero.
 
-- <a name="CLOUDABI_RIGHT_MEM_MAP_EXEC"></a>`CLOUDABI_RIGHT_MEM_MAP_EXEC`
+- <a name="CLOUDABI_RIGHT_MEM_MAP_EXEC"></a>**`CLOUDABI_RIGHT_MEM_MAP_EXEC`**
 
     If [`CLOUDABI_RIGHT_MEM_MAP`](#CLOUDABI_RIGHT_MEM_MAP) is set, the right to invoke
     [`cloudabi_sys_mem_map`](#cloudabi_sys_mem_map) with [`CLOUDABI_PROT_EXEC`](#CLOUDABI_PROT_EXEC).
 
-- <a name="CLOUDABI_RIGHT_POLL_FD_READWRITE"></a>`CLOUDABI_RIGHT_POLL_FD_READWRITE`
+- <a name="CLOUDABI_RIGHT_POLL_FD_READWRITE"></a>**`CLOUDABI_RIGHT_POLL_FD_READWRITE`**
 
     If [`CLOUDABI_RIGHT_FD_READ`](#CLOUDABI_RIGHT_FD_READ) is set, includes the right to
     invoke [`cloudabi_sys_poll`](#cloudabi_sys_poll) and [`cloudabi_sys_poll_fd`](#cloudabi_sys_poll_fd) to subscribe to
@@ -2723,58 +2723,58 @@ performed.
     invoke [`cloudabi_sys_poll`](#cloudabi_sys_poll) and [`cloudabi_sys_poll_fd`](#cloudabi_sys_poll_fd) to subscribe to
     [`CLOUDABI_EVENTTYPE_FD_WRITE`](#CLOUDABI_EVENTTYPE_FD_WRITE).
 
-- <a name="CLOUDABI_RIGHT_POLL_MODIFY"></a>`CLOUDABI_RIGHT_POLL_MODIFY`
+- <a name="CLOUDABI_RIGHT_POLL_MODIFY"></a>**`CLOUDABI_RIGHT_POLL_MODIFY`**
 
     The right to modify the events a polling event queue
     is subscribed to.
 
-- <a name="CLOUDABI_RIGHT_POLL_PROC_TERMINATE"></a>`CLOUDABI_RIGHT_POLL_PROC_TERMINATE`
+- <a name="CLOUDABI_RIGHT_POLL_PROC_TERMINATE"></a>**`CLOUDABI_RIGHT_POLL_PROC_TERMINATE`**
 
     The right to invoke [`cloudabi_sys_poll`](#cloudabi_sys_poll) and [`cloudabi_sys_poll_fd`](#cloudabi_sys_poll_fd) to
     subscribe to [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#CLOUDABI_EVENTTYPE_PROC_TERMINATE).
 
-- <a name="CLOUDABI_RIGHT_POLL_WAIT"></a>`CLOUDABI_RIGHT_POLL_WAIT`
+- <a name="CLOUDABI_RIGHT_POLL_WAIT"></a>**`CLOUDABI_RIGHT_POLL_WAIT`**
 
     The right to wait for events on a polling event queue
     and extract them.
 
-- <a name="CLOUDABI_RIGHT_PROC_EXEC"></a>`CLOUDABI_RIGHT_PROC_EXEC`
+- <a name="CLOUDABI_RIGHT_PROC_EXEC"></a>**`CLOUDABI_RIGHT_PROC_EXEC`**
 
     The right to invoke [`cloudabi_sys_proc_exec`](#cloudabi_sys_proc_exec).
 
-- <a name="CLOUDABI_RIGHT_SOCK_ACCEPT"></a>`CLOUDABI_RIGHT_SOCK_ACCEPT`
+- <a name="CLOUDABI_RIGHT_SOCK_ACCEPT"></a>**`CLOUDABI_RIGHT_SOCK_ACCEPT`**
 
     The right to invoke [`cloudabi_sys_sock_accept`](#cloudabi_sys_sock_accept).
 
-- <a name="CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY"></a>`CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY`
+- <a name="CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY"></a>**`CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY`**
 
     The right to invoke [`cloudabi_sys_sock_bind`](#cloudabi_sys_sock_bind) with the file
     descriptor as the directory.
 
-- <a name="CLOUDABI_RIGHT_SOCK_BIND_SOCKET"></a>`CLOUDABI_RIGHT_SOCK_BIND_SOCKET`
+- <a name="CLOUDABI_RIGHT_SOCK_BIND_SOCKET"></a>**`CLOUDABI_RIGHT_SOCK_BIND_SOCKET`**
 
     The right to invoke [`cloudabi_sys_sock_bind`](#cloudabi_sys_sock_bind) with the file
     descriptor as the socket.
 
-- <a name="CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY"></a>`CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY`
+- <a name="CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY`**
 
     The right to invoke [`cloudabi_sys_sock_connect`](#cloudabi_sys_sock_connect) with the file
     descriptor as the directory.
 
-- <a name="CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET"></a>`CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET`
+- <a name="CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET`**
 
     The right to invoke [`cloudabi_sys_sock_connect`](#cloudabi_sys_sock_connect) with the file
     descriptor as the socket.
 
-- <a name="CLOUDABI_RIGHT_SOCK_LISTEN"></a>`CLOUDABI_RIGHT_SOCK_LISTEN`
+- <a name="CLOUDABI_RIGHT_SOCK_LISTEN"></a>**`CLOUDABI_RIGHT_SOCK_LISTEN`**
 
     The right to invoke [`cloudabi_sys_sock_listen`](#cloudabi_sys_sock_listen).
 
-- <a name="CLOUDABI_RIGHT_SOCK_SHUTDOWN"></a>`CLOUDABI_RIGHT_SOCK_SHUTDOWN`
+- <a name="CLOUDABI_RIGHT_SOCK_SHUTDOWN"></a>**`CLOUDABI_RIGHT_SOCK_SHUTDOWN`**
 
     The right to invoke [`cloudabi_sys_sock_shutdown`](#cloudabi_sys_sock_shutdown).
 
-- <a name="CLOUDABI_RIGHT_SOCK_STAT_GET"></a>`CLOUDABI_RIGHT_SOCK_STAT_GET`
+- <a name="CLOUDABI_RIGHT_SOCK_STAT_GET"></a>**`CLOUDABI_RIGHT_SOCK_STAT_GET`**
 
     The right to invoke [`cloudabi_sys_sock_stat_get`](#cloudabi_sys_sock_stat_get).
 
@@ -2782,20 +2782,20 @@ performed.
 
 Socket address family.
 
-- <a name="CLOUDABI_AF_UNSPEC"></a>`CLOUDABI_AF_UNSPEC`
+- <a name="CLOUDABI_AF_UNSPEC"></a>**`CLOUDABI_AF_UNSPEC`**
 
     The socket address family is unknown or is different
     from any of the other address families specified.
 
-- <a name="CLOUDABI_AF_INET"></a>`CLOUDABI_AF_INET`
+- <a name="CLOUDABI_AF_INET"></a>**`CLOUDABI_AF_INET`**
 
     An IPv4 address.
 
-- <a name="CLOUDABI_AF_INET6"></a>`CLOUDABI_AF_INET6`
+- <a name="CLOUDABI_AF_INET6"></a>**`CLOUDABI_AF_INET6`**
 
     An IPv6 address.
 
-- <a name="CLOUDABI_AF_UNIX"></a>`CLOUDABI_AF_UNIX`
+- <a name="CLOUDABI_AF_UNIX"></a>**`CLOUDABI_AF_UNIX`**
 
     The socket is local to the system, and may be bound to
     the file system.
@@ -2804,11 +2804,11 @@ Socket address family.
 
 Which channels on a socket need to be shut down.
 
-- <a name="CLOUDABI_SHUT_RD"></a>`CLOUDABI_SHUT_RD`
+- <a name="CLOUDABI_SHUT_RD"></a>**`CLOUDABI_SHUT_RD`**
 
     Disables further receive operations.
 
-- <a name="CLOUDABI_SHUT_WR"></a>`CLOUDABI_SHUT_WR`
+- <a name="CLOUDABI_SHUT_WR"></a>**`CLOUDABI_SHUT_WR`**
 
     Disables further send operations.
 
@@ -2846,157 +2846,157 @@ Members:
 
 Signal condition.
 
-- <a name="CLOUDABI_SIGABRT"></a>`CLOUDABI_SIGABRT`
+- <a name="CLOUDABI_SIGABRT"></a>**`CLOUDABI_SIGABRT`**
 
     Process abort signal.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGALRM"></a>`CLOUDABI_SIGALRM`
+- <a name="CLOUDABI_SIGALRM"></a>**`CLOUDABI_SIGALRM`**
 
     Alarm clock.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGBUS"></a>`CLOUDABI_SIGBUS`
+- <a name="CLOUDABI_SIGBUS"></a>**`CLOUDABI_SIGBUS`**
 
     Access to an undefined portion of a memory object.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGCHLD"></a>`CLOUDABI_SIGCHLD`
+- <a name="CLOUDABI_SIGCHLD"></a>**`CLOUDABI_SIGCHLD`**
 
     Child process terminated, stopped, or continued.
 
     Action: Ignored.
 
-- <a name="CLOUDABI_SIGCONT"></a>`CLOUDABI_SIGCONT`
+- <a name="CLOUDABI_SIGCONT"></a>**`CLOUDABI_SIGCONT`**
 
     Continue executing, if stopped.
 
     Action: Continues executing, if stopped.
 
-- <a name="CLOUDABI_SIGFPE"></a>`CLOUDABI_SIGFPE`
+- <a name="CLOUDABI_SIGFPE"></a>**`CLOUDABI_SIGFPE`**
 
     Erroneous arithmetic operation.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGHUP"></a>`CLOUDABI_SIGHUP`
+- <a name="CLOUDABI_SIGHUP"></a>**`CLOUDABI_SIGHUP`**
 
     Hangup.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGILL"></a>`CLOUDABI_SIGILL`
+- <a name="CLOUDABI_SIGILL"></a>**`CLOUDABI_SIGILL`**
 
     Illegal instruction.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGINT"></a>`CLOUDABI_SIGINT`
+- <a name="CLOUDABI_SIGINT"></a>**`CLOUDABI_SIGINT`**
 
     Terminale interrupt signal.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGKILL"></a>`CLOUDABI_SIGKILL`
+- <a name="CLOUDABI_SIGKILL"></a>**`CLOUDABI_SIGKILL`**
 
     Kill.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGPIPE"></a>`CLOUDABI_SIGPIPE`
+- <a name="CLOUDABI_SIGPIPE"></a>**`CLOUDABI_SIGPIPE`**
 
     Write on a pipe with no one to read it.
 
     Action: Ignored.
 
-- <a name="CLOUDABI_SIGQUIT"></a>`CLOUDABI_SIGQUIT`
+- <a name="CLOUDABI_SIGQUIT"></a>**`CLOUDABI_SIGQUIT`**
 
     Terminal quit signal.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGSEGV"></a>`CLOUDABI_SIGSEGV`
+- <a name="CLOUDABI_SIGSEGV"></a>**`CLOUDABI_SIGSEGV`**
 
     Invalid memory reference.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGSTOP"></a>`CLOUDABI_SIGSTOP`
+- <a name="CLOUDABI_SIGSTOP"></a>**`CLOUDABI_SIGSTOP`**
 
     Stop executing.
 
     Action: Stops executing.
 
-- <a name="CLOUDABI_SIGSYS"></a>`CLOUDABI_SIGSYS`
+- <a name="CLOUDABI_SIGSYS"></a>**`CLOUDABI_SIGSYS`**
 
     Bad system call.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGTERM"></a>`CLOUDABI_SIGTERM`
+- <a name="CLOUDABI_SIGTERM"></a>**`CLOUDABI_SIGTERM`**
 
     Termination signal.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGTRAP"></a>`CLOUDABI_SIGTRAP`
+- <a name="CLOUDABI_SIGTRAP"></a>**`CLOUDABI_SIGTRAP`**
 
     Trace/breakpoint trap.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGTSTP"></a>`CLOUDABI_SIGTSTP`
+- <a name="CLOUDABI_SIGTSTP"></a>**`CLOUDABI_SIGTSTP`**
 
     Terminal stop signal.
 
     Action: Stops executing.
 
-- <a name="CLOUDABI_SIGTTIN"></a>`CLOUDABI_SIGTTIN`
+- <a name="CLOUDABI_SIGTTIN"></a>**`CLOUDABI_SIGTTIN`**
 
     Background process attempting read.
 
     Action: Stops executing.
 
-- <a name="CLOUDABI_SIGTTOU"></a>`CLOUDABI_SIGTTOU`
+- <a name="CLOUDABI_SIGTTOU"></a>**`CLOUDABI_SIGTTOU`**
 
     Background process attempting write.
 
     Action: Stops executing.
 
-- <a name="CLOUDABI_SIGURG"></a>`CLOUDABI_SIGURG`
+- <a name="CLOUDABI_SIGURG"></a>**`CLOUDABI_SIGURG`**
 
     High bandwidth data is available at a socket.
 
     Action: Ignored.
 
-- <a name="CLOUDABI_SIGUSR1"></a>`CLOUDABI_SIGUSR1`
+- <a name="CLOUDABI_SIGUSR1"></a>**`CLOUDABI_SIGUSR1`**
 
     User-defined signal 1.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGUSR2"></a>`CLOUDABI_SIGUSR2`
+- <a name="CLOUDABI_SIGUSR2"></a>**`CLOUDABI_SIGUSR2`**
 
     User-defined signal 2.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGVTALRM"></a>`CLOUDABI_SIGVTALRM`
+- <a name="CLOUDABI_SIGVTALRM"></a>**`CLOUDABI_SIGVTALRM`**
 
     Virtual timer expired.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGXCPU"></a>`CLOUDABI_SIGXCPU`
+- <a name="CLOUDABI_SIGXCPU"></a>**`CLOUDABI_SIGXCPU`**
 
     CPU time limit exceeded.
 
     Action: Terminates the process.
 
-- <a name="CLOUDABI_SIGXFSZ"></a>`CLOUDABI_SIGXFSZ`
+- <a name="CLOUDABI_SIGXFSZ"></a>**`CLOUDABI_SIGXFSZ`**
 
     File size limit exceeded.
 
@@ -3064,7 +3064,7 @@ Members:
 Specifies which socket attributes need to be altered when
 calling [`cloudabi_sys_sock_stat_get`](#cloudabi_sys_sock_stat_get).
 
-- <a name="CLOUDABI_SOCKSTAT_CLEAR_ERROR"></a>`CLOUDABI_SOCKSTAT_CLEAR_ERROR`
+- <a name="CLOUDABI_SOCKSTAT_CLEAR_ERROR"></a>**`CLOUDABI_SOCKSTAT_CLEAR_ERROR`**
 
     Clear [`cloudabi_sockstat_t::ss_error`](#cloudabi_sockstat_t.ss_error).
 
@@ -3072,7 +3072,7 @@ calling [`cloudabi_sys_sock_stat_get`](#cloudabi_sys_sock_stat_get).
 
 State of the socket.
 
-- <a name="CLOUDABI_SOCKSTATE_ACCEPTCONN"></a>`CLOUDABI_SOCKSTATE_ACCEPTCONN`
+- <a name="CLOUDABI_SOCKSTATE_ACCEPTCONN"></a>**`CLOUDABI_SOCKSTATE_ACCEPTCONN`**
 
     [`cloudabi_sys_sock_listen`](#cloudabi_sys_sock_listen) has been called on the socket. The
     socket is accepting incoming connections.
@@ -3082,7 +3082,7 @@ State of the socket.
 Flags determining how the timestamp provided in
 [`cloudabi_subscription_t::clock.timeout`](#cloudabi_subscription_t.clock.timeout) should be interpreted.
 
-- <a name="CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME"></a>`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`
+- <a name="CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME"></a>**`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`**
 
     If set, treat the timestamp provided in
     [`cloudabi_subscription_t::clock.timeout`](#cloudabi_subscription_t.clock.timeout) as an absolute timestamp
@@ -3097,31 +3097,31 @@ Flags determining how the timestamp provided in
 Flags for [`cloudabi_sys_poll_fd`](#cloudabi_sys_poll_fd) to determine how to process a
 subscription request. These flags are ignored by [`cloudabi_sys_poll`](#cloudabi_sys_poll).
 
-- <a name="CLOUDABI_SUBSCRIPTION_ADD"></a>`CLOUDABI_SUBSCRIPTION_ADD`
+- <a name="CLOUDABI_SUBSCRIPTION_ADD"></a>**`CLOUDABI_SUBSCRIPTION_ADD`**
 
     Adds and enables the subscription. Implies
     [`CLOUDABI_SUBSCRIPTION_ENABLE`](#CLOUDABI_SUBSCRIPTION_ENABLE), unless [`CLOUDABI_SUBSCRIPTION_DISABLE`](#CLOUDABI_SUBSCRIPTION_DISABLE) is
     specified.
 
-- <a name="CLOUDABI_SUBSCRIPTION_CLEAR"></a>`CLOUDABI_SUBSCRIPTION_CLEAR`
+- <a name="CLOUDABI_SUBSCRIPTION_CLEAR"></a>**`CLOUDABI_SUBSCRIPTION_CLEAR`**
 
     Sets the event back to the initial state, so that it
     no longer triggers.
 
-- <a name="CLOUDABI_SUBSCRIPTION_DELETE"></a>`CLOUDABI_SUBSCRIPTION_DELETE`
+- <a name="CLOUDABI_SUBSCRIPTION_DELETE"></a>**`CLOUDABI_SUBSCRIPTION_DELETE`**
 
     Deletes the subscription.
 
-- <a name="CLOUDABI_SUBSCRIPTION_DISABLE"></a>`CLOUDABI_SUBSCRIPTION_DISABLE`
+- <a name="CLOUDABI_SUBSCRIPTION_DISABLE"></a>**`CLOUDABI_SUBSCRIPTION_DISABLE`**
 
     Disables the subscription so that it does not trigger,
     but does not delete it.
 
-- <a name="CLOUDABI_SUBSCRIPTION_ENABLE"></a>`CLOUDABI_SUBSCRIPTION_ENABLE`
+- <a name="CLOUDABI_SUBSCRIPTION_ENABLE"></a>**`CLOUDABI_SUBSCRIPTION_ENABLE`**
 
     Enables the subscription so that it can trigger.
 
-- <a name="CLOUDABI_SUBSCRIPTION_ONESHOT"></a>`CLOUDABI_SUBSCRIPTION_ONESHOT`
+- <a name="CLOUDABI_SUBSCRIPTION_ONESHOT"></a>**`CLOUDABI_SUBSCRIPTION_ONESHOT`**
 
     Automatically deletes the subscription once triggered.
 
@@ -3130,7 +3130,7 @@ subscription request. These flags are ignored by [`cloudabi_sys_poll`](#cloudabi
 Flags influencing the method of polling for read or writing on
 a file descriptor.
 
-- <a name="CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL"></a>`CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL`
+- <a name="CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL"></a>**`CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL`**
 
     If set, trigger immediately when polling for reading
     on a regular file, just like the POSIX poll function.
@@ -3300,7 +3300,7 @@ Timestamp in nanoseconds.
 Specifies whether files are unlinked or directories are
 removed.
 
-- <a name="CLOUDABI_UNLINK_REMOVEDIR"></a>`CLOUDABI_UNLINK_REMOVEDIR`
+- <a name="CLOUDABI_UNLINK_REMOVEDIR"></a>**`CLOUDABI_UNLINK_REMOVEDIR`**
 
     If set, removes a directory. Otherwise, unlinks any
     non-directory file.
@@ -3315,15 +3315,15 @@ retained when extracted from the kernel.
 Relative to which position the offset of the file descriptor
 should be set.
 
-- <a name="CLOUDABI_WHENCE_CUR"></a>`CLOUDABI_WHENCE_CUR`
+- <a name="CLOUDABI_WHENCE_CUR"></a>**`CLOUDABI_WHENCE_CUR`**
 
     Seek relative to current position.
 
-- <a name="CLOUDABI_WHENCE_END"></a>`CLOUDABI_WHENCE_END`
+- <a name="CLOUDABI_WHENCE_END"></a>**`CLOUDABI_WHENCE_END`**
 
     Seek relative to end-of-file.
 
-- <a name="CLOUDABI_WHENCE_SET"></a>`CLOUDABI_WHENCE_SET`
+- <a name="CLOUDABI_WHENCE_SET"></a>**`CLOUDABI_WHENCE_SET`**
 
     Seek relative to start-of-file.
 

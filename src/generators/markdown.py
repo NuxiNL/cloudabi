@@ -84,7 +84,7 @@ class MarkdownGenerator(Generator):
                 if isinstance(type, OpaqueType) or isinstance(type, AliasType):
                     print('Special values:\n')
                 for v in type.values:
-                    print('- {}`{}`\n'.format(
+                    print('- {}**`{}`**\n'.format(
                         self.anchor(type, v),
                         self.naming.valname(type, v)))
                     self.generate_doc(abi, v, '    ')
