@@ -100,9 +100,11 @@ toolchain, and ports) are available for several operating systems:
 
 ## Specification of the ABI
 
-The entire ABI is specified in a a file called `cloudabi.txt`, from
-which all headers and documentation (including the one you're reading
-now) is generated.
+The entire ABI is specified in a a file called
+[`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt),
+from which all
+[headers](https://github.com/NuxiNL/cloudabi/tree/master/headers)
+and documentation (including the one you're reading now) is generated.
 
 ### Syscalls
 
