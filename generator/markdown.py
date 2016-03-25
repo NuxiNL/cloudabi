@@ -25,8 +25,8 @@ class MarkdownNaming:
 
     def link_target(self, *path):
         for p in path:
-            if p.name == None or (isinstance(p, Type) and not isinstance(p,
-                UserDefinedType)):
+            if p.name is None or (isinstance(p, Type) and
+                                  not isinstance(p, UserDefinedType)):
                 return None
         return '.'.join(p.name for p in path)
 
@@ -207,8 +207,10 @@ class MarkdownGenerator(Generator):
             return ''
         return '<a name="{}"></a>'.format(target)
 
+
 def _escape(text):
     return text.replace('_', '\\_')
+
 
 def _fix_undescores(text):
     return _escape(text.replace('\\_', '_'))
