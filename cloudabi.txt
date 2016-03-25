@@ -912,8 +912,6 @@ enum uint8 whence
 	3 set
 		| Seek relative to start-of-file.
 
-
-
 function threadentry
 	| Entry point for additionally created threads.
 	in
@@ -922,8 +920,6 @@ function threadentry
 		ptr void aux
 			| Copy of the value stored in
 			| [threadattr.argument].
-
-
 
 struct auxv
 	| Auxiliary vector entry.
@@ -1229,8 +1225,6 @@ struct threadattr
 		| Region allocated to serve as stack space.
 	ptr void        argument
 		| Argument to be forwarded to the entry point function.
-
-
 
 syscall 0 clock_res_get
 	| Obtains the resolution of a clock.
