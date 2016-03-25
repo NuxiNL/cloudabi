@@ -1,7 +1,7 @@
-# Copyright (c) 2015 Nuxi, https://nuxi.nl/
+# Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
 # This file is distributed under a 2-clause BSD license.
-# See the LICENSE file for details.
+# See the LICENSE and CONTRIBUTORS files for details.
 
 # 'Indented Tree Format': An extremely simple text format to describe a tree
 # using indentation. Every non-empty line represents a node, with the

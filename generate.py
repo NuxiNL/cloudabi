@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# Copyright (c) 2016 Nuxi, https://nuxi.nl/
+# Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
 # This file is distributed under a 2-clause BSD license.
-# See the LICENSE file for details.
+# See the LICENSE and CONTRIBUTORS files for details.
 
 from contextlib import redirect_stdout
 import os
