@@ -5,6 +5,7 @@
 # See the LICENSE and CONTRIBUTORS files for details.
 
 from contextlib import redirect_stdout
+import subprocess
 import os
 
 from generator.abi import *
@@ -88,3 +89,11 @@ with open('docs/cloudabi.md', 'w') as f:
         MarkdownGenerator(
             naming=MarkdownCNaming('cloudabi_'),
         ).generate_abi(abi)
+
+html = subprocess.check_output('markdown docs/cloudabi.md', shell=True)
+with open('docs/cloudabi.html', 'wb') as f:
+    with open('parts/head.html', 'rb') as p:
+        f.write(p.read())
+    f.write(html)
+    with open('parts/foot.html', 'rb') as p:
+        f.write(p.read())
