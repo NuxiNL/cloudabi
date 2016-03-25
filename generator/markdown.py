@@ -17,15 +17,18 @@ class MarkdownNaming:
         target = self.link_target(*path)
         if code:
             name = '`{}`'.format(name)
+        else:
+            name = _fix_undescores(name)
         if target is None:
             return name
         return '[{}](#{})'.format(name, target)
 
     def link_target(self, *path):
-        l = self.link_name(*path)
-        if l is not None:
-            l = l.replace('::', '.')
-        return l
+        for p in path:
+            if p.name == None or (isinstance(p, Type) and not isinstance(p,
+                UserDefinedType)):
+                return None
+        return '.'.join(p.name for p in path)
 
     def link_name(self, *path):
         if len(path) == 2 and isinstance(path[1], SpecialValue):
@@ -47,7 +50,7 @@ class MarkdownNaming:
 class MarkdownCNaming(MarkdownNaming, CNaming):
 
     def typename(self, type, link=True, **kwargs):
-        if link and isinstance(type, UserDefinedType):
+        if link:
             return self.link(type, code=False)
         else:
             return super().typename(type, **kwargs)
@@ -83,15 +86,15 @@ class MarkdownGenerator(Generator):
     def generate_type(self, abi, type):
         if isinstance(type, IntLikeType):
             extra = ' ({}{})'.format(
-                self.naming.typename(type.int_type),
+                self.naming.link(type.int_type),
                 ' bitfield' if isinstance(type, FlagsType) else '')
         elif isinstance(type, StructType):
-            extra = ' (struct)'
+            extra = ' (`struct`)'
         elif isinstance(type, FunctionType):
             extra = ' (function type)'
         else:
             assert(False)
-        print('#### {}{}{}\n'.format(
+        print('#### {}`{}`{}\n'.format(
             self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
         if isinstance(type, IntLikeType):
@@ -114,8 +117,8 @@ class MarkdownGenerator(Generator):
                     self.generate_struct_member(abi, m, [type])
             if not isinstance(type.return_type, VoidType):
                 print('Returns:\n')
-                print('- <code>{}</code>\n'.format(
-                    self.naming.typename(type.return_type)))
+                print('- {}\n'.format(
+                    self.naming.link(type.return_type)))
                 self.generate_doc(abi, type.return_type.doc, '    ')
 
     def generate_struct_member(self, abi, m, parents, indent=''):
@@ -124,18 +127,20 @@ class MarkdownGenerator(Generator):
             print('- {}<code>{}</code>\n'.format(
                 self.anchor(*parents, m),
                 self.naming.vardecl(
-                    m.type, '<strong>{}</strong>'.format(m.name))))
+                    m.type, '<strong>{}</strong>'.format(_escape(m.name)))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, RangeStructMember):
             print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
                 self.anchor(*parents, m.raw_members[0]),
                 self.naming.vardecl(
                     m.raw_members[0].type,
-                    '<strong>{}</strong>'.format(m.raw_members[0].name)),
+                    '<strong>{}</strong>'.format(
+                        _escape(m.raw_members[0].name))),
                 self.anchor(*parents, m.raw_members[1]),
                 self.naming.vardecl(
                     m.raw_members[1].type,
-                    '<strong>{}</strong>'.format(m.raw_members[1].name))))
+                    '<strong>{}</strong>'.format(
+                        _escape(m.raw_members[1].name)))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, VariantStructMember):
             for vm in m.members:
@@ -163,7 +168,8 @@ class MarkdownGenerator(Generator):
         super().generate_syscalls(abi, syscalls)
 
     def generate_syscall(self, abi, syscall):
-        print('#### {}\n'.format(self.naming.syscallname(syscall)))
+        print('#### {}`{}`\n'.format(
+            self.anchor(syscall), self.naming.syscallname(syscall)))
         self.generate_doc(abi, syscall)
 
         if syscall.input.members:
@@ -200,3 +206,9 @@ class MarkdownGenerator(Generator):
         if target is None:
             return ''
         return '<a name="{}"></a>'.format(target)
+
+def _escape(text):
+    return text.replace('_', '\\_')
+
+def _fix_undescores(text):
+    return _escape(text.replace('\\_', '_'))
