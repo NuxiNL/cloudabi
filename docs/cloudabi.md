@@ -1458,6 +1458,8 @@ Temporarily yields execution of the calling thread.
 
 File or memory access pattern advisory information.
 
+Possible values:
+
 - <a name="advice.dontneed"></a>**`CLOUDABI_ADVICE_DONTNEED`**
 
     The application expects that it will not access the
@@ -1491,6 +1493,8 @@ File or memory access pattern advisory information.
 #### <a name="auxtype"></a>`cloudabi_auxtype_t` (`uint32_t`)
 
 Enumeration describing the kind of value stored in [`cloudabi_auxv_t`](#auxv).
+
+Possible values:
 
 - <a name="auxtype.argdata"></a>**`CLOUDABI_AT_ARGDATA`**
 
@@ -1562,15 +1566,15 @@ Members:
 
 - When `a_type` is one of: [`CLOUDABI_AT_ARGDATALEN`](#auxtype.argdatalen), [`CLOUDABI_AT_CANARYLEN`](#auxtype.canarylen), [`CLOUDABI_AT_NCPUS`](#auxtype.ncpus), [`CLOUDABI_AT_PAGESZ`](#auxtype.pagesz), [`CLOUDABI_AT_PHNUM`](#auxtype.phnum), [`CLOUDABI_AT_TID`](#auxtype.tid):
 
-  - <a name="auxv.a_val"></a><code>size\_t <strong>a\_val</strong></code>
+    - <a name="auxv.a_val"></a><code>size\_t <strong>a\_val</strong></code>
 
-      A numerical value.
+        A numerical value.
 
 - When `a_type` is one of: [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_CANARY`](#auxtype.canary), [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
 
-  - <a name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
+    - <a name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 
-      A pointer value.
+        A pointer value.
 
 #### <a name="backlog"></a>`cloudabi_backlog_t` (`uint32_t`)
 
@@ -1590,6 +1594,8 @@ Members:
 #### <a name="clockid"></a>`cloudabi_clockid_t` (`uint32_t`)
 
 Identifiers for clocks.
+
+Possible values:
 
 - <a name="clockid.monotonic"></a>**`CLOUDABI_CLOCK_MONOTONIC`**
 
@@ -1676,6 +1682,8 @@ Error codes returned by system calls.
 Not all of these error codes are returned by the system calls
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.
+
+Possible values:
 
 - <a name="errno.2big"></a>**`CLOUDABI_E2BIG`**
 
@@ -2003,78 +2011,80 @@ Members:
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
 
-  - <a name="event.clock"></a>**`clock`**
+    - <a name="event.clock"></a>**`clock`**
 
-    - <a name="event.clock.identifier"></a><code>[cloudabi\_userdata\_t](#userdata) <strong>identifier</strong></code>
+        - <a name="event.clock.identifier"></a><code>[cloudabi\_userdata\_t](#userdata) <strong>identifier</strong></code>
 
-        The user-defined unique
-        identifier of the clock.
+            The user-defined unique
+            identifier of the clock.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CONDVAR`](#eventtype.condvar):
 
-  - <a name="event.condvar"></a>**`condvar`**
+    - <a name="event.condvar"></a>**`condvar`**
 
-    - <a name="event.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
+        - <a name="event.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
 
-        The condition variable that
-        got woken up.
+            The condition variable that
+            got woken up.
 
 - When `type` is one of: [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read), [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
-  - <a name="event.fd_readwrite"></a>**`fd_readwrite`**
+    - <a name="event.fd_readwrite"></a>**`fd_readwrite`**
 
-    - <a name="event.fd_readwrite.nbytes"></a><code>[cloudabi\_filesize\_t](#filesize) <strong>nbytes</strong></code>
+        - <a name="event.fd_readwrite.nbytes"></a><code>[cloudabi\_filesize\_t](#filesize) <strong>nbytes</strong></code>
 
-        The number of bytes available
-        for reading or writing.
+            The number of bytes available
+            for reading or writing.
 
-    - <a name="event.fd_readwrite.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a name="event.fd_readwrite.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
 
-        The file descriptor that has
-        data available for reading or
-        writing.
+            The file descriptor that has
+            data available for reading or
+            writing.
 
-    - <a name="event.fd_readwrite.flags"></a><code>[cloudabi\_eventrwflags\_t](#eventrwflags) <strong>flags</strong></code>
+        - <a name="event.fd_readwrite.flags"></a><code>[cloudabi\_eventrwflags\_t](#eventrwflags) <strong>flags</strong></code>
 
-        The state of the file
-        descriptor.
+            The state of the file
+            descriptor.
 
 - When `type` is one of: [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
 
-  - <a name="event.lock"></a>**`lock`**
+    - <a name="event.lock"></a>**`lock`**
 
-    - <a name="event.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+        - <a name="event.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
-        The lock that has been
-        acquired for reading or
-        writing.
+            The lock that has been
+            acquired for reading or
+            writing.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
 
-  - <a name="event.proc_terminate"></a>**`proc_terminate`**
+    - <a name="event.proc_terminate"></a>**`proc_terminate`**
 
-    - <a name="event.proc_terminate.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a name="event.proc_terminate.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
 
-        The process descriptor of the
-        process that has terminated.
+            The process descriptor of the
+            process that has terminated.
 
-    - <a name="event.proc_terminate.signal"></a><code>[cloudabi\_signal\_t](#signal) <strong>signal</strong></code>
+        - <a name="event.proc_terminate.signal"></a><code>[cloudabi\_signal\_t](#signal) <strong>signal</strong></code>
 
-        If zero, the process has
-        exited.
-        Otherwise, the signal
-        condition causing it to
-        terminated.
+            If zero, the process has
+            exited.
+            Otherwise, the signal
+            condition causing it to
+            terminated.
 
-    - <a name="event.proc_terminate.exitcode"></a><code>[cloudabi\_exitcode\_t](#exitcode) <strong>exitcode</strong></code>
+        - <a name="event.proc_terminate.exitcode"></a><code>[cloudabi\_exitcode\_t](#exitcode) <strong>exitcode</strong></code>
 
-        If exited, the exit code of
-        the process.
+            If exited, the exit code of
+            the process.
 
 #### <a name="eventrwflags"></a>`cloudabi_eventrwflags_t` (`uint16_t` bitfield)
 
 The state of the file descriptor subscribed to with
 [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
+
+Possible values:
 
 - <a name="eventrwflags.hangup"></a>**`CLOUDABI_EVENT_FD_READWRITE_HANGUP`**
 
@@ -2084,6 +2094,8 @@ The state of the file descriptor subscribed to with
 #### <a name="eventtype"></a>`cloudabi_eventtype_t` (`uint8_t`)
 
 Type of a subscription to an event or its occurence.
+
+Possible values:
 
 - <a name="eventtype.clock"></a>**`CLOUDABI_EVENTTYPE_CLOCK`**
 
@@ -2148,6 +2160,8 @@ Special values:
 
 File descriptor flags.
 
+Possible values:
+
 - <a name="fdflags.append"></a>**`CLOUDABI_FDFLAG_APPEND`**
 
     Append mode: Data written to the file is always
@@ -2177,6 +2191,8 @@ File descriptor flags.
 #### <a name="fdsflags"></a>`cloudabi_fdsflags_t` (`uint16_t` bitfield)
 
 Which file descriptor attributes to adjust.
+
+Possible values:
 
 - <a name="fdsflags.flags"></a>**`CLOUDABI_FDSTAT_FLAGS`**
 
@@ -2265,6 +2281,8 @@ Members:
 
 The type of a file descriptor or file.
 
+Possible values:
+
 - <a name="filetype.unknown"></a>**`CLOUDABI_FILETYPE_UNKNOWN`**
 
     The type of the file descriptor or file is unknown or
@@ -2329,6 +2347,8 @@ The type of a file descriptor or file.
 #### <a name="fsflags"></a>`cloudabi_fsflags_t` (`uint16_t` bitfield)
 
 Which file attributes to adjust.
+
+Possible values:
 
 - <a name="fsflags.atim"></a>**`CLOUDABI_FILESTAT_ATIM`**
 
@@ -2433,6 +2453,8 @@ Members:
 
 Flags determining the method of how paths are resolved.
 
+Possible values:
+
 - <a name="lookupflags.symlink_follow"></a>**`CLOUDABI_LOOKUP_SYMLINK_FOLLOW`**
 
     As long as the resolved path corresponds to a symbolic
@@ -2441,6 +2463,8 @@ Flags determining the method of how paths are resolved.
 #### <a name="mflags"></a>`cloudabi_mflags_t` (`uint8_t` bitfield)
 
 Memory mapping flags.
+
+Possible values:
 
 - <a name="mflags.anon"></a>**`CLOUDABI_MAP_ANON`**
 
@@ -2469,6 +2493,8 @@ Memory page protection options.
 This implementation enforces the W^X property: Pages cannot be
 mapped for execution while also mapped for writing.
 
+Possible values:
+
 - <a name="mprot.exec"></a>**`CLOUDABI_PROT_EXEC`**
 
     Page can be executed.
@@ -2485,6 +2511,8 @@ mapped for execution while also mapped for writing.
 
 Methods of synchronizing memory with physical storage.
 
+Possible values:
+
 - <a name="msflags.async"></a>**`CLOUDABI_MS_ASYNC`**
 
     Perform asynchronous writes.
@@ -2500,6 +2528,8 @@ Methods of synchronizing memory with physical storage.
 #### <a name="msgflags"></a>`cloudabi_msgflags_t` (`uint16_t` bitfield)
 
 Flags provided to and returned by [`cloudabi_sys_sock_recv`](#sock_recv) and [`cloudabi_sys_sock_send`](#sock_send).
+
+Possible values:
 
 - <a name="msgflags.ctrunc"></a>**`CLOUDABI_MSG_CTRUNC`**
 
@@ -2536,6 +2566,8 @@ variable that should be woken up.
 #### <a name="oflags"></a>`cloudabi_oflags_t` (`uint16_t` bitfield)
 
 Open flags used by [`cloudabi_sys_file_open`](#file_open).
+
+Possible values:
 
 - <a name="oflags.creat"></a>**`CLOUDABI_O_CREAT`**
 
@@ -2605,6 +2637,8 @@ Members:
 
 File descriptor rights, determining which actions may be
 performed.
+
+Possible values:
 
 - <a name="rights.fd_datasync"></a>**`CLOUDABI_RIGHT_FD_DATASYNC`**
 
@@ -2829,6 +2863,8 @@ performed.
 
 Socket address family.
 
+Possible values:
+
 - <a name="sa_family.unspec"></a>**`CLOUDABI_AF_UNSPEC`**
 
     The socket address family is unknown or is different
@@ -2850,6 +2886,8 @@ Socket address family.
 #### <a name="sdflags"></a>`cloudabi_sdflags_t` (`uint8_t` bitfield)
 
 Which channels on a socket need to be shut down.
+
+Possible values:
 
 - <a name="sdflags.rd"></a>**`CLOUDABI_SHUT_RD`**
 
@@ -2892,6 +2930,8 @@ Members:
 #### <a name="signal"></a>`cloudabi_signal_t` (`uint8_t`)
 
 Signal condition.
+
+Possible values:
 
 - <a name="signal.abrt"></a>**`CLOUDABI_SIGABRT`**
 
@@ -3061,27 +3101,27 @@ Members:
 
 - When `sa_family` is [`CLOUDABI_AF_INET`](#sa_family.inet):
 
-  - <a name="sockaddr.sa_inet"></a>**`sa_inet`**
+    - <a name="sockaddr.sa_inet"></a>**`sa_inet`**
 
-    - <a name="sockaddr.sa_inet.addr"></a><code>uint8\_t <strong>addr</strong>[4]</code>
+        - <a name="sockaddr.sa_inet.addr"></a><code>uint8\_t <strong>addr</strong>[4]</code>
 
-        IPv4 address.
+            IPv4 address.
 
-    - <a name="sockaddr.sa_inet.port"></a><code>uint16\_t <strong>port</strong></code>
+        - <a name="sockaddr.sa_inet.port"></a><code>uint16\_t <strong>port</strong></code>
 
-        IPv4 port number.
+            IPv4 port number.
 
 - When `sa_family` is [`CLOUDABI_AF_INET6`](#sa_family.inet6):
 
-  - <a name="sockaddr.sa_inet6"></a>**`sa_inet6`**
+    - <a name="sockaddr.sa_inet6"></a>**`sa_inet6`**
 
-    - <a name="sockaddr.sa_inet6.addr"></a><code>uint8\_t <strong>addr</strong>[16]</code>
+        - <a name="sockaddr.sa_inet6.addr"></a><code>uint8\_t <strong>addr</strong>[16]</code>
 
-        IPv6 address.
+            IPv6 address.
 
-    - <a name="sockaddr.sa_inet6.port"></a><code>uint16\_t <strong>port</strong></code>
+        - <a name="sockaddr.sa_inet6.port"></a><code>uint16\_t <strong>port</strong></code>
 
-        IPv6 port number.
+            IPv6 port number.
 
 #### <a name="sockstat"></a>`cloudabi_sockstat_t` (`struct`)
 
@@ -3111,6 +3151,8 @@ Members:
 Specifies which socket attributes need to be altered when
 calling [`cloudabi_sys_sock_stat_get`](#sock_stat_get).
 
+Possible values:
+
 - <a name="ssflags.clear_error"></a>**`CLOUDABI_SOCKSTAT_CLEAR_ERROR`**
 
     Clear [`cloudabi_sockstat_t::ss_error`](#sockstat.ss_error).
@@ -3118,6 +3160,8 @@ calling [`cloudabi_sys_sock_stat_get`](#sock_stat_get).
 #### <a name="sstate"></a>`cloudabi_sstate_t` (`uint32_t` bitfield)
 
 State of the socket.
+
+Possible values:
 
 - <a name="sstate.acceptconn"></a>**`CLOUDABI_SOCKSTATE_ACCEPTCONN`**
 
@@ -3128,6 +3172,8 @@ State of the socket.
 
 Flags determining how the timestamp provided in
 [`cloudabi_subscription_t::clock.timeout`](#subscription.clock.timeout) should be interpreted.
+
+Possible values:
 
 - <a name="subclockflags.abstime"></a>**`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`**
 
@@ -3143,6 +3189,8 @@ Flags determining how the timestamp provided in
 
 Flags for [`cloudabi_sys_poll_fd`](#poll_fd) to determine how to process a
 subscription request. These flags are ignored by [`cloudabi_sys_poll`](#poll).
+
+Possible values:
 
 - <a name="subflags.add"></a>**`CLOUDABI_SUBSCRIPTION_ADD`**
 
@@ -3177,6 +3225,8 @@ subscription request. These flags are ignored by [`cloudabi_sys_poll`](#poll).
 Flags influencing the method of polling for read or writing on
 a file descriptor.
 
+Possible values:
+
 - <a name="subrwflags.poll"></a>**`CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL`**
 
     If set, trigger immediately when polling for reading
@@ -3206,106 +3256,106 @@ Members:
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
 
-  - <a name="subscription.clock"></a>**`clock`**
+    - <a name="subscription.clock"></a>**`clock`**
 
-    - <a name="subscription.clock.identifier"></a><code>[cloudabi\_userdata\_t](#userdata) <strong>identifier</strong></code>
+        - <a name="subscription.clock.identifier"></a><code>[cloudabi\_userdata\_t](#userdata) <strong>identifier</strong></code>
 
-        The user-defined unique
-        identifier of the clock.
+            The user-defined unique
+            identifier of the clock.
 
-    - <a name="subscription.clock.clock_id"></a><code>[cloudabi\_clockid\_t](#clockid) <strong>clock\_id</strong></code>
+        - <a name="subscription.clock.clock_id"></a><code>[cloudabi\_clockid\_t](#clockid) <strong>clock\_id</strong></code>
 
-        The clock against which the
-        timestamp should be compared.
+            The clock against which the
+            timestamp should be compared.
 
-    - <a name="subscription.clock.timeout"></a><code>[cloudabi\_timestamp\_t](#timestamp) <strong>timeout</strong></code>
+        - <a name="subscription.clock.timeout"></a><code>[cloudabi\_timestamp\_t](#timestamp) <strong>timeout</strong></code>
 
-        The absolute or relative
-        timestamp.
+            The absolute or relative
+            timestamp.
 
-    - <a name="subscription.clock.precision"></a><code>[cloudabi\_timestamp\_t](#timestamp) <strong>precision</strong></code>
+        - <a name="subscription.clock.precision"></a><code>[cloudabi\_timestamp\_t](#timestamp) <strong>precision</strong></code>
 
-        The amount of time that the
-        kernel may wait additionally
-        to coalesce with other events.
+            The amount of time that the
+            kernel may wait additionally
+            to coalesce with other events.
 
-    - <a name="subscription.clock.flags"></a><code>[cloudabi\_subclockflags\_t](#subclockflags) <strong>flags</strong></code>
+        - <a name="subscription.clock.flags"></a><code>[cloudabi\_subclockflags\_t](#subclockflags) <strong>flags</strong></code>
 
-        Flags specifying whether the
-        timeout is absolute or
-        relative.
+            Flags specifying whether the
+            timeout is absolute or
+            relative.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CONDVAR`](#eventtype.condvar):
 
-  - <a name="subscription.condvar"></a>**`condvar`**
+    - <a name="subscription.condvar"></a>**`condvar`**
 
-    - <a name="subscription.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
+        - <a name="subscription.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
 
-        The condition variable on
-        which to wait to be woken up.
+            The condition variable on
+            which to wait to be woken up.
 
-    - <a name="subscription.condvar.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+        - <a name="subscription.condvar.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
-        The lock that should be
-        released while waiting.
+            The lock that should be
+            released while waiting.
 
-    - <a name="subscription.condvar.condvar_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>condvar\_scope</strong></code>
+        - <a name="subscription.condvar.condvar_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>condvar\_scope</strong></code>
 
-        [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the
-        condition variable is stored
-        in private memory.
-        [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the
-        condition variable is stored
-        in shared memory.
+            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the
+            condition variable is stored
+            in private memory.
+            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the
+            condition variable is stored
+            in shared memory.
 
-    - <a name="subscription.condvar.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
+        - <a name="subscription.condvar.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
 
-        [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
-        is stored in private memory.
-        [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-        stored in shared memory.
+            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
+            is stored in private memory.
+            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
+            stored in shared memory.
 
 - When `type` is one of: [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read), [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
-  - <a name="subscription.fd_readwrite"></a>**`fd_readwrite`**
+    - <a name="subscription.fd_readwrite"></a>**`fd_readwrite`**
 
-    - <a name="subscription.fd_readwrite.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a name="subscription.fd_readwrite.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
 
-        The file descriptor on which
-        to wait for it to become ready
-        for reading or writing.
+            The file descriptor on which
+            to wait for it to become ready
+            for reading or writing.
 
-    - <a name="subscription.fd_readwrite.flags"></a><code>[cloudabi\_subrwflags\_t](#subrwflags) <strong>flags</strong></code>
+        - <a name="subscription.fd_readwrite.flags"></a><code>[cloudabi\_subrwflags\_t](#subrwflags) <strong>flags</strong></code>
 
-        Under which conditions to
-        trigger.
+            Under which conditions to
+            trigger.
 
 - When `type` is one of: [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
 
-  - <a name="subscription.lock"></a>**`lock`**
+    - <a name="subscription.lock"></a>**`lock`**
 
-    - <a name="subscription.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+        - <a name="subscription.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
-        The lock that should be
-        acquired for reading or
-        writing.
+            The lock that should be
+            acquired for reading or
+            writing.
 
-    - <a name="subscription.lock.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
+        - <a name="subscription.lock.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
 
-        [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
-        is stored in private memory.
-        [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-        stored in shared memory.
+            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
+            is stored in private memory.
+            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
+            stored in shared memory.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
 
-  - <a name="subscription.proc_terminate"></a>**`proc_terminate`**
+    - <a name="subscription.proc_terminate"></a>**`proc_terminate`**
 
-    - <a name="subscription.proc_terminate.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a name="subscription.proc_terminate.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
 
-        The process descriptor on
-        which to wait for process
-        termination.
+            The process descriptor on
+            which to wait for process
+            termination.
 
 #### <a name="threadattr"></a>`cloudabi_threadattr_t` (`struct`)
 
@@ -3358,6 +3408,8 @@ Timestamp in nanoseconds.
 Specifies whether files are unlinked or directories are
 removed.
 
+Possible values:
+
 - <a name="ulflags.removedir"></a>**`CLOUDABI_UNLINK_REMOVEDIR`**
 
     If set, removes a directory. Otherwise, unlinks any
@@ -3372,6 +3424,8 @@ retained when extracted from the kernel.
 
 Relative to which position the offset of the file descriptor
 should be set.
+
+Possible values:
 
 - <a name="whence.cur"></a>**`CLOUDABI_WHENCE_CUR`**
 

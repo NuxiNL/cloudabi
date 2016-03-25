@@ -101,6 +101,8 @@ class MarkdownGenerator(Generator):
             if type.values != []:
                 if isinstance(type, OpaqueType) or isinstance(type, AliasType):
                     print('Special values:\n')
+                else:
+                    print('Possible values:\n')
                 for v in type.values:
                     print('- {}**`{}`**\n'.format(
                         self.anchor(type, v),
@@ -157,13 +159,13 @@ class MarkdownGenerator(Generator):
                 if vm.name is None:
                     for mm in vm.type.members:
                         self.generate_struct_member(
-                            abi, mm, parents, indent + '  ')
+                            abi, mm, parents, indent + '    ')
                 else:
-                    print('  - {}**`{}`**\n'.format(
+                    print('    - {}**`{}`**\n'.format(
                         self.anchor(*parents, vm), vm.name))
                     for mm in vm.type.members:
                         self.generate_struct_member(
-                            abi, mm, parents + [vm], indent + '    ')
+                            abi, mm, parents + [vm], indent + '        ')
 
     def generate_syscalls(self, abi, syscalls):
         print('### Syscalls\n')
