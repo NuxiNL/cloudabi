@@ -3,7 +3,7 @@
 # This file is distributed under a 2-clause BSD license.
 # See the LICENSE and CONTRIBUTORS files for details.
 
-from .itf import read_itf
+from .itf import read_itf, Node
 from .abi import *
 
 
@@ -12,10 +12,12 @@ class AbiParser:
     def parse_abi_file(self, file_name):
         return self.parse_abi(read_itf(file_name))
 
-    def parse_abi(self, root_node):
+    def parse_abi(self, nodes):
         abi = Abi()
 
-        for node in root_node:
+        abi.doc = self.pop_documentation(Node(text='ROOT', children=nodes))
+
+        for node in nodes:
             decl = node.text.split()
 
             doc = self.pop_documentation(node)
