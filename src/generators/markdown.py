@@ -70,12 +70,6 @@ class MarkdownGenerator(Generator):
     def generate_head(self, abi):
         super().generate_head(abi)
         self.generate_doc(abi, abi)
-        self.generate_toc(abi)
-
-    def generate_toc(self, abi):
-        for n in sorted(abi.syscalls_by_name):
-            print('- {}'.format(self.naming.link(abi.syscalls_by_name[n])))
-        print()
 
     def generate_types(self, abi, types):
         print('### Types\n')
@@ -142,6 +136,9 @@ class MarkdownGenerator(Generator):
 
     def generate_syscalls(self, abi, syscalls):
         print('### Syscalls\n')
+        for n in sorted(abi.syscalls_by_name):
+            print('- {}'.format(self.naming.link(abi.syscalls_by_name[n])))
+        print()
         super().generate_syscalls(abi, syscalls)
 
     def generate_syscall(self, abi, syscall):

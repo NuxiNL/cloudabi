@@ -104,6 +104,8 @@ The entire ABI is specified in a a file called `cloudabi.txt`, from
 which all headers and documentation (including the one you're reading
 now) is generated.
 
+### Syscalls
+
 - [`cloudabi_sys_clock_res_get`](cloudabi_sys_clock_res_get)
 - [`cloudabi_sys_clock_time_get`](cloudabi_sys_clock_time_get)
 - [`cloudabi_sys_condvar_signal`](cloudabi_sys_condvar_signal)
@@ -162,8 +164,6 @@ now) is generated.
 - [`cloudabi_sys_thread_exit`](cloudabi_sys_thread_exit)
 - [`cloudabi_sys_thread_tcb_set`](cloudabi_sys_thread_tcb_set)
 - [`cloudabi_sys_thread_yield`](cloudabi_sys_thread_yield)
-
-### Syscalls
 
 #### cloudabi_sys_clock_res_get
 
