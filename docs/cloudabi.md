@@ -79,9 +79,9 @@ of the C standard library, without all CloudABI-incompatible
 functions. For example, Cloudlibc does not have `open`, but does have
 `openat`.
 
-## Cloudabi-Ports
+## CloudABI-Ports
 
-[Cloudabi-Ports](https://github.com/NuxiNL/cloudabi-ports) is a
+[CloudABI-Ports](https://github.com/NuxiNL/cloudabi-ports) is a
 collection of ports of commonly used libraries and applications to
 CloudABI. It contains software such as `zlib`, `libpng`, `boost`,
 `memcached`, and much more. The software is patched to not depend on
