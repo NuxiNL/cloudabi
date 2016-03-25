@@ -196,6 +196,7 @@ class Syscall:
             # TODO: Uncomment this to do it correctly.
             # elif not p.type.layout.fits_in(PointerType().layout):
             #    return True
+        return False
 
 
 class Abi:
