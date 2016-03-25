@@ -284,7 +284,8 @@ class AbiParser:
             doc += n.text[2:] + '\n'
         if doc == '':
             import sys
-            sys.stderr.write('Missing documentation for: {}'.format(node.text))
+            sys.stderr.write(
+                'Missing documentation for: {}\n'.format(node.text))
         return doc
 
     @staticmethod
