@@ -63,11 +63,8 @@ def read_itf(file_name):
         for line in f:
             line_num += 1
 
-            # Remove comments.
-            line = line.partition('#')[0]
-
-            # Skip empty lines
-            if line.strip() == '':
+            # Skip empty and comment lines.
+            if line.strip()[:1] in ('', '#'):
                 continue
 
             indent = line[:-len(line.lstrip())]
