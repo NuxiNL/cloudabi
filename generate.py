@@ -86,6 +86,5 @@ with open('freebsd/syscalls.master', 'w') as f:
 with open('docs/cloudabi.md', 'w') as f:
     with redirect_stdout(f):
         MarkdownGenerator(
-            title='CloudABI',
-            naming=CNaming('cloudabi_'),
+            naming=MarkdownCNaming('cloudabi_'),
         ).generate_abi(abi)

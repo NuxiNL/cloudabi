@@ -7,13 +7,58 @@ import re
 
 from ..abi import *
 from ..generator import *
+from .c import CNaming
+
+class MarkdownNaming:
+
+    def link(self, *path, code=True):
+        name = self.link_name(*path)
+        target = self.link_target(*path)
+        if code:
+            name = '`{}`'.format(name)
+        return '[{}]({})'.format(name, target)
+
+    def link_target(self, *path):
+        return self.link_name(*path).replace('::', '.')
+
+    def link_name(self, *path):
+        if len(path) == 2 and isinstance(path[1], SpecialValue):
+            name = self.valname(path[0], path[1])
+
+        elif len(path) == 1 and isinstance(path[0], Syscall):
+            name = self.syscallname(path[0])
+
+        elif len(path) == 1 and isinstance(path[0], Type):
+            name = self.typename(path[0], link=False)
+
+        elif len(path) > 1 and isinstance(path[0], StructType):
+            name = self.memname(*path)
+
+        else:
+            raise Exception('Unable to generate link to: {}'.format(path))
+
+        return name
+
+
+class MarkdownCNaming(MarkdownNaming, CNaming):
+
+    def typename(self, type, link=True, **kwargs):
+        if link and isinstance(type, UserDefinedType):
+            return self.link(type, code=False)
+        else:
+            return super().typename(type, **kwargs)
+
+    def memname(self, *path):
+        name = self.typename(path[0], link=False)
+        name += '::'
+        name += '.'.join(m.name for m in path[1:])
+        return name
 
 
 class MarkdownGenerator(Generator):
 
-    def __init__(self, title, naming):
+    def __init__(self, naming):
         super().__init__(comment_begin='<!--', comment_end='-->')
-        self.title = title
         self.naming = naming
 
     def generate_abi(self, abi):
@@ -24,27 +69,21 @@ class MarkdownGenerator(Generator):
 
     def generate_head(self, abi):
         super().generate_head(abi)
-        print('# {}\n'.format(self.title))
+        self.generate_doc(abi, abi)
         self.generate_toc(abi)
 
     def generate_toc(self, abi):
-        print('## Contents\n')
-        print('**Syscalls**\n')
         for n in sorted(abi.syscalls_by_name):
-            print(self.link(abi.syscalls_by_name[n]))
-        print()
-        print('**Types**\n')
-        for n in sorted(abi.types):
-            print(self.link(abi.types[n]))
+            print('- {}'.format(self.naming.link(abi.syscalls_by_name[n])))
         print()
 
     def generate_types(self, abi, types):
-        print('## Types\n')
+        print('### Types\n')
         for type in sorted(types):
             self.generate_type(abi, types[type])
 
     def generate_type(self, abi, type):
-        print('### {}\n'.format(self.naming.typename(type)))
+        print('#### {}\n'.format(self.naming.typename(type, link=False)))
         self.generate_doc(abi, type)
         if isinstance(type, IntLikeType):
             if type.values != []:
@@ -88,7 +127,7 @@ class MarkdownGenerator(Generator):
                 print('- When `{}` {} {}:\n'.format(
                     m.tag.name,
                     'is' if len(vm.tag_values) == 1 else 'is one of:',
-                    ', '.join([self.link(m.tag.type, v)
+                    ', '.join([self.naming.link(m.tag.type, v)
                                for v in vm.tag_values])))
                 if vm.name is None:
                     for mm in vm.type.members:
@@ -102,11 +141,11 @@ class MarkdownGenerator(Generator):
                             abi, mm, parents + [vm], indent + '    ')
 
     def generate_syscalls(self, abi, syscalls):
-        print('## Syscalls\n')
+        print('### Syscalls\n')
         super().generate_syscalls(abi, syscalls)
 
     def generate_syscall(self, abi, syscall):
-        print('### {}\n'.format(self.naming.syscallname(syscall)))
+        print('#### {}\n'.format(self.naming.syscallname(syscall)))
         self.generate_doc(abi, syscall)
 
         if syscall.input.members:
@@ -133,35 +172,13 @@ class MarkdownGenerator(Generator):
                             raise Exception(
                                 'Unable to resolve link: '
                                 '{}'.format(match.group(1)))
-                        return self.link(*path)
+                        return self.naming.link(*path)
                     line = re.sub(r'\[([\w.]+)\](?!\()', fix_link, line)
                     print('{}{}'.format(indent, line))
             print()
 
-    def link_name(self, *path):
-        if len(path) == 2 and isinstance(path[1], SpecialValue):
-            name = self.naming.valname(path[0], path[1])
-
-        elif len(path) == 1 and isinstance(path[0], Syscall):
-            name = self.naming.syscallname(path[0])
-
-        elif len(path) == 1 and isinstance(path[0], Type):
-            name = self.naming.typename(path[0])
-
-        elif len(path) > 1 and isinstance(path[0], StructType):
-            name = self.naming.memname(path[0], *path[1:])
-
-        else:
-            raise Exception('Unable to generate link to: {}'.format(path))
-
-        return name
-
-    def link(self, *path):
-        name = self.link_name(*path)
-        return '[`{}`](#{})'.format(name, name)
-
     def anchor(self, *path):
         if len(path) > 1 and isinstance(path[0], Syscall):
             return ''
-        name = self.link_name(*path)
+        name = self.naming.link_target(*path)
         return '<a name="{}"></a>'.format(name)
