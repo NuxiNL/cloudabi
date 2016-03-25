@@ -1507,7 +1507,6 @@ syscall 19 file_create
 			# Not regular files? Those have to be created
 			# with file_open?
 
-
 syscall 20 file_link
 	| Creates a hard link.
 	in
