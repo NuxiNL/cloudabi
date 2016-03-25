@@ -15,7 +15,28 @@ class CNaming:
         self.c11 = c11
 
     def typename(self, type):
-        return self.vardecl(type, '')
+        if isinstance(type, VoidType):
+            return 'void'
+        elif isinstance(type, IntType):
+            if type.name == 'char':
+                return 'char'
+            return '{}_t'.format(type.name)
+        elif isinstance(type, UserDefinedType):
+            prefix = self.prefix
+            if self.md_prefix is not None and type.layout.machine_dep:
+                prefix = self.md_prefix
+            return '{}{}_t'.format(prefix, type.name)
+        elif isinstance(type, AtomicType):
+            if self.c11:
+                return '_Atomic({})'.format(
+                    self.typename(type.target_type))
+            else:
+                return self.typename(type.target_type)
+        elif isinstance(type, PointerType) or isinstance(type, ArrayType):
+            return self.vardecl(type, '')
+        else:
+            raise Exception('Unable to generate C declaration '
+                            'for type: {}'.format(type))
 
     def valname(self, type, value):
         return '{}{}{}'.format(self.prefix, type.cprefix, value.name).upper()
@@ -27,49 +48,20 @@ class CNaming:
         return '{}sys_{}'.format(prefix, syscall.name)
 
     def vardecl(self, type, name, array_need_parens=False):
-        if isinstance(type, VoidType):
-            return 'void {}'.format(name).rstrip()
-        elif isinstance(type, IntType):
-            if type.name == 'char':
-                return 'char {}'.format(name).rstrip()
-            return '{}_t {}'.format(type.name, name).rstrip()
-        elif isinstance(type, UserDefinedType):
-            prefix = self.prefix
-            if self.md_prefix is not None and type.layout.machine_dep:
-                prefix = self.md_prefix
-            return '{}{}_t {}'.format(prefix, type.name, name).rstrip()
-
-        elif isinstance(type, PointerType):
+        if isinstance(type, PointerType):
             decl = self.vardecl(type.target_type, '*{}'.format(name),
                                 array_need_parens=True)
             if type.const:
                 decl = 'const ' + decl
             return decl
-
         elif isinstance(type, ArrayType):
             if array_need_parens:
                 name = '({})'.format(name)
             return self.vardecl(
                 type.element_type, '{}[{}]'.format(
                     name, type.count))
-
-        elif isinstance(type, AtomicType):
-            if self.c11:
-                return '_Atomic({}) {}'.format(
-                    self.typename(type.target_type), name).rstrip()
-            else:
-                return self.vardecl(type.target_type, name)
-
         else:
-            raise Exception('Unable to generate C declaration '
-                            'for type: {}'.format(type))
-
-    def memname(self, obj, *members):
-        if isinstance(obj, Type):
-            obj = self.typename(obj)
-        obj += '::'
-        obj += '.'.join(m.name for m in members)
-        return obj
+            return '{} {}'.format(self.typename(type), name)
 
 
 class CGenerator(Generator):
