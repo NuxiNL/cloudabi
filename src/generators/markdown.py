@@ -16,7 +16,7 @@ class MarkdownNaming:
         target = self.link_target(*path)
         if code:
             name = '`{}`'.format(name)
-        return '[{}]({})'.format(name, target)
+        return '[{}](#{})'.format(name, target)
 
     def link_target(self, *path):
         return self.link_name(*path).replace('::', '.')
