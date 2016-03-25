@@ -93,10 +93,10 @@ etc.
 Instructions for using CloudABI (including kernel modules/patches,
 toolchain, and ports) are available for several operating systems:
 
-- Arch Linux: https://nuxi.nl/doc/archlinux/
-- Debian, Ubuntu, and other Debian derivatives: https://nuxi.nl/doc/debian/
-- FreeBSD, PC-BSD and DragonFly BSD: https://nuxi.nl/doc/freebsd/
-- NetBSD: https://nuxi.nl/doc/netbsd/
+- [Arch Linux](https://nuxi.nl/doc/archlinux/)
+- [Debian, Ubuntu, and other Debian derivatives](https://nuxi.nl/doc/debian/)
+- [FreeBSD, PC-BSD and DragonFly BSD](https://nuxi.nl/doc/freebsd/)
+- [NetBSD](https://nuxi.nl/doc/netbsd/)
 
 ## Specification of the ABI
 
