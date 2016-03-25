@@ -16,28 +16,31 @@ class MarkdownNaming:
         target = self.link_target(*path)
         if code:
             name = '`{}`'.format(name)
+        if target is None:
+            return name
         return '[{}](#{})'.format(name, target)
 
     def link_target(self, *path):
-        return self.link_name(*path).replace('::', '.')
+        l = self.link_name(*path)
+        if l is not None:
+            l = l.replace('::', '.')
+        return l
 
     def link_name(self, *path):
         if len(path) == 2 and isinstance(path[1], SpecialValue):
-            name = self.valname(path[0], path[1])
+            return self.valname(path[0], path[1])
 
         elif len(path) == 1 and isinstance(path[0], Syscall):
-            name = self.syscallname(path[0])
+            return self.syscallname(path[0])
 
         elif len(path) == 1 and isinstance(path[0], Type):
-            name = self.typename(path[0], link=False)
+            return self.typename(path[0], link=False)
 
         elif len(path) > 1 and isinstance(path[0], StructType):
-            name = self.memname(*path)
+            return self.memname(*path)
 
         else:
-            raise Exception('Unable to generate link to: {}'.format(path))
-
-        return name
+            return None
 
 
 class MarkdownCNaming(MarkdownNaming, CNaming):
@@ -175,7 +178,7 @@ class MarkdownGenerator(Generator):
             print()
 
     def anchor(self, *path):
-        if len(path) > 1 and isinstance(path[0], Syscall):
+        target = self.naming.link_target(*path)
+        if target is None:
             return ''
-        name = self.naming.link_target(*path)
-        return '<a name="{}"></a>'.format(name)
+        return '<a name="{}"></a>'.format(target)
