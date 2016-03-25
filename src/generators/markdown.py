@@ -80,7 +80,18 @@ class MarkdownGenerator(Generator):
             self.generate_type(abi, types[type])
 
     def generate_type(self, abi, type):
-        print('#### {}\n'.format(self.naming.typename(type, link=False)))
+        if isinstance(type, IntLikeType):
+            extra = ' ({}{})'.format(
+                self.naming.typename(type.int_type),
+                ' bitfield' if isinstance(type, FlagsType) else '')
+        elif isinstance(type, StructType):
+            extra = ' (struct)'
+        elif isinstance(type, FunctionType):
+            extra = ' (function type)'
+        else:
+            assert(False)
+        print('#### {}{}\n'.format(
+            self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
         if isinstance(type, IntLikeType):
             if type.values != []:
@@ -97,8 +108,6 @@ class MarkdownGenerator(Generator):
                 self.generate_struct_member(abi, m, [type])
         elif isinstance(type, FunctionType):
             pass
-        else:
-            assert(False)
 
     def generate_struct_member(self, abi, m, parents, indent=''):
         print(indent, end='')
