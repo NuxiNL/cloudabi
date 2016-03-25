@@ -233,7 +233,7 @@ class AbiParser:
                 if len(val) != 1:
                     raise Exception(
                         'Variant tag type {} has no value {}'.format(
-                            tag_type.name, v))
+                            tag_type.name, vname))
                 tag_values.append(val[0])
             if len(node.children) != 1:
                 raise Exception(
