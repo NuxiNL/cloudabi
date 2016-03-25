@@ -90,8 +90,8 @@ class MarkdownGenerator(Generator):
             extra = ' (function type)'
         else:
             assert(False)
-        print('#### {}{}\n'.format(
-            self.naming.typename(type, link=False), extra))
+        print('#### {}{}{}\n'.format(
+            self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
         if isinstance(type, IntLikeType):
             if type.values != []:
