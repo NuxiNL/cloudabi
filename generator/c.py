@@ -9,10 +9,11 @@ from .generator import *
 
 class CNaming:
 
-    def __init__(self, prefix, md_prefix=None, c11=True):
+    def __init__(self, prefix, md_prefix=None, c11=True, pointer_prefix=''):
         self.prefix = prefix
         self.md_prefix = md_prefix
         self.c11 = c11
+        self.pointer_prefix = pointer_prefix
 
     def typename(self, type):
         if isinstance(type, VoidType):
@@ -48,8 +49,12 @@ class CNaming:
         return '{}sys_{}'.format(prefix, syscall.name)
 
     def vardecl(self, type, name, array_need_parens=False):
-        if isinstance(type, PointerType):
-            decl = self.vardecl(type.target_type, '*{}'.format(name),
+        if isinstance(type, OutputPointerType):
+            return self.vardecl(type.target_type, '*{}'.format(name),
+                                array_need_parens=True)
+        elif isinstance(type, PointerType):
+            decl = self.vardecl(type.target_type,
+                                '{}*{}'.format(self.pointer_prefix, name),
                                 array_need_parens=True)
             if type.const:
                 decl = 'const ' + decl
@@ -240,18 +245,21 @@ class CSyscallsGenerator(CGenerator):
         for p in syscall.input.raw_members:
             params.append(self.naming.vardecl(p.type, p.name))
         for p in syscall.output.raw_members:
-            params.append(self.naming.vardecl(PointerType(p.type), p.name))
+            params.append(self.naming.vardecl(OutputPointerType(p.type),
+                                              p.name))
         return params
 
     def generate_syscall(self, abi, syscall):
+        if self.machine_dep is not None:
+            if syscall.machine_dep != self.machine_dep:
+                return
+
+        self.generate_syscall_keywords(syscall)
         if syscall.noreturn:
-            noreturn = '_Noreturn '
             return_type = VoidType()
         else:
-            noreturn = ''
-            return_type = UserDefinedType('errno')
-        print('static inline {}{}'.format(
-            noreturn, self.naming.typename(return_type)))
+            return_type = IntLikeType('errno', IntType('uint8', 1), set(), False)
+        print(self.naming.typename(return_type))
         print('{}('.format(self.naming.syscallname(syscall)), end='')
         params = self.syscall_params(syscall)
         if params == []:
@@ -265,6 +273,9 @@ class CSyscallsGenerator(CGenerator):
         self.generate_syscall_body(abi, syscall)
         print()
 
+    def generate_syscall_keywords(self, syscall):
+        pass
+
     def generate_syscall_body(self, abi, syscall):
         print(';')
 
@@ -273,6 +284,13 @@ class CSyscallsGenerator(CGenerator):
 
 
 class CSyscallsImplGenerator(CSyscallsGenerator):
+
+    def generate_syscall_keywords(self, syscall):
+        if syscall.noreturn:
+            noreturn = '_Noreturn '
+        else:
+            noreturn = ''
+        print('static inline {}'.format(noreturn), end='')
 
     def generate_syscall_body(self, abi, syscall):
         print(' {')

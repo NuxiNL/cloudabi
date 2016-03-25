@@ -100,6 +100,10 @@ class PointerType(Type):
         self.target_type = target_type
 
 
+class OutputPointerType(PointerType):
+    pass
+
+
 class AtomicType(Type):
 
     def __init__(self, target_type):

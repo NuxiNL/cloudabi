@@ -84,6 +84,25 @@ with open('freebsd/syscalls.master', 'w') as f:
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False),
         ).generate_abi(abi)
 
+with open('linux/cloudabi_syscalls.h', 'w') as f:
+    with redirect_stdout(f):
+        CSyscallsGenerator(
+            naming=CNaming('cloudabi_', c11=False, pointer_prefix='__user '),
+            header_guard='CLOUDABI_SYSCALLS_H',
+            machine_dep=False,
+            preamble='#include "cloudabi_types_common.h"\n'
+        ).generate_abi(abi)
+
+with open('linux/cloudabi64_syscalls.h', 'w') as f:
+    with redirect_stdout(f):
+        CSyscallsGenerator(
+            naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
+                           pointer_prefix='__user '),
+            header_guard='CLOUDABI64_SYSCALLS_H',
+            machine_dep=True,
+            preamble='#include "cloudabi64_types.h"\n'
+        ).generate_abi(abi)
+
 with open('docs/cloudabi.md', 'w') as f:
     with redirect_stdout(f):
         MarkdownGenerator(
