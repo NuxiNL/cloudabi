@@ -86,7 +86,7 @@ class CGenerator(Generator):
             print('#ifndef {}'.format(self.header_guard))
             print('#define {}'.format(self.header_guard))
             print()
-            print(self.preamble)
+        print(self.preamble)
 
     def generate_foot(self, abi):
         if self.header_guard is not None:
@@ -258,7 +258,7 @@ class CSyscallsGenerator(CGenerator):
         if syscall.noreturn:
             return_type = VoidType()
         else:
-            return_type = IntLikeType('errno', IntType('uint8', 1), set(), False)
+            return_type = abi.types['errno']
         print(self.naming.typename(return_type))
         print('{}('.format(self.naming.syscallname(syscall)), end='')
         params = self.syscall_params(syscall)
@@ -420,3 +420,74 @@ class CSyscallsAarch64Generator(CSyscallsImplGenerator):
 
     asm = '\t\t"\\tsvc 0\\n"'
     asm_check = '\t\t"\\tcset %0, cc\\n"'
+
+class CLinuxSyscallTableGenerator(CGenerator):
+
+    def generate_head(self, abi):
+        super().generate_head(abi)
+
+        # Macro for placing the system call argument at the right spot
+        # within a register, depending on the system's endianness.
+        regalign = self.md_type.layout.align[0]
+        regtype = self.naming.typename(self.md_type)
+        print(
+            '#ifdef __LITTLE_ENDIAN\n'
+            '#define MEMBER(type, name) _Alignas({}) type name\n'
+            '#else\n'
+            '#define PAD(type) \\\n'
+            '    ((sizeof({}) - (sizeof(type) % sizeof({}))) % sizeof({}))\n'
+            '#define MEMBER(type, name) char name##_pad[PAD(type)]; type name\n'
+            '#endif\n'.format(regalign, regtype, regtype, regtype))
+
+    def generate_syscall(self, abi, syscall):
+        print('static {} do_{}(const void *in, void *out)\n{{'.format(
+             self.naming.typename(abi.types['errno']), syscall.name))
+
+        # Map structures over the system call input and output registers.
+        if syscall.input.raw_members:
+            print('\tconst struct {')
+            for p in syscall.input.raw_members:
+                print('\t\tMEMBER({}, {});'.format(
+                    self.naming.typename(p.type), p.name))
+            print('\t} *vin = in;')
+        if syscall.output.raw_members:
+            print('\tstruct {')
+            for p in syscall.output.raw_members:
+                print('\t\tMEMBER({}, {});'.format(
+                    self.naming.typename(p.type), p.name))
+            print('\t} *vout = out;')
+
+        # Invoke the system call implementation function.
+        if syscall.noreturn:
+            print('\t{}('.format(self.naming.syscallname(syscall)), end='')
+        else:
+            print('\treturn {}('.format(self.naming.syscallname(syscall)),
+                  end='')
+        params = []
+        for p in syscall.input.raw_members:
+            params.append('vin->' + p.name)
+        for p in syscall.output.raw_members:
+            params.append('&vout->' + p.name)
+        print(', '.join(params), end='')
+        print(');')
+        if syscall.noreturn:
+            print('\treturn 0;')
+        print('}\n')
+
+    def generate_foot(self, abi):
+        # Fallback for invoking an out-of-bounds system call.
+        print('static {} do_enosys(void *in, void *out)\n'
+              '{{\n'
+              '\treturn CLOUDABI_ENOSYS;\n'
+              '}}\n'.format(self.naming.typename(abi.types['errno'])))
+
+        # Emit the actual system call table.
+        print('{} (*{}syscalls[])(const void *, void *) = {{'.format(
+            self.naming.typename(abi.types['errno']),
+            self.naming.md_prefix))
+        for idx in sorted(abi.syscalls_by_number):
+            syscall = abi.syscalls_by_number[idx]
+            print('\tdo_{},'.format(syscall.name))
+        print('\n\tdo_enosys,\n};')
+
+        super().generate_foot(abi)
