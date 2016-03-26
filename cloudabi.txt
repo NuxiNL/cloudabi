@@ -13,7 +13,7 @@
 | kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
 | for NetBSD](https://github.com/NuxiNL/netbsd) and [a patch-set for
 | Linux](https://github.com/NuxiNL/linux) are available as well. This means that
-| CloudABI binaries can be executed in different operating systems, without any
+| CloudABI binaries can be executed on different operating systems, without any
 | modification.
 |
 | ## Capability-Based Security
@@ -51,8 +51,8 @@
 |
 | [Cloudlibc](https://github.com/NuxiNL/cloudlibc) is an implementation
 | of the C standard library, without all CloudABI-incompatible
-| functions. For example, Cloudlibc does not have `open`, but does have
-| `openat`.
+| functions. For example, Cloudlibc does not have `printf`, but does
+| have `fprintf`.
 |
 | ## CloudABI-Ports
 |

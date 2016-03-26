@@ -124,7 +124,7 @@ result is a minimal ABI consisting of only 58 syscalls.</p>
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and <a href="https://github.com/NuxiNL/netbsd">a patch-set
 for NetBSD</a> and <a href="https://github.com/NuxiNL/linux">a patch-set for
 Linux</a> are available as well. This means that
-CloudABI binaries can be executed in different operating systems, without any
+CloudABI binaries can be executed on different operating systems, without any
 modification.</p>
 
 <h2>Capability-Based Security</h2>
@@ -162,8 +162,8 @@ information about what capability-based security for UNIX means.</p>
 
 <p><a href="https://github.com/NuxiNL/cloudlibc">Cloudlibc</a> is an implementation
 of the C standard library, without all CloudABI-incompatible
-functions. For example, Cloudlibc does not have <code>open</code>, but does have
-<code>openat</code>.</p>
+functions. For example, Cloudlibc does not have <code>printf</code>, but does
+have <code>fprintf</code>.</p>
 
 <h2>CloudABI-Ports</h2>
 
