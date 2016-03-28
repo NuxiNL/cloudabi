@@ -105,7 +105,7 @@ from which all
 [headers](https://github.com/NuxiNL/cloudabi/tree/master/headers)
 and documentation (including the one you're reading now) is generated.
 
-### Syscalls
+### System calls
 
 - [`cloudabi_sys_clock_res_get()`](#clock_res_get)
 - [`cloudabi_sys_clock_time_get()`](#clock_time_get)

@@ -179,7 +179,7 @@ class MarkdownGenerator(Generator):
                             abi, mm, parents + [vm], indent + '        ')
 
     def generate_syscalls(self, abi, syscalls):
-        print('### Syscalls\n')
+        print('### System calls\n')
         for n in sorted(abi.syscalls_by_name):
             print('- {}'.format(self.naming.link(abi.syscalls_by_name[n])))
         print()
