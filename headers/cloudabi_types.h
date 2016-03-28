@@ -180,8 +180,8 @@ typedef struct {
 		struct {
 			_Atomic(cloudabi_condvar_t) *condvar;
 			_Atomic(cloudabi_lock_t) *lock;
-			_Alignas(1) cloudabi_mflags_t condvar_scope;
-			_Alignas(1) cloudabi_mflags_t lock_scope;
+			_Alignas(1) cloudabi_scope_t condvar_scope;
+			_Alignas(1) cloudabi_scope_t lock_scope;
 		} condvar;
 		struct {
 			_Alignas(4) cloudabi_fd_t fd;
@@ -189,7 +189,7 @@ typedef struct {
 		} fd_readwrite;
 		struct {
 			_Atomic(cloudabi_lock_t) *lock;
-			_Alignas(1) cloudabi_mflags_t lock_scope;
+			_Alignas(1) cloudabi_scope_t lock_scope;
 		} lock;
 		struct {
 			_Alignas(4) cloudabi_fd_t fd;

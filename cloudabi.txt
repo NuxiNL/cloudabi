@@ -527,11 +527,6 @@ flags uint32 lookupflags
 
 flags uint8 mflags
 	| Memory mapping flags.
-	# These are all separate bits, but private|shared is not valid,
-	# i assume?
-	# mflags is used in quite a few places where only private and
-	# shared are mentioned as possible values. Is 0 also allowed
-	# there? Are anon and fixed UB/ignored in those cases?
 	@cprefix MAP_
 	0x01 anon
 		| Instead of mapping the contents of the file provided,
@@ -545,7 +540,14 @@ flags uint8 mflags
 		| Changes are private.
 	0x08 shared
 		| Changes are shared.
-		# Are private and shared opposites?
+
+enum uint8 scope
+	| Indicates whether an object is stored in private or shared
+	| memory.
+	0x04 private
+		| The object is stored in private memory.
+	0x08 shared
+		| The object is stored in shared memory.
 
 flags uint8 mprot
 	| Memory page protection options.
@@ -1268,18 +1270,13 @@ struct subscription
 					| The lock will be reacquired
 					| for writing when the condition
 					| variable triggers.
-				mflags             condvar_scope
-					| [mflags.private] if the
-					| condition variable is stored
-					| in private memory.
-					| [mflags.shared] if the
-					| condition variable is stored
-					| in shared memory.
-				mflags             lock_scope
-					| [mflags.private] if the lock
-					| is stored in private memory.
-					| [mflags.shared] if the lock is
-					| stored in shared memory.
+				scope              condvar_scope
+					| Whether the condition variable
+					| is stored in private or shared
+					| memory.
+				scope              lock_scope
+					| Whether the lock is stored in
+					| private or shared memory.
 		fd_read fd_write
 			struct fd_readwrite
 				fd         fd
@@ -1294,11 +1291,9 @@ struct subscription
 				ptr atomic lock lock
 					| The lock that will be acquired
 					| for reading or writing.
-				mflags          lock_scope
-					| [mflags.private] if the lock
-					| is stored in private memory.
-					| [mflags.shared] if the lock is
-					| stored in shared memory.
+				scope           lock_scope
+					| Whether the lock is stored in
+					| private or shared memory.
 		proc_terminate
 			struct proc_terminate
 				fd       fd
@@ -1351,13 +1346,9 @@ syscall 2 condvar_signal
 		ptr atomic condvar condvar
 			| The userspace condition variable that has
 			| waiting threads.
-		mflags             scope
-			private
-				| The condition variable is stored in
-				| private memory.
-			shared
-				| The condition variable is stored in
-				| shared memory.
+		scope              scope
+			| Whether the condition variable is stored in
+			| private or shared memory.
 		nthreads           nwaiters
 			| The number of threads that need to be woken
 			| up. If it exceeds the number of waiting
@@ -1785,11 +1776,9 @@ syscall 31 lock_unlock
 		ptr atomic lock lock
 			| The userspace lock that is locked for writing
 			| by the calling thread.
-		mflags          scope
-			private
-				| The lock is stored in private memory.
-			shared
-				| The lock is stored in shared memory.
+		scope           scope
+			| Whether the lock is stored in private or
+			| shared memory.
 
 syscall 32 mem_advise
 	| Provides memory advisory information on a region of memory.
@@ -2068,11 +2057,9 @@ syscall 54 thread_exit
 		ptr atomic lock lock
 			| Userspace lock that is locked for writing by
 			| the calling thread.
-		mflags          scope
-			private
-				| The lock is stored in private memory.
-			shared
-				| The lock is stored in shared memory.
+		scope           scope
+			| Whether the lock is stored in private or
+			| shared memory.
 	noreturn
 
 syscall 55 thread_tcb_set

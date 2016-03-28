@@ -65,7 +65,7 @@ static cloudabi_errno_t do_condvar_signal(const void *in, void *out)
 {
 	const struct {
 		MEMBER(cloudabi_condvar_t __user *, condvar);
-		MEMBER(cloudabi_mflags_t, scope);
+		MEMBER(cloudabi_scope_t, scope);
 		MEMBER(cloudabi_nthreads_t, nwaiters);
 	} *vin = in;
 	return cloudabi_sys_condvar_signal(vin->condvar, vin->scope, vin->nwaiters);
@@ -395,7 +395,7 @@ static cloudabi_errno_t do_lock_unlock(const void *in, void *out)
 {
 	const struct {
 		MEMBER(cloudabi_lock_t __user *, lock);
-		MEMBER(cloudabi_mflags_t, scope);
+		MEMBER(cloudabi_scope_t, scope);
 	} *vin = in;
 	return cloudabi_sys_lock_unlock(vin->lock, vin->scope);
 }
@@ -646,7 +646,7 @@ static cloudabi_errno_t do_thread_exit(const void *in, void *out)
 {
 	const struct {
 		MEMBER(cloudabi_lock_t __user *, lock);
-		MEMBER(cloudabi_mflags_t, scope);
+		MEMBER(cloudabi_scope_t, scope);
 	} *vin = in;
 	cloudabi_sys_thread_exit(vin->lock, vin->scope);
 	return 0;
