@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+<meta charset="utf-8" />
 <title>CloudABI</title>
 <style>
 html, body {
@@ -18,6 +19,32 @@ a {
 }
 a:hover {
 	text-decoration: underline;
+}
+a[name] {
+	position: relative;
+}
+a[name]::before {
+	position: absolute;
+	display: block;
+}
+a[name]:target::before {
+	content: "➥";
+	right: 1em;
+	transform: scale(2);
+}
+h4 > a[name]:not(:target):first-child::before,
+li > p:first-child > a[name]:not(:target):first-child::before {
+	content: "\00a0";
+	right: 0;
+	padding: 0 1em;
+}
+h4:hover > a[name]:not(:target):first-child::before,
+li > p:first-child:hover > a[name]:not(:target):first-child::before {
+	content: "§";
+	transform: none;
+	right: 0;
+	top: -0.5em;
+	padding: 0.5em 1em;
 }
 h1, h2, h3, h4 {
 	font-weight: normal;

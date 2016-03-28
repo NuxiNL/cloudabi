@@ -223,7 +223,7 @@ class MarkdownGenerator(Generator):
         target = self.naming.link_target(*path)
         if target is None:
             return ''
-        return '<a name="{}"></a>'.format(target)
+        return '<a href="#{}" name="{}"></a>'.format(target, target)
 
 
 def _escape(text):
