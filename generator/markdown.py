@@ -173,7 +173,7 @@ class MarkdownGenerator(Generator):
                             abi, mm, parents, indent + '    ')
                 else:
                     print('    - {}**`{}`**\n'.format(
-                        self.anchor(*parents, vm), vm.name))
+                        self.anchor(*(parents + [vm])), vm.name))
                     for mm in vm.type.members:
                         self.generate_struct_member(
                             abi, mm, parents + [vm], indent + '        ')
