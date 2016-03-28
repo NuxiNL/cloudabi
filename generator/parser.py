@@ -184,7 +184,7 @@ class AbiParser:
         if name in abi.types:
             raise Exception('Duplicate definition of {}'.format(name))
 
-        parameters = StructType('', [])
+        parameters = StructType(None, [])
         return_type = VoidType()
 
         if len(children) > 0 and children[0].text == 'in':
