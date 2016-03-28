@@ -2235,7 +2235,8 @@ has reached timestamp <a href="#subscription.clock.timeout"><code>cloudabi_subsc
 <li><p><a name="eventtype.condvar"></a><strong><code>CLOUDABI_EVENTTYPE_CONDVAR</code></strong></p>
 
 <p>Condition variable <a href="#subscription.condvar.condvar"><code>cloudabi_subscription_t::condvar.condvar</code></a> has
-been woken up.</p></li>
+been woken up and <a href="#subscription.condvar.lock"><code>cloudabi_subscription_t::condvar.lock</code></a> has been
+aqcuired for writing.</p></li>
 <li><p><a name="eventtype.fd_read"></a><strong><code>CLOUDABI_EVENTTYPE_FD_READ</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
@@ -3382,7 +3383,14 @@ subscription in the kernel and returned through
 Ignored by <a href="#poll"><code>cloudabi_sys_poll()</code></a>.</p></li>
 <li><p><a name="subscription.type"></a><code><a href="#eventtype">cloudabi_eventtype_t</a> <strong>type</strong></code></p>
 
-<p>The type of the event to which to subscribe.</p></li>
+<p>The type of the event to which to subscribe.</p>
+
+<p>Currently, <a href="#eventtype.condvar"><code>CLOUDABI_EVENTTYPE_CONDVAR</code></a>,
+<a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a>, and <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>
+can only be used with <a href="#poll"><code>cloudabi_sys_poll()</code></a>.  It must be provided as
+the first subscription and may only be followed by up
+to one other subscription, having type
+<a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a> with <a href="#subclockflags.abstime"><code>CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME</code></a>.</p></li>
 <li><p>When <code>type</code> is <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a>:</p>
 
 <ul>
@@ -3425,8 +3433,12 @@ relative.</p></li>
 which to wait to be woken up.</p></li>
 <li><p><a name="subscription.condvar.lock"></a><code>_Atomic(<a href="#lock">cloudabi_lock_t</a>) *<strong>lock</strong></code></p>
 
-<p>The lock that should be
-released while waiting.</p></li>
+<p>The lock that will be
+released while waiting.</p>
+
+<p>The lock will be reacquired
+for writing when the condition
+variable triggers.</p></li>
 <li><p><a name="subscription.condvar.condvar_scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>condvar_scope</strong></code></p>
 
 <p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a> if the

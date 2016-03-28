@@ -2128,7 +2128,8 @@ Possible values:
 - <a name="eventtype.condvar"></a>**`CLOUDABI_EVENTTYPE_CONDVAR`**
 
     Condition variable [`cloudabi_subscription_t::condvar.condvar`](#subscription.condvar.condvar) has
-    been woken up.
+    been woken up and [`cloudabi_subscription_t::condvar.lock`](#subscription.condvar.lock) has been
+    aqcuired for writing.
 
 - <a name="eventtype.fd_read"></a>**`CLOUDABI_EVENTTYPE_FD_READ`**
 
@@ -3349,6 +3350,13 @@ Members:
 
     The type of the event to which to subscribe.
 
+    Currently, [`CLOUDABI_EVENTTYPE_CONDVAR`](#eventtype.condvar),
+    [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock)
+    can only be used with [`cloudabi_sys_poll()`](#poll).  It must be provided as
+    the first subscription and may only be followed by up
+    to one other subscription, having type
+    [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock) with [`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`](#subclockflags.abstime).
+
 - When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
 
     - <a name="subscription.clock"></a>**`clock`**
@@ -3391,8 +3399,12 @@ Members:
 
         - <a name="subscription.condvar.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
-            The lock that should be
+            The lock that will be
             released while waiting.
+
+            The lock will be reacquired
+            for writing when the condition
+            variable triggers.
 
         - <a name="subscription.condvar.condvar_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>condvar\_scope</strong></code>
 
