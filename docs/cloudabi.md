@@ -3445,9 +3445,8 @@ Members:
 
         - <a name="subscription.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
-            The lock that should be
-            acquired for reading or
-            writing.
+            The lock that will be acquired
+            for reading or writing.
 
         - <a name="subscription.lock.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
 

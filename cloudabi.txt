@@ -1292,9 +1292,8 @@ struct subscription
 		lock_rdlock lock_wrlock
 			struct lock
 				ptr atomic lock lock
-					| The lock that should be
-					| acquired for reading or
-					| writing.
+					| The lock that will be acquired
+					| for reading or writing.
 				mflags          lock_scope
 					| [mflags.private] if the lock
 					| is stored in private memory.
