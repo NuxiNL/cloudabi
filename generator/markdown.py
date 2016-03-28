@@ -61,6 +61,9 @@ class MarkdownCNaming(MarkdownNaming, CNaming):
         name += '.'.join(m.name for m in path[1:])
         return name
 
+    def syscallname(self, syscall):
+        return CNaming.syscallname(self, syscall) + '()'
+
 
 class MarkdownGenerator(Generator):
 

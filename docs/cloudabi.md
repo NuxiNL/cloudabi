@@ -107,66 +107,66 @@ and documentation (including the one you're reading now) is generated.
 
 ### Syscalls
 
-- [`cloudabi_sys_clock_res_get`](#clock_res_get)
-- [`cloudabi_sys_clock_time_get`](#clock_time_get)
-- [`cloudabi_sys_condvar_signal`](#condvar_signal)
-- [`cloudabi_sys_fd_close`](#fd_close)
-- [`cloudabi_sys_fd_create1`](#fd_create1)
-- [`cloudabi_sys_fd_create2`](#fd_create2)
-- [`cloudabi_sys_fd_datasync`](#fd_datasync)
-- [`cloudabi_sys_fd_dup`](#fd_dup)
-- [`cloudabi_sys_fd_pread`](#fd_pread)
-- [`cloudabi_sys_fd_pwrite`](#fd_pwrite)
-- [`cloudabi_sys_fd_read`](#fd_read)
-- [`cloudabi_sys_fd_replace`](#fd_replace)
-- [`cloudabi_sys_fd_seek`](#fd_seek)
-- [`cloudabi_sys_fd_stat_get`](#fd_stat_get)
-- [`cloudabi_sys_fd_stat_put`](#fd_stat_put)
-- [`cloudabi_sys_fd_sync`](#fd_sync)
-- [`cloudabi_sys_fd_write`](#fd_write)
-- [`cloudabi_sys_file_advise`](#file_advise)
-- [`cloudabi_sys_file_allocate`](#file_allocate)
-- [`cloudabi_sys_file_create`](#file_create)
-- [`cloudabi_sys_file_link`](#file_link)
-- [`cloudabi_sys_file_open`](#file_open)
-- [`cloudabi_sys_file_readdir`](#file_readdir)
-- [`cloudabi_sys_file_readlink`](#file_readlink)
-- [`cloudabi_sys_file_rename`](#file_rename)
-- [`cloudabi_sys_file_stat_fget`](#file_stat_fget)
-- [`cloudabi_sys_file_stat_fput`](#file_stat_fput)
-- [`cloudabi_sys_file_stat_get`](#file_stat_get)
-- [`cloudabi_sys_file_stat_put`](#file_stat_put)
-- [`cloudabi_sys_file_symlink`](#file_symlink)
-- [`cloudabi_sys_file_unlink`](#file_unlink)
-- [`cloudabi_sys_lock_unlock`](#lock_unlock)
-- [`cloudabi_sys_mem_advise`](#mem_advise)
-- [`cloudabi_sys_mem_lock`](#mem_lock)
-- [`cloudabi_sys_mem_map`](#mem_map)
-- [`cloudabi_sys_mem_protect`](#mem_protect)
-- [`cloudabi_sys_mem_sync`](#mem_sync)
-- [`cloudabi_sys_mem_unlock`](#mem_unlock)
-- [`cloudabi_sys_mem_unmap`](#mem_unmap)
-- [`cloudabi_sys_poll`](#poll)
-- [`cloudabi_sys_poll_fd`](#poll_fd)
-- [`cloudabi_sys_proc_exec`](#proc_exec)
-- [`cloudabi_sys_proc_exit`](#proc_exit)
-- [`cloudabi_sys_proc_fork`](#proc_fork)
-- [`cloudabi_sys_proc_raise`](#proc_raise)
-- [`cloudabi_sys_random_get`](#random_get)
-- [`cloudabi_sys_sock_accept`](#sock_accept)
-- [`cloudabi_sys_sock_bind`](#sock_bind)
-- [`cloudabi_sys_sock_connect`](#sock_connect)
-- [`cloudabi_sys_sock_listen`](#sock_listen)
-- [`cloudabi_sys_sock_recv`](#sock_recv)
-- [`cloudabi_sys_sock_send`](#sock_send)
-- [`cloudabi_sys_sock_shutdown`](#sock_shutdown)
-- [`cloudabi_sys_sock_stat_get`](#sock_stat_get)
-- [`cloudabi_sys_thread_create`](#thread_create)
-- [`cloudabi_sys_thread_exit`](#thread_exit)
-- [`cloudabi_sys_thread_tcb_set`](#thread_tcb_set)
-- [`cloudabi_sys_thread_yield`](#thread_yield)
+- [`cloudabi_sys_clock_res_get()`](#clock_res_get)
+- [`cloudabi_sys_clock_time_get()`](#clock_time_get)
+- [`cloudabi_sys_condvar_signal()`](#condvar_signal)
+- [`cloudabi_sys_fd_close()`](#fd_close)
+- [`cloudabi_sys_fd_create1()`](#fd_create1)
+- [`cloudabi_sys_fd_create2()`](#fd_create2)
+- [`cloudabi_sys_fd_datasync()`](#fd_datasync)
+- [`cloudabi_sys_fd_dup()`](#fd_dup)
+- [`cloudabi_sys_fd_pread()`](#fd_pread)
+- [`cloudabi_sys_fd_pwrite()`](#fd_pwrite)
+- [`cloudabi_sys_fd_read()`](#fd_read)
+- [`cloudabi_sys_fd_replace()`](#fd_replace)
+- [`cloudabi_sys_fd_seek()`](#fd_seek)
+- [`cloudabi_sys_fd_stat_get()`](#fd_stat_get)
+- [`cloudabi_sys_fd_stat_put()`](#fd_stat_put)
+- [`cloudabi_sys_fd_sync()`](#fd_sync)
+- [`cloudabi_sys_fd_write()`](#fd_write)
+- [`cloudabi_sys_file_advise()`](#file_advise)
+- [`cloudabi_sys_file_allocate()`](#file_allocate)
+- [`cloudabi_sys_file_create()`](#file_create)
+- [`cloudabi_sys_file_link()`](#file_link)
+- [`cloudabi_sys_file_open()`](#file_open)
+- [`cloudabi_sys_file_readdir()`](#file_readdir)
+- [`cloudabi_sys_file_readlink()`](#file_readlink)
+- [`cloudabi_sys_file_rename()`](#file_rename)
+- [`cloudabi_sys_file_stat_fget()`](#file_stat_fget)
+- [`cloudabi_sys_file_stat_fput()`](#file_stat_fput)
+- [`cloudabi_sys_file_stat_get()`](#file_stat_get)
+- [`cloudabi_sys_file_stat_put()`](#file_stat_put)
+- [`cloudabi_sys_file_symlink()`](#file_symlink)
+- [`cloudabi_sys_file_unlink()`](#file_unlink)
+- [`cloudabi_sys_lock_unlock()`](#lock_unlock)
+- [`cloudabi_sys_mem_advise()`](#mem_advise)
+- [`cloudabi_sys_mem_lock()`](#mem_lock)
+- [`cloudabi_sys_mem_map()`](#mem_map)
+- [`cloudabi_sys_mem_protect()`](#mem_protect)
+- [`cloudabi_sys_mem_sync()`](#mem_sync)
+- [`cloudabi_sys_mem_unlock()`](#mem_unlock)
+- [`cloudabi_sys_mem_unmap()`](#mem_unmap)
+- [`cloudabi_sys_poll()`](#poll)
+- [`cloudabi_sys_poll_fd()`](#poll_fd)
+- [`cloudabi_sys_proc_exec()`](#proc_exec)
+- [`cloudabi_sys_proc_exit()`](#proc_exit)
+- [`cloudabi_sys_proc_fork()`](#proc_fork)
+- [`cloudabi_sys_proc_raise()`](#proc_raise)
+- [`cloudabi_sys_random_get()`](#random_get)
+- [`cloudabi_sys_sock_accept()`](#sock_accept)
+- [`cloudabi_sys_sock_bind()`](#sock_bind)
+- [`cloudabi_sys_sock_connect()`](#sock_connect)
+- [`cloudabi_sys_sock_listen()`](#sock_listen)
+- [`cloudabi_sys_sock_recv()`](#sock_recv)
+- [`cloudabi_sys_sock_send()`](#sock_send)
+- [`cloudabi_sys_sock_shutdown()`](#sock_shutdown)
+- [`cloudabi_sys_sock_stat_get()`](#sock_stat_get)
+- [`cloudabi_sys_thread_create()`](#thread_create)
+- [`cloudabi_sys_thread_exit()`](#thread_exit)
+- [`cloudabi_sys_thread_tcb_set()`](#thread_tcb_set)
+- [`cloudabi_sys_thread_yield()`](#thread_yield)
 
-#### <a name="clock_res_get"></a>`cloudabi_sys_clock_res_get`
+#### <a name="clock_res_get"></a>`cloudabi_sys_clock_res_get()`
 
 Obtains the resolution of a clock.
 
@@ -183,7 +183,7 @@ Outputs:
 
     The resolution of the clock.
 
-#### <a name="clock_time_get"></a>`cloudabi_sys_clock_time_get`
+#### <a name="clock_time_get"></a>`cloudabi_sys_clock_time_get()`
 
 Obtains the time value of a clock.
 
@@ -206,7 +206,7 @@ Outputs:
 
     The time value of the clock.
 
-#### <a name="condvar_signal"></a>`cloudabi_sys_condvar_signal`
+#### <a name="condvar_signal"></a>`cloudabi_sys_condvar_signal()`
 
 Wakes up threads waiting on a userspace condition variable.
 
@@ -243,7 +243,7 @@ Inputs:
     up. If it exceeds the number of waiting
     threads, all threads are woken up.
 
-#### <a name="fd_close"></a>`cloudabi_sys_fd_close`
+#### <a name="fd_close"></a>`cloudabi_sys_fd_close()`
 
 Closes a file descriptor.
 
@@ -253,7 +253,7 @@ Inputs:
 
     The file descriptor that needs to be closed.
 
-#### <a name="fd_create1"></a>`cloudabi_sys_fd_create1`
+#### <a name="fd_create1"></a>`cloudabi_sys_fd_create1()`
 
 Creates a file descriptor.
 
@@ -291,7 +291,7 @@ Outputs:
 
     The file descriptor that has been created.
 
-#### <a name="fd_create2"></a>`cloudabi_sys_fd_create2`
+#### <a name="fd_create2"></a>`cloudabi_sys_fd_create2()`
 
 Creates a pair of file descriptors.
 
@@ -331,7 +331,7 @@ Outputs:
     The second file descriptor of the pair. For
     pipes, this corresponds to the write end.
 
-#### <a name="fd_datasync"></a>`cloudabi_sys_fd_datasync`
+#### <a name="fd_datasync"></a>`cloudabi_sys_fd_datasync()`
 
 Synchronizes the data of a file to disk.
 
@@ -342,7 +342,7 @@ Inputs:
     The file descriptor of the file whose data
     needs to be synchronized to disk.
 
-#### <a name="fd_dup"></a>`cloudabi_sys_fd_dup`
+#### <a name="fd_dup"></a>`cloudabi_sys_fd_dup()`
 
 Duplicates a file descriptor.
 
@@ -359,7 +359,7 @@ Outputs:
 
     The new file descriptor.
 
-#### <a name="fd_pread"></a>`cloudabi_sys_fd_pread`
+#### <a name="fd_pread"></a>`cloudabi_sys_fd_pread()`
 
 Reads from a file descriptor, without using and updating the
 file descriptor's offset.
@@ -387,7 +387,7 @@ Outputs:
 
     The number of bytes read.
 
-#### <a name="fd_pwrite"></a>`cloudabi_sys_fd_pwrite`
+#### <a name="fd_pwrite"></a>`cloudabi_sys_fd_pwrite()`
 
 Writes to a file descriptor, without using and updating the
 file descriptor's offset.
@@ -415,7 +415,7 @@ Outputs:
 
     The number of bytes written.
 
-#### <a name="fd_read"></a>`cloudabi_sys_fd_read`
+#### <a name="fd_read"></a>`cloudabi_sys_fd_read()`
 
 Reads from a file descriptor.
 
@@ -437,7 +437,7 @@ Outputs:
 
     The number of bytes read.
 
-#### <a name="fd_replace"></a>`cloudabi_sys_fd_replace`
+#### <a name="fd_replace"></a>`cloudabi_sys_fd_replace()`
 
 Atomically replaces a file descriptor by a copy of another
 file descriptor.
@@ -463,7 +463,7 @@ Inputs:
     The file descriptor that needs to be
     overwritten.
 
-#### <a name="fd_seek"></a>`cloudabi_sys_fd_seek`
+#### <a name="fd_seek"></a>`cloudabi_sys_fd_seek()`
 
 Moves the offset of the file descriptor.
 
@@ -490,7 +490,7 @@ Outputs:
     The new offset of the file descriptor,
     relative to the start of the file.
 
-#### <a name="fd_stat_get"></a>`cloudabi_sys_fd_stat_get`
+#### <a name="fd_stat_get"></a>`cloudabi_sys_fd_stat_get()`
 
 Gets attributes of a file descriptor.
 
@@ -506,7 +506,7 @@ Inputs:
     The buffer where the file descriptor's
     attributes are stored.
 
-#### <a name="fd_stat_put"></a>`cloudabi_sys_fd_stat_put`
+#### <a name="fd_stat_put"></a>`cloudabi_sys_fd_stat_put()`
 
 Adjusts attributes of a file descriptor.
 
@@ -527,7 +527,7 @@ Inputs:
     A bitmask indicating which attributes have to
     be adjusted.
 
-#### <a name="fd_sync"></a>`cloudabi_sys_fd_sync`
+#### <a name="fd_sync"></a>`cloudabi_sys_fd_sync()`
 
 Synchronizes the data and metadata of a file to disk.
 
@@ -538,7 +538,7 @@ Inputs:
     The file descriptor of the file whose data
     and metadata needs to be synchronized to disk.
 
-#### <a name="fd_write"></a>`cloudabi_sys_fd_write`
+#### <a name="fd_write"></a>`cloudabi_sys_fd_write()`
 
 Writes to a file descriptor.
 
@@ -560,7 +560,7 @@ Outputs:
 
     The number of bytes written.
 
-#### <a name="file_advise"></a>`cloudabi_sys_file_advise`
+#### <a name="file_advise"></a>`cloudabi_sys_file_advise()`
 
 Provides file advisory information on a file descriptor.
 
@@ -585,7 +585,7 @@ Inputs:
 
     The advice.
 
-#### <a name="file_allocate"></a>`cloudabi_sys_file_allocate`
+#### <a name="file_allocate"></a>`cloudabi_sys_file_allocate()`
 
 Forces the allocation of space in a file.
 
@@ -605,7 +605,7 @@ Inputs:
 
     The length of the area that is allocated.
 
-#### <a name="file_create"></a>`cloudabi_sys_file_create`
+#### <a name="file_create"></a>`cloudabi_sys_file_create()`
 
 Creates a file of a specified type.
 
@@ -632,7 +632,7 @@ Inputs:
 
         Creates a FIFO.
 
-#### <a name="file_link"></a>`cloudabi_sys_file_link`
+#### <a name="file_link"></a>`cloudabi_sys_file_link()`
 
 Creates a hard link.
 
@@ -658,7 +658,7 @@ Inputs:
     The destination path at which the hard link
     should be created.
 
-#### <a name="file_open"></a>`cloudabi_sys_file_open`
+#### <a name="file_open"></a>`cloudabi_sys_file_open()`
 
 Opens a file.
 
@@ -689,7 +689,7 @@ Outputs:
     The file descriptor of the file that has been
     opened.
 
-#### <a name="file_readdir"></a>`cloudabi_sys_file_readdir`
+#### <a name="file_readdir"></a>`cloudabi_sys_file_readdir()`
 
 Reads directory entries from a directory.
 
@@ -728,7 +728,7 @@ Outputs:
     If less than the size of the read buffer, the
     end of the directory has been reached.
 
-#### <a name="file_readlink"></a>`cloudabi_sys_file_readlink`
+#### <a name="file_readlink"></a>`cloudabi_sys_file_readlink()`
 
 Reads the contents of a symbolic link.
 
@@ -755,7 +755,7 @@ Outputs:
 
     The number of bytes placed in the buffer.
 
-#### <a name="file_rename"></a>`cloudabi_sys_file_rename`
+#### <a name="file_rename"></a>`cloudabi_sys_file_rename()`
 
 Renames a file.
 
@@ -781,7 +781,7 @@ Inputs:
     The destination path to which the file should
     be renamed.
 
-#### <a name="file_stat_fget"></a>`cloudabi_sys_file_stat_fget`
+#### <a name="file_stat_fget"></a>`cloudabi_sys_file_stat_fget()`
 
 Gets attributes of a file by file descriptor.
 
@@ -797,7 +797,7 @@ Inputs:
     The buffer where the file's attributes are
     stored.
 
-#### <a name="file_stat_fput"></a>`cloudabi_sys_file_stat_fput`
+#### <a name="file_stat_fput"></a>`cloudabi_sys_file_stat_fput()`
 
 Adjusts attributes of a file by file descriptor.
 
@@ -818,7 +818,7 @@ Inputs:
     A bitmask indicating which attributes have to
     be adjusted.
 
-#### <a name="file_stat_get"></a>`cloudabi_sys_file_stat_get`
+#### <a name="file_stat_get"></a>`cloudabi_sys_file_stat_get()`
 
 Gets attributes of a file by path.
 
@@ -840,7 +840,7 @@ Inputs:
     The buffer where the file's attributes are
     stored.
 
-#### <a name="file_stat_put"></a>`cloudabi_sys_file_stat_put`
+#### <a name="file_stat_put"></a>`cloudabi_sys_file_stat_put()`
 
 Adjusts attributes of a file by path.
 
@@ -867,7 +867,7 @@ Inputs:
     A bitmask indicating which attributes have to
     be adjusted.
 
-#### <a name="file_symlink"></a>`cloudabi_sys_file_symlink`
+#### <a name="file_symlink"></a>`cloudabi_sys_file_symlink()`
 
 Creates a symbolic link.
 
@@ -887,7 +887,7 @@ Inputs:
     The destination path at which the symbolic
     link should be created.
 
-#### <a name="file_unlink"></a>`cloudabi_sys_file_unlink`
+#### <a name="file_unlink"></a>`cloudabi_sys_file_unlink()`
 
 Unlinks a file, or removes a directory.
 
@@ -911,7 +911,7 @@ Inputs:
         If set, attempt to remove a directory.
         Otherwise, unlink a file.
 
-#### <a name="lock_unlock"></a>`cloudabi_sys_lock_unlock`
+#### <a name="lock_unlock"></a>`cloudabi_sys_lock_unlock()`
 
 Unlocks a write-locked userspace lock.
 
@@ -945,7 +945,7 @@ Inputs:
 
         The lock is stored in shared memory.
 
-#### <a name="mem_advise"></a>`cloudabi_sys_mem_advise`
+#### <a name="mem_advise"></a>`cloudabi_sys_mem_advise()`
 
 Provides memory advisory information on a region of memory.
 
@@ -960,7 +960,7 @@ Inputs:
 
     The advice.
 
-#### <a name="mem_lock"></a>`cloudabi_sys_mem_lock`
+#### <a name="mem_lock"></a>`cloudabi_sys_mem_lock()`
 
 Increments the lock count on a region of memory, which
 prevents it from leaving system memory.
@@ -972,7 +972,7 @@ Inputs:
     The pages that need its lock count
     incremented.
 
-#### <a name="mem_map"></a>`cloudabi_sys_mem_map`
+#### <a name="mem_map"></a>`cloudabi_sys_mem_map()`
 
 Creates a memory mapping, making the contents of a file
 accessible through memory.
@@ -1020,7 +1020,7 @@ Outputs:
 
     The starting address of the memory mapping.
 
-#### <a name="mem_protect"></a>`cloudabi_sys_mem_protect`
+#### <a name="mem_protect"></a>`cloudabi_sys_mem_protect()`
 
 Change the protection of a memory mapping.
 
@@ -1034,7 +1034,7 @@ Inputs:
 
     New protection options.
 
-#### <a name="mem_sync"></a>`cloudabi_sys_mem_sync`
+#### <a name="mem_sync"></a>`cloudabi_sys_mem_sync()`
 
 Synchronize a region of memory with its physical storage.
 
@@ -1048,7 +1048,7 @@ Inputs:
 
     The method of synchronization.
 
-#### <a name="mem_unlock"></a>`cloudabi_sys_mem_unlock`
+#### <a name="mem_unlock"></a>`cloudabi_sys_mem_unlock()`
 
 Decrements the lock count on a region of memory, which
 prevents it from leaving system memory.
@@ -1060,7 +1060,7 @@ Inputs:
     The pages that need its lock count
     decremented.
 
-#### <a name="mem_unmap"></a>`cloudabi_sys_mem_unmap`
+#### <a name="mem_unmap"></a>`cloudabi_sys_mem_unmap()`
 
 Unmaps a region of memory.
 
@@ -1070,7 +1070,7 @@ Inputs:
 
     The pages that needs to be unmapped.
 
-#### <a name="poll"></a>`cloudabi_sys_poll`
+#### <a name="poll"></a>`cloudabi_sys_poll()`
 
 Concurrently polls for the occurrence of a set of events.
 
@@ -1094,7 +1094,7 @@ Outputs:
 
     The number of events stored.
 
-#### <a name="poll_fd"></a>`cloudabi_sys_poll_fd`
+#### <a name="poll_fd"></a>`cloudabi_sys_poll_fd()`
 
 Concurrently polls for the occurrence of a set of events,
 while retaining subscriptions across calls.
@@ -1128,7 +1128,7 @@ Outputs:
 
     The number of events stored.
 
-#### <a name="proc_exec"></a>`cloudabi_sys_proc_exec`
+#### <a name="proc_exec"></a>`cloudabi_sys_proc_exec()`
 
 Replaces the process by a new executable.
 
@@ -1166,7 +1166,7 @@ Inputs:
     The layout of the file descriptor table after
     execution.
 
-#### <a name="proc_exit"></a>`cloudabi_sys_proc_exit`
+#### <a name="proc_exit"></a>`cloudabi_sys_proc_exit()`
 
 Terminates the process normally.
 
@@ -1180,7 +1180,7 @@ Inputs:
 
 Does not return.
 
-#### <a name="proc_fork"></a>`cloudabi_sys_proc_fork`
+#### <a name="proc_fork"></a>`cloudabi_sys_proc_fork()`
 
 Forks the process of the calling thread.
 
@@ -1205,7 +1205,7 @@ Outputs:
     In the child process: the thread ID of the
     initial thread of the child process.
 
-#### <a name="proc_raise"></a>`cloudabi_sys_proc_raise`
+#### <a name="proc_raise"></a>`cloudabi_sys_proc_raise()`
 
 Sends a signal to the process of the calling thread.
 
@@ -1219,7 +1219,7 @@ Inputs:
     processes through
     [`cloudabi_event_t::proc_terminate.signal`](#event.proc_terminate.signal).
 
-#### <a name="random_get"></a>`cloudabi_sys_random_get`
+#### <a name="random_get"></a>`cloudabi_sys_random_get()`
 
 Obtains random data from the kernel random number generator.
 
@@ -1234,7 +1234,7 @@ Inputs:
     The buffer that needs to be filled with random
     data.
 
-#### <a name="sock_accept"></a>`cloudabi_sys_sock_accept`
+#### <a name="sock_accept"></a>`cloudabi_sys_sock_accept()`
 
 Accepts an incoming connection on a listening socket.
 
@@ -1256,7 +1256,7 @@ Outputs:
     The socket associated with the incoming
     connection.
 
-#### <a name="sock_bind"></a>`cloudabi_sys_sock_bind`
+#### <a name="sock_bind"></a>`cloudabi_sys_sock_bind()`
 
 Binds a UNIX socket to a path.
 
@@ -1275,7 +1275,7 @@ Inputs:
 
     The path to which the socket should bind.
 
-#### <a name="sock_connect"></a>`cloudabi_sys_sock_connect`
+#### <a name="sock_connect"></a>`cloudabi_sys_sock_connect()`
 
 Connects a UNIX socket to another UNIX socket bound at a path.
 
@@ -1294,7 +1294,7 @@ Inputs:
 
     The path to which the socket should onnect.
 
-#### <a name="sock_listen"></a>`cloudabi_sys_sock_listen`
+#### <a name="sock_listen"></a>`cloudabi_sys_sock_listen()`
 
 Listens for incoming connections on a socket.
 
@@ -1310,7 +1310,7 @@ Inputs:
     Number of incoming connections the socket is
     capable of keeping in its backlog.
 
-#### <a name="sock_recv"></a>`cloudabi_sys_sock_recv`
+#### <a name="sock_recv"></a>`cloudabi_sys_sock_recv()`
 
 Receives a message on a socket.
 
@@ -1329,7 +1329,7 @@ Inputs:
 
     Output parameters.
 
-#### <a name="sock_send"></a>`cloudabi_sys_sock_send`
+#### <a name="sock_send"></a>`cloudabi_sys_sock_send()`
 
 Sends a message on a socket.
 
@@ -1347,7 +1347,7 @@ Inputs:
 
     Output parameters.
 
-#### <a name="sock_shutdown"></a>`cloudabi_sys_sock_shutdown`
+#### <a name="sock_shutdown"></a>`cloudabi_sys_sock_shutdown()`
 
 Shuts down socket send and receive channels.
 
@@ -1362,7 +1362,7 @@ Inputs:
     Which channels on the socket need to be shut
     down.
 
-#### <a name="sock_stat_get"></a>`cloudabi_sys_sock_stat_get`
+#### <a name="sock_stat_get"></a>`cloudabi_sys_sock_stat_get()`
 
 Gets attributes of a socket.
 
@@ -1383,7 +1383,7 @@ Inputs:
     Flags indicating how the existing socket
     attributes need to be changed.
 
-#### <a name="thread_create"></a>`cloudabi_sys_thread_create`
+#### <a name="thread_create"></a>`cloudabi_sys_thread_create()`
 
 Creates a new thread within the current process.
 
@@ -1399,7 +1399,7 @@ Outputs:
 
     The thread ID of the new thread.
 
-#### <a name="thread_exit"></a>`cloudabi_sys_thread_exit`
+#### <a name="thread_exit"></a>`cloudabi_sys_thread_exit()`
 
 Terminates the calling thread.
 
@@ -1428,7 +1428,7 @@ Inputs:
 
 Does not return.
 
-#### <a name="thread_tcb_set"></a>`cloudabi_sys_thread_tcb_set`
+#### <a name="thread_tcb_set"></a>`cloudabi_sys_thread_tcb_set()`
 
 Adjusts the machine-dependent TLS base address register.
 
@@ -1447,7 +1447,7 @@ Inputs:
 
     The new register contents.
 
-#### <a name="thread_yield"></a>`cloudabi_sys_thread_yield`
+#### <a name="thread_yield"></a>`cloudabi_sys_thread_yield()`
 
 Temporarily yields execution of the calling thread.
 
@@ -1457,7 +1457,7 @@ Temporarily yields execution of the calling thread.
 
 File or memory access pattern advisory information.
 
-Used by [`cloudabi_sys_file_advise`](#file_advise) and [`cloudabi_sys_mem_advise`](#mem_advise).
+Used by [`cloudabi_sys_file_advise()`](#file_advise) and [`cloudabi_sys_mem_advise()`](#mem_advise).
 
 Possible values:
 
@@ -1500,12 +1500,12 @@ Possible values:
 - <a name="auxtype.argdata"></a>**`CLOUDABI_AT_ARGDATA`**
 
     Base address of the binary argument data provided to
-    [`cloudabi_sys_proc_exec`](#proc_exec).
+    [`cloudabi_sys_proc_exec()`](#proc_exec).
 
 - <a name="auxtype.argdatalen"></a>**`CLOUDABI_AT_ARGDATALEN`**
 
     Length of the binary argument data provided to
-    [`cloudabi_sys_proc_exec`](#proc_exec).
+    [`cloudabi_sys_proc_exec()`](#proc_exec).
 
 - <a name="auxtype.canary"></a>**`CLOUDABI_AT_CANARY`**
 
@@ -1582,13 +1582,13 @@ Members:
 Number of incoming connections a socket is capable of keeping
 in its backlog.
 
-Used by [`cloudabi_sys_sock_listen`](#sock_listen).
+Used by [`cloudabi_sys_sock_listen()`](#sock_listen).
 
 #### <a name="ciovec"></a>`cloudabi_ciovec_t` (`struct`)
 
 A region of memory for scatter/gather writes.
 
-Used by [`cloudabi_send_in_t`](#send_in), [`cloudabi_sys_fd_pwrite`](#fd_pwrite), and [`cloudabi_sys_fd_write`](#fd_write).
+Used by [`cloudabi_send_in_t`](#send_in), [`cloudabi_sys_fd_pwrite()`](#fd_pwrite), and [`cloudabi_sys_fd_write()`](#fd_write).
 
 Members:
 
@@ -1600,7 +1600,7 @@ Members:
 
 Identifiers for clocks.
 
-Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_clock_res_get`](#clock_res_get), and [`cloudabi_sys_clock_time_get`](#clock_time_get).
+Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_clock_res_get()`](#clock_res_get), and [`cloudabi_sys_clock_time_get()`](#clock_time_get).
 
 Possible values:
 
@@ -1631,7 +1631,7 @@ Possible values:
 
 A userspace condition variable.
 
-Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), and [`cloudabi_sys_condvar_signal`](#condvar_signal).
+Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), and [`cloudabi_sys_condvar_signal()`](#condvar_signal).
 
 Special values:
 
@@ -1654,7 +1654,7 @@ Used by [`cloudabi_filestat_t`](#filestat).
 
 A reference to the offset of a directory entry.
 
-Used by [`cloudabi_dirent_t`](#dirent) and [`cloudabi_sys_file_readdir`](#file_readdir).
+Used by [`cloudabi_dirent_t`](#dirent) and [`cloudabi_sys_file_readdir()`](#file_readdir).
 
 Special values:
 
@@ -2008,7 +2008,7 @@ Possible values:
 
 An event that occurred.
 
-Used by [`cloudabi_sys_poll`](#poll) and [`cloudabi_sys_poll_fd`](#poll_fd).
+Used by [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd).
 
 Members:
 
@@ -2157,7 +2157,7 @@ Possible values:
 
 Exit code generated by a process when exiting.
 
-Used by [`cloudabi_event_t`](#event) and [`cloudabi_sys_proc_exit`](#proc_exit).
+Used by [`cloudabi_event_t`](#event) and [`cloudabi_sys_proc_exit()`](#proc_exit).
 
 #### <a name="fd"></a>`cloudabi_fd_t` (`uint32_t`)
 
@@ -2172,11 +2172,11 @@ Special values:
 
 - <a name="fd.process_child"></a>**`CLOUDABI_PROCESS_CHILD`**
 
-    Returned to the child process by [`cloudabi_sys_proc_fork`](#proc_fork).
+    Returned to the child process by [`cloudabi_sys_proc_fork()`](#proc_fork).
 
 - <a name="fd.map_anon_fd"></a>**`CLOUDABI_MAP_ANON_FD`**
 
-    Passed to [`cloudabi_sys_mem_map`](#mem_map) when creating a mapping to
+    Passed to [`cloudabi_sys_mem_map()`](#mem_map) when creating a mapping to
     anonymous memory.
 
 #### <a name="fdflags"></a>`cloudabi_fdflags_t` (`uint16_t` bitfield)
@@ -2217,7 +2217,7 @@ Possible values:
 
 Which file descriptor attributes to adjust.
 
-Used by [`cloudabi_sys_fd_stat_put`](#fd_stat_put).
+Used by [`cloudabi_sys_fd_stat_put()`](#fd_stat_put).
 
 Possible values:
 
@@ -2236,7 +2236,7 @@ Possible values:
 
 File descriptor attributes.
 
-Used by [`cloudabi_sys_fd_stat_get`](#fd_stat_get), [`cloudabi_sys_fd_stat_put`](#fd_stat_put), and [`cloudabi_sys_file_open`](#file_open).
+Used by [`cloudabi_sys_fd_stat_get()`](#fd_stat_get), [`cloudabi_sys_fd_stat_put()`](#fd_stat_put), and [`cloudabi_sys_file_open()`](#file_open).
 
 Members:
 
@@ -2256,25 +2256,25 @@ Members:
 
     Maximum set of rights that can be installed on new
     file descriptors that are created through this file
-    descriptor, e.g., through [`cloudabi_sys_file_open`](#file_open).
+    descriptor, e.g., through [`cloudabi_sys_file_open()`](#file_open).
 
 #### <a name="filedelta"></a>`cloudabi_filedelta_t` (`int64_t`)
 
 Relative offset within a file.
 
-Used by [`cloudabi_sys_fd_seek`](#fd_seek).
+Used by [`cloudabi_sys_fd_seek()`](#fd_seek).
 
 #### <a name="filesize"></a>`cloudabi_filesize_t` (`uint64_t`)
 
 Non-negative file size or length of a region within a file.
 
-Used by [`cloudabi_event_t`](#event), [`cloudabi_filestat_t`](#filestat), [`cloudabi_sys_fd_pread`](#fd_pread), [`cloudabi_sys_fd_pwrite`](#fd_pwrite), [`cloudabi_sys_fd_seek`](#fd_seek), [`cloudabi_sys_file_advise`](#file_advise), [`cloudabi_sys_file_allocate`](#file_allocate), and [`cloudabi_sys_mem_map`](#mem_map).
+Used by [`cloudabi_event_t`](#event), [`cloudabi_filestat_t`](#filestat), [`cloudabi_sys_fd_pread()`](#fd_pread), [`cloudabi_sys_fd_pwrite()`](#fd_pwrite), [`cloudabi_sys_fd_seek()`](#fd_seek), [`cloudabi_sys_file_advise()`](#file_advise), [`cloudabi_sys_file_allocate()`](#file_allocate), and [`cloudabi_sys_mem_map()`](#mem_map).
 
 #### <a name="filestat"></a>`cloudabi_filestat_t` (`struct`)
 
 File attributes.
 
-Used by [`cloudabi_sys_file_stat_fget`](#file_stat_fget), [`cloudabi_sys_file_stat_fput`](#file_stat_fput), [`cloudabi_sys_file_stat_get`](#file_stat_get), and [`cloudabi_sys_file_stat_put`](#file_stat_put).
+Used by [`cloudabi_sys_file_stat_fget()`](#file_stat_fget), [`cloudabi_sys_file_stat_fput()`](#file_stat_fput), [`cloudabi_sys_file_stat_get()`](#file_stat_get), and [`cloudabi_sys_file_stat_put()`](#file_stat_put).
 
 Members:
 
@@ -2316,7 +2316,7 @@ Members:
 
 The type of a file descriptor or file.
 
-Used by [`cloudabi_dirent_t`](#dirent), [`cloudabi_fdstat_t`](#fdstat), [`cloudabi_filestat_t`](#filestat), [`cloudabi_sys_fd_create1`](#fd_create1), [`cloudabi_sys_fd_create2`](#fd_create2), and [`cloudabi_sys_file_create`](#file_create).
+Used by [`cloudabi_dirent_t`](#dirent), [`cloudabi_fdstat_t`](#fdstat), [`cloudabi_filestat_t`](#filestat), [`cloudabi_sys_fd_create1()`](#fd_create1), [`cloudabi_sys_fd_create2()`](#fd_create2), and [`cloudabi_sys_file_create()`](#file_create).
 
 Possible values:
 
@@ -2385,7 +2385,7 @@ Possible values:
 
 Which file attributes to adjust.
 
-Used by [`cloudabi_sys_file_stat_fput`](#file_stat_fput) and [`cloudabi_sys_file_stat_put`](#file_stat_put).
+Used by [`cloudabi_sys_file_stat_fput()`](#file_stat_fput) and [`cloudabi_sys_file_stat_put()`](#file_stat_put).
 
 Possible values:
 
@@ -2424,7 +2424,7 @@ Used by [`cloudabi_dirent_t`](#dirent) and [`cloudabi_filestat_t`](#filestat).
 
 A region of memory for scatter/gather reads.
 
-Used by [`cloudabi_recv_in_t`](#recv_in), [`cloudabi_sys_fd_pread`](#fd_pread), and [`cloudabi_sys_fd_read`](#fd_read).
+Used by [`cloudabi_recv_in_t`](#recv_in), [`cloudabi_sys_fd_pread()`](#fd_pread), and [`cloudabi_sys_fd_read()`](#fd_read).
 
 Members:
 
@@ -2443,7 +2443,7 @@ Used by [`cloudabi_filestat_t`](#filestat).
 A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.
 
-Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_lock_unlock`](#lock_unlock), and [`cloudabi_sys_thread_exit`](#thread_exit).
+Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_lock_unlock()`](#lock_unlock), and [`cloudabi_sys_thread_exit()`](#thread_exit).
 
 Special values:
 
@@ -2484,7 +2484,7 @@ Special values:
 
 Path lookup properties.
 
-Used by [`cloudabi_sys_file_link`](#file_link), [`cloudabi_sys_file_open`](#file_open), [`cloudabi_sys_file_stat_get`](#file_stat_get), and [`cloudabi_sys_file_stat_put`](#file_stat_put).
+Used by [`cloudabi_sys_file_link()`](#file_link), [`cloudabi_sys_file_open()`](#file_open), [`cloudabi_sys_file_stat_get()`](#file_stat_get), and [`cloudabi_sys_file_stat_put()`](#file_stat_put).
 
 Members:
 
@@ -2515,7 +2515,7 @@ Possible values:
 
 Memory mapping flags.
 
-Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_condvar_signal`](#condvar_signal), [`cloudabi_sys_lock_unlock`](#lock_unlock), [`cloudabi_sys_mem_map`](#mem_map), and [`cloudabi_sys_thread_exit`](#thread_exit).
+Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_condvar_signal()`](#condvar_signal), [`cloudabi_sys_lock_unlock()`](#lock_unlock), [`cloudabi_sys_mem_map()`](#mem_map), and [`cloudabi_sys_thread_exit()`](#thread_exit).
 
 Possible values:
 
@@ -2546,7 +2546,7 @@ Memory page protection options.
 This implementation enforces the W^X property: Pages cannot be
 mapped for execution while also mapped for writing.
 
-Used by [`cloudabi_sys_mem_map`](#mem_map) and [`cloudabi_sys_mem_protect`](#mem_protect).
+Used by [`cloudabi_sys_mem_map()`](#mem_map) and [`cloudabi_sys_mem_protect()`](#mem_protect).
 
 Possible values:
 
@@ -2566,7 +2566,7 @@ Possible values:
 
 Methods of synchronizing memory with physical storage.
 
-Used by [`cloudabi_sys_mem_sync`](#mem_sync).
+Used by [`cloudabi_sys_mem_sync()`](#mem_sync).
 
 Possible values:
 
@@ -2584,7 +2584,7 @@ Possible values:
 
 #### <a name="msgflags"></a>`cloudabi_msgflags_t` (`uint16_t` bitfield)
 
-Flags provided to and returned by [`cloudabi_sys_sock_recv`](#sock_recv) and [`cloudabi_sys_sock_send`](#sock_send).
+Flags provided to and returned by [`cloudabi_sys_sock_recv()`](#sock_recv) and [`cloudabi_sys_sock_send()`](#sock_send).
 
 Used by [`cloudabi_recv_in_t`](#recv_in), [`cloudabi_recv_out_t`](#recv_out), and [`cloudabi_send_in_t`](#send_in).
 
@@ -2592,29 +2592,29 @@ Possible values:
 
 - <a name="msgflags.ctrunc"></a>**`CLOUDABI_MSG_CTRUNC`**
 
-    Returned by [`cloudabi_sys_sock_recv`](#sock_recv): File descriptors truncated.
+    Returned by [`cloudabi_sys_sock_recv()`](#sock_recv): File descriptors truncated.
 
 - <a name="msgflags.eor"></a>**`CLOUDABI_MSG_EOR`**
 
-    Provided to [`cloudabi_sys_sock_send`](#sock_send): Terminates a record (if
+    Provided to [`cloudabi_sys_sock_send()`](#sock_send): Terminates a record (if
     supported by the protocol).
 
-    Returned by [`cloudabi_sys_sock_recv`](#sock_recv): End-of-record was received
+    Returned by [`cloudabi_sys_sock_recv()`](#sock_recv): End-of-record was received
     (if supported by the protocol).
 
 - <a name="msgflags.peek"></a>**`CLOUDABI_MSG_PEEK`**
 
-    Provided to [`cloudabi_sys_sock_recv`](#sock_recv): Returns the message without
+    Provided to [`cloudabi_sys_sock_recv()`](#sock_recv): Returns the message without
     removing it from the socket's receive queue.
 
 - <a name="msgflags.trunc"></a>**`CLOUDABI_MSG_TRUNC`**
 
-    Returned by [`cloudabi_sys_sock_recv`](#sock_recv): Message data has been
+    Returned by [`cloudabi_sys_sock_recv()`](#sock_recv): Message data has been
     truncated.
 
 - <a name="msgflags.waitall"></a>**`CLOUDABI_MSG_WAITALL`**
 
-    Provided to [`cloudabi_sys_sock_recv`](#sock_recv): On byte-stream sockets, block
+    Provided to [`cloudabi_sys_sock_recv()`](#sock_recv): On byte-stream sockets, block
     until the full amount of data can be returned.
 
 #### <a name="nthreads"></a>`cloudabi_nthreads_t` (`uint32_t`)
@@ -2622,11 +2622,11 @@ Possible values:
 Specifies the number of threads sleeping on a condition
 variable that should be woken up.
 
-Used by [`cloudabi_sys_condvar_signal`](#condvar_signal).
+Used by [`cloudabi_sys_condvar_signal()`](#condvar_signal).
 
 #### <a name="oflags"></a>`cloudabi_oflags_t` (`uint16_t` bitfield)
 
-Open flags used by [`cloudabi_sys_file_open`](#file_open).
+Open flags used by [`cloudabi_sys_file_open()`](#file_open).
 
 Possible values:
 
@@ -2648,7 +2648,7 @@ Possible values:
 
 #### <a name="recv_in"></a>`cloudabi_recv_in_t` (`struct`)
 
-Arguments of [`cloudabi_sys_sock_recv`](#sock_recv).
+Arguments of [`cloudabi_sys_sock_recv()`](#sock_recv).
 
 Members:
 
@@ -2669,7 +2669,7 @@ Members:
 
 #### <a name="recv_out"></a>`cloudabi_recv_out_t` (`struct`)
 
-Results of [`cloudabi_sys_sock_recv`](#sock_recv).
+Results of [`cloudabi_sys_sock_recv()`](#sock_recv).
 
 Members:
 
@@ -2705,166 +2705,166 @@ Possible values:
 
 - <a name="rights.fd_datasync"></a>**`CLOUDABI_RIGHT_FD_DATASYNC`**
 
-    The right to invoke [`cloudabi_sys_fd_datasync`](#fd_datasync).
+    The right to invoke [`cloudabi_sys_fd_datasync()`](#fd_datasync).
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`cloudabi_sys_file_open`](#file_open) with [`CLOUDABI_FDFLAG_DSYNC`](#fdflags.dsync).
+    invoke [`cloudabi_sys_file_open()`](#file_open) with [`CLOUDABI_FDFLAG_DSYNC`](#fdflags.dsync).
 
 - <a name="rights.fd_read"></a>**`CLOUDABI_RIGHT_FD_READ`**
 
-    The right to invoke [`cloudabi_sys_fd_read`](#fd_read) and [`cloudabi_sys_sock_recv`](#sock_recv).
+    The right to invoke [`cloudabi_sys_fd_read()`](#fd_read) and [`cloudabi_sys_sock_recv()`](#sock_recv).
 
     If [`CLOUDABI_RIGHT_MEM_MAP`](#rights.mem_map) is set, includes the right to
-    invoke [`cloudabi_sys_mem_map`](#mem_map) with memory protection option
+    invoke [`cloudabi_sys_mem_map()`](#mem_map) with memory protection option
     [`CLOUDABI_PROT_READ`](#mprot.read).
 
     If [`CLOUDABI_RIGHT_FD_SEEK`](#rights.fd_seek) is set, includes the right to invoke
-    [`cloudabi_sys_fd_pread`](#fd_pread).
+    [`cloudabi_sys_fd_pread()`](#fd_pread).
 
 - <a name="rights.fd_seek"></a>**`CLOUDABI_RIGHT_FD_SEEK`**
 
-    The right to invoke [`cloudabi_sys_fd_seek`](#fd_seek). This flag implies
+    The right to invoke [`cloudabi_sys_fd_seek()`](#fd_seek). This flag implies
     [`CLOUDABI_RIGHT_FD_TELL`](#rights.fd_tell).
 
 - <a name="rights.fd_stat_put_flags"></a>**`CLOUDABI_RIGHT_FD_STAT_PUT_FLAGS`**
 
-    The right to invoke [`cloudabi_sys_fd_stat_put`](#fd_stat_put) with
+    The right to invoke [`cloudabi_sys_fd_stat_put()`](#fd_stat_put) with
     [`CLOUDABI_FDSTAT_FLAGS`](#fdsflags.flags).
 
 - <a name="rights.fd_sync"></a>**`CLOUDABI_RIGHT_FD_SYNC`**
 
-    The right to invoke [`cloudabi_sys_fd_sync`](#fd_sync).
+    The right to invoke [`cloudabi_sys_fd_sync()`](#fd_sync).
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`cloudabi_sys_file_open`](#file_open) with [`CLOUDABI_FDFLAG_RSYNC`](#fdflags.rsync) and
+    invoke [`cloudabi_sys_file_open()`](#file_open) with [`CLOUDABI_FDFLAG_RSYNC`](#fdflags.rsync) and
     [`CLOUDABI_FDFLAG_DSYNC`](#fdflags.dsync).
 
 - <a name="rights.fd_tell"></a>**`CLOUDABI_RIGHT_FD_TELL`**
 
-    The right to invoke [`cloudabi_sys_fd_seek`](#fd_seek) in such a way that the
+    The right to invoke [`cloudabi_sys_fd_seek()`](#fd_seek) in such a way that the
     file offset remains unaltered (i.e., [`CLOUDABI_WHENCE_CUR`](#whence.cur) with
     offset zero).
 
 - <a name="rights.fd_write"></a>**`CLOUDABI_RIGHT_FD_WRITE`**
 
-    The right to invoke [`cloudabi_sys_fd_write`](#fd_write) and [`cloudabi_sys_sock_send`](#sock_send).
+    The right to invoke [`cloudabi_sys_fd_write()`](#fd_write) and [`cloudabi_sys_sock_send()`](#sock_send).
 
     If [`CLOUDABI_RIGHT_MEM_MAP`](#rights.mem_map) is set, includes the right to
-    invoke [`cloudabi_sys_mem_map`](#mem_map) with memory protection option
+    invoke [`cloudabi_sys_mem_map()`](#mem_map) with memory protection option
     [`CLOUDABI_PROT_WRITE`](#mprot.write).
 
     If [`CLOUDABI_RIGHT_FD_SEEK`](#rights.fd_seek) is set, includes the right to
-    invoke [`cloudabi_sys_fd_pwrite`](#fd_pwrite).
+    invoke [`cloudabi_sys_fd_pwrite()`](#fd_pwrite).
 
 - <a name="rights.file_advise"></a>**`CLOUDABI_RIGHT_FILE_ADVISE`**
 
-    The right to invoke [`cloudabi_sys_file_advise`](#file_advise).
+    The right to invoke [`cloudabi_sys_file_advise()`](#file_advise).
 
 - <a name="rights.file_allocate"></a>**`CLOUDABI_RIGHT_FILE_ALLOCATE`**
 
-    The right to invoke [`cloudabi_sys_file_allocate`](#file_allocate).
+    The right to invoke [`cloudabi_sys_file_allocate()`](#file_allocate).
 
 - <a name="rights.file_create_directory"></a>**`CLOUDABI_RIGHT_FILE_CREATE_DIRECTORY`**
 
-    The right to invoke [`cloudabi_sys_file_create`](#file_create) with
+    The right to invoke [`cloudabi_sys_file_create()`](#file_create) with
     [`CLOUDABI_FILETYPE_DIRECTORY`](#filetype.directory).
 
 - <a name="rights.file_create_file"></a>**`CLOUDABI_RIGHT_FILE_CREATE_FILE`**
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#rights.file_open) is set, the right to invoke
-    [`cloudabi_sys_file_open`](#file_open) with [`CLOUDABI_O_CREAT`](#oflags.creat).
+    [`cloudabi_sys_file_open()`](#file_open) with [`CLOUDABI_O_CREAT`](#oflags.creat).
 
 - <a name="rights.file_create_fifo"></a>**`CLOUDABI_RIGHT_FILE_CREATE_FIFO`**
 
-    The right to invoke [`cloudabi_sys_file_create`](#file_create) with
+    The right to invoke [`cloudabi_sys_file_create()`](#file_create) with
     [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo).
 
 - <a name="rights.file_link_source"></a>**`CLOUDABI_RIGHT_FILE_LINK_SOURCE`**
 
-    The right to invoke [`cloudabi_sys_file_link`](#file_link) with the file
+    The right to invoke [`cloudabi_sys_file_link()`](#file_link) with the file
     descriptor as the source directory.
 
 - <a name="rights.file_link_target"></a>**`CLOUDABI_RIGHT_FILE_LINK_TARGET`**
 
-    The right to invoke [`cloudabi_sys_file_link`](#file_link) with the file
+    The right to invoke [`cloudabi_sys_file_link()`](#file_link) with the file
     descriptor as the target directory.
 
 - <a name="rights.file_open"></a>**`CLOUDABI_RIGHT_FILE_OPEN`**
 
-    The right to invoke [`cloudabi_sys_file_open`](#file_open).
+    The right to invoke [`cloudabi_sys_file_open()`](#file_open).
 
 - <a name="rights.file_readdir"></a>**`CLOUDABI_RIGHT_FILE_READDIR`**
 
-    The right to invoke [`cloudabi_sys_file_readdir`](#file_readdir).
+    The right to invoke [`cloudabi_sys_file_readdir()`](#file_readdir).
 
 - <a name="rights.file_readlink"></a>**`CLOUDABI_RIGHT_FILE_READLINK`**
 
-    The right to invoke [`cloudabi_sys_file_readlink`](#file_readlink).
+    The right to invoke [`cloudabi_sys_file_readlink()`](#file_readlink).
 
 - <a name="rights.file_rename_source"></a>**`CLOUDABI_RIGHT_FILE_RENAME_SOURCE`**
 
-    The right to invoke [`cloudabi_sys_file_rename`](#file_rename) with the file
+    The right to invoke [`cloudabi_sys_file_rename()`](#file_rename) with the file
     descriptor as the source directory.
 
 - <a name="rights.file_rename_target"></a>**`CLOUDABI_RIGHT_FILE_RENAME_TARGET`**
 
-    The right to invoke [`cloudabi_sys_file_rename`](#file_rename) with the file
+    The right to invoke [`cloudabi_sys_file_rename()`](#file_rename) with the file
     descriptor as the target directory.
 
 - <a name="rights.file_stat_fget"></a>**`CLOUDABI_RIGHT_FILE_STAT_FGET`**
 
-    The right to invoke [`cloudabi_sys_file_stat_fget`](#file_stat_fget).
+    The right to invoke [`cloudabi_sys_file_stat_fget()`](#file_stat_fget).
 
 - <a name="rights.file_stat_fput_size"></a>**`CLOUDABI_RIGHT_FILE_STAT_FPUT_SIZE`**
 
-    The right to invoke [`cloudabi_sys_file_stat_fput`](#file_stat_fput) with
+    The right to invoke [`cloudabi_sys_file_stat_fput()`](#file_stat_fput) with
     [`CLOUDABI_FILESTAT_SIZE`](#fsflags.size).
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`cloudabi_sys_file_open`](#file_open) with [`CLOUDABI_O_TRUNC`](#oflags.trunc).
+    invoke [`cloudabi_sys_file_open()`](#file_open) with [`CLOUDABI_O_TRUNC`](#oflags.trunc).
 
 - <a name="rights.file_stat_fput_times"></a>**`CLOUDABI_RIGHT_FILE_STAT_FPUT_TIMES`**
 
-    The right to invoke [`cloudabi_sys_file_stat_fput`](#file_stat_fput) with
+    The right to invoke [`cloudabi_sys_file_stat_fput()`](#file_stat_fput) with
     [`CLOUDABI_FILESTAT_ATIM`](#fsflags.atim), [`CLOUDABI_FILESTAT_ATIM_NOW`](#fsflags.atim_now), [`CLOUDABI_FILESTAT_MTIM`](#fsflags.mtim),
     and [`CLOUDABI_FILESTAT_MTIM_NOW`](#fsflags.mtim_now).
 
 - <a name="rights.file_stat_get"></a>**`CLOUDABI_RIGHT_FILE_STAT_GET`**
 
-    The right to invoke [`cloudabi_sys_file_stat_get`](#file_stat_get).
+    The right to invoke [`cloudabi_sys_file_stat_get()`](#file_stat_get).
 
 - <a name="rights.file_stat_put_times"></a>**`CLOUDABI_RIGHT_FILE_STAT_PUT_TIMES`**
 
-    The right to invoke [`cloudabi_sys_file_stat_put`](#file_stat_put) with
+    The right to invoke [`cloudabi_sys_file_stat_put()`](#file_stat_put) with
     [`CLOUDABI_FILESTAT_ATIM`](#fsflags.atim), [`CLOUDABI_FILESTAT_ATIM_NOW`](#fsflags.atim_now), [`CLOUDABI_FILESTAT_MTIM`](#fsflags.mtim),
     and [`CLOUDABI_FILESTAT_MTIM_NOW`](#fsflags.mtim_now).
 
 - <a name="rights.file_symlink"></a>**`CLOUDABI_RIGHT_FILE_SYMLINK`**
 
-    The right to invoke [`cloudabi_sys_file_symlink`](#file_symlink).
+    The right to invoke [`cloudabi_sys_file_symlink()`](#file_symlink).
 
 - <a name="rights.file_unlink"></a>**`CLOUDABI_RIGHT_FILE_UNLINK`**
 
-    The right to invoke [`cloudabi_sys_file_unlink`](#file_unlink).
+    The right to invoke [`cloudabi_sys_file_unlink()`](#file_unlink).
 
 - <a name="rights.mem_map"></a>**`CLOUDABI_RIGHT_MEM_MAP`**
 
-    The right to invoke [`cloudabi_sys_mem_map`](#mem_map) with [`cloudabi_mprot_t`](#mprot) set to
+    The right to invoke [`cloudabi_sys_mem_map()`](#mem_map) with [`cloudabi_mprot_t`](#mprot) set to
     zero.
 
 - <a name="rights.mem_map_exec"></a>**`CLOUDABI_RIGHT_MEM_MAP_EXEC`**
 
     If [`CLOUDABI_RIGHT_MEM_MAP`](#rights.mem_map) is set, the right to invoke
-    [`cloudabi_sys_mem_map`](#mem_map) with [`CLOUDABI_PROT_EXEC`](#mprot.exec).
+    [`cloudabi_sys_mem_map()`](#mem_map) with [`CLOUDABI_PROT_EXEC`](#mprot.exec).
 
 - <a name="rights.poll_fd_readwrite"></a>**`CLOUDABI_RIGHT_POLL_FD_READWRITE`**
 
     If [`CLOUDABI_RIGHT_FD_READ`](#rights.fd_read) is set, includes the right to
-    invoke [`cloudabi_sys_poll`](#poll) and [`cloudabi_sys_poll_fd`](#poll_fd) to subscribe to
+    invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to subscribe to
     [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read).
 
     If [`CLOUDABI_RIGHT_FD_WRITE`](#rights.fd_write) is set, includes the right to
-    invoke [`cloudabi_sys_poll`](#poll) and [`cloudabi_sys_poll_fd`](#poll_fd) to subscribe to
+    invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to subscribe to
     [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
 
 - <a name="rights.poll_modify"></a>**`CLOUDABI_RIGHT_POLL_MODIFY`**
@@ -2874,7 +2874,7 @@ Possible values:
 
 - <a name="rights.poll_proc_terminate"></a>**`CLOUDABI_RIGHT_POLL_PROC_TERMINATE`**
 
-    The right to invoke [`cloudabi_sys_poll`](#poll) and [`cloudabi_sys_poll_fd`](#poll_fd) to
+    The right to invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to
     subscribe to [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate).
 
 - <a name="rights.poll_wait"></a>**`CLOUDABI_RIGHT_POLL_WAIT`**
@@ -2884,43 +2884,43 @@ Possible values:
 
 - <a name="rights.proc_exec"></a>**`CLOUDABI_RIGHT_PROC_EXEC`**
 
-    The right to invoke [`cloudabi_sys_proc_exec`](#proc_exec).
+    The right to invoke [`cloudabi_sys_proc_exec()`](#proc_exec).
 
 - <a name="rights.sock_accept"></a>**`CLOUDABI_RIGHT_SOCK_ACCEPT`**
 
-    The right to invoke [`cloudabi_sys_sock_accept`](#sock_accept).
+    The right to invoke [`cloudabi_sys_sock_accept()`](#sock_accept).
 
 - <a name="rights.sock_bind_directory"></a>**`CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY`**
 
-    The right to invoke [`cloudabi_sys_sock_bind`](#sock_bind) with the file
+    The right to invoke [`cloudabi_sys_sock_bind()`](#sock_bind) with the file
     descriptor as the directory.
 
 - <a name="rights.sock_bind_socket"></a>**`CLOUDABI_RIGHT_SOCK_BIND_SOCKET`**
 
-    The right to invoke [`cloudabi_sys_sock_bind`](#sock_bind) with the file
+    The right to invoke [`cloudabi_sys_sock_bind()`](#sock_bind) with the file
     descriptor as the socket.
 
 - <a name="rights.sock_connect_directory"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY`**
 
-    The right to invoke [`cloudabi_sys_sock_connect`](#sock_connect) with the file
+    The right to invoke [`cloudabi_sys_sock_connect()`](#sock_connect) with the file
     descriptor as the directory.
 
 - <a name="rights.sock_connect_socket"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET`**
 
-    The right to invoke [`cloudabi_sys_sock_connect`](#sock_connect) with the file
+    The right to invoke [`cloudabi_sys_sock_connect()`](#sock_connect) with the file
     descriptor as the socket.
 
 - <a name="rights.sock_listen"></a>**`CLOUDABI_RIGHT_SOCK_LISTEN`**
 
-    The right to invoke [`cloudabi_sys_sock_listen`](#sock_listen).
+    The right to invoke [`cloudabi_sys_sock_listen()`](#sock_listen).
 
 - <a name="rights.sock_shutdown"></a>**`CLOUDABI_RIGHT_SOCK_SHUTDOWN`**
 
-    The right to invoke [`cloudabi_sys_sock_shutdown`](#sock_shutdown).
+    The right to invoke [`cloudabi_sys_sock_shutdown()`](#sock_shutdown).
 
 - <a name="rights.sock_stat_get"></a>**`CLOUDABI_RIGHT_SOCK_STAT_GET`**
 
-    The right to invoke [`cloudabi_sys_sock_stat_get`](#sock_stat_get).
+    The right to invoke [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
 
 #### <a name="sa_family"></a>`cloudabi_sa_family_t` (`uint8_t`)
 
@@ -2952,7 +2952,7 @@ Possible values:
 
 Which channels on a socket need to be shut down.
 
-Used by [`cloudabi_sys_sock_shutdown`](#sock_shutdown).
+Used by [`cloudabi_sys_sock_shutdown()`](#sock_shutdown).
 
 Possible values:
 
@@ -2966,7 +2966,7 @@ Possible values:
 
 #### <a name="send_in"></a>`cloudabi_send_in_t` (`struct`)
 
-Arguments of [`cloudabi_sys_sock_send`](#sock_send).
+Arguments of [`cloudabi_sys_sock_send()`](#sock_send).
 
 Members:
 
@@ -2986,7 +2986,7 @@ Members:
 
 #### <a name="send_out"></a>`cloudabi_send_out_t` (`struct`)
 
-Results of [`cloudabi_sys_sock_send`](#sock_send).
+Results of [`cloudabi_sys_sock_send()`](#sock_send).
 
 Members:
 
@@ -2998,7 +2998,7 @@ Members:
 
 Signal condition.
 
-Used by [`cloudabi_event_t`](#event) and [`cloudabi_sys_proc_raise`](#proc_raise).
+Used by [`cloudabi_event_t`](#event) and [`cloudabi_sys_proc_raise()`](#proc_raise).
 
 Possible values:
 
@@ -3198,7 +3198,7 @@ Members:
 
 Socket attributes.
 
-Used by [`cloudabi_sys_sock_accept`](#sock_accept) and [`cloudabi_sys_sock_stat_get`](#sock_stat_get).
+Used by [`cloudabi_sys_sock_accept()`](#sock_accept) and [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
 
 Members:
 
@@ -3222,7 +3222,7 @@ Members:
 #### <a name="ssflags"></a>`cloudabi_ssflags_t` (`uint8_t` bitfield)
 
 Specifies which socket attributes need to be altered when
-calling [`cloudabi_sys_sock_stat_get`](#sock_stat_get).
+calling [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
 
 Possible values:
 
@@ -3240,7 +3240,7 @@ Possible values:
 
 - <a name="sstate.acceptconn"></a>**`CLOUDABI_SOCKSTATE_ACCEPTCONN`**
 
-    [`cloudabi_sys_sock_listen`](#sock_listen) has been called on the socket. The
+    [`cloudabi_sys_sock_listen()`](#sock_listen) has been called on the socket. The
     socket is accepting incoming connections.
 
 #### <a name="subclockflags"></a>`cloudabi_subclockflags_t` (`uint16_t` bitfield)
@@ -3264,8 +3264,8 @@ Possible values:
 
 #### <a name="subflags"></a>`cloudabi_subflags_t` (`uint16_t` bitfield)
 
-Flags for [`cloudabi_sys_poll_fd`](#poll_fd) to determine how to process a
-subscription request. These flags are ignored by [`cloudabi_sys_poll`](#poll).
+Flags for [`cloudabi_sys_poll_fd()`](#poll_fd) to determine how to process a
+subscription request. These flags are ignored by [`cloudabi_sys_poll()`](#poll).
 
 Used by [`cloudabi_subscription_t`](#subscription).
 
@@ -3318,7 +3318,7 @@ Possible values:
 
 Subscription to an event.
 
-Used by [`cloudabi_sys_poll`](#poll) and [`cloudabi_sys_poll_fd`](#poll_fd).
+Used by [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd).
 
 Members:
 
@@ -3330,8 +3330,8 @@ Members:
 
 - <a name="subscription.flags"></a><code>[cloudabi\_subflags\_t](#subflags) <strong>flags</strong></code>
 
-    Subscription adjustment flags used by [`cloudabi_sys_poll_fd`](#poll_fd).
-    Ignored by [`cloudabi_sys_poll`](#poll).
+    Subscription adjustment flags used by [`cloudabi_sys_poll_fd()`](#poll_fd).
+    Ignored by [`cloudabi_sys_poll()`](#poll).
 
 - <a name="subscription.type"></a><code>[cloudabi\_eventtype\_t](#eventtype) <strong>type</strong></code>
 
@@ -3444,7 +3444,7 @@ Members:
 
 Attributes for thread creation.
 
-Used by [`cloudabi_sys_thread_create`](#thread_create).
+Used by [`cloudabi_sys_thread_create()`](#thread_create).
 
 Members:
 
@@ -3486,20 +3486,20 @@ Threads must be aware of their thread identifier, as it is
 written it into locks when acquiring them for writing. It is
 not advised to use these identifiers for any other purpose.
 
-Used by [`cloudabi_sys_proc_fork`](#proc_fork) and [`cloudabi_sys_thread_create`](#thread_create).
+Used by [`cloudabi_sys_proc_fork()`](#proc_fork) and [`cloudabi_sys_thread_create()`](#thread_create).
 
 #### <a name="timestamp"></a>`cloudabi_timestamp_t` (`uint64_t`)
 
 Timestamp in nanoseconds.
 
-Used by [`cloudabi_filestat_t`](#filestat), [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_clock_res_get`](#clock_res_get), and [`cloudabi_sys_clock_time_get`](#clock_time_get).
+Used by [`cloudabi_filestat_t`](#filestat), [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_clock_res_get()`](#clock_res_get), and [`cloudabi_sys_clock_time_get()`](#clock_time_get).
 
 #### <a name="ulflags"></a>`cloudabi_ulflags_t` (`uint8_t` bitfield)
 
 Specifies whether files are unlinked or directories are
 removed.
 
-Used by [`cloudabi_sys_file_unlink`](#file_unlink).
+Used by [`cloudabi_sys_file_unlink()`](#file_unlink).
 
 Possible values:
 
@@ -3520,7 +3520,7 @@ Used by [`cloudabi_event_t`](#event) and [`cloudabi_subscription_t`](#subscripti
 Relative to which position the offset of the file descriptor
 should be set.
 
-Used by [`cloudabi_sys_fd_seek`](#fd_seek).
+Used by [`cloudabi_sys_fd_seek()`](#fd_seek).
 
 Possible values:
 
