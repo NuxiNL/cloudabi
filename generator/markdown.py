@@ -153,8 +153,8 @@ class MarkdownGenerator(Generator):
             for vm in m.members:
                 print('- When `{}` is {}:\n'.format(
                     m.tag.name,
-                    ' or '.join([self.naming.link(m.tag.type, v)
-                               for v in vm.tag_values])))
+                    _list('or', [self.naming.link(m.tag.type, v)
+                                 for v in vm.tag_values])))
                 if vm.name is None:
                     for mm in vm.type.members:
                         self.generate_struct_member(
@@ -220,3 +220,13 @@ def _escape(text):
 
 def _fix_undescores(text):
     return _escape(text.replace('\\_', '_'))
+
+
+def _list(word, items):
+    assert(len(items) > 0)
+    if len(items) == 1:
+        return items[0]
+    elif len(items) == 2:
+        return '{} {} {}'.format(items[0], word, items[1])
+    else:
+        return '{}, {} {}'.format(', '.join(items[:-1]), word, items[-1])

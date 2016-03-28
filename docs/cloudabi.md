@@ -1563,13 +1563,13 @@ Members:
 
     The type of the auxiliary vector entry.
 
-- When `a_type` is [`CLOUDABI_AT_ARGDATALEN`](#auxtype.argdatalen) or [`CLOUDABI_AT_CANARYLEN`](#auxtype.canarylen) or [`CLOUDABI_AT_NCPUS`](#auxtype.ncpus) or [`CLOUDABI_AT_PAGESZ`](#auxtype.pagesz) or [`CLOUDABI_AT_PHNUM`](#auxtype.phnum) or [`CLOUDABI_AT_TID`](#auxtype.tid):
+- When `a_type` is [`CLOUDABI_AT_ARGDATALEN`](#auxtype.argdatalen), [`CLOUDABI_AT_CANARYLEN`](#auxtype.canarylen), [`CLOUDABI_AT_NCPUS`](#auxtype.ncpus), [`CLOUDABI_AT_PAGESZ`](#auxtype.pagesz), [`CLOUDABI_AT_PHNUM`](#auxtype.phnum), or [`CLOUDABI_AT_TID`](#auxtype.tid):
 
     - <a name="auxv.a_val"></a><code>size\_t <strong>a\_val</strong></code>
 
         A numerical value.
 
-- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata) or [`CLOUDABI_AT_CANARY`](#auxtype.canary) or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
+- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_CANARY`](#auxtype.canary), or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
 
     - <a name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 

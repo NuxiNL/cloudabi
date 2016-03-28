@@ -1718,14 +1718,14 @@ this environment on all architectures.</p>
 <li><p><a name="auxv.a_type"></a><code><a href="#auxtype">cloudabi_auxtype_t</a> <strong>a_type</strong></code></p>
 
 <p>The type of the auxiliary vector entry.</p></li>
-<li><p>When <code>a_type</code> is <a href="#auxtype.argdatalen"><code>CLOUDABI_AT_ARGDATALEN</code></a> or <a href="#auxtype.canarylen"><code>CLOUDABI_AT_CANARYLEN</code></a> or <a href="#auxtype.ncpus"><code>CLOUDABI_AT_NCPUS</code></a> or <a href="#auxtype.pagesz"><code>CLOUDABI_AT_PAGESZ</code></a> or <a href="#auxtype.phnum"><code>CLOUDABI_AT_PHNUM</code></a> or <a href="#auxtype.tid"><code>CLOUDABI_AT_TID</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdatalen"><code>CLOUDABI_AT_ARGDATALEN</code></a>, <a href="#auxtype.canarylen"><code>CLOUDABI_AT_CANARYLEN</code></a>, <a href="#auxtype.ncpus"><code>CLOUDABI_AT_NCPUS</code></a>, <a href="#auxtype.pagesz"><code>CLOUDABI_AT_PAGESZ</code></a>, <a href="#auxtype.phnum"><code>CLOUDABI_AT_PHNUM</code></a>, or <a href="#auxtype.tid"><code>CLOUDABI_AT_TID</code></a>:</p>
 
 <ul>
 <li><p><a name="auxv.a_val"></a><code>size_t <strong>a_val</strong></code></p>
 
 <p>A numerical value.</p></li>
 </ul></li>
-<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a> or <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a> or <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, or <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>:</p>
 
 <ul>
 <li><p><a name="auxv.a_ptr"></a><code>void *<strong>a_ptr</strong></code></p>
