@@ -97,6 +97,15 @@ class MarkdownGenerator(Generator):
         print('#### {}`{}`{}\n'.format(
             self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
+        if len(type.used_by) > 0:
+            if all('[{}]'.format(x.name) in type.doc for x in type.used_by):
+                # Documentation string already refers to all uses.
+                pass
+            else:
+                by = sorted(type.used_by,
+                    key=lambda x: ('A' if isinstance(x, Type) else 'B') + x.name)
+                print('Used by {}.\n'.format(
+                    _list('and', [self.naming.link(x) for x in by])))
         if isinstance(type, IntLikeType):
             if type.values != []:
                 if isinstance(type, OpaqueType) or isinstance(type, AliasType):
