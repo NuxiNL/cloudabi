@@ -3404,7 +3404,7 @@ Members:
             The lock that will be
             released while waiting.
 
-            The lock will be re-acquired
+            The lock will be reacquired
             for writing when the condition
             variable triggers.
 
