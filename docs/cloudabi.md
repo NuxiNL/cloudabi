@@ -2457,9 +2457,11 @@ Special values:
 
 - <a name="lock.wrlocked"></a>**`CLOUDABI_LOCK_WRLOCKED`**
 
-    Bitmask indicating that the lock is write-locked. The
-    lower 30 bits of the lock contain the identifier of
-    the thread that owns the write lock.
+    Bitmask indicating that the lock is write-locked. If
+    set, the lower 30 bits of the lock contain the
+    identifier of the thread that owns the write lock.
+    Otherwise, the lower 30 bits of the lock contain the
+    number of acquired read locks.
 
 - <a name="lock.kernel_managed"></a>**`CLOUDABI_LOCK_KERNEL_MANAGED`**
 
@@ -3402,7 +3404,7 @@ Members:
             The lock that will be
             released while waiting.
 
-            The lock will be reacquired
+            The lock will be re-acquired
             for writing when the condition
             variable triggers.
 

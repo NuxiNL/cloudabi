@@ -2544,9 +2544,11 @@ Linux futex or a FreeBSD umtx.</p>
 unlocked state.</p></li>
 <li><p><a name="lock.wrlocked"></a><strong><code>CLOUDABI_LOCK_WRLOCKED</code></strong></p>
 
-<p>Bitmask indicating that the lock is write-locked. The
-lower 30 bits of the lock contain the identifier of
-the thread that owns the write lock.</p></li>
+<p>Bitmask indicating that the lock is write-locked. If
+set, the lower 30 bits of the lock contain the
+identifier of the thread that owns the write lock.
+Otherwise, the lower 30 bits of the lock contain the
+number of acquired read locks.</p></li>
 <li><p><a name="lock.kernel_managed"></a><strong><code>CLOUDABI_LOCK_KERNEL_MANAGED</code></strong></p>
 
 <p>Bitmask indicating that the lock is either read locked
@@ -3436,7 +3438,7 @@ which to wait to be woken up.</p></li>
 <p>The lock that will be
 released while waiting.</p>
 
-<p>The lock will be reacquired
+<p>The lock will be re-acquired
 for writing when the condition
 variable triggers.</p></li>
 <li><p><a name="subscription.condvar.condvar_scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>condvar_scope</strong></code></p>
