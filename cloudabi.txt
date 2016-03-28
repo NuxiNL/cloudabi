@@ -494,9 +494,11 @@ opaque uint32 lock
 		| Value indicating that the lock is in its initial
 		| unlocked state.
 	0x40000000 wrlocked
-		| Bitmask indicating that the lock is write-locked. The
-		| lower 30 bits of the lock contain the identifier of
-		| the thread that owns the write lock.
+		| Bitmask indicating that the lock is write-locked. If
+		| set, the lower 30 bits of the lock contain the
+		| identifier of the thread that owns the write lock.
+		| Otherwise, the lower 30 bits of the lock contain the
+		| number of acquired read locks.
 	0x80000000 kernel_managed
 		| Bitmask indicating that the lock is either read locked
 		| or write locked, and that one or more threads have
