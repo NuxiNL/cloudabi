@@ -173,7 +173,6 @@ opaque uint64 device
 
 opaque uint64 dircookie
 	| A reference to the offset of a directory entry.
-	# Maybe refer to file_readdir or dirent
 	0 start
 		| Permanent reference to the first directory entry
 		| within a directory.
@@ -409,7 +408,6 @@ flags uint16 fdflags
 
 flags uint16 fdsflags
 	| Which file descriptor attributes to adjust.
-	# Maybe refer to fd_stat_put
 	@cprefix FDSTAT_
 	0x01 flags
 		| Adjust the file descriptor flags stored in
@@ -427,7 +425,6 @@ alias uint64 filesize
 
 flags uint16 fsflags
 	| Which file attributes to adjust.
-	# Maybe refer to file_stat_{,f}put
 	@cprefix FILESTAT_
 	0x01 atim
 		| Adjust the last data access timestamp to the value
@@ -524,11 +521,9 @@ flags uint32 lookupflags
 	1 symlink_follow
 		| As long as the resolved path corresponds to a symbolic
 		| link, it is expanded.
-		# ELOOP?
 
 flags uint8 mflags
 	| Memory mapping flags.
-	# Refer to syscall(s)?
 	# These are all separate bits, but private|shared is not valid,
 	# i assume?
 	# mflags is used in quite a few places where only private and
@@ -779,9 +774,6 @@ flags uint8 sdflags
 
 enum uint8 signal
 	| Signal condition.
-	# What do signals mean in cloudabi? Doesn't look like I can do
-	# anything with them other than use one to kill myself. (Can I
-	# handle a signal? Send one to another process?)
 	@cprefix SIG
 	1  abrt
 		| Process abort signal.
