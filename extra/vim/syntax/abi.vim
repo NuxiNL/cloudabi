@@ -2,7 +2,7 @@ if exists("b:current_syntax")
 	finish
 endif
 
-let b:current_syntax = "cel"
+let b:current_syntax = "abi"
 
 syn match abiComment "#.*$"
 
