@@ -112,6 +112,8 @@ _Static_assert(sizeof(void *) != 8 || sizeof(cloudabi_iovec_t) == 16, "Incorrect
 _Static_assert(sizeof(void *) != 4 || _Alignof(cloudabi_iovec_t) == 4, "Incorrect layout");
 _Static_assert(sizeof(void *) != 8 || _Alignof(cloudabi_iovec_t) == 8, "Incorrect layout");
 
+typedef void cloudabi_processentry_t(const cloudabi_auxv_t *auxv);
+
 typedef struct {
 	const cloudabi_iovec_t *ri_data;
 	size_t ri_datalen;

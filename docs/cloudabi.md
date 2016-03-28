@@ -2646,6 +2646,16 @@ Possible values:
 
     Truncate file to size 0.
 
+#### <a name="processentry"></a>`cloudabi_processentry_t` (function type)
+
+Entry point for a process (`_start`).
+
+Parameters:
+
+- <a name="processentry.auxv"></a><code>const [cloudabi\_auxv\_t](#auxv) *<strong>auxv</strong></code>
+
+    The auxiliary vector. See [`cloudabi_auxv_t`](#auxv).
+
 #### <a name="recv_in"></a>`cloudabi_recv_in_t` (`struct`)
 
 Arguments of [`cloudabi_sys_sock_recv()`](#sock_recv).

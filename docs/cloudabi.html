@@ -2731,6 +2731,18 @@ variable that should be woken up.</p>
 <p>Truncate file to size 0.</p></li>
 </ul>
 
+<h4><a name="processentry"></a><code>cloudabi_processentry_t</code> (function type)</h4>
+
+<p>Entry point for a process (<code>_start</code>).</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><p><a name="processentry.auxv"></a><code>const <a href="#auxv">cloudabi_auxv_t</a> *<strong>auxv</strong></code></p>
+
+<p>The auxiliary vector. See <a href="#auxv"><code>cloudabi_auxv_t</code></a>.</p></li>
+</ul>
+
 <h4><a name="recv_in"></a><code>cloudabi_recv_in_t</code> (<code>struct</code>)</h4>
 
 <p>Arguments of <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>.</p>

@@ -1020,6 +1020,12 @@ struct auxv
 			ptr void a_ptr
 				| A pointer value.
 
+function processentry
+	| Entry point for a process (`_start`).
+	in
+		cptr auxv auxv
+			| The auxiliary vector. See [auxv].
+
 struct ciovec
 	| A region of memory for scatter/gather writes.
 	crange void iov_base iov_len iov_data

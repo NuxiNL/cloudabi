@@ -102,6 +102,8 @@ _Static_assert(offsetof(cloudabi32_iovec_t, iov_len) == 4, "Incorrect layout");
 _Static_assert(sizeof(cloudabi32_iovec_t) == 8, "Incorrect layout");
 _Static_assert(_Alignof(cloudabi32_iovec_t) == 4, "Incorrect layout");
 
+typedef void cloudabi32_processentry_t(uint32_t auxv);
+
 typedef struct {
 	_Alignas(4) uint32_t ri_data;
 	_Alignas(4) uint32_t ri_datalen;
