@@ -139,7 +139,7 @@ class MarkdownGenerator(Generator):
         print(indent, end='')
         if isinstance(m, SimpleStructMember):
             print('- {}<code>{}</code>\n'.format(
-                self.anchor(*parents, m),
+                self.anchor(*(parents + [m])),
                 self.naming.vardecl(
                     m.type, '<strong>{}</strong>'.format(_escape(m.name)))))
             self.generate_doc(abi, m, indent + '    ')
@@ -150,12 +150,12 @@ class MarkdownGenerator(Generator):
                     self.generate_doc(abi, v, indent + '        ')
         elif isinstance(m, RangeStructMember):
             print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
-                self.anchor(*parents, m.raw_members[0]),
+                self.anchor(*(parents + [m.raw_members[0]])),
                 self.naming.vardecl(
                     m.raw_members[0].type,
                     '<strong>{}</strong>'.format(
                         _escape(m.raw_members[0].name))),
-                self.anchor(*parents, m.raw_members[1]),
+                self.anchor(*(parents + [m.raw_members[1]])),
                 self.naming.vardecl(
                     m.raw_members[1].type,
                     '<strong>{}</strong>'.format(
