@@ -97,7 +97,7 @@ class MarkdownGenerator(Generator):
         print('#### {}`{}`{}\n'.format(
             self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
-        if len(type.used_by) > 0:
+        if len(type.used_by) > 0 and len(type.used_by) < 10:
             if all('[{}]'.format(x.name) in type.doc for x in type.used_by):
                 # Documentation string already refers to all uses.
                 pass
