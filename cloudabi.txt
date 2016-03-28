@@ -353,6 +353,11 @@ enum uint8 eventtype
 	2 condvar
 		| Condition variable [subscription.condvar.condvar] has
 		| been woken up.
+		|
+		| This type is currently only supported in combination
+		| with [poll]. It must be provided as the first
+		| subscription and may only be followed by up to one
+		| other subscription, having type [eventtype.clock].
 	3 fd_read
 		| File descriptor [subscription.fd_readwrite.fd] has
 		| data available for reading.
@@ -362,9 +367,19 @@ enum uint8 eventtype
 	5 lock_rdlock
 		| Lock [subscription.lock.lock] has been acquired for
 		| reading.
+		|
+		| This type is currently only supported in combination
+		| with [poll]. It must be provided as the first
+		| subscription and may only be followed by up to one
+		| other subscription, having type [eventtype.clock].
 	6 lock_wrlock
 		| Lock [subscription.lock.lock] has been acquired for
 		| writing.
+		|
+		| This type is currently only supported in combination
+		| with [poll]. It must be provided as the first
+		| subscription and may only be followed by up to one
+		| other subscription, having type [eventtype.clock].
 	7 proc_terminate
 		| The process associated with process descriptor
 		| [subscription.proc_terminate.fd] has terminated.
