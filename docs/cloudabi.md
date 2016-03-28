@@ -1563,13 +1563,13 @@ Members:
 
     The type of the auxiliary vector entry.
 
-- When `a_type` is one of: [`CLOUDABI_AT_ARGDATALEN`](#auxtype.argdatalen), [`CLOUDABI_AT_CANARYLEN`](#auxtype.canarylen), [`CLOUDABI_AT_NCPUS`](#auxtype.ncpus), [`CLOUDABI_AT_PAGESZ`](#auxtype.pagesz), [`CLOUDABI_AT_PHNUM`](#auxtype.phnum), [`CLOUDABI_AT_TID`](#auxtype.tid):
+- When `a_type` is [`CLOUDABI_AT_ARGDATALEN`](#auxtype.argdatalen) or [`CLOUDABI_AT_CANARYLEN`](#auxtype.canarylen) or [`CLOUDABI_AT_NCPUS`](#auxtype.ncpus) or [`CLOUDABI_AT_PAGESZ`](#auxtype.pagesz) or [`CLOUDABI_AT_PHNUM`](#auxtype.phnum) or [`CLOUDABI_AT_TID`](#auxtype.tid):
 
     - <a name="auxv.a_val"></a><code>size\_t <strong>a\_val</strong></code>
 
         A numerical value.
 
-- When `a_type` is one of: [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_CANARY`](#auxtype.canary), [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
+- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata) or [`CLOUDABI_AT_CANARY`](#auxtype.canary) or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
 
     - <a name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 
@@ -2026,7 +2026,7 @@ Members:
             The condition variable that
             got woken up.
 
-- When `type` is one of: [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read), [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
+- When `type` is [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
     - <a name="event.fd_readwrite"></a>**`fd_readwrite`**
 
@@ -2046,7 +2046,7 @@ Members:
             The state of the file
             descriptor.
 
-- When `type` is one of: [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
+- When `type` is [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
 
     - <a name="event.lock"></a>**`lock`**
 
@@ -3314,7 +3314,7 @@ Members:
             [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
             stored in shared memory.
 
-- When `type` is one of: [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read), [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
+- When `type` is [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
     - <a name="subscription.fd_readwrite"></a>**`fd_readwrite`**
 
@@ -3329,7 +3329,7 @@ Members:
             Under which conditions to
             trigger.
 
-- When `type` is one of: [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
+- When `type` is [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
 
     - <a name="subscription.lock"></a>**`lock`**
 

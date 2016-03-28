@@ -1718,14 +1718,14 @@ this environment on all architectures.</p>
 <li><p><a name="auxv.a_type"></a><code><a href="#auxtype">cloudabi_auxtype_t</a> <strong>a_type</strong></code></p>
 
 <p>The type of the auxiliary vector entry.</p></li>
-<li><p>When <code>a_type</code> is one of: <a href="#auxtype.argdatalen"><code>CLOUDABI_AT_ARGDATALEN</code></a>, <a href="#auxtype.canarylen"><code>CLOUDABI_AT_CANARYLEN</code></a>, <a href="#auxtype.ncpus"><code>CLOUDABI_AT_NCPUS</code></a>, <a href="#auxtype.pagesz"><code>CLOUDABI_AT_PAGESZ</code></a>, <a href="#auxtype.phnum"><code>CLOUDABI_AT_PHNUM</code></a>, <a href="#auxtype.tid"><code>CLOUDABI_AT_TID</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdatalen"><code>CLOUDABI_AT_ARGDATALEN</code></a> or <a href="#auxtype.canarylen"><code>CLOUDABI_AT_CANARYLEN</code></a> or <a href="#auxtype.ncpus"><code>CLOUDABI_AT_NCPUS</code></a> or <a href="#auxtype.pagesz"><code>CLOUDABI_AT_PAGESZ</code></a> or <a href="#auxtype.phnum"><code>CLOUDABI_AT_PHNUM</code></a> or <a href="#auxtype.tid"><code>CLOUDABI_AT_TID</code></a>:</p>
 
 <ul>
 <li><p><a name="auxv.a_val"></a><code>size_t <strong>a_val</strong></code></p>
 
 <p>A numerical value.</p></li>
 </ul></li>
-<li><p>When <code>a_type</code> is one of: <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a> or <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a> or <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>:</p>
 
 <ul>
 <li><p><a name="auxv.a_ptr"></a><code>void *<strong>a_ptr</strong></code></p>
@@ -2120,7 +2120,7 @@ identifier of the clock.</p></li>
 got woken up.</p></li>
 </ul></li>
 </ul></li>
-<li><p>When <code>type</code> is one of: <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a>, <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
+<li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a> or <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
 
 <ul>
 <li><p><a name="event.fd_readwrite"></a><strong><code>fd_readwrite</code></strong></p>
@@ -2141,7 +2141,7 @@ writing.</p></li>
 descriptor.</p></li>
 </ul></li>
 </ul></li>
-<li><p>When <code>type</code> is one of: <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a>, <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
+<li><p>When <code>type</code> is <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a> or <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
 
 <ul>
 <li><p><a name="event.lock"></a><strong><code>lock</code></strong></p>
@@ -3341,7 +3341,7 @@ is stored in private memory.
 stored in shared memory.</p></li>
 </ul></li>
 </ul></li>
-<li><p>When <code>type</code> is one of: <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a>, <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
+<li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a> or <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
 
 <ul>
 <li><p><a name="subscription.fd_readwrite"></a><strong><code>fd_readwrite</code></strong></p>
@@ -3358,7 +3358,7 @@ for reading or writing.</p></li>
 trigger.</p></li>
 </ul></li>
 </ul></li>
-<li><p>When <code>type</code> is one of: <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a>, <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
+<li><p>When <code>type</code> is <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a> or <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
 
 <ul>
 <li><p><a name="subscription.lock"></a><strong><code>lock</code></strong></p>

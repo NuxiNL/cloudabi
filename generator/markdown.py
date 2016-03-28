@@ -151,10 +151,9 @@ class MarkdownGenerator(Generator):
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, VariantStructMember):
             for vm in m.members:
-                print('- When `{}` {} {}:\n'.format(
+                print('- When `{}` is {}:\n'.format(
                     m.tag.name,
-                    'is' if len(vm.tag_values) == 1 else 'is one of:',
-                    ', '.join([self.naming.link(m.tag.type, v)
+                    ' or '.join([self.naming.link(m.tag.type, v)
                                for v in vm.tag_values])))
                 if vm.name is None:
                     for mm in vm.type.members:
