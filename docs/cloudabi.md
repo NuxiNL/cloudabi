@@ -223,19 +223,10 @@ Inputs:
     The userspace condition variable that has
     waiting threads.
 
-- <a name="condvar_signal.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
+- <a name="condvar_signal.scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>scope</strong></code>
 
-    Possible values:
-
-    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
-
-        The condition variable is stored in
-        private memory.
-
-    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
-
-        The condition variable is stored in
-        shared memory.
+    Whether the condition variable is stored in
+    private or shared memory.
 
 - <a name="condvar_signal.nwaiters"></a><code>[cloudabi\_nthreads\_t](#nthreads) <strong>nwaiters</strong></code>
 
@@ -933,17 +924,10 @@ Inputs:
     The userspace lock that is locked for writing
     by the calling thread.
 
-- <a name="lock_unlock.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
+- <a name="lock_unlock.scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>scope</strong></code>
 
-    Possible values:
-
-    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
-
-        The lock is stored in private memory.
-
-    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
-
-        The lock is stored in shared memory.
+    Whether the lock is stored in private or
+    shared memory.
 
 #### <a name="mem_advise"></a>`cloudabi_sys_mem_advise()`
 
@@ -1414,17 +1398,10 @@ Inputs:
     Userspace lock that is locked for writing by
     the calling thread.
 
-- <a name="thread_exit.scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>scope</strong></code>
+- <a name="thread_exit.scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>scope</strong></code>
 
-    Possible values:
-
-    - [`CLOUDABI_MAP_PRIVATE`](#mflags.private)
-
-        The lock is stored in private memory.
-
-    - [`CLOUDABI_MAP_SHARED`](#mflags.shared)
-
-        The lock is stored in shared memory.
+    Whether the lock is stored in private or
+    shared memory.
 
 Does not return.
 
@@ -2520,7 +2497,7 @@ Possible values:
 
 Memory mapping flags.
 
-Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_condvar_signal()`](#condvar_signal), [`cloudabi_sys_lock_unlock()`](#lock_unlock), [`cloudabi_sys_mem_map()`](#mem_map), and [`cloudabi_sys_thread_exit()`](#thread_exit).
+Used by [`cloudabi_sys_mem_map()`](#mem_map).
 
 Possible values:
 
@@ -2962,6 +2939,23 @@ Possible values:
 
     The socket is local to the system, and may be bound to
     the file system.
+
+#### <a name="scope"></a>`cloudabi_scope_t` (`uint8_t`)
+
+Indicates whether an object is stored in private or shared
+memory.
+
+Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_condvar_signal()`](#condvar_signal), [`cloudabi_sys_lock_unlock()`](#lock_unlock), and [`cloudabi_sys_thread_exit()`](#thread_exit).
+
+Possible values:
+
+- <a name="scope.private"></a>**`CLOUDABI_SCOPE_PRIVATE`**
+
+    The object is stored in private memory.
+
+- <a name="scope.shared"></a>**`CLOUDABI_SCOPE_SHARED`**
+
+    The object is stored in shared memory.
 
 #### <a name="sdflags"></a>`cloudabi_sdflags_t` (`uint8_t` bitfield)
 
@@ -3408,21 +3402,16 @@ Members:
             for writing when the condition
             variable triggers.
 
-        - <a name="subscription.condvar.condvar_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>condvar\_scope</strong></code>
+        - <a name="subscription.condvar.condvar_scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>condvar\_scope</strong></code>
 
-            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the
-            condition variable is stored
-            in private memory.
-            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the
-            condition variable is stored
-            in shared memory.
+            Whether the condition variable
+            is stored in private or shared
+            memory.
 
-        - <a name="subscription.condvar.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
+        - <a name="subscription.condvar.lock_scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>lock\_scope</strong></code>
 
-            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
-            is stored in private memory.
-            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-            stored in shared memory.
+            Whether the lock is stored in
+            private or shared memory.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
@@ -3449,12 +3438,10 @@ Members:
             acquired for reading or
             writing.
 
-        - <a name="subscription.lock.lock_scope"></a><code>[cloudabi\_mflags\_t](#mflags) <strong>lock\_scope</strong></code>
+        - <a name="subscription.lock.lock_scope"></a><code>[cloudabi\_scope\_t](#scope) <strong>lock\_scope</strong></code>
 
-            [`CLOUDABI_MAP_PRIVATE`](#mflags.private) if the lock
-            is stored in private memory.
-            [`CLOUDABI_MAP_SHARED`](#mflags.shared) if the lock is
-            stored in shared memory.
+            Whether the lock is stored in
+            private or shared memory.
 
 - When `type` is [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
 

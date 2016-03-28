@@ -46,7 +46,7 @@ cloudabi_sys_clock_time_get(
 cloudabi_errno_t
 cloudabi_sys_condvar_signal(
 	cloudabi_condvar_t __user *condvar,
-	cloudabi_mflags_t scope,
+	cloudabi_scope_t scope,
 	cloudabi_nthreads_t nwaiters
 );
 
@@ -233,7 +233,7 @@ cloudabi_sys_file_unlink(
 cloudabi_errno_t
 cloudabi_sys_lock_unlock(
 	cloudabi_lock_t __user *lock,
-	cloudabi_mflags_t scope
+	cloudabi_scope_t scope
 );
 
 cloudabi_errno_t
@@ -362,7 +362,7 @@ cloudabi_sys_sock_stat_get(
 void
 cloudabi_sys_thread_exit(
 	cloudabi_lock_t __user *lock,
-	cloudabi_mflags_t scope
+	cloudabi_scope_t scope
 );
 
 cloudabi_errno_t

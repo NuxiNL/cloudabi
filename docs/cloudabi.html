@@ -325,20 +325,10 @@ system call.</p>
 
 <p>The userspace condition variable that has
 waiting threads.</p></li>
-<li><p><a name="condvar_signal.scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>scope</strong></code></p>
+<li><p><a name="condvar_signal.scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>scope</strong></code></p>
 
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a></p>
-
-<p>The condition variable is stored in
-private memory.</p></li>
-<li><p><a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a></p>
-
-<p>The condition variable is stored in
-shared memory.</p></li>
-</ul></li>
+<p>Whether the condition variable is stored in
+private or shared memory.</p></li>
 <li><p><a name="condvar_signal.nwaiters"></a><code><a href="#nthreads">cloudabi_nthreads_t</a> <strong>nwaiters</strong></code></p>
 
 <p>The number of threads that need to be woken
@@ -1069,18 +1059,10 @@ be upgraded to a write lock.</p>
 
 <p>The userspace lock that is locked for writing
 by the calling thread.</p></li>
-<li><p><a name="lock_unlock.scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>scope</strong></code></p>
+<li><p><a name="lock_unlock.scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>scope</strong></code></p>
 
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a></p>
-
-<p>The lock is stored in private memory.</p></li>
-<li><p><a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a></p>
-
-<p>The lock is stored in shared memory.</p></li>
-</ul></li>
+<p>Whether the lock is stored in private or
+shared memory.</p></li>
 </ul>
 
 <h4><a name="mem_advise"></a><code>cloudabi_sys_mem_advise()</code></h4>
@@ -1579,18 +1561,10 @@ joining.</p>
 
 <p>Userspace lock that is locked for writing by
 the calling thread.</p></li>
-<li><p><a name="thread_exit.scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>scope</strong></code></p>
+<li><p><a name="thread_exit.scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>scope</strong></code></p>
 
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a></p>
-
-<p>The lock is stored in private memory.</p></li>
-<li><p><a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a></p>
-
-<p>The lock is stored in shared memory.</p></li>
-</ul></li>
+<p>Whether the lock is stored in private or
+shared memory.</p></li>
 </ul>
 
 <p>Does not return.</p>
@@ -2609,7 +2583,7 @@ link, it is expanded.</p></li>
 
 <p>Memory mapping flags.</p>
 
-<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, <a href="#mem_map"><code>cloudabi_sys_mem_map()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
+<p>Used by <a href="#mem_map"><code>cloudabi_sys_mem_map()</code></a>.</p>
 
 <p>Possible values:</p>
 
@@ -3007,6 +2981,24 @@ from any of the other address families specified.</p></li>
 
 <p>The socket is local to the system, and may be bound to
 the file system.</p></li>
+</ul>
+
+<h4><a name="scope"></a><code>cloudabi_scope_t</code> (<code>uint8_t</code>)</h4>
+
+<p>Indicates whether an object is stored in private or shared
+memory.</p>
+
+<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
+
+<p>Possible values:</p>
+
+<ul>
+<li><p><a name="scope.private"></a><strong><code>CLOUDABI_SCOPE_PRIVATE</code></strong></p>
+
+<p>The object is stored in private memory.</p></li>
+<li><p><a name="scope.shared"></a><strong><code>CLOUDABI_SCOPE_SHARED</code></strong></p>
+
+<p>The object is stored in shared memory.</p></li>
 </ul>
 
 <h4><a name="sdflags"></a><code>cloudabi_sdflags_t</code> (<code>uint8_t</code> bitfield)</h4>
@@ -3441,20 +3433,15 @@ released while waiting.</p>
 <p>The lock will be reacquired
 for writing when the condition
 variable triggers.</p></li>
-<li><p><a name="subscription.condvar.condvar_scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>condvar_scope</strong></code></p>
+<li><p><a name="subscription.condvar.condvar_scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>condvar_scope</strong></code></p>
 
-<p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a> if the
-condition variable is stored
-in private memory.
-<a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a> if the
-condition variable is stored
-in shared memory.</p></li>
-<li><p><a name="subscription.condvar.lock_scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>lock_scope</strong></code></p>
+<p>Whether the condition variable
+is stored in private or shared
+memory.</p></li>
+<li><p><a name="subscription.condvar.lock_scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>lock_scope</strong></code></p>
 
-<p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a> if the lock
-is stored in private memory.
-<a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a> if the lock is
-stored in shared memory.</p></li>
+<p>Whether the lock is stored in
+private or shared memory.</p></li>
 </ul></li>
 </ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a> or <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
@@ -3485,12 +3472,10 @@ trigger.</p></li>
 <p>The lock that should be
 acquired for reading or
 writing.</p></li>
-<li><p><a name="subscription.lock.lock_scope"></a><code><a href="#mflags">cloudabi_mflags_t</a> <strong>lock_scope</strong></code></p>
+<li><p><a name="subscription.lock.lock_scope"></a><code><a href="#scope">cloudabi_scope_t</a> <strong>lock_scope</strong></code></p>
 
-<p><a href="#mflags.private"><code>CLOUDABI_MAP_PRIVATE</code></a> if the lock
-is stored in private memory.
-<a href="#mflags.shared"><code>CLOUDABI_MAP_SHARED</code></a> if the lock is
-stored in shared memory.</p></li>
+<p>Whether the lock is stored in
+private or shared memory.</p></li>
 </ul></li>
 </ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.proc_terminate"><code>CLOUDABI_EVENTTYPE_PROC_TERMINATE</code></a>:</p>

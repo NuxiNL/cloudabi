@@ -299,6 +299,10 @@ typedef uint8_t cloudabi_sa_family_t;
 #define CLOUDABI_AF_INET6  2
 #define CLOUDABI_AF_UNIX   3
 
+typedef uint8_t cloudabi_scope_t;
+#define CLOUDABI_SCOPE_PRIVATE 4
+#define CLOUDABI_SCOPE_SHARED  8
+
 typedef uint8_t cloudabi_sdflags_t;
 #define CLOUDABI_SHUT_RD 0x01
 #define CLOUDABI_SHUT_WR 0x02

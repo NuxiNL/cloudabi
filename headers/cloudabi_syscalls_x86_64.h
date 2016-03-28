@@ -82,7 +82,7 @@ cloudabi_sys_clock_time_get(
 static inline cloudabi_errno_t
 cloudabi_sys_condvar_signal(
 	_Atomic(cloudabi_condvar_t) *condvar,
-	cloudabi_mflags_t scope,
+	cloudabi_scope_t scope,
 	cloudabi_nthreads_t nwaiters
 ) {
 	register uint64_t reg_rax asm("rax") = 2;
@@ -801,7 +801,7 @@ cloudabi_sys_file_unlink(
 static inline cloudabi_errno_t
 cloudabi_sys_lock_unlock(
 	_Atomic(cloudabi_lock_t) *lock,
-	cloudabi_mflags_t scope
+	cloudabi_scope_t scope
 ) {
 	register uint64_t reg_rax asm("rax") = 31;
 	register uint64_t reg_rdi asm("rdi") = (uint64_t)lock;
@@ -1336,7 +1336,7 @@ cloudabi_sys_thread_create(
 static inline _Noreturn void
 cloudabi_sys_thread_exit(
 	_Atomic(cloudabi_lock_t) *lock,
-	cloudabi_mflags_t scope
+	cloudabi_scope_t scope
 ) {
 	register uint64_t reg_rax asm("rax") = 54;
 	register uint64_t reg_rdi asm("rdi") = (uint64_t)lock;
