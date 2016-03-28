@@ -1559,6 +1559,8 @@ type [`CLOUDABI_AT_NULL`](#auxtype.null).
 The auxiliary vector is part of the x86-64 ABI, but is used by
 this environment on all architectures.
 
+Used by [`cloudabi_processentry_t`](#processentry).
+
 Members:
 
 - <a name="auxv.a_type"></a><code>[cloudabi\_auxtype\_t](#auxtype) <strong>a\_type</strong></code>
@@ -3496,7 +3498,7 @@ Threads must be aware of their thread identifier, as it is
 written it into locks when acquiring them for writing. It is
 not advised to use these identifiers for any other purpose.
 
-Used by [`cloudabi_sys_proc_fork()`](#proc_fork) and [`cloudabi_sys_thread_create()`](#thread_create).
+Used by [`cloudabi_threadentry_t`](#threadentry), [`cloudabi_sys_proc_fork()`](#proc_fork), and [`cloudabi_sys_thread_create()`](#thread_create).
 
 #### <a name="timestamp"></a>`cloudabi_timestamp_t` (`uint64_t`)
 

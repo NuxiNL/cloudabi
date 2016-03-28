@@ -180,6 +180,7 @@ class FunctionType(UserDefinedType):
         super().__init__(name, layout=Layout(None, None, machine_dep))
         self.parameters = parameters
         self.return_type = return_type
+        self.dependencies = _compute_dependencies(self)
 
 
 class Syscall:
@@ -261,7 +262,7 @@ def _compute_dependencies(thing):
 
     members = set(getattr(thing, 'members', []))
     for attr in ['type', 'target_type', 'element_type',
-                 'return_type', 'input', 'output']:
+                 'parameters', 'return_type', 'input', 'output']:
         m = getattr(thing, attr, None)
         if m is not None:
             members.add(m)
