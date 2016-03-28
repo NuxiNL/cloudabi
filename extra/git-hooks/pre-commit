@@ -2,8 +2,6 @@
 
 set -e
 
-SRCDIR="$(cd "$(dirname "$0")" && pwd)"
-
 TMPDIR="$(mktemp -d)"
 
 cleanup() {
