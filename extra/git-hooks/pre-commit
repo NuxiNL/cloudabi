@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+SRCDIR="$(cd "$(dirname "$0")" && pwd)"
+
+TMPDIR="$(mktemp -d)"
+
+cleanup() {
+	rm -rf "$TMPDIR"
+}
+
+trap cleanup EXIT
+
+git checkout-index --all --prefix="$TMPDIR/"
+
+cd "$TMPDIR"
+git init --quiet
+git add .
+./generate.py
+
+if git diff --exit-code; then
+	echo "Generated files in sync."
+else
+	printf '\n\e[31;1mGenerated files not in sync.\n'
+	printf 'Please run generate.py and git add the generated files.\e[0m\n\n'
+	exit 1
+fi
