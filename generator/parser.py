@@ -50,6 +50,15 @@ class AbiParser:
 
             thing.doc = doc
 
+        for type in abi.types.values():
+            type.used_by = {
+                t for t in abi.types.values() if type in getattr(
+                    t, 'dependencies', set())}
+
+            type.used_by.update({
+                s for s in abi.syscalls_by_number.values() if type in getattr(
+                    s, 'dependencies', set())})
+
         return abi
 
     def parse_int_like_type(self, abi, decl, children):

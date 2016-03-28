@@ -39,26 +39,25 @@ class Generator:
 
     def generate_types(self, abi, types):
         first_pass = True
-        generate_now = [name for name in sorted(types)]
+        generate_now = [types[name] for name in sorted(types)]
         generate_later = []
         generated = set()
 
         while generate_now != []:
-            for type_name in generate_now:
-                type = types[type_name]
+            for type in generate_now:
 
                 if (not (getattr(type, 'dependencies', set()) <= generated) or
                         (first_pass and not isinstance(type, IntLikeType))):
-                    generate_later.append(type_name)
+                    generate_later.append(type)
                 else:
                     self.generate_type(abi, type)
-                    generated.add(type_name)
+                    generated.add(type)
 
             generate_now = generate_later
             generate_later = []
             first_pass = False
 
-        assert(generated == {n for n in types})
+        assert(generated == set(types.values()))
 
     def generate_syscalls(self, abi, syscalls):
         for syscall in sorted(syscalls):

@@ -191,6 +191,7 @@ class Syscall:
         self.output = output
         self.noreturn = noreturn
         self.machine_dep = self.__is_machine_dep(input, output)
+        self.dependencies = _compute_dependencies(self)
 
     @staticmethod
     def __is_machine_dep(input, output):
@@ -259,15 +260,16 @@ def _compute_dependencies(thing):
     deps = set()
 
     members = set(getattr(thing, 'members', []))
-    for attr in ['type', 'target_type', 'element_type']:
+    for attr in ['type', 'target_type', 'element_type',
+                 'return_type', 'input', 'output']:
         m = getattr(thing, attr, None)
         if m is not None:
             members.add(m)
 
     for m in members:
         if isinstance(m, UserDefinedType) and m.name is not None:
-            deps.add(m.name)
-
-        deps.update(_compute_dependencies(m))
+            deps.add(m)
+        else:
+            deps.update(_compute_dependencies(m))
 
     return deps
