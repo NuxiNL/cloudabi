@@ -3,42 +3,35 @@
 	<head>
 		<title>Nuxi CloudABI</title>
 		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="https://nuxi.nl/style.css">
 		<link rel="shortcut icon" type="image/png" href="https://nuxi.nl/img/favicon.png">
 		<style>
 html, body {
-	font-family: sans-serif;
-	font-size: 14px;
-	margin: 0px;
+	font-size: 16px;
 }
-p {
-	text-align: justify;
-	text-justify: distribute;
-}
-a {
-	color: #5b57a6;
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-}
+
 a[name] {
 	position: relative;
 }
+
 a[name]::before {
 	position: absolute;
 	display: block;
 }
+
 a[name]:target::before {
 	content: "➥";
 	right: 1em;
 	transform: scale(2);
 }
+
 h4 > a[name]:not(:target):first-child::before,
 li > p:first-child > a[name]:not(:target):first-child::before {
 	content: "\00a0";
 	right: 0;
 	padding: 0 1em;
 }
+
 h4:hover > a[name]:not(:target):first-child::before,
 li > p:first-child:hover > a[name]:not(:target):first-child::before {
 	content: "§";
@@ -47,65 +40,62 @@ li > p:first-child:hover > a[name]:not(:target):first-child::before {
 	top: -0.5em;
 	padding: 0.5em 1em;
 }
+
 h1, h2, h3, h4 {
 	font-weight: normal;
 	margin-bottom: 10px;
 }
+
 h1 {
-	margin-top: 0;
 	font-size: 3.2em;
 }
+
 h2 {
 	font-size: 2.4em;
 }
+
 h3 {
-	font-size: 2.1em;
+	font-size: 1.9em;
 }
+
 h4 {
-	font-size: 1.8em;
+	font-size: 1.6em;
 }
+
 pre {
 	background: #eee;
 	padding: 0.5em;;
 }
-.topbox, .content {
-	margin: 0 auto;
-	padding-left: 5%;
-	padding-right: 5%;
-	max-width: 60em;
-}
-.topbox {
-	padding-top: 25px;
-	padding-bottom: 25px;
-	border-bottom: 2px solid #00bff3;
-}
-.content {
-	padding-top: 60px;
-	padding-bottom: 60px;
-}
+
 ul p {
 	margin-top: 0.3em;
 	margin-bottom: 0.3em;
 	text-align: left;
 }
+
 ul p:last-child {
 	margin-bottom: 0.6em;
 }
+
 ul {
 	list-style: none;
 	padding-left: 2em;
 }
+
 li > p + p {
 	margin-left: 1.5em;
 	font-size: 0.9em;
 }
+
 p + ul {
 	margin-top: -0.5em;
 }
+
 ul p + ul {
 	margin-top: 0em;
 	padding-left: 3em;
 }
+
 ul p:first-child + ul{
 	margin-top: 0;
 }
@@ -116,7 +106,7 @@ ul p:first-child + ul{
 			<a href="https://nuxi.nl/"><img src="https://nuxi.nl/img/logo.svg" alt="Nuxi"/></a>
 		</div>
 
-		<div class="content">
+		<div class="contentbox-light">
 <!--
 Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 
