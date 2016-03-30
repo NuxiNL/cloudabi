@@ -1484,6 +1484,11 @@ Possible values:
     Length of the binary argument data provided to
     [`cloudabi_sys_proc_exec()`](#proc_exec).
 
+- <a href="#auxtype.base" name="auxtype.base"></a>**`CLOUDABI_AT_BASE`**
+
+    Base address at which the executable is placed in
+    memory.
+
 - <a href="#auxtype.canary" name="auxtype.canary"></a>**`CLOUDABI_AT_CANARY`**
 
     Base address of a buffer of random data that may be
@@ -1550,7 +1555,7 @@ Members:
 
         A numerical value.
 
-- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_CANARY`](#auxtype.canary), or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
+- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_BASE`](#auxtype.base), [`CLOUDABI_AT_CANARY`](#auxtype.canary), or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
 
     - <a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 

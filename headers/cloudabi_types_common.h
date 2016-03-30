@@ -48,6 +48,7 @@ typedef uint8_t cloudabi_advice_t;
 typedef uint32_t cloudabi_auxtype_t;
 #define CLOUDABI_AT_ARGDATA    256
 #define CLOUDABI_AT_ARGDATALEN 257
+#define CLOUDABI_AT_BASE         7
 #define CLOUDABI_AT_CANARY     258
 #define CLOUDABI_AT_CANARYLEN  259
 #define CLOUDABI_AT_NCPUS      260

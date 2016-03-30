@@ -111,6 +111,9 @@ enum uint32 auxtype
 	257 argdatalen
 		| Length of the binary argument data provided to
 		| [proc_exec].
+	7 base
+		| Base address at which the executable is placed in
+		| memory.
 	258 canary
 		| Base address of a buffer of random data that may be
 		| used for non-cryptographic purposes, for example as a
@@ -1013,7 +1016,7 @@ struct auxv
 		argdatalen canarylen ncpus pagesz phnum tid
 			size a_val
 				| A numerical value.
-		argdata canary phdr
+		argdata base canary phdr
 			ptr void a_ptr
 				| A pointer value.
 
