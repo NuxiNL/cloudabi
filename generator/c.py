@@ -476,7 +476,7 @@ class CLinuxSyscallTableGenerator(CGenerator):
 
     def generate_foot(self, abi):
         # Fallback for invoking an out-of-bounds system call.
-        print('static {} do_enosys(void *in, void *out)\n'
+        print('static {} do_enosys(const void *in, void *out)\n'
               '{{\n'
               '\treturn CLOUDABI_ENOSYS;\n'
               '}}\n'.format(self.naming.typename(abi.types['errno'])))
