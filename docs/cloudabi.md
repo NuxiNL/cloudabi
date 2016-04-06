@@ -1407,16 +1407,12 @@ Does not return.
 
 #### <a href="#thread_tcb_set" name="thread_tcb_set"></a>`cloudabi_sys_thread_tcb_set()`
 
-Adjusts the machine-dependent TLS base address register.
+On x86-64: adjusts the %fs base address.
 
-On certain architectures, the TLS base address register can
-only be modified through privileged instructions (e.g., %fs on
-x86). This system call can be used on those architectures to
-adjust the contents of this register.
-
-The results are undefined if this system call is invoked on
-architectures that do have writable TLS base address registers
-(e.g., aarch64).
+This system call was required to set up Thread-Local Storage
+after program startup and thread creation. It is no longer
+needed as the %fs base now points to location that can be
+modified directly.
 
 Inputs:
 
@@ -3456,6 +3452,35 @@ Members:
             The process descriptor on
             which to wait for process
             termination.
+
+#### <a href="#tcb" name="tcb"></a>`cloudabi_tcb_t` (`struct`)
+
+The Thread Control Block (TCB).
+
+After a thread begins execution (at program startup or when
+created through [`cloudabi_sys_thread_create()`](#thread_create)), the CPU's registers
+controlling Thread-Local Storage (TLS) will already be
+initialized. They will point to an area only containing the
+TCB.
+
+If the thread needs space for storing thread-specific
+variables, the thread may allocate a larger area and adjust
+the CPU's registers to point to that area instead. However, it
+does need to make sure that the TCB is copied over to the new
+TLS area.
+
+The purpose of the TCB is that it allows light-weight
+emulators to store information related to individual threads.
+For example, it may be used to store a copy of the CPU
+registers prior emulation, so that TLS for the host system
+can be restored if needed.
+
+Members:
+
+- <a href="#tcb.parent" name="tcb.parent"></a><code>void *<strong>parent</strong></code>
+
+    Pointer that may be freely assigned by the system. Its
+    value cannot be interpreted by the application.
 
 #### <a href="#threadattr" name="threadattr"></a>`cloudabi_threadattr_t` (`struct`)
 

@@ -192,6 +192,13 @@ _Static_assert(offsetof(cloudabi32_subscription_t, proc_terminate.fd) == 16, "In
 _Static_assert(sizeof(cloudabi32_subscription_t) == 56, "Incorrect layout");
 _Static_assert(_Alignof(cloudabi32_subscription_t) == 8, "Incorrect layout");
 
+typedef struct {
+	_Alignas(4) uint32_t parent;
+} cloudabi32_tcb_t;
+_Static_assert(offsetof(cloudabi32_tcb_t, parent) == 0, "Incorrect layout");
+_Static_assert(sizeof(cloudabi32_tcb_t) == 4, "Incorrect layout");
+_Static_assert(_Alignof(cloudabi32_tcb_t) == 4, "Incorrect layout");
+
 typedef void cloudabi32_threadentry_t(cloudabi_tid_t tid, uint32_t aux);
 
 typedef struct {
