@@ -665,7 +665,7 @@ static cloudabi_errno_t do_thread_yield(const void *in, void *out)
 	return cloudabi_sys_thread_yield();
 }
 
-static cloudabi_errno_t do_enosys(void *in, void *out)
+static cloudabi_errno_t do_enosys(const void *in, void *out)
 {
 	return CLOUDABI_ENOSYS;
 }
