@@ -62,7 +62,7 @@ with open('headers/cloudabi64_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_syscall_struct.h', 'w') as f:
+with open('headers/cloudabi_syscalls_struct.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallStructGenerator(
             naming=CNaming('cloudabi_'),
@@ -78,7 +78,7 @@ with open('headers/cloudabi_syscalls.h', 'w') as f:
             preamble='#include "cloudabi_syscalls_struct.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_syscall_names.h', 'w') as f:
+with open('headers/cloudabi_syscalls_names.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallNamesGenerator(
             naming=CNaming('cloudabi_')
