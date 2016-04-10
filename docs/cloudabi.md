@@ -1521,6 +1521,27 @@ Possible values:
 
     Number of ELF program headers of the executable.
 
+- <a href="#auxtype.sysinfo_ehdr" name="auxtype.sysinfo_ehdr"></a>**`CLOUDABI_AT_SYSINFO_EHDR`**
+
+    Address of the ELF header of the vDSO.
+
+    The vDSO is a shared library that is mapped in the
+    address space of the process. It provides entry points
+    for every system call supported by the environment,
+    all having a corresponding symbol that is prefixed
+    with "cloudabi_sys_". System calls should be invoked
+    through these entry points.
+
+    The first advantage of letting processes call into a
+    vDSO to perform system calls instead of raising
+    hardware traps is that it allows for easy emulation of
+    executables on top of existing operator systems. The
+    second advantage is that in cases where an operating
+    system provides native support for CloudABI executables,
+    it may still implement partial userspace
+    implementations of these system calls to improve
+    performance (e.g., [`cloudabi_sys_clock_time_get()`](#clock_time_get)).
+
 - <a href="#auxtype.tid" name="auxtype.tid"></a>**`CLOUDABI_AT_TID`**
 
     Thread ID of the initial thread of the process.
@@ -1552,7 +1573,7 @@ Members:
 
         A numerical value.
 
-- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_BASE`](#auxtype.base), [`CLOUDABI_AT_CANARY`](#auxtype.canary), or [`CLOUDABI_AT_PHDR`](#auxtype.phdr):
+- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_BASE`](#auxtype.base), [`CLOUDABI_AT_CANARY`](#auxtype.canary), [`CLOUDABI_AT_PHDR`](#auxtype.phdr), or [`CLOUDABI_AT_SYSINFO_EHDR`](#auxtype.sysinfo_ehdr):
 
     - <a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 
