@@ -25,8 +25,8 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
-#ifndef CLOUDABI_SYSCALL_STRUCT
-#define CLOUDABI_SYSCALL_STRUCT
+#ifndef CLOUDABI_SYSCALL_STRUCT_H
+#define CLOUDABI_SYSCALL_STRUCT_H
 
 #include "cloudabi_types.h"
 

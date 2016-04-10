@@ -25,6 +25,9 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
+#ifndef CLOUDABI_SYSCALLS_NAMES_H
+#define CLOUDABI_SYSCALLS_NAMES_H
+
 #define CLOUDABI_SYSCALL_NAMES(SYSCALL) \
 	SYSCALL(clock_res_get) \
 	SYSCALL(clock_time_get) \
@@ -84,3 +87,4 @@
 	SYSCALL(thread_exit) \
 	SYSCALL(thread_tcb_set) \
 	SYSCALL(thread_yield)
+#endif
