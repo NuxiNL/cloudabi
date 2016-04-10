@@ -86,7 +86,8 @@ class CGenerator(Generator):
             print('#ifndef {}'.format(self.header_guard))
             print('#define {}'.format(self.header_guard))
             print()
-        print(self.preamble)
+        if self.preamble != '':
+            print(self.preamble)
 
     def generate_foot(self, abi):
         if self.header_guard is not None:
@@ -235,6 +236,22 @@ class CSyscalldefsGenerator(CGenerator):
                 voidptr, expression, value[1])))
 
     def generate_syscalls(self, abi, syscalls):
+        pass
+
+
+class CSyscallNamesGenerator(CGenerator):
+
+    def generate_syscalls(self, abi, syscalls):
+        print('#define {}SYSCALL_NAMES(SYSCALL)'.format(
+            self.naming.prefix.upper()), end='')
+        for s in sorted(abi.syscalls_by_name):
+            self.generate_syscall(abi, abi.syscalls_by_name[s])
+        print()
+
+    def generate_syscall(self, abi, syscall):
+        print(' \\\n\tSYSCALL({})'.format(syscall.name), end='')
+
+    def generate_types(self, abi, types):
         pass
 
 
