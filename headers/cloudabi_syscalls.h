@@ -30,7 +30,7 @@
 
 #include "cloudabi_syscalls_struct.h"
 
-extern cloudabi_syscalls_t __cloudabi_syscalls;
+extern cloudabi_syscalls_t cloudabi_syscalls;
 
 static inline cloudabi_errno_t
 cloudabi_sys_clock_res_get(

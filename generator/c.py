@@ -340,7 +340,7 @@ class CSyscallsGenerator(CGenerator):
 class CSyscallWrappersGenerator(CSyscallsGenerator):
 
     def generate_syscalls(self, abi, syscalls):
-        print('extern {prefix}syscalls_t __{prefix}syscalls;\n'.format(
+        print('extern {prefix}syscalls_t {prefix}syscalls;\n'.format(
             prefix=self.naming.prefix))
         for s in sorted(abi.syscalls_by_name):
             self.generate_syscall(abi, abi.syscalls_by_name[s])
