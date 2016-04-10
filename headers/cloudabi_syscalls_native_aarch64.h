@@ -25,13 +25,13 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
-#ifndef CLOUDABI_SYSCALLS_AARCH64_H
-#define CLOUDABI_SYSCALLS_AARCH64_H
+#ifndef CLOUDABI_SYSCALLS_NATIVE_AARCH64_H
+#define CLOUDABI_SYSCALLS_NATIVE_AARCH64_H
 
 #include "cloudabi_types.h"
 
 static inline cloudabi_errno_t
-cloudabi_sys_clock_res_get(
+cloudabi_native_sys_clock_res_get(
 	cloudabi_clockid_t clock_id,
 	cloudabi_timestamp_t *resolution
 ) {
@@ -58,7 +58,7 @@ cloudabi_sys_clock_res_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_clock_time_get(
+cloudabi_native_sys_clock_time_get(
 	cloudabi_clockid_t clock_id,
 	cloudabi_timestamp_t precision,
 	cloudabi_timestamp_t *time
@@ -88,7 +88,7 @@ cloudabi_sys_clock_time_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_condvar_signal(
+cloudabi_native_sys_condvar_signal(
 	_Atomic(cloudabi_condvar_t) *condvar,
 	cloudabi_scope_t scope,
 	cloudabi_nthreads_t nwaiters
@@ -113,7 +113,7 @@ cloudabi_sys_condvar_signal(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_close(
+cloudabi_native_sys_fd_close(
 	cloudabi_fd_t fd
 ) {
 	register uint64_t reg_x8 asm("x8") = 3;
@@ -132,7 +132,7 @@ cloudabi_sys_fd_close(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_create1(
+cloudabi_native_sys_fd_create1(
 	cloudabi_filetype_t type,
 	cloudabi_fd_t *fd
 ) {
@@ -159,7 +159,7 @@ cloudabi_sys_fd_create1(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_create2(
+cloudabi_native_sys_fd_create2(
 	cloudabi_filetype_t type,
 	cloudabi_fd_t *fd1,
 	cloudabi_fd_t *fd2
@@ -190,7 +190,7 @@ cloudabi_sys_fd_create2(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_datasync(
+cloudabi_native_sys_fd_datasync(
 	cloudabi_fd_t fd
 ) {
 	register uint64_t reg_x8 asm("x8") = 6;
@@ -209,7 +209,7 @@ cloudabi_sys_fd_datasync(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_dup(
+cloudabi_native_sys_fd_dup(
 	cloudabi_fd_t from,
 	cloudabi_fd_t *fd
 ) {
@@ -236,7 +236,7 @@ cloudabi_sys_fd_dup(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_pread(
+cloudabi_native_sys_fd_pread(
 	cloudabi_fd_t fd,
 	const cloudabi_iovec_t *iov,
 	size_t iovcnt,
@@ -272,7 +272,7 @@ cloudabi_sys_fd_pread(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_pwrite(
+cloudabi_native_sys_fd_pwrite(
 	cloudabi_fd_t fd,
 	const cloudabi_ciovec_t *iov,
 	size_t iovcnt,
@@ -308,7 +308,7 @@ cloudabi_sys_fd_pwrite(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_read(
+cloudabi_native_sys_fd_read(
 	cloudabi_fd_t fd,
 	const cloudabi_iovec_t *iov,
 	size_t iovcnt,
@@ -341,7 +341,7 @@ cloudabi_sys_fd_read(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_replace(
+cloudabi_native_sys_fd_replace(
 	cloudabi_fd_t from,
 	cloudabi_fd_t to
 ) {
@@ -363,7 +363,7 @@ cloudabi_sys_fd_replace(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_seek(
+cloudabi_native_sys_fd_seek(
 	cloudabi_fd_t fd,
 	cloudabi_filedelta_t offset,
 	cloudabi_whence_t whence,
@@ -396,7 +396,7 @@ cloudabi_sys_fd_seek(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_stat_get(
+cloudabi_native_sys_fd_stat_get(
 	cloudabi_fd_t fd,
 	cloudabi_fdstat_t *buf
 ) {
@@ -418,7 +418,7 @@ cloudabi_sys_fd_stat_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_stat_put(
+cloudabi_native_sys_fd_stat_put(
 	cloudabi_fd_t fd,
 	const cloudabi_fdstat_t *buf,
 	cloudabi_fdsflags_t flags
@@ -443,7 +443,7 @@ cloudabi_sys_fd_stat_put(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_sync(
+cloudabi_native_sys_fd_sync(
 	cloudabi_fd_t fd
 ) {
 	register uint64_t reg_x8 asm("x8") = 15;
@@ -462,7 +462,7 @@ cloudabi_sys_fd_sync(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_fd_write(
+cloudabi_native_sys_fd_write(
 	cloudabi_fd_t fd,
 	const cloudabi_ciovec_t *iov,
 	size_t iovcnt,
@@ -495,7 +495,7 @@ cloudabi_sys_fd_write(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_advise(
+cloudabi_native_sys_file_advise(
 	cloudabi_fd_t fd,
 	cloudabi_filesize_t offset,
 	cloudabi_filesize_t len,
@@ -523,7 +523,7 @@ cloudabi_sys_file_advise(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_allocate(
+cloudabi_native_sys_file_allocate(
 	cloudabi_fd_t fd,
 	cloudabi_filesize_t offset,
 	cloudabi_filesize_t len
@@ -548,7 +548,7 @@ cloudabi_sys_file_allocate(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_create(
+cloudabi_native_sys_file_create(
 	cloudabi_fd_t fd,
 	const char *path,
 	size_t pathlen,
@@ -576,7 +576,7 @@ cloudabi_sys_file_create(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_link(
+cloudabi_native_sys_file_link(
 	cloudabi_lookup_t fd1,
 	const char *path1,
 	size_t path1len,
@@ -610,7 +610,7 @@ cloudabi_sys_file_link(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_open(
+cloudabi_native_sys_file_open(
 	cloudabi_lookup_t dirfd,
 	const char *path,
 	size_t pathlen,
@@ -649,7 +649,7 @@ cloudabi_sys_file_open(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_readdir(
+cloudabi_native_sys_file_readdir(
 	cloudabi_fd_t fd,
 	void *buf,
 	size_t nbyte,
@@ -685,7 +685,7 @@ cloudabi_sys_file_readdir(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_readlink(
+cloudabi_native_sys_file_readlink(
 	cloudabi_fd_t fd,
 	const char *path,
 	size_t pathlen,
@@ -724,7 +724,7 @@ cloudabi_sys_file_readlink(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_rename(
+cloudabi_native_sys_file_rename(
 	cloudabi_fd_t oldfd,
 	const char *old,
 	size_t oldlen,
@@ -758,7 +758,7 @@ cloudabi_sys_file_rename(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_stat_fget(
+cloudabi_native_sys_file_stat_fget(
 	cloudabi_fd_t fd,
 	cloudabi_filestat_t *buf
 ) {
@@ -780,7 +780,7 @@ cloudabi_sys_file_stat_fget(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_stat_fput(
+cloudabi_native_sys_file_stat_fput(
 	cloudabi_fd_t fd,
 	const cloudabi_filestat_t *buf,
 	cloudabi_fsflags_t flags
@@ -805,7 +805,7 @@ cloudabi_sys_file_stat_fput(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_stat_get(
+cloudabi_native_sys_file_stat_get(
 	cloudabi_lookup_t fd,
 	const char *path,
 	size_t pathlen,
@@ -833,7 +833,7 @@ cloudabi_sys_file_stat_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_stat_put(
+cloudabi_native_sys_file_stat_put(
 	cloudabi_lookup_t fd,
 	const char *path,
 	size_t pathlen,
@@ -864,7 +864,7 @@ cloudabi_sys_file_stat_put(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_symlink(
+cloudabi_native_sys_file_symlink(
 	const char *path1,
 	size_t path1len,
 	cloudabi_fd_t fd,
@@ -895,7 +895,7 @@ cloudabi_sys_file_symlink(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_file_unlink(
+cloudabi_native_sys_file_unlink(
 	cloudabi_fd_t fd,
 	const char *path,
 	size_t pathlen,
@@ -923,7 +923,7 @@ cloudabi_sys_file_unlink(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_lock_unlock(
+cloudabi_native_sys_lock_unlock(
 	_Atomic(cloudabi_lock_t) *lock,
 	cloudabi_scope_t scope
 ) {
@@ -945,7 +945,7 @@ cloudabi_sys_lock_unlock(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_advise(
+cloudabi_native_sys_mem_advise(
 	void *addr,
 	size_t len,
 	cloudabi_advice_t advice
@@ -970,7 +970,7 @@ cloudabi_sys_mem_advise(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_lock(
+cloudabi_native_sys_mem_lock(
 	const void *addr,
 	size_t len
 ) {
@@ -992,7 +992,7 @@ cloudabi_sys_mem_lock(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_map(
+cloudabi_native_sys_mem_map(
 	void *addr,
 	size_t len,
 	cloudabi_mprot_t prot,
@@ -1034,7 +1034,7 @@ cloudabi_sys_mem_map(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_protect(
+cloudabi_native_sys_mem_protect(
 	void *addr,
 	size_t len,
 	cloudabi_mprot_t prot
@@ -1059,7 +1059,7 @@ cloudabi_sys_mem_protect(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_sync(
+cloudabi_native_sys_mem_sync(
 	void *addr,
 	size_t len,
 	cloudabi_msflags_t flags
@@ -1084,7 +1084,7 @@ cloudabi_sys_mem_sync(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_unlock(
+cloudabi_native_sys_mem_unlock(
 	const void *addr,
 	size_t len
 ) {
@@ -1106,7 +1106,7 @@ cloudabi_sys_mem_unlock(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_mem_unmap(
+cloudabi_native_sys_mem_unmap(
 	void *addr,
 	size_t len
 ) {
@@ -1128,7 +1128,7 @@ cloudabi_sys_mem_unmap(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_poll(
+cloudabi_native_sys_poll(
 	const cloudabi_subscription_t *in,
 	cloudabi_event_t *out,
 	size_t nsubscriptions,
@@ -1161,7 +1161,7 @@ cloudabi_sys_poll(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_poll_fd(
+cloudabi_native_sys_poll_fd(
 	cloudabi_fd_t fd,
 	const cloudabi_subscription_t *in,
 	size_t nin,
@@ -1203,7 +1203,7 @@ cloudabi_sys_poll_fd(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_proc_exec(
+cloudabi_native_sys_proc_exec(
 	cloudabi_fd_t fd,
 	const void *data,
 	size_t datalen,
@@ -1234,7 +1234,7 @@ cloudabi_sys_proc_exec(
 }
 
 static inline _Noreturn void
-cloudabi_sys_proc_exit(
+cloudabi_native_sys_proc_exit(
 	cloudabi_exitcode_t rval
 ) {
 	register uint64_t reg_x8 asm("x8") = 41;
@@ -1253,7 +1253,7 @@ cloudabi_sys_proc_exit(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_proc_fork(
+cloudabi_native_sys_proc_fork(
 	cloudabi_fd_t *fd,
 	cloudabi_tid_t *tid
 ) {
@@ -1282,7 +1282,7 @@ cloudabi_sys_proc_fork(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_proc_raise(
+cloudabi_native_sys_proc_raise(
 	cloudabi_signal_t sig
 ) {
 	register uint64_t reg_x8 asm("x8") = 43;
@@ -1301,7 +1301,7 @@ cloudabi_sys_proc_raise(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_random_get(
+cloudabi_native_sys_random_get(
 	void *buf,
 	size_t nbyte
 ) {
@@ -1323,7 +1323,7 @@ cloudabi_sys_random_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_accept(
+cloudabi_native_sys_sock_accept(
 	cloudabi_fd_t sock,
 	cloudabi_sockstat_t *buf,
 	cloudabi_fd_t *conn
@@ -1353,7 +1353,7 @@ cloudabi_sys_sock_accept(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_bind(
+cloudabi_native_sys_sock_bind(
 	cloudabi_fd_t sock,
 	cloudabi_fd_t fd,
 	const char *path,
@@ -1381,7 +1381,7 @@ cloudabi_sys_sock_bind(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_connect(
+cloudabi_native_sys_sock_connect(
 	cloudabi_fd_t sock,
 	cloudabi_fd_t fd,
 	const char *path,
@@ -1409,7 +1409,7 @@ cloudabi_sys_sock_connect(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_listen(
+cloudabi_native_sys_sock_listen(
 	cloudabi_fd_t sock,
 	cloudabi_backlog_t backlog
 ) {
@@ -1431,7 +1431,7 @@ cloudabi_sys_sock_listen(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_recv(
+cloudabi_native_sys_sock_recv(
 	cloudabi_fd_t sock,
 	const cloudabi_recv_in_t *in,
 	cloudabi_recv_out_t *out
@@ -1456,7 +1456,7 @@ cloudabi_sys_sock_recv(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_send(
+cloudabi_native_sys_sock_send(
 	cloudabi_fd_t sock,
 	const cloudabi_send_in_t *in,
 	cloudabi_send_out_t *out
@@ -1481,7 +1481,7 @@ cloudabi_sys_sock_send(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_shutdown(
+cloudabi_native_sys_sock_shutdown(
 	cloudabi_fd_t sock,
 	cloudabi_sdflags_t how
 ) {
@@ -1503,7 +1503,7 @@ cloudabi_sys_sock_shutdown(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_sock_stat_get(
+cloudabi_native_sys_sock_stat_get(
 	cloudabi_fd_t sock,
 	cloudabi_sockstat_t *buf,
 	cloudabi_ssflags_t flags
@@ -1528,7 +1528,7 @@ cloudabi_sys_sock_stat_get(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_thread_create(
+cloudabi_native_sys_thread_create(
 	cloudabi_threadattr_t *attr,
 	cloudabi_tid_t *tid
 ) {
@@ -1555,7 +1555,7 @@ cloudabi_sys_thread_create(
 }
 
 static inline _Noreturn void
-cloudabi_sys_thread_exit(
+cloudabi_native_sys_thread_exit(
 	_Atomic(cloudabi_lock_t) *lock,
 	cloudabi_scope_t scope
 ) {
@@ -1577,7 +1577,7 @@ cloudabi_sys_thread_exit(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_thread_tcb_set(
+cloudabi_native_sys_thread_tcb_set(
 	void *tcb
 ) {
 	register uint64_t reg_x8 asm("x8") = 55;
@@ -1596,7 +1596,7 @@ cloudabi_sys_thread_tcb_set(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_thread_yield(void) {
+cloudabi_native_sys_thread_yield(void) {
 	register uint64_t reg_x8 asm("x8") = 56;
 	register uint64_t reg_x0 asm("x0");
 	asm volatile (

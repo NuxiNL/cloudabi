@@ -9,10 +9,11 @@ from .generator import *
 
 class CNaming:
 
-    def __init__(self, prefix, md_prefix=None, c11=True, pointer_prefix=''):
+    def __init__(self, prefix, md_prefix=None, c11=True, syscall_prefix=None, pointer_prefix=''):
         self.prefix = prefix
         self.md_prefix = md_prefix
         self.c11 = c11
+        self.syscall_prefix = syscall_prefix
         self.pointer_prefix = pointer_prefix
 
     def typename(self, type):
@@ -43,10 +44,14 @@ class CNaming:
         return '{}{}{}'.format(self.prefix, type.cprefix, value.name).upper()
 
     def syscallname(self, syscall):
-        prefix = self.prefix
-        if self.md_prefix is not None and syscall.machine_dep:
-            prefix = self.md_prefix
-        return '{}sys_{}'.format(prefix, syscall.name)
+        if self.syscall_prefix is not None:
+            prefix = self.syscall_prefix
+        else:
+            prefix = self.prefix
+            if self.md_prefix is not None and syscall.machine_dep:
+                prefix = self.md_prefix
+            prefix += 'sys_'
+        return '{}{}'.format(prefix, syscall.name)
 
     def vardecl(self, type, name, array_need_parens=False):
         if isinstance(type, OutputPointerType):
@@ -103,6 +108,15 @@ class CGenerator(Generator):
             elif isinstance(mtype, AtomicType):
                 return AtomicType(self.mi_type(mtype.target_type))
         return mtype
+
+    def syscall_params(self, syscall):
+        params = []
+        for p in syscall.input.raw_members:
+            params.append(self.naming.vardecl(p.type, p.name))
+        for p in syscall.output.raw_members:
+            params.append(self.naming.vardecl(OutputPointerType(p.type),
+                                              p.name))
+        return params
 
 
 class CSyscalldefsGenerator(CGenerator):
@@ -239,6 +253,36 @@ class CSyscalldefsGenerator(CGenerator):
         pass
 
 
+class CSyscallStructGenerator(CGenerator):
+
+    def generate_syscalls(self, abi, syscalls):
+        print('typedef struct {')
+        for s in sorted(abi.syscalls_by_name):
+            self.generate_syscall(abi, abi.syscalls_by_name[s])
+        print('}} {}syscalls_t;'.format(self.naming.prefix))
+        print()
+
+    def generate_syscall(self, abi, syscall):
+        if syscall.noreturn:
+            return_type = VoidType()
+        else:
+            return_type = abi.types['errno']
+        print('\t{} (*{})('.format(
+            self.naming.typename(return_type), syscall.name), end='')
+        params = self.syscall_params(syscall)
+        if params == []:
+            print('void', end='')
+        else:
+            print()
+            for p in params[:-1]:
+                print('\t\t{},'.format(p))
+            print('\t\t{}'.format(params[-1]), end='')
+        print(');')
+
+    def generate_types(self, abi, types):
+        pass
+
+
 class CSyscallNamesGenerator(CGenerator):
 
     def generate_syscalls(self, abi, syscalls):
@@ -256,15 +300,6 @@ class CSyscallNamesGenerator(CGenerator):
 
 
 class CSyscallsGenerator(CGenerator):
-
-    def syscall_params(self, syscall):
-        params = []
-        for p in syscall.input.raw_members:
-            params.append(self.naming.vardecl(p.type, p.name))
-        for p in syscall.output.raw_members:
-            params.append(self.naming.vardecl(OutputPointerType(p.type),
-                                              p.name))
-        return params
 
     def generate_syscall(self, abi, syscall):
         if self.machine_dep is not None:
@@ -291,7 +326,9 @@ class CSyscallsGenerator(CGenerator):
         print()
 
     def generate_syscall_keywords(self, syscall):
-        pass
+        print('static inline ', end='')
+        if syscall.noreturn:
+            print('_Noreturn ', end='')
 
     def generate_syscall_body(self, abi, syscall):
         print(';')
@@ -300,14 +337,50 @@ class CSyscallsGenerator(CGenerator):
         pass
 
 
-class CSyscallsImplGenerator(CSyscallsGenerator):
+class CSyscallWrappersGenerator(CSyscallsGenerator):
+
+    def generate_syscalls(self, abi, syscalls):
+        print('extern {prefix}syscalls_t __{prefix}syscalls;\n'.format(
+            prefix=self.naming.prefix))
+        for s in sorted(abi.syscalls_by_name):
+            self.generate_syscall(abi, abi.syscalls_by_name[s])
+
+    def generate_syscall_body(self, abi, syscall):
+        print(' {')
+
+        print('\t', end='')
+
+        if not syscall.noreturn:
+            print('return ', end='')
+
+        print('{}syscalls.{}('.format(
+            self.naming.prefix, syscall.name), end='')
+
+        params = []
+        for p in syscall.input.raw_members:
+            params.append(p.name)
+        for p in syscall.output.raw_members:
+            params.append(p.name)
+
+        if len(params) > 0:
+            for p in params[:-1]:
+                print('{}, '.format(p), end='')
+            print('{}'.format(params[-1]), end='')
+        print(');')
+
+        if syscall.noreturn:
+            print('\tfor (;;);')
+
+        print('}')
+
+
+class CLinuxSyscallsGenerator(CSyscallsGenerator):
 
     def generate_syscall_keywords(self, syscall):
-        if syscall.noreturn:
-            noreturn = '_Noreturn '
-        else:
-            noreturn = ''
-        print('static inline {}'.format(noreturn), end='')
+        pass
+
+
+class CNativeSyscallsGenerator(CSyscallsGenerator):
 
     def generate_syscall_body(self, abi, syscall):
         print(' {')
@@ -401,7 +474,7 @@ class CSyscallsImplGenerator(CSyscallsGenerator):
             return '({}){}'.format(self.naming.typename(type_to), name)
 
 
-class CSyscallsX86_64Generator(CSyscallsImplGenerator):
+class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
 
     syscall_num_register = 'rax'
     input_registers = ['rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
@@ -417,7 +490,7 @@ class CSyscallsX86_64Generator(CSyscallsImplGenerator):
     asm_check = '\t\t"\\tsetnc %0\\n"'
 
 
-class CSyscallsAarch64Generator(CSyscallsImplGenerator):
+class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
 
     syscall_num_register = 'x8'
     input_registers = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
