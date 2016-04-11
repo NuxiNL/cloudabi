@@ -283,17 +283,46 @@ class CSyscallStructGenerator(CGenerator):
         pass
 
 
-class CSyscallNamesGenerator(CGenerator):
+class CSyscallsInfoGenerator(CGenerator):
 
     def generate_syscalls(self, abi, syscalls):
         print('#define {}SYSCALL_NAMES(SYSCALL)'.format(
             self.naming.prefix.upper()), end='')
         for s in sorted(abi.syscalls_by_name):
-            self.generate_syscall(abi, abi.syscalls_by_name[s])
+            print(' \\\n\tSYSCALL({})'.format(s), end='')
+        print('\n')
+        for s in sorted(abi.syscalls_by_name):
+            print('#define {}SYSCALL_PARAMETERS_{}'.format(
+                self.naming.prefix.upper(), s), end='')
+            params = self.syscall_params(abi.syscalls_by_name[s])
+            if params == []:
+                print('\n')
+            else:
+                print(' \\\n\t{}\n'.format(
+                    ', \\\n\t'.join(params)))
+        for s in sorted(abi.syscalls_by_name):
+            print('#define {}SYSCALL_PARAMETER_NAMES_{}'.format(
+                self.naming.prefix.upper(), s), end='')
+            syscall = abi.syscalls_by_name[s]
+            params = (
+                [p.name for p in syscall.input.raw_members] +
+                [p.name for p in syscall.output.raw_members])
+            if params == []:
+                print('\n')
+            else:
+                print(' \\\n\t{}\n'.format(
+                    ', '.join(params)))
+        for s in sorted(abi.syscalls_by_name):
+            print('#define {}SYSCALL_HAS_PARAMETERS_{}(yes, no) {}'.format(
+                self.naming.prefix.upper(), s,
+                ('no' if self.syscall_params(abi.syscalls_by_name[s]) == []
+                     else 'yes')))
         print()
-
-    def generate_syscall(self, abi, syscall):
-        print(' \\\n\tSYSCALL({})'.format(syscall.name), end='')
+        for s in sorted(abi.syscalls_by_name):
+            print('#define {}SYSCALL_RETURNS_{}(yes, no) {}'.format(
+                self.naming.prefix.upper(), s,
+                'no' if abi.syscalls_by_name[s].noreturn else 'yes'))
+        print()
 
     def generate_types(self, abi, types):
         pass
