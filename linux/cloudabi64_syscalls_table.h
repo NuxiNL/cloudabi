@@ -25,14 +25,10 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
-#include <linux/kernel.h>
-
 #include <asm/byteorder.h>
-#include <asm/ptrace.h>
 
 #include "cloudabi_syscalls.h"
 #include "cloudabi64_syscalls.h"
-#include "cloudabi64_util.h"
 
 #ifdef __LITTLE_ENDIAN
 #define MEMBER(type, name) _Alignas(8) type name

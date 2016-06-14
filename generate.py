@@ -126,20 +126,16 @@ with open('linux/cloudabi64_syscalls.h', 'w') as f:
             preamble='#include "cloudabi64_types.h"\n'
         ).generate_abi(abi)
 
-with open('linux/cloudabi64_syscalls.c', 'w') as f:
+with open('linux/cloudabi64_syscalls_table.h', 'w') as f:
     with redirect_stdout(f):
         CLinuxSyscallTableGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
                            pointer_prefix='__user '),
             md_type=int_types['uint64'],
-            preamble='#include <linux/kernel.h>\n'
-                     '\n'
-                     '#include <asm/byteorder.h>\n'
-                     '#include <asm/ptrace.h>\n'
+            preamble='#include <asm/byteorder.h>\n'
                      '\n'
                      '#include "cloudabi_syscalls.h"\n'
                      '#include "cloudabi64_syscalls.h"\n'
-                     '#include "cloudabi64_util.h"\n'
         ).generate_abi(abi)
 
 with open('docs/cloudabi.md', 'w') as f:
