@@ -25,10 +25,14 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
+#include <linux/kernel.h>
+
 #include <asm/byteorder.h>
+#include <asm/ptrace.h>
 
 #include "cloudabi_syscalls.h"
 #include "cloudabi64_syscalls.h"
+#include "cloudabi64_util.h"
 
 #ifdef __LITTLE_ENDIAN
 #define MEMBER(type, name) _Alignas(8) type name
@@ -665,12 +669,7 @@ static cloudabi_errno_t do_thread_yield(const void *in, void *out)
 	return cloudabi_sys_thread_yield();
 }
 
-static cloudabi_errno_t do_enosys(const void *in, void *out)
-{
-	return CLOUDABI_ENOSYS;
-}
-
-cloudabi_errno_t (*cloudabi64_syscalls[])(const void *, void *) = {
+static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
 	do_clock_res_get,
 	do_clock_time_get,
 	do_condvar_signal,
@@ -729,6 +728,4 @@ cloudabi_errno_t (*cloudabi64_syscalls[])(const void *, void *) = {
 	do_thread_tcb_set,
 	do_thread_yield,
 	do_poll_fd,
-
-	do_enosys,
 };

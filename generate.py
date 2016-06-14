@@ -132,10 +132,14 @@ with open('linux/cloudabi64_syscalls.c', 'w') as f:
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
                            pointer_prefix='__user '),
             md_type=int_types['uint64'],
-            preamble='#include <asm/byteorder.h>\n'
+            preamble='#include <linux/kernel.h>\n'
+                     '\n'
+                     '#include <asm/byteorder.h>\n'
+                     '#include <asm/ptrace.h>\n'
                      '\n'
                      '#include "cloudabi_syscalls.h"\n'
                      '#include "cloudabi64_syscalls.h"\n'
+                     '#include "cloudabi64_util.h"\n'
         ).generate_abi(abi)
 
 with open('docs/cloudabi.md', 'w') as f:
