@@ -1529,13 +1529,13 @@ Possible values:
     address space of the process. It provides entry points
     for every system call supported by the environment,
     all having a corresponding symbol that is prefixed
-    with "cloudabi_sys_". System calls should be invoked
+    with `cloudabi_sys_`. System calls should be invoked
     through these entry points.
 
     The first advantage of letting processes call into a
     vDSO to perform system calls instead of raising
     hardware traps is that it allows for easy emulation of
-    executables on top of existing operator systems. The
+    executables on top of existing operating systems. The
     second advantage is that in cases where an operating
     system provides native support for CloudABI executables,
     it may still implement partial userspace
