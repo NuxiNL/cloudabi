@@ -29,7 +29,7 @@
 #define CLOUDABI_TYPES_COMMON_H
 
 #if defined(__FreeBSD__) && defined(_KERNEL)
-#include <sys/stdint.h>
+#include <sys/types.h>
 #elif defined(__linux__) && defined(__KERNEL__)
 #include <linux/types.h>
 #else

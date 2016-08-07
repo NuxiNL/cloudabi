@@ -24,7 +24,7 @@ with open('headers/cloudabi_types_common.h', 'w') as f:
             header_guard='CLOUDABI_TYPES_COMMON_H',
             machine_dep=False,
             preamble='#if defined(__FreeBSD__) && defined(_KERNEL)\n'
-                     '#include <sys/stdint.h>\n'
+                     '#include <sys/types.h>\n'
                      '#elif defined(__linux__) && defined(__KERNEL__)\n'
                      '#include <linux/types.h>\n'
                      '#else\n'
