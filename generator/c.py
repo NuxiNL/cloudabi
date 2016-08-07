@@ -594,19 +594,12 @@ class CLinuxSyscallTableGenerator(CGenerator):
         print('}\n')
 
     def generate_foot(self, abi):
-        # Fallback for invoking an out-of-bounds system call.
-        print('static {} do_enosys(const void *in, void *out)\n'
-              '{{\n'
-              '\treturn CLOUDABI_ENOSYS;\n'
-              '}}\n'.format(self.naming.typename(abi.types['errno'])))
-
         # Emit the actual system call table.
-        print('{} (*{}syscalls[])(const void *, void *) = {{'.format(
-            self.naming.typename(abi.types['errno']),
-            self.naming.md_prefix))
+        print('static {} (*syscalls[])(const void *, void *) = {{'.format(
+            self.naming.typename(abi.types['errno'])))
         for idx in sorted(abi.syscalls_by_number):
             syscall = abi.syscalls_by_number[idx]
             print('\tdo_{},'.format(syscall.name))
-        print('\n\tdo_enosys,\n};')
+        print('};')
 
         super().generate_foot(abi)

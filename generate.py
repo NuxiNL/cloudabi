@@ -126,7 +126,7 @@ with open('linux/cloudabi64_syscalls.h', 'w') as f:
             preamble='#include "cloudabi64_types.h"\n'
         ).generate_abi(abi)
 
-with open('linux/cloudabi64_syscalls.c', 'w') as f:
+with open('linux/cloudabi64_syscalls_table.h', 'w') as f:
     with redirect_stdout(f):
         CLinuxSyscallTableGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
