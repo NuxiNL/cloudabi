@@ -85,7 +85,6 @@
 	SYSCALL(sock_stat_get) \
 	SYSCALL(thread_create) \
 	SYSCALL(thread_exit) \
-	SYSCALL(thread_tcb_set) \
 	SYSCALL(thread_yield)
 
 #define CLOUDABI_SYSCALL_PARAMETERS_clock_res_get \
@@ -384,9 +383,6 @@
 	_Atomic(cloudabi_lock_t) *lock, \
 	cloudabi_scope_t scope
 
-#define CLOUDABI_SYSCALL_PARAMETERS_thread_tcb_set \
-	void *tcb
-
 #define CLOUDABI_SYSCALL_PARAMETERS_thread_yield
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_clock_res_get \
@@ -557,9 +553,6 @@
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_exit \
 	lock, scope
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_tcb_set \
-	tcb
-
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_yield
 
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_clock_res_get(yes, no) yes
@@ -618,7 +611,6 @@
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_stat_get(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_create(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_exit(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_tcb_set(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_yield(yes, no) no
 
 #define CLOUDABI_SYSCALL_RETURNS_clock_res_get(yes, no) yes
@@ -677,7 +669,6 @@
 #define CLOUDABI_SYSCALL_RETURNS_sock_stat_get(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_create(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_exit(yes, no) no
-#define CLOUDABI_SYSCALL_RETURNS_thread_tcb_set(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_yield(yes, no) yes
 
 #endif

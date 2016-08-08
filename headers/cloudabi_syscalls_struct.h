@@ -271,8 +271,6 @@ typedef struct {
 	void (*thread_exit)(
 		_Atomic(cloudabi_lock_t) *lock,
 		cloudabi_scope_t scope);
-	cloudabi_errno_t (*thread_tcb_set)(
-		void *tcb);
 	cloudabi_errno_t (*thread_yield)(void);
 } cloudabi_syscalls_t;
 

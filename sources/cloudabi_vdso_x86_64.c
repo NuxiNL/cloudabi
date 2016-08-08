@@ -1349,23 +1349,8 @@ cloudabi_sys_thread_exit(
 }
 
 cloudabi_errno_t
-cloudabi_sys_thread_tcb_set(
-	void *tcb
-) {
-	register uint64_t reg_rax asm("rax") = 56;
-	register uint64_t reg_rdi asm("rdi") = (uint64_t)tcb;
-	asm volatile (
-		"\tsyscall\n"
-		: "=r"(reg_rax)
-		: "r"(reg_rax)
-		, "r"(reg_rdi)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
-	return reg_rax;
-}
-
-cloudabi_errno_t
 cloudabi_sys_thread_yield(void) {
-	register uint64_t reg_rax asm("rax") = 57;
+	register uint64_t reg_rax asm("rax") = 56;
 	asm volatile (
 		"\tsyscall\n"
 		: "=r"(reg_rax)

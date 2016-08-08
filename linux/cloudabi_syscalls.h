@@ -366,11 +366,6 @@ cloudabi_sys_thread_exit(
 );
 
 cloudabi_errno_t
-cloudabi_sys_thread_tcb_set(
-	void __user *tcb
-);
-
-cloudabi_errno_t
 cloudabi_sys_thread_yield(void);
 
 #endif

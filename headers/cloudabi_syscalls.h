@@ -555,13 +555,6 @@ cloudabi_sys_thread_exit(
 }
 
 static inline cloudabi_errno_t
-cloudabi_sys_thread_tcb_set(
-	void *tcb
-) {
-	return cloudabi_syscalls.thread_tcb_set(tcb);
-}
-
-static inline cloudabi_errno_t
 cloudabi_sys_thread_yield(void) {
 	return cloudabi_syscalls.thread_yield();
 }

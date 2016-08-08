@@ -276,7 +276,6 @@ and documentation (including the one you're reading now) is generated.</p>
 <li><a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a></li>
 <li><a href="#thread_create"><code>cloudabi_sys_thread_create()</code></a></li>
 <li><a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a></li>
-<li><a href="#thread_tcb_set"><code>cloudabi_sys_thread_tcb_set()</code></a></li>
 <li><a href="#thread_yield"><code>cloudabi_sys_thread_yield()</code></a></li>
 </ul>
 
@@ -1587,23 +1586,6 @@ shared memory.</p></li>
 </ul>
 
 <p>Does not return.</p>
-
-<h4><a href="#thread_tcb_set" name="thread_tcb_set"></a><code>cloudabi_sys_thread_tcb_set()</code></h4>
-
-<p>On x86-64: adjusts the %fs base address.</p>
-
-<p>This system call was required to set up Thread-Local Storage
-after program startup and thread creation. It is no longer
-needed as the %fs base now points to location that can be
-modified directly.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#thread_tcb_set.tcb" name="thread_tcb_set.tcb"></a><code>void *<strong>tcb</strong></code></p>
-
-<p>The new register contents.</p></li>
-</ul>
 
 <h4><a href="#thread_yield" name="thread_yield"></a><code>cloudabi_sys_thread_yield()</code></h4>
 

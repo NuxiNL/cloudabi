@@ -1574,27 +1574,8 @@ cloudabi_sys_thread_exit(
 }
 
 cloudabi_errno_t
-cloudabi_sys_thread_tcb_set(
-	void *tcb
-) {
-	register uint64_t reg_x8 asm("x8") = 56;
-	register uint64_t reg_x0 asm("x0") = (uint64_t)tcb;
-	asm volatile (
-		"\tsvc 0\n"
-		: "=r"(reg_x0)
-		: "r"(reg_x8)
-		, "r"(reg_x0)
-		: "memory"
-		, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7"
-		, "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"
-		, "x16", "x17", "x18"
-		, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7");
-	return reg_x0;
-}
-
-cloudabi_errno_t
 cloudabi_sys_thread_yield(void) {
-	register uint64_t reg_x8 asm("x8") = 57;
+	register uint64_t reg_x8 asm("x8") = 56;
 	register uint64_t reg_x0 asm("x0");
 	asm volatile (
 		"\tsvc 0\n"

@@ -312,7 +312,4 @@
 					cloudabi_lock_t *lock, \
 					cloudabi_scope_t scope); }
 
-56	AUE_NULL	STD	{ void cloudabi_sys_thread_tcb_set( \
-					void *tcb); }
-
-57	AUE_NULL	STD	{ void cloudabi_sys_thread_yield(); }
+56	AUE_NULL	STD	{ void cloudabi_sys_thread_yield(); }

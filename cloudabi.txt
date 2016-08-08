@@ -2130,16 +2130,5 @@ syscall thread_exit
 			| shared memory.
 	noreturn
 
-syscall thread_tcb_set
-	| On x86-64: adjusts the %fs base address.
-	|
-	| This system call was required to set up Thread-Local Storage
-	| after program startup and thread creation. It is no longer
-	| needed as the %fs base now points to location that can be
-	| modified directly.
-	in
-		ptr void tcb
-			| The new register contents.
-
 syscall thread_yield
 	| Temporarily yields execution of the calling thread.
