@@ -1524,7 +1524,9 @@ Possible values:
     system provides native support for CloudABI executables,
     it may still implement partial userspace
     implementations of these system calls to improve
-    performance (e.g., [`cloudabi_sys_clock_time_get()`](#clock_time_get)).
+    performance (e.g., [`cloudabi_sys_clock_time_get()`](#clock_time_get)). It also provides
+    a more dynamic way of adding, removing or replacing
+    system calls.
 
 - <a href="#auxtype.tid" name="auxtype.tid"></a>**`CLOUDABI_AT_TID`**
 

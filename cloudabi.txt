@@ -154,7 +154,9 @@ enum uint32 auxtype
 		| system provides native support for CloudABI executables,
 		| it may still implement partial userspace
 		| implementations of these system calls to improve
-		| performance (e.g., [clock_time_get]).
+		| performance (e.g., [clock_time_get]). It also provides
+		| a more dynamic way of adding, removing or replacing
+		| system calls.
 	261 tid
 		| Thread ID of the initial thread of the process.
 
