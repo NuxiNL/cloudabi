@@ -1918,6 +1918,27 @@ syscall poll
 		size nevents
 			| The number of events stored.
 
+syscall poll_fd
+	| Concurrently polls for the occurrence of a set of events,
+	| while retaining subscriptions across calls.
+	in
+		fd                  fd
+			| The polling event queue.
+		crange subscription in nin in
+			| Changes that need to be made to the polling
+			| event queue.
+		range event         out nout out
+			| The events that have occurred.
+		cptr subscription   timeout
+			| Subscription of type [eventtype.clock] to
+			| serve as a timeout for the system call. The
+			| subscription is local to this invocation of
+			| this system call and is automatically purged
+			| upon completion.
+	out
+		size nevents
+			| The number of events stored.
+
 syscall proc_exec
 	| Replaces the process by a new executable.
 	|
@@ -2122,24 +2143,3 @@ syscall thread_tcb_set
 
 syscall thread_yield
 	| Temporarily yields execution of the calling thread.
-
-syscall poll_fd
-	| Concurrently polls for the occurrence of a set of events,
-	| while retaining subscriptions across calls.
-	in
-		fd                  fd
-			| The polling event queue.
-		crange subscription in nin in
-			| Changes that need to be made to the polling
-			| event queue.
-		range event         out nout out
-			| The events that have occurred.
-		cptr subscription   timeout
-			| Subscription of type [eventtype.clock] to
-			| serve as a timeout for the system call. The
-			| subscription is local to this invocation of
-			| this system call and is automatically purged
-			| upon completion.
-	out
-		size nevents
-			| The number of events stored.
