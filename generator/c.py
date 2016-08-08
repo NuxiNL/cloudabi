@@ -9,12 +9,13 @@ from .generator import *
 
 class CNaming:
 
-    def __init__(self, prefix, md_prefix=None, c11=True, syscall_prefix=None, pointer_prefix=''):
+    def __init__(self, prefix, md_prefix=None, c11=True, syscall_prefix=None, pointer_prefix='', function_keywords=''):
         self.prefix = prefix
         self.md_prefix = md_prefix
         self.c11 = c11
         self.syscall_prefix = syscall_prefix
         self.pointer_prefix = pointer_prefix
+        self.function_keywords = function_keywords
 
     def typename(self, type):
         if isinstance(type, VoidType):
@@ -355,7 +356,7 @@ class CSyscallsGenerator(CGenerator):
         print()
 
     def generate_syscall_keywords(self, syscall):
-        print('static inline ', end='')
+        print(self.naming.function_keywords, end='')
         if syscall.noreturn:
             print('_Noreturn ', end='')
 

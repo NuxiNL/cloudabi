@@ -73,7 +73,7 @@ with open('headers/cloudabi_syscalls_struct.h', 'w') as f:
 with open('headers/cloudabi_syscalls.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallWrappersGenerator(
-            naming=CNaming('cloudabi_'),
+            naming=CNaming('cloudabi_', function_keywords='static inline '),
             header_guard='CLOUDABI_SYSCALLS_H',
             preamble='#include "cloudabi_syscalls_struct.h"\n'
         ).generate_abi(abi)
@@ -88,7 +88,8 @@ with open('headers/cloudabi_syscalls_info.h', 'w') as f:
 with open('headers/cloudabi_syscalls_native_x86_64.h', 'w') as f:
     with redirect_stdout(f):
         CNativeSyscallsX86_64Generator(
-            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_native_sys_'),
+            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_native_sys_',
+                           function_keywords='static inline '),
             header_guard='CLOUDABI_SYSCALLS_NATIVE_X86_64_H',
             preamble='#include "cloudabi_types.h"\n'
         ).generate_abi(abi)
@@ -96,9 +97,24 @@ with open('headers/cloudabi_syscalls_native_x86_64.h', 'w') as f:
 with open('headers/cloudabi_syscalls_native_aarch64.h', 'w') as f:
     with redirect_stdout(f):
         CNativeSyscallsAarch64Generator(
-            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_native_sys_'),
+            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_native_sys_',
+                           function_keywords='static inline '),
             header_guard='CLOUDABI_SYSCALLS_NATIVE_AARCH64_H',
             preamble='#include "cloudabi_types.h"\n'
+        ).generate_abi(abi)
+
+with open('sources/cloudabi_vdso_x86_64.c', 'w') as f:
+    with redirect_stdout(f):
+        CNativeSyscallsX86_64Generator(
+            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
+            preamble='#include <cloudabi_types.h>\n'
+        ).generate_abi(abi)
+
+with open('sources/cloudabi_vdso_aarch64.c', 'w') as f:
+    with redirect_stdout(f):
+        CNativeSyscallsAarch64Generator(
+            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
+            preamble='#include <cloudabi_types.h>\n'
         ).generate_abi(abi)
 
 with open('freebsd/syscalls.master', 'w') as f:
