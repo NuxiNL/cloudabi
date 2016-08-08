@@ -73,7 +73,7 @@ class MarkdownGenerator(Generator):
 
     def generate_abi(self, abi):
         self.generate_head(abi)
-        self.generate_syscalls(abi, abi.syscalls_by_name)
+        self.generate_syscalls(abi, abi.syscalls)
         self.generate_types(abi, abi.types)
         self.generate_foot(abi)
 
@@ -180,8 +180,8 @@ class MarkdownGenerator(Generator):
 
     def generate_syscalls(self, abi, syscalls):
         print('### System calls\n')
-        for n in sorted(abi.syscalls_by_name):
-            print('- {}'.format(self.naming.link(abi.syscalls_by_name[n])))
+        for n in sorted(abi.syscalls):
+            print('- {}'.format(self.naming.link(abi.syscalls[n])))
         print()
         super().generate_syscalls(abi, syscalls)
 

@@ -706,6 +706,7 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
 	do_mem_unlock,
 	do_mem_unmap,
 	do_poll,
+	do_poll_fd,
 	do_proc_exec,
 	do_proc_exit,
 	do_proc_fork,
@@ -723,5 +724,4 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
 	do_thread_exit,
 	do_thread_tcb_set,
 	do_thread_yield,
-	do_poll_fd,
 };

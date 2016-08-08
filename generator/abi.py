@@ -185,8 +185,7 @@ class FunctionType(UserDefinedType):
 
 class Syscall:
 
-    def __init__(self, number, name, input, output, noreturn=False):
-        self.number = number
+    def __init__(self, name, input, output, noreturn=False):
         self.name = name
         self.input = input
         self.output = output
@@ -210,15 +209,14 @@ class Abi:
 
     def __init__(self):
         self.types = {}
-        self.syscalls_by_name = {}
-        self.syscalls_by_number = {}
+        self.syscalls = {}
 
     def resolve_name(self, name, root=None):
         if root is None:
             if name in self.types:
                 return self.types[name]
-            elif name in self.syscalls_by_name:
-                return self.syscalls_by_name[name]
+            elif name in self.syscalls:
+                return self.syscalls[name]
         elif isinstance(root, IntLikeType):
             for v in root.values:
                 if v.name == name:

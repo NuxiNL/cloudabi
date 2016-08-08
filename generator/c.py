@@ -258,8 +258,8 @@ class CSyscallStructGenerator(CGenerator):
 
     def generate_syscalls(self, abi, syscalls):
         print('typedef struct {')
-        for s in sorted(abi.syscalls_by_name):
-            self.generate_syscall(abi, abi.syscalls_by_name[s])
+        for s in sorted(abi.syscalls):
+            self.generate_syscall(abi, abi.syscalls[s])
         print('}} {}syscalls_t;'.format(self.naming.prefix))
         print()
 
@@ -289,22 +289,22 @@ class CSyscallsInfoGenerator(CGenerator):
     def generate_syscalls(self, abi, syscalls):
         print('#define {}SYSCALL_NAMES(SYSCALL)'.format(
             self.naming.prefix.upper()), end='')
-        for s in sorted(abi.syscalls_by_name):
+        for s in sorted(abi.syscalls):
             print(' \\\n\tSYSCALL({})'.format(s), end='')
         print('\n')
-        for s in sorted(abi.syscalls_by_name):
+        for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_PARAMETERS_{}'.format(
                 self.naming.prefix.upper(), s), end='')
-            params = self.syscall_params(abi.syscalls_by_name[s])
+            params = self.syscall_params(abi.syscalls[s])
             if params == []:
                 print('\n')
             else:
                 print(' \\\n\t{}\n'.format(
                     ', \\\n\t'.join(params)))
-        for s in sorted(abi.syscalls_by_name):
+        for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_PARAMETER_NAMES_{}'.format(
                 self.naming.prefix.upper(), s), end='')
-            syscall = abi.syscalls_by_name[s]
+            syscall = abi.syscalls[s]
             params = (
                 [p.name for p in syscall.input.raw_members] +
                 [p.name for p in syscall.output.raw_members])
@@ -313,16 +313,16 @@ class CSyscallsInfoGenerator(CGenerator):
             else:
                 print(' \\\n\t{}\n'.format(
                     ', '.join(params)))
-        for s in sorted(abi.syscalls_by_name):
+        for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_HAS_PARAMETERS_{}(yes, no) {}'.format(
                 self.naming.prefix.upper(), s,
-                ('no' if self.syscall_params(abi.syscalls_by_name[s]) == []
+                ('no' if self.syscall_params(abi.syscalls[s]) == []
                      else 'yes')))
         print()
-        for s in sorted(abi.syscalls_by_name):
+        for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_RETURNS_{}(yes, no) {}'.format(
                 self.naming.prefix.upper(), s,
-                'no' if abi.syscalls_by_name[s].noreturn else 'yes'))
+                'no' if abi.syscalls[s].noreturn else 'yes'))
         print()
 
     def generate_types(self, abi, types):
@@ -372,8 +372,8 @@ class CSyscallWrappersGenerator(CSyscallsGenerator):
     def generate_syscalls(self, abi, syscalls):
         print('extern {prefix}syscalls_t {prefix}syscalls;\n'.format(
             prefix=self.naming.prefix))
-        for s in sorted(abi.syscalls_by_name):
-            self.generate_syscall(abi, abi.syscalls_by_name[s])
+        for s in sorted(abi.syscalls):
+            self.generate_syscall(abi, abi.syscalls[s])
 
     def generate_syscall_body(self, abi, syscall):
         print(' {')
@@ -433,7 +433,8 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
                 reg=register, defn=defn))
             defined_regs.add(register)
 
-        define_reg(self.syscall_num_register, syscall.number)
+        define_reg(self.syscall_num_register,
+                   sorted(abi.syscalls).index(syscall.name))
 
         for i, p in enumerate(syscall.input.raw_members):
             define_reg(self.input_registers[i], self._ccast(
@@ -598,8 +599,8 @@ class CLinuxSyscallTableGenerator(CGenerator):
         # Emit the actual system call table.
         print('static {} (*syscalls[])(const void *, void *) = {{'.format(
             self.naming.typename(abi.types['errno'])))
-        for idx in sorted(abi.syscalls_by_number):
-            syscall = abi.syscalls_by_number[idx]
+        for idx in sorted(abi.syscalls):
+            syscall = abi.syscalls[idx]
             print('\tdo_{},'.format(syscall.name))
         print('};')
 

@@ -1357,7 +1357,7 @@ struct threadattr
 	ptr void        argument
 		| Argument to be forwarded to the entry point function.
 
-syscall 0 clock_res_get
+syscall clock_res_get
 	| Obtains the resolution of a clock.
 	in
 		clockid   clock_id
@@ -1367,7 +1367,7 @@ syscall 0 clock_res_get
 		timestamp resolution
 			| The resolution of the clock.
 
-syscall 1 clock_time_get
+syscall clock_time_get
 	| Obtains the time value of a clock.
 	in
 		clockid   clock_id
@@ -1381,7 +1381,7 @@ syscall 1 clock_time_get
 		timestamp time
 			| The time value of the clock.
 
-syscall 2 condvar_signal
+syscall condvar_signal
 	| Wakes up threads waiting on a userspace condition variable.
 	|
 	| If an invocation of this system call causes all waiting
@@ -1401,13 +1401,13 @@ syscall 2 condvar_signal
 			| up. If it exceeds the number of waiting
 			| threads, all threads are woken up.
 
-syscall 3 fd_close
+syscall fd_close
 	| Closes a file descriptor.
 	in
 		fd fd
 			| The file descriptor that needs to be closed.
 
-syscall 4 fd_create1
+syscall fd_create1
 	| Creates a file descriptor.
 	in
 		filetype type
@@ -1427,7 +1427,7 @@ syscall 4 fd_create1
 		fd       fd
 			| The file descriptor that has been created.
 
-syscall 5 fd_create2
+syscall fd_create2
 	| Creates a pair of file descriptors.
 	in
 		filetype type
@@ -1449,14 +1449,14 @@ syscall 5 fd_create2
 			| The second file descriptor of the pair. For
 			| pipes, this corresponds to the write end.
 
-syscall 6 fd_datasync
+syscall fd_datasync
 	| Synchronizes the data of a file to disk.
 	in
 		fd fd
 			| The file descriptor of the file whose data
 			| needs to be synchronized to disk.
 
-syscall 7 fd_dup
+syscall fd_dup
 	| Duplicates a file descriptor.
 	in
 		fd from
@@ -1466,7 +1466,7 @@ syscall 7 fd_dup
 		fd fd
 			| The new file descriptor.
 
-syscall 8 fd_pread
+syscall fd_pread
 	| Reads from a file descriptor, without using and updating the
 	| file descriptor's offset.
 	in
@@ -1483,7 +1483,7 @@ syscall 8 fd_pread
 		size         nread
 			| The number of bytes read.
 
-syscall 9 fd_pwrite
+syscall fd_pwrite
 	| Writes to a file descriptor, without using and updating the
 	| file descriptor's offset.
 	in
@@ -1500,7 +1500,7 @@ syscall 9 fd_pwrite
 		size          nwritten
 			| The number of bytes written.
 
-syscall 10 fd_read
+syscall fd_read
 	| Reads from a file descriptor.
 	in
 		fd           fd
@@ -1513,7 +1513,7 @@ syscall 10 fd_read
 		size         nread
 			| The number of bytes read.
 
-syscall 11 fd_replace
+syscall fd_replace
 	| Atomically replaces a file descriptor by a copy of another
 	| file descriptor.
 	|
@@ -1533,7 +1533,7 @@ syscall 11 fd_replace
 			| The file descriptor that needs to be
 			| overwritten.
 
-syscall 12 fd_seek
+syscall fd_seek
 	| Moves the offset of the file descriptor.
 	in
 		fd        fd
@@ -1549,7 +1549,7 @@ syscall 12 fd_seek
 			| The new offset of the file descriptor,
 			| relative to the start of the file.
 
-syscall 13 fd_stat_get
+syscall fd_stat_get
 	| Gets attributes of a file descriptor.
 	in
 		fd         fd
@@ -1559,7 +1559,7 @@ syscall 13 fd_stat_get
 			| The buffer where the file descriptor's
 			| attributes are stored.
 
-syscall 14 fd_stat_put
+syscall fd_stat_put
 	| Adjusts attributes of a file descriptor.
 	in
 		fd          fd
@@ -1572,14 +1572,14 @@ syscall 14 fd_stat_put
 			| A bitmask indicating which attributes have to
 			| be adjusted.
 
-syscall 15 fd_sync
+syscall fd_sync
 	| Synchronizes the data and metadata of a file to disk.
 	in
 		fd fd
 			| The file descriptor of the file whose data
 			| and metadata needs to be synchronized to disk.
 
-syscall 16 fd_write
+syscall fd_write
 	| Writes to a file descriptor.
 	in
 		fd            fd
@@ -1592,7 +1592,7 @@ syscall 16 fd_write
 		size nwritten
 			| The number of bytes written.
 
-syscall 17 file_advise
+syscall file_advise
 	| Provides file advisory information on a file descriptor.
 	in
 		fd       fd
@@ -1607,7 +1607,7 @@ syscall 17 file_advise
 		advice   advice
 			| The advice.
 
-syscall 18 file_allocate
+syscall file_allocate
 	| Forces the allocation of space in a file.
 	in
 		fd       fd
@@ -1619,7 +1619,7 @@ syscall 18 file_allocate
 		filesize len
 			| The length of the area that is allocated.
 
-syscall 19 file_create
+syscall file_create
 	| Creates a file of a specified type.
 	in
 		fd          fd
@@ -1633,7 +1633,7 @@ syscall 19 file_create
 			fifo
 				| Creates a FIFO.
 
-syscall 20 file_link
+syscall file_link
 	| Creates a hard link.
 	in
 		lookup      fd1
@@ -1649,7 +1649,7 @@ syscall 20 file_link
 			| The destination path at which the hard link
 			| should be created.
 
-syscall 21 file_open
+syscall file_open
 	| Opens a file.
 	in
 		lookup      dirfd
@@ -1667,7 +1667,7 @@ syscall 21 file_open
 			| The file descriptor of the file that has been
 			| opened.
 
-syscall 22 file_readdir
+syscall file_readdir
 	| Reads directory entries from a directory.
 	|
 	| When successful, the contents of the output buffer consist of
@@ -1695,7 +1695,7 @@ syscall 22 file_readdir
 			| If less than the size of the read buffer, the
 			| end of the directory has been reached.
 
-syscall 23 file_readlink
+syscall file_readlink
 	| Reads the contents of a symbolic link.
 	in
 		fd          fd
@@ -1711,7 +1711,7 @@ syscall 23 file_readlink
 		size bufused
 			| The number of bytes placed in the buffer.
 
-syscall 24 file_rename
+syscall file_rename
 	| Renames a file.
 	in
 		fd          oldfd
@@ -1727,7 +1727,7 @@ syscall 24 file_rename
 			| The destination path to which the file should
 			| be renamed.
 
-syscall 25 file_stat_fget
+syscall file_stat_fget
 	| Gets attributes of a file by file descriptor.
 	in
 		fd           fd
@@ -1737,7 +1737,7 @@ syscall 25 file_stat_fget
 			| The buffer where the file's attributes are
 			| stored.
 
-syscall 26 file_stat_fput
+syscall file_stat_fput
 	| Adjusts attributes of a file by file descriptor.
 	in
 		fd            fd
@@ -1750,7 +1750,7 @@ syscall 26 file_stat_fput
 			| A bitmask indicating which attributes have to
 			| be adjusted.
 
-syscall 27 file_stat_get
+syscall file_stat_get
 	| Gets attributes of a file by path.
 	in
 		lookup       fd
@@ -1764,7 +1764,7 @@ syscall 27 file_stat_get
 			| The buffer where the file's attributes are
 			| stored.
 
-syscall 28 file_stat_put
+syscall file_stat_put
 	| Adjusts attributes of a file by path.
 	in
 		lookup        fd
@@ -1781,7 +1781,7 @@ syscall 28 file_stat_put
 			| A bitmask indicating which attributes have to
 			| be adjusted.
 
-syscall 29 file_symlink
+syscall file_symlink
 	| Creates a symbolic link.
 	in
 		crange char path1 path1len path1
@@ -1793,7 +1793,7 @@ syscall 29 file_symlink
 			| The destination path at which the symbolic
 			| link should be created.
 
-syscall 30 file_unlink
+syscall file_unlink
 	| Unlinks a file, or removes a directory.
 	in
 		fd          fd
@@ -1806,7 +1806,7 @@ syscall 30 file_unlink
 				| If set, attempt to remove a directory.
 				| Otherwise, unlink a file.
 
-syscall 31 lock_unlock
+syscall lock_unlock
 	| Unlocks a write-locked userspace lock.
 	|
 	| If a userspace lock is unlocked while having its
@@ -1827,7 +1827,7 @@ syscall 31 lock_unlock
 			| Whether the lock is stored in private or
 			| shared memory.
 
-syscall 32 mem_advise
+syscall mem_advise
 	| Provides memory advisory information on a region of memory.
 	in
 		range void addr len mem
@@ -1836,7 +1836,7 @@ syscall 32 mem_advise
 		advice     advice
 			| The advice.
 
-syscall 33 mem_lock
+syscall mem_lock
 	| Increments the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
@@ -1844,7 +1844,7 @@ syscall 33 mem_lock
 			| The pages that need its lock count
 			| incremented.
 
-syscall 34 mem_map
+syscall mem_map
 	| Creates a memory mapping, making the contents of a file
 	| accessible through memory.
 	in
@@ -1875,7 +1875,7 @@ syscall 34 mem_map
 		ptr void   mem
 			| The starting address of the memory mapping.
 
-syscall 35 mem_protect
+syscall mem_protect
 	| Change the protection of a memory mapping.
 	in
 		range void addr len mem
@@ -1883,7 +1883,7 @@ syscall 35 mem_protect
 		mprot      prot
 			| New protection options.
 
-syscall 36 mem_sync
+syscall mem_sync
 	| Synchronize a region of memory with its physical storage.
 	in
 		range void addr len mem
@@ -1891,7 +1891,7 @@ syscall 36 mem_sync
 		msflags    flags
 			| The method of synchronization.
 
-syscall 37 mem_unlock
+syscall mem_unlock
 	| Decrements the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
@@ -1899,13 +1899,13 @@ syscall 37 mem_unlock
 			| The pages that need its lock count
 			| decremented.
 
-syscall 38 mem_unmap
+syscall mem_unmap
 	| Unmaps a region of memory.
 	in
 		range void addr len mem
 			| The pages that needs to be unmapped.
 
-syscall 39 poll
+syscall poll
 	| Concurrently polls for the occurrence of a set of events.
 	in
 		cptr subscription in
@@ -1918,7 +1918,7 @@ syscall 39 poll
 		size nevents
 			| The number of events stored.
 
-syscall 40 proc_exec
+syscall proc_exec
 	| Replaces the process by a new executable.
 	|
 	| Process execution in CloudABI differs from POSIX in two ways:
@@ -1948,7 +1948,7 @@ syscall 40 proc_exec
 			| The layout of the file descriptor table after
 			| execution.
 
-syscall 41 proc_exit
+syscall proc_exit
 	| Terminates the process normally.
 	in
 		exitcode rval
@@ -1957,7 +1957,7 @@ syscall 41 proc_exit
 			| through [event.proc_terminate.exitcode].
 	noreturn
 
-syscall 42 proc_fork
+syscall proc_fork
 	| Forks the process of the calling thread.
 	|
 	| After forking, a new process shall be created, having only a
@@ -1976,7 +1976,7 @@ syscall 42 proc_fork
 			| In the child process: the thread ID of the
 			| initial thread of the child process.
 
-syscall 43 proc_raise
+syscall proc_raise
 	| Sends a signal to the process of the calling thread.
 	in
 		signal sig
@@ -1986,7 +1986,7 @@ syscall 43 proc_raise
 			| processes through
 			| [event.proc_terminate.signal].
 
-syscall 44 random_get
+syscall random_get
 	| Obtains random data from the kernel random number generator.
 	|
 	| As this interface is not guaranteed to be fast, it is advised
@@ -1997,7 +1997,7 @@ syscall 44 random_get
 			| The buffer that needs to be filled with random
 			| data.
 
-syscall 45 sock_accept
+syscall sock_accept
 	| Accepts an incoming connection on a listening socket.
 	in
 		fd           sock
@@ -2010,7 +2010,7 @@ syscall 45 sock_accept
 			| The socket associated with the incoming
 			| connection.
 
-syscall 46 sock_bind
+syscall sock_bind
 	| Binds a UNIX socket to a path.
 	in
 		fd          sock
@@ -2021,7 +2021,7 @@ syscall 46 sock_bind
 		crange char path pathlen path
 			| The path to which the socket should bind.
 
-syscall 47 sock_connect
+syscall sock_connect
 	| Connects a UNIX socket to another UNIX socket bound at a path.
 	in
 		fd          sock
@@ -2032,7 +2032,7 @@ syscall 47 sock_connect
 		crange char path pathlen path
 			| The path to which the socket should onnect.
 
-syscall 48 sock_listen
+syscall sock_listen
 	| Listens for incoming connections on a socket.
 	in
 		fd      sock
@@ -2042,7 +2042,7 @@ syscall 48 sock_listen
 			| Number of incoming connections the socket is
 			| capable of keeping in its backlog.
 
-syscall 49 sock_recv
+syscall sock_recv
 	| Receives a message on a socket.
 	in
 		fd           sock
@@ -2053,7 +2053,7 @@ syscall 49 sock_recv
 		ptr recv_out out
 			| Output parameters.
 
-syscall 50 sock_send
+syscall sock_send
 	| Sends a message on a socket.
 	in
 		fd           sock
@@ -2063,7 +2063,7 @@ syscall 50 sock_send
 		ptr send_out out
 			| Output parameters.
 
-syscall 51 sock_shutdown
+syscall sock_shutdown
 	| Shuts down socket send and receive channels.
 	in
 		fd      sock
@@ -2072,7 +2072,7 @@ syscall 51 sock_shutdown
 			| Which channels on the socket need to be shut
 			| down.
 
-syscall 52 sock_stat_get
+syscall sock_stat_get
 	| Gets attributes of a socket.
 	in
 		fd           sock
@@ -2085,7 +2085,7 @@ syscall 52 sock_stat_get
 			| Flags indicating how the existing socket
 			| attributes need to be changed.
 
-syscall 53 thread_create
+syscall thread_create
 	| Creates a new thread within the current process.
 	in
 		ptr threadattr attr
@@ -2094,7 +2094,7 @@ syscall 53 thread_create
 		tid tid
 			| The thread ID of the new thread.
 
-syscall 54 thread_exit
+syscall thread_exit
 	| Terminates the calling thread.
 	|
 	| This system call can also unlock a single userspace lock
@@ -2109,7 +2109,7 @@ syscall 54 thread_exit
 			| shared memory.
 	noreturn
 
-syscall 55 thread_tcb_set
+syscall thread_tcb_set
 	| On x86-64: adjusts the %fs base address.
 	|
 	| This system call was required to set up Thread-Local Storage
@@ -2120,10 +2120,10 @@ syscall 55 thread_tcb_set
 		ptr void tcb
 			| The new register contents.
 
-syscall 56 thread_yield
+syscall thread_yield
 	| Temporarily yields execution of the calling thread.
 
-syscall 57 poll_fd
+syscall poll_fd
 	| Concurrently polls for the occurrence of a set of events,
 	| while retaining subscriptions across calls.
 	in

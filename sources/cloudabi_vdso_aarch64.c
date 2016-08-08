@@ -1167,7 +1167,7 @@ cloudabi_sys_poll_fd(
 	const cloudabi_subscription_t *timeout,
 	size_t *nevents
 ) {
-	register uint64_t reg_x8 asm("x8") = 57;
+	register uint64_t reg_x8 asm("x8") = 40;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)fd;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)in;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)nin;
@@ -1207,7 +1207,7 @@ cloudabi_sys_proc_exec(
 	const cloudabi_fd_t *fds,
 	size_t fdslen
 ) {
-	register uint64_t reg_x8 asm("x8") = 40;
+	register uint64_t reg_x8 asm("x8") = 41;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)fd;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)data;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)datalen;
@@ -1234,7 +1234,7 @@ _Noreturn void
 cloudabi_sys_proc_exit(
 	cloudabi_exitcode_t rval
 ) {
-	register uint64_t reg_x8 asm("x8") = 41;
+	register uint64_t reg_x8 asm("x8") = 42;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)rval;
 	asm volatile (
 		"\tsvc 0\n"
@@ -1254,7 +1254,7 @@ cloudabi_sys_proc_fork(
 	cloudabi_fd_t *fd,
 	cloudabi_tid_t *tid
 ) {
-	register uint64_t reg_x8 asm("x8") = 42;
+	register uint64_t reg_x8 asm("x8") = 43;
 	register uint64_t reg_x0 asm("x0");
 	register uint64_t reg_x1 asm("x1");
 	register uint64_t okay;
@@ -1282,7 +1282,7 @@ cloudabi_errno_t
 cloudabi_sys_proc_raise(
 	cloudabi_signal_t sig
 ) {
-	register uint64_t reg_x8 asm("x8") = 43;
+	register uint64_t reg_x8 asm("x8") = 44;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sig;
 	asm volatile (
 		"\tsvc 0\n"
@@ -1302,7 +1302,7 @@ cloudabi_sys_random_get(
 	void *buf,
 	size_t nbyte
 ) {
-	register uint64_t reg_x8 asm("x8") = 44;
+	register uint64_t reg_x8 asm("x8") = 45;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)buf;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)nbyte;
 	asm volatile (
@@ -1325,7 +1325,7 @@ cloudabi_sys_sock_accept(
 	cloudabi_sockstat_t *buf,
 	cloudabi_fd_t *conn
 ) {
-	register uint64_t reg_x8 asm("x8") = 45;
+	register uint64_t reg_x8 asm("x8") = 46;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)buf;
 	register uint64_t okay;
@@ -1356,7 +1356,7 @@ cloudabi_sys_sock_bind(
 	const char *path,
 	size_t pathlen
 ) {
-	register uint64_t reg_x8 asm("x8") = 46;
+	register uint64_t reg_x8 asm("x8") = 47;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)fd;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)path;
@@ -1384,7 +1384,7 @@ cloudabi_sys_sock_connect(
 	const char *path,
 	size_t pathlen
 ) {
-	register uint64_t reg_x8 asm("x8") = 47;
+	register uint64_t reg_x8 asm("x8") = 48;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)fd;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)path;
@@ -1410,7 +1410,7 @@ cloudabi_sys_sock_listen(
 	cloudabi_fd_t sock,
 	cloudabi_backlog_t backlog
 ) {
-	register uint64_t reg_x8 asm("x8") = 48;
+	register uint64_t reg_x8 asm("x8") = 49;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)backlog;
 	asm volatile (
@@ -1433,7 +1433,7 @@ cloudabi_sys_sock_recv(
 	const cloudabi_recv_in_t *in,
 	cloudabi_recv_out_t *out
 ) {
-	register uint64_t reg_x8 asm("x8") = 49;
+	register uint64_t reg_x8 asm("x8") = 50;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)in;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)out;
@@ -1458,7 +1458,7 @@ cloudabi_sys_sock_send(
 	const cloudabi_send_in_t *in,
 	cloudabi_send_out_t *out
 ) {
-	register uint64_t reg_x8 asm("x8") = 50;
+	register uint64_t reg_x8 asm("x8") = 51;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)in;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)out;
@@ -1482,7 +1482,7 @@ cloudabi_sys_sock_shutdown(
 	cloudabi_fd_t sock,
 	cloudabi_sdflags_t how
 ) {
-	register uint64_t reg_x8 asm("x8") = 51;
+	register uint64_t reg_x8 asm("x8") = 52;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)how;
 	asm volatile (
@@ -1505,7 +1505,7 @@ cloudabi_sys_sock_stat_get(
 	cloudabi_sockstat_t *buf,
 	cloudabi_ssflags_t flags
 ) {
-	register uint64_t reg_x8 asm("x8") = 52;
+	register uint64_t reg_x8 asm("x8") = 53;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)sock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)buf;
 	register uint64_t reg_x2 asm("x2") = (uint64_t)flags;
@@ -1529,7 +1529,7 @@ cloudabi_sys_thread_create(
 	cloudabi_threadattr_t *attr,
 	cloudabi_tid_t *tid
 ) {
-	register uint64_t reg_x8 asm("x8") = 53;
+	register uint64_t reg_x8 asm("x8") = 54;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)attr;
 	register uint64_t okay;
 	asm volatile (
@@ -1556,7 +1556,7 @@ cloudabi_sys_thread_exit(
 	_Atomic(cloudabi_lock_t) *lock,
 	cloudabi_scope_t scope
 ) {
-	register uint64_t reg_x8 asm("x8") = 54;
+	register uint64_t reg_x8 asm("x8") = 55;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)lock;
 	register uint64_t reg_x1 asm("x1") = (uint64_t)scope;
 	asm volatile (
@@ -1577,7 +1577,7 @@ cloudabi_errno_t
 cloudabi_sys_thread_tcb_set(
 	void *tcb
 ) {
-	register uint64_t reg_x8 asm("x8") = 55;
+	register uint64_t reg_x8 asm("x8") = 56;
 	register uint64_t reg_x0 asm("x0") = (uint64_t)tcb;
 	asm volatile (
 		"\tsvc 0\n"
@@ -1594,7 +1594,7 @@ cloudabi_sys_thread_tcb_set(
 
 cloudabi_errno_t
 cloudabi_sys_thread_yield(void) {
-	register uint64_t reg_x8 asm("x8") = 56;
+	register uint64_t reg_x8 asm("x8") = 57;
 	register uint64_t reg_x0 asm("x0");
 	asm volatile (
 		"\tsvc 0\n"

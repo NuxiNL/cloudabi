@@ -17,7 +17,7 @@ class SyscallsMasterGenerator(Generator):
         self.generate_head(abi)
         self.generate_includes(abi)
         self.generate_types(abi, abi.types)
-        self.generate_syscalls(abi, abi.syscalls_by_number)
+        self.generate_syscalls(abi, abi.syscalls)
         self.generate_foot(abi)
 
     def generate_head(self, abi):
@@ -49,7 +49,7 @@ class SyscallsMasterGenerator(Generator):
 
         return_type_name = self.naming.typename(return_type)
         print('\n{}\t{}\t{}\t{{ {}{}{}({}); }}'.format(
-            syscall.number,
+            sorted(abi.syscalls).index(syscall.name),
             'AUE_NULL',
             'STD',
             return_type_name,

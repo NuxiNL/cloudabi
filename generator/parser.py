@@ -41,8 +41,7 @@ class AbiParser:
 
             elif decl[0] == 'syscall':
                 s = self.parse_syscall(abi, decl, node.children)
-                abi.syscalls_by_name[s.name] = s
-                abi.syscalls_by_number[s.number] = s
+                abi.syscalls[s.name] = s
                 thing = s
 
             else:
@@ -56,7 +55,7 @@ class AbiParser:
                     t, 'dependencies', set())}
 
             type.used_by.update({
-                s for s in abi.syscalls_by_number.values() if type in getattr(
+                s for s in abi.syscalls.values() if type in getattr(
                     s, 'dependencies', set())})
 
         return abi
@@ -206,15 +205,11 @@ class AbiParser:
         return FunctionType(name, parameters, return_type)
 
     def parse_syscall(self, abi, decl, children):
-        if len(decl) != 3:
+        if len(decl) != 2:
             raise Exception('Invalid declaration: {}'.format(' '.join(decl)))
 
-        num = int(decl[1], 0)
-        if num in abi.syscalls_by_number:
-            raise Exception('Duplicate syscall number: {}'.format(num))
-
-        name = decl[2]
-        if name in abi.syscalls_by_name:
+        name = decl[1]
+        if name in abi.syscalls:
             raise Exception('Duplicate syscall name: {}'.format(name))
 
         input = StructType('', [])
@@ -241,7 +236,7 @@ class AbiParser:
             raise Exception('Invalid node under syscall: {}'.format(
                 children[0].text))
 
-        syscall = Syscall(num, name, input, output, **attr)
+        syscall = Syscall(name, input, output, **attr)
 
         return syscall
 
