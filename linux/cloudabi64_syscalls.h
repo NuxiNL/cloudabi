@@ -30,77 +30,44 @@
 
 #include "cloudabi64_types.h"
 
-cloudabi_errno_t
-cloudabi64_sys_fd_pread(
-	cloudabi_fd_t fd,
-	const cloudabi64_iovec_t __user *iov,
-	size_t iovcnt,
-	cloudabi_filesize_t offset,
-	size_t *nread
-);
+cloudabi_errno_t cloudabi64_sys_fd_pread(cloudabi_fd_t fd,
+                                         const cloudabi64_iovec_t __user *iov,
+                                         size_t iovcnt,
+                                         cloudabi_filesize_t offset,
+                                         size_t *nread);
 
-cloudabi_errno_t
-cloudabi64_sys_fd_pwrite(
-	cloudabi_fd_t fd,
-	const cloudabi64_ciovec_t __user *iov,
-	size_t iovcnt,
-	cloudabi_filesize_t offset,
-	size_t *nwritten
-);
+cloudabi_errno_t cloudabi64_sys_fd_pwrite(cloudabi_fd_t fd,
+                                          const cloudabi64_ciovec_t __user *iov,
+                                          size_t iovcnt,
+                                          cloudabi_filesize_t offset,
+                                          size_t *nwritten);
 
-cloudabi_errno_t
-cloudabi64_sys_fd_read(
-	cloudabi_fd_t fd,
-	const cloudabi64_iovec_t __user *iov,
-	size_t iovcnt,
-	size_t *nread
-);
+cloudabi_errno_t cloudabi64_sys_fd_read(cloudabi_fd_t fd,
+                                        const cloudabi64_iovec_t __user *iov,
+                                        size_t iovcnt, size_t *nread);
 
-cloudabi_errno_t
-cloudabi64_sys_fd_write(
-	cloudabi_fd_t fd,
-	const cloudabi64_ciovec_t __user *iov,
-	size_t iovcnt,
-	size_t *nwritten
-);
+cloudabi_errno_t cloudabi64_sys_fd_write(cloudabi_fd_t fd,
+                                         const cloudabi64_ciovec_t __user *iov,
+                                         size_t iovcnt, size_t *nwritten);
 
-cloudabi_errno_t
-cloudabi64_sys_poll(
-	const cloudabi64_subscription_t __user *in,
-	cloudabi64_event_t __user *out,
-	size_t nsubscriptions,
-	size_t *nevents
-);
+cloudabi_errno_t cloudabi64_sys_poll(const cloudabi64_subscription_t __user *in,
+                                     cloudabi64_event_t __user *out,
+                                     size_t nsubscriptions, size_t *nevents);
 
-cloudabi_errno_t
-cloudabi64_sys_poll_fd(
-	cloudabi_fd_t fd,
-	const cloudabi64_subscription_t __user *in,
-	size_t nin,
-	cloudabi64_event_t __user *out,
-	size_t nout,
-	const cloudabi64_subscription_t __user *timeout,
-	size_t *nevents
-);
+cloudabi_errno_t cloudabi64_sys_poll_fd(
+    cloudabi_fd_t fd, const cloudabi64_subscription_t __user *in, size_t nin,
+    cloudabi64_event_t __user *out, size_t nout,
+    const cloudabi64_subscription_t __user *timeout, size_t *nevents);
 
-cloudabi_errno_t
-cloudabi64_sys_sock_recv(
-	cloudabi_fd_t sock,
-	const cloudabi64_recv_in_t __user *in,
-	cloudabi64_recv_out_t __user *out
-);
+cloudabi_errno_t cloudabi64_sys_sock_recv(cloudabi_fd_t sock,
+                                          const cloudabi64_recv_in_t __user *in,
+                                          cloudabi64_recv_out_t __user *out);
 
-cloudabi_errno_t
-cloudabi64_sys_sock_send(
-	cloudabi_fd_t sock,
-	const cloudabi64_send_in_t __user *in,
-	cloudabi64_send_out_t __user *out
-);
+cloudabi_errno_t cloudabi64_sys_sock_send(cloudabi_fd_t sock,
+                                          const cloudabi64_send_in_t __user *in,
+                                          cloudabi64_send_out_t __user *out);
 
-cloudabi_errno_t
-cloudabi64_sys_thread_create(
-	cloudabi64_threadattr_t __user *attr,
-	cloudabi_tid_t *tid
-);
+cloudabi_errno_t cloudabi64_sys_thread_create(
+    cloudabi64_threadattr_t __user *attr, cloudabi_tid_t *tid);
 
 #endif

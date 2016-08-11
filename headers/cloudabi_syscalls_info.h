@@ -29,529 +29,368 @@
 #define CLOUDABI_SYSCALLS_INFO_H
 
 #define CLOUDABI_SYSCALL_NAMES(SYSCALL) \
-	SYSCALL(clock_res_get) \
-	SYSCALL(clock_time_get) \
-	SYSCALL(condvar_signal) \
-	SYSCALL(fd_close) \
-	SYSCALL(fd_create1) \
-	SYSCALL(fd_create2) \
-	SYSCALL(fd_datasync) \
-	SYSCALL(fd_dup) \
-	SYSCALL(fd_pread) \
-	SYSCALL(fd_pwrite) \
-	SYSCALL(fd_read) \
-	SYSCALL(fd_replace) \
-	SYSCALL(fd_seek) \
-	SYSCALL(fd_stat_get) \
-	SYSCALL(fd_stat_put) \
-	SYSCALL(fd_sync) \
-	SYSCALL(fd_write) \
-	SYSCALL(file_advise) \
-	SYSCALL(file_allocate) \
-	SYSCALL(file_create) \
-	SYSCALL(file_link) \
-	SYSCALL(file_open) \
-	SYSCALL(file_readdir) \
-	SYSCALL(file_readlink) \
-	SYSCALL(file_rename) \
-	SYSCALL(file_stat_fget) \
-	SYSCALL(file_stat_fput) \
-	SYSCALL(file_stat_get) \
-	SYSCALL(file_stat_put) \
-	SYSCALL(file_symlink) \
-	SYSCALL(file_unlink) \
-	SYSCALL(lock_unlock) \
-	SYSCALL(mem_advise) \
-	SYSCALL(mem_lock) \
-	SYSCALL(mem_map) \
-	SYSCALL(mem_protect) \
-	SYSCALL(mem_sync) \
-	SYSCALL(mem_unlock) \
-	SYSCALL(mem_unmap) \
-	SYSCALL(poll) \
-	SYSCALL(poll_fd) \
-	SYSCALL(proc_exec) \
-	SYSCALL(proc_exit) \
-	SYSCALL(proc_fork) \
-	SYSCALL(proc_raise) \
-	SYSCALL(random_get) \
-	SYSCALL(sock_accept) \
-	SYSCALL(sock_bind) \
-	SYSCALL(sock_connect) \
-	SYSCALL(sock_listen) \
-	SYSCALL(sock_recv) \
-	SYSCALL(sock_send) \
-	SYSCALL(sock_shutdown) \
-	SYSCALL(sock_stat_get) \
-	SYSCALL(thread_create) \
-	SYSCALL(thread_exit) \
-	SYSCALL(thread_yield)
+  SYSCALL(clock_res_get)                \
+  SYSCALL(clock_time_get)               \
+  SYSCALL(condvar_signal)               \
+  SYSCALL(fd_close)                     \
+  SYSCALL(fd_create1)                   \
+  SYSCALL(fd_create2)                   \
+  SYSCALL(fd_datasync)                  \
+  SYSCALL(fd_dup)                       \
+  SYSCALL(fd_pread)                     \
+  SYSCALL(fd_pwrite)                    \
+  SYSCALL(fd_read)                      \
+  SYSCALL(fd_replace)                   \
+  SYSCALL(fd_seek)                      \
+  SYSCALL(fd_stat_get)                  \
+  SYSCALL(fd_stat_put)                  \
+  SYSCALL(fd_sync)                      \
+  SYSCALL(fd_write)                     \
+  SYSCALL(file_advise)                  \
+  SYSCALL(file_allocate)                \
+  SYSCALL(file_create)                  \
+  SYSCALL(file_link)                    \
+  SYSCALL(file_open)                    \
+  SYSCALL(file_readdir)                 \
+  SYSCALL(file_readlink)                \
+  SYSCALL(file_rename)                  \
+  SYSCALL(file_stat_fget)               \
+  SYSCALL(file_stat_fput)               \
+  SYSCALL(file_stat_get)                \
+  SYSCALL(file_stat_put)                \
+  SYSCALL(file_symlink)                 \
+  SYSCALL(file_unlink)                  \
+  SYSCALL(lock_unlock)                  \
+  SYSCALL(mem_advise)                   \
+  SYSCALL(mem_lock)                     \
+  SYSCALL(mem_map)                      \
+  SYSCALL(mem_protect)                  \
+  SYSCALL(mem_sync)                     \
+  SYSCALL(mem_unlock)                   \
+  SYSCALL(mem_unmap)                    \
+  SYSCALL(poll)                         \
+  SYSCALL(poll_fd)                      \
+  SYSCALL(proc_exec)                    \
+  SYSCALL(proc_exit)                    \
+  SYSCALL(proc_fork)                    \
+  SYSCALL(proc_raise)                   \
+  SYSCALL(random_get)                   \
+  SYSCALL(sock_accept)                  \
+  SYSCALL(sock_bind)                    \
+  SYSCALL(sock_connect)                 \
+  SYSCALL(sock_listen)                  \
+  SYSCALL(sock_recv)                    \
+  SYSCALL(sock_send)                    \
+  SYSCALL(sock_shutdown)                \
+  SYSCALL(sock_stat_get)                \
+  SYSCALL(thread_create)                \
+  SYSCALL(thread_exit)                  \
+  SYSCALL(thread_yield)
 
 #define CLOUDABI_SYSCALL_PARAMETERS_clock_res_get \
-	cloudabi_clockid_t clock_id, \
-	cloudabi_timestamp_t *resolution
+  cloudabi_clockid_t clock_id, cloudabi_timestamp_t *resolution
 
-#define CLOUDABI_SYSCALL_PARAMETERS_clock_time_get \
-	cloudabi_clockid_t clock_id, \
-	cloudabi_timestamp_t precision, \
-	cloudabi_timestamp_t *time
+#define CLOUDABI_SYSCALL_PARAMETERS_clock_time_get             \
+  cloudabi_clockid_t clock_id, cloudabi_timestamp_t precision, \
+      cloudabi_timestamp_t *time
 
-#define CLOUDABI_SYSCALL_PARAMETERS_condvar_signal \
-	_Atomic(cloudabi_condvar_t) *condvar, \
-	cloudabi_scope_t scope, \
-	cloudabi_nthreads_t nwaiters
+#define CLOUDABI_SYSCALL_PARAMETERS_condvar_signal               \
+  _Atomic(cloudabi_condvar_t) * condvar, cloudabi_scope_t scope, \
+      cloudabi_nthreads_t nwaiters
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_close \
-	cloudabi_fd_t fd
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_close cloudabi_fd_t fd
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_create1 \
-	cloudabi_filetype_t type, \
-	cloudabi_fd_t *fd
+  cloudabi_filetype_t type, cloudabi_fd_t *fd
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_create2 \
-	cloudabi_filetype_t type, \
-	cloudabi_fd_t *fd1, \
-	cloudabi_fd_t *fd2
+  cloudabi_filetype_t type, cloudabi_fd_t *fd1, cloudabi_fd_t *fd2
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_datasync \
-	cloudabi_fd_t fd
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_datasync cloudabi_fd_t fd
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_dup \
-	cloudabi_fd_t from, \
-	cloudabi_fd_t *fd
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_dup cloudabi_fd_t from, cloudabi_fd_t *fd
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_pread \
-	cloudabi_fd_t fd, \
-	const cloudabi_iovec_t *iov, \
-	size_t iovcnt, \
-	cloudabi_filesize_t offset, \
-	size_t *nread
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_pread                    \
+  cloudabi_fd_t fd, const cloudabi_iovec_t *iov, size_t iovcnt, \
+      cloudabi_filesize_t offset, size_t *nread
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_pwrite \
-	cloudabi_fd_t fd, \
-	const cloudabi_ciovec_t *iov, \
-	size_t iovcnt, \
-	cloudabi_filesize_t offset, \
-	size_t *nwritten
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_pwrite                    \
+  cloudabi_fd_t fd, const cloudabi_ciovec_t *iov, size_t iovcnt, \
+      cloudabi_filesize_t offset, size_t *nwritten
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_read \
-	cloudabi_fd_t fd, \
-	const cloudabi_iovec_t *iov, \
-	size_t iovcnt, \
-	size_t *nread
+  cloudabi_fd_t fd, const cloudabi_iovec_t *iov, size_t iovcnt, size_t *nread
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_replace \
-	cloudabi_fd_t from, \
-	cloudabi_fd_t to
+  cloudabi_fd_t from, cloudabi_fd_t to
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_seek \
-	cloudabi_fd_t fd, \
-	cloudabi_filedelta_t offset, \
-	cloudabi_whence_t whence, \
-	cloudabi_filesize_t *newoffset
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_seek                                \
+  cloudabi_fd_t fd, cloudabi_filedelta_t offset, cloudabi_whence_t whence, \
+      cloudabi_filesize_t *newoffset
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_stat_get \
-	cloudabi_fd_t fd, \
-	cloudabi_fdstat_t *buf
+  cloudabi_fd_t fd, cloudabi_fdstat_t *buf
 
 #define CLOUDABI_SYSCALL_PARAMETERS_fd_stat_put \
-	cloudabi_fd_t fd, \
-	const cloudabi_fdstat_t *buf, \
-	cloudabi_fdsflags_t flags
+  cloudabi_fd_t fd, const cloudabi_fdstat_t *buf, cloudabi_fdsflags_t flags
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_sync \
-	cloudabi_fd_t fd
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_sync cloudabi_fd_t fd
 
-#define CLOUDABI_SYSCALL_PARAMETERS_fd_write \
-	cloudabi_fd_t fd, \
-	const cloudabi_ciovec_t *iov, \
-	size_t iovcnt, \
-	size_t *nwritten
+#define CLOUDABI_SYSCALL_PARAMETERS_fd_write                     \
+  cloudabi_fd_t fd, const cloudabi_ciovec_t *iov, size_t iovcnt, \
+      size_t *nwritten
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_advise \
-	cloudabi_fd_t fd, \
-	cloudabi_filesize_t offset, \
-	cloudabi_filesize_t len, \
-	cloudabi_advice_t advice
+#define CLOUDABI_SYSCALL_PARAMETERS_file_advise                          \
+  cloudabi_fd_t fd, cloudabi_filesize_t offset, cloudabi_filesize_t len, \
+      cloudabi_advice_t advice
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_allocate \
-	cloudabi_fd_t fd, \
-	cloudabi_filesize_t offset, \
-	cloudabi_filesize_t len
+  cloudabi_fd_t fd, cloudabi_filesize_t offset, cloudabi_filesize_t len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_create \
-	cloudabi_fd_t fd, \
-	const char *path, \
-	size_t pathlen, \
-	cloudabi_filetype_t type
+  cloudabi_fd_t fd, const char *path, size_t pathlen, cloudabi_filetype_t type
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_link \
-	cloudabi_lookup_t fd1, \
-	const char *path1, \
-	size_t path1len, \
-	cloudabi_fd_t fd2, \
-	const char *path2, \
-	size_t path2len
+#define CLOUDABI_SYSCALL_PARAMETERS_file_link                \
+  cloudabi_lookup_t fd1, const char *path1, size_t path1len, \
+      cloudabi_fd_t fd2, const char *path2, size_t path2len
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_open \
-	cloudabi_lookup_t dirfd, \
-	const char *path, \
-	size_t pathlen, \
-	cloudabi_oflags_t oflags, \
-	const cloudabi_fdstat_t *fds, \
-	cloudabi_fd_t *fd
+#define CLOUDABI_SYSCALL_PARAMETERS_file_open                 \
+  cloudabi_lookup_t dirfd, const char *path, size_t pathlen,  \
+      cloudabi_oflags_t oflags, const cloudabi_fdstat_t *fds, \
+      cloudabi_fd_t *fd
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_readdir \
-	cloudabi_fd_t fd, \
-	void *buf, \
-	size_t nbyte, \
-	cloudabi_dircookie_t cookie, \
-	size_t *bufused
+#define CLOUDABI_SYSCALL_PARAMETERS_file_readdir                          \
+  cloudabi_fd_t fd, void *buf, size_t nbyte, cloudabi_dircookie_t cookie, \
+      size_t *bufused
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_readlink \
-	cloudabi_fd_t fd, \
-	const char *path, \
-	size_t pathlen, \
-	char *buf, \
-	size_t bufsize, \
-	size_t *bufused
+#define CLOUDABI_SYSCALL_PARAMETERS_file_readlink                \
+  cloudabi_fd_t fd, const char *path, size_t pathlen, char *buf, \
+      size_t bufsize, size_t *bufused
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_rename \
-	cloudabi_fd_t oldfd, \
-	const char *old, \
-	size_t oldlen, \
-	cloudabi_fd_t newfd, \
-	const char *new, \
-	size_t newlen
+#define CLOUDABI_SYSCALL_PARAMETERS_file_rename                             \
+  cloudabi_fd_t oldfd, const char *old, size_t oldlen, cloudabi_fd_t newfd, \
+      const char *new, size_t newlen
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_stat_fget \
-	cloudabi_fd_t fd, \
-	cloudabi_filestat_t *buf
+  cloudabi_fd_t fd, cloudabi_filestat_t *buf
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_stat_fput \
-	cloudabi_fd_t fd, \
-	const cloudabi_filestat_t *buf, \
-	cloudabi_fsflags_t flags
+  cloudabi_fd_t fd, const cloudabi_filestat_t *buf, cloudabi_fsflags_t flags
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_stat_get \
-	cloudabi_lookup_t fd, \
-	const char *path, \
-	size_t pathlen, \
-	cloudabi_filestat_t *buf
+#define CLOUDABI_SYSCALL_PARAMETERS_file_stat_get         \
+  cloudabi_lookup_t fd, const char *path, size_t pathlen, \
+      cloudabi_filestat_t *buf
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_stat_put \
-	cloudabi_lookup_t fd, \
-	const char *path, \
-	size_t pathlen, \
-	const cloudabi_filestat_t *buf, \
-	cloudabi_fsflags_t flags
+#define CLOUDABI_SYSCALL_PARAMETERS_file_stat_put         \
+  cloudabi_lookup_t fd, const char *path, size_t pathlen, \
+      const cloudabi_filestat_t *buf, cloudabi_fsflags_t flags
 
-#define CLOUDABI_SYSCALL_PARAMETERS_file_symlink \
-	const char *path1, \
-	size_t path1len, \
-	cloudabi_fd_t fd, \
-	const char *path2, \
-	size_t path2len
+#define CLOUDABI_SYSCALL_PARAMETERS_file_symlink                           \
+  const char *path1, size_t path1len, cloudabi_fd_t fd, const char *path2, \
+      size_t path2len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_unlink \
-	cloudabi_fd_t fd, \
-	const char *path, \
-	size_t pathlen, \
-	cloudabi_ulflags_t flags
+  cloudabi_fd_t fd, const char *path, size_t pathlen, cloudabi_ulflags_t flags
 
 #define CLOUDABI_SYSCALL_PARAMETERS_lock_unlock \
-	_Atomic(cloudabi_lock_t) *lock, \
-	cloudabi_scope_t scope
+  _Atomic(cloudabi_lock_t) * lock, cloudabi_scope_t scope
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_advise \
-	void *addr, \
-	size_t len, \
-	cloudabi_advice_t advice
+  void *addr, size_t len, cloudabi_advice_t advice
 
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_lock \
-	const void *addr, \
-	size_t len
+#define CLOUDABI_SYSCALL_PARAMETERS_mem_lock const void *addr, size_t len
 
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_map \
-	void *addr, \
-	size_t len, \
-	cloudabi_mprot_t prot, \
-	cloudabi_mflags_t flags, \
-	cloudabi_fd_t fd, \
-	cloudabi_filesize_t off, \
-	void **mem
+#define CLOUDABI_SYSCALL_PARAMETERS_mem_map                               \
+  void *addr, size_t len, cloudabi_mprot_t prot, cloudabi_mflags_t flags, \
+      cloudabi_fd_t fd, cloudabi_filesize_t off, void **mem
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_protect \
-	void *addr, \
-	size_t len, \
-	cloudabi_mprot_t prot
+  void *addr, size_t len, cloudabi_mprot_t prot
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_sync \
-	void *addr, \
-	size_t len, \
-	cloudabi_msflags_t flags
+  void *addr, size_t len, cloudabi_msflags_t flags
 
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_unlock \
-	const void *addr, \
-	size_t len
+#define CLOUDABI_SYSCALL_PARAMETERS_mem_unlock const void *addr, size_t len
 
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_unmap \
-	void *addr, \
-	size_t len
+#define CLOUDABI_SYSCALL_PARAMETERS_mem_unmap void *addr, size_t len
 
-#define CLOUDABI_SYSCALL_PARAMETERS_poll \
-	const cloudabi_subscription_t *in, \
-	cloudabi_event_t *out, \
-	size_t nsubscriptions, \
-	size_t *nevents
+#define CLOUDABI_SYSCALL_PARAMETERS_poll                    \
+  const cloudabi_subscription_t *in, cloudabi_event_t *out, \
+      size_t nsubscriptions, size_t *nevents
 
-#define CLOUDABI_SYSCALL_PARAMETERS_poll_fd \
-	cloudabi_fd_t fd, \
-	const cloudabi_subscription_t *in, \
-	size_t nin, \
-	cloudabi_event_t *out, \
-	size_t nout, \
-	const cloudabi_subscription_t *timeout, \
-	size_t *nevents
+#define CLOUDABI_SYSCALL_PARAMETERS_poll_fd                        \
+  cloudabi_fd_t fd, const cloudabi_subscription_t *in, size_t nin, \
+      cloudabi_event_t *out, size_t nout,                          \
+      const cloudabi_subscription_t *timeout, size_t *nevents
 
-#define CLOUDABI_SYSCALL_PARAMETERS_proc_exec \
-	cloudabi_fd_t fd, \
-	const void *data, \
-	size_t datalen, \
-	const cloudabi_fd_t *fds, \
-	size_t fdslen
+#define CLOUDABI_SYSCALL_PARAMETERS_proc_exec         \
+  cloudabi_fd_t fd, const void *data, size_t datalen, \
+      const cloudabi_fd_t *fds, size_t fdslen
 
-#define CLOUDABI_SYSCALL_PARAMETERS_proc_exit \
-	cloudabi_exitcode_t rval
+#define CLOUDABI_SYSCALL_PARAMETERS_proc_exit cloudabi_exitcode_t rval
 
 #define CLOUDABI_SYSCALL_PARAMETERS_proc_fork \
-	cloudabi_fd_t *fd, \
-	cloudabi_tid_t *tid
+  cloudabi_fd_t *fd, cloudabi_tid_t *tid
 
-#define CLOUDABI_SYSCALL_PARAMETERS_proc_raise \
-	cloudabi_signal_t sig
+#define CLOUDABI_SYSCALL_PARAMETERS_proc_raise cloudabi_signal_t sig
 
-#define CLOUDABI_SYSCALL_PARAMETERS_random_get \
-	void *buf, \
-	size_t nbyte
+#define CLOUDABI_SYSCALL_PARAMETERS_random_get void *buf, size_t nbyte
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_accept \
-	cloudabi_fd_t sock, \
-	cloudabi_sockstat_t *buf, \
-	cloudabi_fd_t *conn
+  cloudabi_fd_t sock, cloudabi_sockstat_t *buf, cloudabi_fd_t *conn
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_bind \
-	cloudabi_fd_t sock, \
-	cloudabi_fd_t fd, \
-	const char *path, \
-	size_t pathlen
+  cloudabi_fd_t sock, cloudabi_fd_t fd, const char *path, size_t pathlen
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_connect \
-	cloudabi_fd_t sock, \
-	cloudabi_fd_t fd, \
-	const char *path, \
-	size_t pathlen
+  cloudabi_fd_t sock, cloudabi_fd_t fd, const char *path, size_t pathlen
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_listen \
-	cloudabi_fd_t sock, \
-	cloudabi_backlog_t backlog
+  cloudabi_fd_t sock, cloudabi_backlog_t backlog
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_recv \
-	cloudabi_fd_t sock, \
-	const cloudabi_recv_in_t *in, \
-	cloudabi_recv_out_t *out
+  cloudabi_fd_t sock, const cloudabi_recv_in_t *in, cloudabi_recv_out_t *out
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_send \
-	cloudabi_fd_t sock, \
-	const cloudabi_send_in_t *in, \
-	cloudabi_send_out_t *out
+  cloudabi_fd_t sock, const cloudabi_send_in_t *in, cloudabi_send_out_t *out
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_shutdown \
-	cloudabi_fd_t sock, \
-	cloudabi_sdflags_t how
+  cloudabi_fd_t sock, cloudabi_sdflags_t how
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_stat_get \
-	cloudabi_fd_t sock, \
-	cloudabi_sockstat_t *buf, \
-	cloudabi_ssflags_t flags
+  cloudabi_fd_t sock, cloudabi_sockstat_t *buf, cloudabi_ssflags_t flags
 
 #define CLOUDABI_SYSCALL_PARAMETERS_thread_create \
-	cloudabi_threadattr_t *attr, \
-	cloudabi_tid_t *tid
+  cloudabi_threadattr_t *attr, cloudabi_tid_t *tid
 
 #define CLOUDABI_SYSCALL_PARAMETERS_thread_exit \
-	_Atomic(cloudabi_lock_t) *lock, \
-	cloudabi_scope_t scope
+  _Atomic(cloudabi_lock_t) * lock, cloudabi_scope_t scope
 
 #define CLOUDABI_SYSCALL_PARAMETERS_thread_yield
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_clock_res_get \
-	clock_id, resolution
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_clock_res_get clock_id, resolution
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_clock_time_get \
-	clock_id, precision, time
+  clock_id, precision, time
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_condvar_signal \
-	condvar, scope, nwaiters
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_condvar_signal condvar, scope, nwaiters
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_close \
-	fd
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_close fd
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_create1 \
-	type, fd
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_create1 type, fd
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_create2 \
-	type, fd1, fd2
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_create2 type, fd1, fd2
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_datasync \
-	fd
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_datasync fd
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_dup \
-	from, fd
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_dup from, fd
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_pread \
-	fd, iov, iovcnt, offset, nread
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_pread fd, iov, iovcnt, offset, nread
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_pwrite \
-	fd, iov, iovcnt, offset, nwritten
+  fd, iov, iovcnt, offset, nwritten
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_read \
-	fd, iov, iovcnt, nread
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_read fd, iov, iovcnt, nread
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_replace \
-	from, to
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_replace from, to
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_seek \
-	fd, offset, whence, newoffset
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_seek fd, offset, whence, newoffset
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_stat_get \
-	fd, buf
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_stat_get fd, buf
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_stat_put \
-	fd, buf, flags
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_stat_put fd, buf, flags
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_sync \
-	fd
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_sync fd
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_write \
-	fd, iov, iovcnt, nwritten
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_fd_write fd, iov, iovcnt, nwritten
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_advise \
-	fd, offset, len, advice
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_advise fd, offset, len, advice
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_allocate \
-	fd, offset, len
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_allocate fd, offset, len
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_create \
-	fd, path, pathlen, type
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_create fd, path, pathlen, type
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_link \
-	fd1, path1, path1len, fd2, path2, path2len
+  fd1, path1, path1len, fd2, path2, path2len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_open \
-	dirfd, path, pathlen, oflags, fds, fd
+  dirfd, path, pathlen, oflags, fds, fd
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_readdir \
-	fd, buf, nbyte, cookie, bufused
+  fd, buf, nbyte, cookie, bufused
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_readlink \
-	fd, path, pathlen, buf, bufsize, bufused
+  fd, path, pathlen, buf, bufsize, bufused
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_rename \
-	oldfd, old, oldlen, newfd, new, newlen
+  oldfd, old, oldlen, newfd, new, newlen
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_fget \
-	fd, buf
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_fget fd, buf
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_fput \
-	fd, buf, flags
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_fput fd, buf, flags
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_get \
-	fd, path, pathlen, buf
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_get fd, path, pathlen, buf
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_put \
-	fd, path, pathlen, buf, flags
+  fd, path, pathlen, buf, flags
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_symlink \
-	path1, path1len, fd, path2, path2len
+  path1, path1len, fd, path2, path2len
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_unlink \
-	fd, path, pathlen, flags
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_unlink fd, path, pathlen, flags
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_lock_unlock \
-	lock, scope
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_lock_unlock lock, scope
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_advise \
-	addr, len, advice
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_advise addr, len, advice
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_lock \
-	addr, len
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_lock addr, len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_map \
-	addr, len, prot, flags, fd, off, mem
+  addr, len, prot, flags, fd, off, mem
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_protect \
-	addr, len, prot
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_protect addr, len, prot
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_sync \
-	addr, len, flags
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_sync addr, len, flags
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unlock \
-	addr, len
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unlock addr, len
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unmap \
-	addr, len
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unmap addr, len
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll \
-	in, out, nsubscriptions, nevents
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll in, out, nsubscriptions, nevents
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll_fd \
-	fd, in, nin, out, nout, timeout, nevents
+  fd, in, nin, out, nout, timeout, nevents
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_exec \
-	fd, data, datalen, fds, fdslen
+  fd, data, datalen, fds, fdslen
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_exit \
-	rval
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_exit rval
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_fork \
-	fd, tid
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_fork fd, tid
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_raise \
-	sig
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_raise sig
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_random_get \
-	buf, nbyte
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_random_get buf, nbyte
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_accept \
-	sock, buf, conn
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_accept sock, buf, conn
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_bind \
-	sock, fd, path, pathlen
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_bind sock, fd, path, pathlen
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_connect \
-	sock, fd, path, pathlen
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_connect sock, fd, path, pathlen
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_listen \
-	sock, backlog
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_listen sock, backlog
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_recv \
-	sock, in, out
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_recv sock, in, out
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_send \
-	sock, in, out
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_send sock, in, out
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_shutdown \
-	sock, how
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_shutdown sock, how
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_stat_get \
-	sock, buf, flags
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_stat_get sock, buf, flags
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_create \
-	attr, tid
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_create attr, tid
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_exit \
-	lock, scope
+#define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_exit lock, scope
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_yield
 

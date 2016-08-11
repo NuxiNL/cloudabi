@@ -31,247 +31,130 @@
 #include "cloudabi_types.h"
 
 typedef struct {
-	cloudabi_errno_t (*clock_res_get)(
-		cloudabi_clockid_t clock_id,
-		cloudabi_timestamp_t *resolution);
-	cloudabi_errno_t (*clock_time_get)(
-		cloudabi_clockid_t clock_id,
-		cloudabi_timestamp_t precision,
-		cloudabi_timestamp_t *time);
-	cloudabi_errno_t (*condvar_signal)(
-		_Atomic(cloudabi_condvar_t) *condvar,
-		cloudabi_scope_t scope,
-		cloudabi_nthreads_t nwaiters);
-	cloudabi_errno_t (*fd_close)(
-		cloudabi_fd_t fd);
-	cloudabi_errno_t (*fd_create1)(
-		cloudabi_filetype_t type,
-		cloudabi_fd_t *fd);
-	cloudabi_errno_t (*fd_create2)(
-		cloudabi_filetype_t type,
-		cloudabi_fd_t *fd1,
-		cloudabi_fd_t *fd2);
-	cloudabi_errno_t (*fd_datasync)(
-		cloudabi_fd_t fd);
-	cloudabi_errno_t (*fd_dup)(
-		cloudabi_fd_t from,
-		cloudabi_fd_t *fd);
-	cloudabi_errno_t (*fd_pread)(
-		cloudabi_fd_t fd,
-		const cloudabi_iovec_t *iov,
-		size_t iovcnt,
-		cloudabi_filesize_t offset,
-		size_t *nread);
-	cloudabi_errno_t (*fd_pwrite)(
-		cloudabi_fd_t fd,
-		const cloudabi_ciovec_t *iov,
-		size_t iovcnt,
-		cloudabi_filesize_t offset,
-		size_t *nwritten);
-	cloudabi_errno_t (*fd_read)(
-		cloudabi_fd_t fd,
-		const cloudabi_iovec_t *iov,
-		size_t iovcnt,
-		size_t *nread);
-	cloudabi_errno_t (*fd_replace)(
-		cloudabi_fd_t from,
-		cloudabi_fd_t to);
-	cloudabi_errno_t (*fd_seek)(
-		cloudabi_fd_t fd,
-		cloudabi_filedelta_t offset,
-		cloudabi_whence_t whence,
-		cloudabi_filesize_t *newoffset);
-	cloudabi_errno_t (*fd_stat_get)(
-		cloudabi_fd_t fd,
-		cloudabi_fdstat_t *buf);
-	cloudabi_errno_t (*fd_stat_put)(
-		cloudabi_fd_t fd,
-		const cloudabi_fdstat_t *buf,
-		cloudabi_fdsflags_t flags);
-	cloudabi_errno_t (*fd_sync)(
-		cloudabi_fd_t fd);
-	cloudabi_errno_t (*fd_write)(
-		cloudabi_fd_t fd,
-		const cloudabi_ciovec_t *iov,
-		size_t iovcnt,
-		size_t *nwritten);
-	cloudabi_errno_t (*file_advise)(
-		cloudabi_fd_t fd,
-		cloudabi_filesize_t offset,
-		cloudabi_filesize_t len,
-		cloudabi_advice_t advice);
-	cloudabi_errno_t (*file_allocate)(
-		cloudabi_fd_t fd,
-		cloudabi_filesize_t offset,
-		cloudabi_filesize_t len);
-	cloudabi_errno_t (*file_create)(
-		cloudabi_fd_t fd,
-		const char *path,
-		size_t pathlen,
-		cloudabi_filetype_t type);
-	cloudabi_errno_t (*file_link)(
-		cloudabi_lookup_t fd1,
-		const char *path1,
-		size_t path1len,
-		cloudabi_fd_t fd2,
-		const char *path2,
-		size_t path2len);
-	cloudabi_errno_t (*file_open)(
-		cloudabi_lookup_t dirfd,
-		const char *path,
-		size_t pathlen,
-		cloudabi_oflags_t oflags,
-		const cloudabi_fdstat_t *fds,
-		cloudabi_fd_t *fd);
-	cloudabi_errno_t (*file_readdir)(
-		cloudabi_fd_t fd,
-		void *buf,
-		size_t nbyte,
-		cloudabi_dircookie_t cookie,
-		size_t *bufused);
-	cloudabi_errno_t (*file_readlink)(
-		cloudabi_fd_t fd,
-		const char *path,
-		size_t pathlen,
-		char *buf,
-		size_t bufsize,
-		size_t *bufused);
-	cloudabi_errno_t (*file_rename)(
-		cloudabi_fd_t oldfd,
-		const char *old,
-		size_t oldlen,
-		cloudabi_fd_t newfd,
-		const char *new,
-		size_t newlen);
-	cloudabi_errno_t (*file_stat_fget)(
-		cloudabi_fd_t fd,
-		cloudabi_filestat_t *buf);
-	cloudabi_errno_t (*file_stat_fput)(
-		cloudabi_fd_t fd,
-		const cloudabi_filestat_t *buf,
-		cloudabi_fsflags_t flags);
-	cloudabi_errno_t (*file_stat_get)(
-		cloudabi_lookup_t fd,
-		const char *path,
-		size_t pathlen,
-		cloudabi_filestat_t *buf);
-	cloudabi_errno_t (*file_stat_put)(
-		cloudabi_lookup_t fd,
-		const char *path,
-		size_t pathlen,
-		const cloudabi_filestat_t *buf,
-		cloudabi_fsflags_t flags);
-	cloudabi_errno_t (*file_symlink)(
-		const char *path1,
-		size_t path1len,
-		cloudabi_fd_t fd,
-		const char *path2,
-		size_t path2len);
-	cloudabi_errno_t (*file_unlink)(
-		cloudabi_fd_t fd,
-		const char *path,
-		size_t pathlen,
-		cloudabi_ulflags_t flags);
-	cloudabi_errno_t (*lock_unlock)(
-		_Atomic(cloudabi_lock_t) *lock,
-		cloudabi_scope_t scope);
-	cloudabi_errno_t (*mem_advise)(
-		void *addr,
-		size_t len,
-		cloudabi_advice_t advice);
-	cloudabi_errno_t (*mem_lock)(
-		const void *addr,
-		size_t len);
-	cloudabi_errno_t (*mem_map)(
-		void *addr,
-		size_t len,
-		cloudabi_mprot_t prot,
-		cloudabi_mflags_t flags,
-		cloudabi_fd_t fd,
-		cloudabi_filesize_t off,
-		void **mem);
-	cloudabi_errno_t (*mem_protect)(
-		void *addr,
-		size_t len,
-		cloudabi_mprot_t prot);
-	cloudabi_errno_t (*mem_sync)(
-		void *addr,
-		size_t len,
-		cloudabi_msflags_t flags);
-	cloudabi_errno_t (*mem_unlock)(
-		const void *addr,
-		size_t len);
-	cloudabi_errno_t (*mem_unmap)(
-		void *addr,
-		size_t len);
-	cloudabi_errno_t (*poll)(
-		const cloudabi_subscription_t *in,
-		cloudabi_event_t *out,
-		size_t nsubscriptions,
-		size_t *nevents);
-	cloudabi_errno_t (*poll_fd)(
-		cloudabi_fd_t fd,
-		const cloudabi_subscription_t *in,
-		size_t nin,
-		cloudabi_event_t *out,
-		size_t nout,
-		const cloudabi_subscription_t *timeout,
-		size_t *nevents);
-	cloudabi_errno_t (*proc_exec)(
-		cloudabi_fd_t fd,
-		const void *data,
-		size_t datalen,
-		const cloudabi_fd_t *fds,
-		size_t fdslen);
-	void (*proc_exit)(
-		cloudabi_exitcode_t rval);
-	cloudabi_errno_t (*proc_fork)(
-		cloudabi_fd_t *fd,
-		cloudabi_tid_t *tid);
-	cloudabi_errno_t (*proc_raise)(
-		cloudabi_signal_t sig);
-	cloudabi_errno_t (*random_get)(
-		void *buf,
-		size_t nbyte);
-	cloudabi_errno_t (*sock_accept)(
-		cloudabi_fd_t sock,
-		cloudabi_sockstat_t *buf,
-		cloudabi_fd_t *conn);
-	cloudabi_errno_t (*sock_bind)(
-		cloudabi_fd_t sock,
-		cloudabi_fd_t fd,
-		const char *path,
-		size_t pathlen);
-	cloudabi_errno_t (*sock_connect)(
-		cloudabi_fd_t sock,
-		cloudabi_fd_t fd,
-		const char *path,
-		size_t pathlen);
-	cloudabi_errno_t (*sock_listen)(
-		cloudabi_fd_t sock,
-		cloudabi_backlog_t backlog);
-	cloudabi_errno_t (*sock_recv)(
-		cloudabi_fd_t sock,
-		const cloudabi_recv_in_t *in,
-		cloudabi_recv_out_t *out);
-	cloudabi_errno_t (*sock_send)(
-		cloudabi_fd_t sock,
-		const cloudabi_send_in_t *in,
-		cloudabi_send_out_t *out);
-	cloudabi_errno_t (*sock_shutdown)(
-		cloudabi_fd_t sock,
-		cloudabi_sdflags_t how);
-	cloudabi_errno_t (*sock_stat_get)(
-		cloudabi_fd_t sock,
-		cloudabi_sockstat_t *buf,
-		cloudabi_ssflags_t flags);
-	cloudabi_errno_t (*thread_create)(
-		cloudabi_threadattr_t *attr,
-		cloudabi_tid_t *tid);
-	void (*thread_exit)(
-		_Atomic(cloudabi_lock_t) *lock,
-		cloudabi_scope_t scope);
-	cloudabi_errno_t (*thread_yield)(void);
+  cloudabi_errno_t (*clock_res_get)(cloudabi_clockid_t clock_id,
+                                    cloudabi_timestamp_t *resolution);
+  cloudabi_errno_t (*clock_time_get)(cloudabi_clockid_t clock_id,
+                                     cloudabi_timestamp_t precision,
+                                     cloudabi_timestamp_t *time);
+  cloudabi_errno_t (*condvar_signal)(_Atomic(cloudabi_condvar_t) * condvar,
+                                     cloudabi_scope_t scope,
+                                     cloudabi_nthreads_t nwaiters);
+  cloudabi_errno_t (*fd_close)(cloudabi_fd_t fd);
+  cloudabi_errno_t (*fd_create1)(cloudabi_filetype_t type, cloudabi_fd_t *fd);
+  cloudabi_errno_t (*fd_create2)(cloudabi_filetype_t type, cloudabi_fd_t *fd1,
+                                 cloudabi_fd_t *fd2);
+  cloudabi_errno_t (*fd_datasync)(cloudabi_fd_t fd);
+  cloudabi_errno_t (*fd_dup)(cloudabi_fd_t from, cloudabi_fd_t *fd);
+  cloudabi_errno_t (*fd_pread)(cloudabi_fd_t fd, const cloudabi_iovec_t *iov,
+                               size_t iovcnt, cloudabi_filesize_t offset,
+                               size_t *nread);
+  cloudabi_errno_t (*fd_pwrite)(cloudabi_fd_t fd, const cloudabi_ciovec_t *iov,
+                                size_t iovcnt, cloudabi_filesize_t offset,
+                                size_t *nwritten);
+  cloudabi_errno_t (*fd_read)(cloudabi_fd_t fd, const cloudabi_iovec_t *iov,
+                              size_t iovcnt, size_t *nread);
+  cloudabi_errno_t (*fd_replace)(cloudabi_fd_t from, cloudabi_fd_t to);
+  cloudabi_errno_t (*fd_seek)(cloudabi_fd_t fd, cloudabi_filedelta_t offset,
+                              cloudabi_whence_t whence,
+                              cloudabi_filesize_t *newoffset);
+  cloudabi_errno_t (*fd_stat_get)(cloudabi_fd_t fd, cloudabi_fdstat_t *buf);
+  cloudabi_errno_t (*fd_stat_put)(cloudabi_fd_t fd,
+                                  const cloudabi_fdstat_t *buf,
+                                  cloudabi_fdsflags_t flags);
+  cloudabi_errno_t (*fd_sync)(cloudabi_fd_t fd);
+  cloudabi_errno_t (*fd_write)(cloudabi_fd_t fd, const cloudabi_ciovec_t *iov,
+                               size_t iovcnt, size_t *nwritten);
+  cloudabi_errno_t (*file_advise)(cloudabi_fd_t fd, cloudabi_filesize_t offset,
+                                  cloudabi_filesize_t len,
+                                  cloudabi_advice_t advice);
+  cloudabi_errno_t (*file_allocate)(cloudabi_fd_t fd,
+                                    cloudabi_filesize_t offset,
+                                    cloudabi_filesize_t len);
+  cloudabi_errno_t (*file_create)(cloudabi_fd_t fd, const char *path,
+                                  size_t pathlen, cloudabi_filetype_t type);
+  cloudabi_errno_t (*file_link)(cloudabi_lookup_t fd1, const char *path1,
+                                size_t path1len, cloudabi_fd_t fd2,
+                                const char *path2, size_t path2len);
+  cloudabi_errno_t (*file_open)(cloudabi_lookup_t dirfd, const char *path,
+                                size_t pathlen, cloudabi_oflags_t oflags,
+                                const cloudabi_fdstat_t *fds,
+                                cloudabi_fd_t *fd);
+  cloudabi_errno_t (*file_readdir)(cloudabi_fd_t fd, void *buf, size_t nbyte,
+                                   cloudabi_dircookie_t cookie,
+                                   size_t *bufused);
+  cloudabi_errno_t (*file_readlink)(cloudabi_fd_t fd, const char *path,
+                                    size_t pathlen, char *buf, size_t bufsize,
+                                    size_t *bufused);
+  cloudabi_errno_t (*file_rename)(cloudabi_fd_t oldfd, const char *old,
+                                  size_t oldlen, cloudabi_fd_t newfd,
+                                  const char *new, size_t newlen);
+  cloudabi_errno_t (*file_stat_fget)(cloudabi_fd_t fd,
+                                     cloudabi_filestat_t *buf);
+  cloudabi_errno_t (*file_stat_fput)(cloudabi_fd_t fd,
+                                     const cloudabi_filestat_t *buf,
+                                     cloudabi_fsflags_t flags);
+  cloudabi_errno_t (*file_stat_get)(cloudabi_lookup_t fd, const char *path,
+                                    size_t pathlen, cloudabi_filestat_t *buf);
+  cloudabi_errno_t (*file_stat_put)(cloudabi_lookup_t fd, const char *path,
+                                    size_t pathlen,
+                                    const cloudabi_filestat_t *buf,
+                                    cloudabi_fsflags_t flags);
+  cloudabi_errno_t (*file_symlink)(const char *path1, size_t path1len,
+                                   cloudabi_fd_t fd, const char *path2,
+                                   size_t path2len);
+  cloudabi_errno_t (*file_unlink)(cloudabi_fd_t fd, const char *path,
+                                  size_t pathlen, cloudabi_ulflags_t flags);
+  cloudabi_errno_t (*lock_unlock)(_Atomic(cloudabi_lock_t) * lock,
+                                  cloudabi_scope_t scope);
+  cloudabi_errno_t (*mem_advise)(void *addr, size_t len,
+                                 cloudabi_advice_t advice);
+  cloudabi_errno_t (*mem_lock)(const void *addr, size_t len);
+  cloudabi_errno_t (*mem_map)(void *addr, size_t len, cloudabi_mprot_t prot,
+                              cloudabi_mflags_t flags, cloudabi_fd_t fd,
+                              cloudabi_filesize_t off, void **mem);
+  cloudabi_errno_t (*mem_protect)(void *addr, size_t len,
+                                  cloudabi_mprot_t prot);
+  cloudabi_errno_t (*mem_sync)(void *addr, size_t len,
+                               cloudabi_msflags_t flags);
+  cloudabi_errno_t (*mem_unlock)(const void *addr, size_t len);
+  cloudabi_errno_t (*mem_unmap)(void *addr, size_t len);
+  cloudabi_errno_t (*poll)(const cloudabi_subscription_t *in,
+                           cloudabi_event_t *out, size_t nsubscriptions,
+                           size_t *nevents);
+  cloudabi_errno_t (*poll_fd)(cloudabi_fd_t fd,
+                              const cloudabi_subscription_t *in, size_t nin,
+                              cloudabi_event_t *out, size_t nout,
+                              const cloudabi_subscription_t *timeout,
+                              size_t *nevents);
+  cloudabi_errno_t (*proc_exec)(cloudabi_fd_t fd, const void *data,
+                                size_t datalen, const cloudabi_fd_t *fds,
+                                size_t fdslen);
+  void (*proc_exit)(cloudabi_exitcode_t rval);
+  cloudabi_errno_t (*proc_fork)(cloudabi_fd_t *fd, cloudabi_tid_t *tid);
+  cloudabi_errno_t (*proc_raise)(cloudabi_signal_t sig);
+  cloudabi_errno_t (*random_get)(void *buf, size_t nbyte);
+  cloudabi_errno_t (*sock_accept)(cloudabi_fd_t sock, cloudabi_sockstat_t *buf,
+                                  cloudabi_fd_t *conn);
+  cloudabi_errno_t (*sock_bind)(cloudabi_fd_t sock, cloudabi_fd_t fd,
+                                const char *path, size_t pathlen);
+  cloudabi_errno_t (*sock_connect)(cloudabi_fd_t sock, cloudabi_fd_t fd,
+                                   const char *path, size_t pathlen);
+  cloudabi_errno_t (*sock_listen)(cloudabi_fd_t sock,
+                                  cloudabi_backlog_t backlog);
+  cloudabi_errno_t (*sock_recv)(cloudabi_fd_t sock,
+                                const cloudabi_recv_in_t *in,
+                                cloudabi_recv_out_t *out);
+  cloudabi_errno_t (*sock_send)(cloudabi_fd_t sock,
+                                const cloudabi_send_in_t *in,
+                                cloudabi_send_out_t *out);
+  cloudabi_errno_t (*sock_shutdown)(cloudabi_fd_t sock, cloudabi_sdflags_t how);
+  cloudabi_errno_t (*sock_stat_get)(cloudabi_fd_t sock,
+                                    cloudabi_sockstat_t *buf,
+                                    cloudabi_ssflags_t flags);
+  cloudabi_errno_t (*thread_create)(cloudabi_threadattr_t *attr,
+                                    cloudabi_tid_t *tid);
+  void (*thread_exit)(_Atomic(cloudabi_lock_t) * lock, cloudabi_scope_t scope);
+  cloudabi_errno_t (*thread_yield)(void);
 } cloudabi_syscalls_t;
 
 #endif

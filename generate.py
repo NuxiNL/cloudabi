@@ -5,8 +5,9 @@
 # See the LICENSE and CONTRIBUTORS files for details.
 
 from contextlib import redirect_stdout
-import subprocess
+import io
 import os
+import subprocess
 
 from generator.abi import *
 from generator.c import *
@@ -17,7 +18,22 @@ from generator.syscalls_master import *
 abi = AbiParser().parse_abi_file(
     os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
-with open('headers/cloudabi_types_common.h', 'w') as f:
+# Pipes output through clang-format to format the C code.
+def open_and_format(filename):
+    proc = subprocess.Popen([
+        'clang-format',
+        '''-style={
+               BasedOnStyle: Google,
+               AllowShortIfStatementsOnASingleLine: false,
+               AllowShortLoopsOnASingleLine: false,
+               AllowShortFunctionsOnASingleLine: None,
+               DerivePointerBinding: false,
+               PointerAlignment: Right,
+         }'''], stdin=subprocess.PIPE, stdout=open(filename, 'w'))
+    return io.TextIOWrapper(proc.stdin, encoding='UTF-8')
+
+
+with open_and_format('headers/cloudabi_types_common.h') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
@@ -33,7 +49,7 @@ with open('headers/cloudabi_types_common.h', 'w') as f:
                      '#endif\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_types.h', 'w') as f:
+with open_and_format('headers/cloudabi_types.h') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
@@ -42,7 +58,7 @@ with open('headers/cloudabi_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi32_types.h', 'w') as f:
+with open_and_format('headers/cloudabi32_types.h') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi32_'),
@@ -52,7 +68,7 @@ with open('headers/cloudabi32_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi64_types.h', 'w') as f:
+with open_and_format('headers/cloudabi64_types.h') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_'),
@@ -62,7 +78,7 @@ with open('headers/cloudabi64_types.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_syscalls_struct.h', 'w') as f:
+with open_and_format('headers/cloudabi_syscalls_struct.h') as f:
     with redirect_stdout(f):
         CSyscallStructGenerator(
             naming=CNaming('cloudabi_'),
@@ -70,7 +86,7 @@ with open('headers/cloudabi_syscalls_struct.h', 'w') as f:
             preamble='#include "cloudabi_types.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_syscalls.h', 'w') as f:
+with open_and_format('headers/cloudabi_syscalls.h') as f:
     with redirect_stdout(f):
         CSyscallWrappersGenerator(
             naming=CNaming('cloudabi_', function_keywords='static inline '),
@@ -78,21 +94,21 @@ with open('headers/cloudabi_syscalls.h', 'w') as f:
             preamble='#include "cloudabi_syscalls_struct.h"\n'
         ).generate_abi(abi)
 
-with open('headers/cloudabi_syscalls_info.h', 'w') as f:
+with open_and_format('headers/cloudabi_syscalls_info.h') as f:
     with redirect_stdout(f):
         CSyscallsInfoGenerator(
             naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_INFO_H',
         ).generate_abi(abi)
 
-with open('sources/cloudabi_vdso_x86_64.c', 'w') as f:
+with open_and_format('sources/cloudabi_vdso_x86_64.c') as f:
     with redirect_stdout(f):
         CNativeSyscallsX86_64Generator(
             naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
             preamble='#include <cloudabi_types.h>\n'
         ).generate_abi(abi)
 
-with open('sources/cloudabi_vdso_aarch64.c', 'w') as f:
+with open_and_format('sources/cloudabi_vdso_aarch64.c') as f:
     with redirect_stdout(f):
         CNativeSyscallsAarch64Generator(
             naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
@@ -105,7 +121,7 @@ with open('freebsd/syscalls.master', 'w') as f:
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False),
         ).generate_abi(abi)
 
-with open('linux/cloudabi_syscalls.h', 'w') as f:
+with open_and_format('linux/cloudabi_syscalls.h') as f:
     with redirect_stdout(f):
         CLinuxSyscallsGenerator(
             naming=CNaming('cloudabi_', c11=False, pointer_prefix='__user '),
@@ -114,7 +130,7 @@ with open('linux/cloudabi_syscalls.h', 'w') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open('linux/cloudabi64_syscalls.h', 'w') as f:
+with open_and_format('linux/cloudabi64_syscalls.h') as f:
     with redirect_stdout(f):
         CLinuxSyscallsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
@@ -124,7 +140,7 @@ with open('linux/cloudabi64_syscalls.h', 'w') as f:
             preamble='#include "cloudabi64_types.h"\n'
         ).generate_abi(abi)
 
-with open('linux/cloudabi64_syscalls_table.h', 'w') as f:
+with open_and_format('linux/cloudabi64_syscalls_table.h') as f:
     with redirect_stdout(f):
         CLinuxSyscallTableGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False,
