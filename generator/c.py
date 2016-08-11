@@ -475,7 +475,12 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
         for i in range(len(syscall.input.raw_members)):
             print('\t\t, "r"(reg_{})'.format(self.input_registers[i]))
 
-        print('\t\t: {});'.format(self.clobbers))
+        # Print clobbered registers. Omit the ones that are already
+        # declared previously, as GCC doesn't allow that.
+        print('\t\t: {});'.format(', '.join(
+            '"%s"' % r
+            for r in self.clobbers
+            if r not in defined_regs)))
         if check_okay:
             print('\tif (okay) {')
             for i, p in enumerate(syscall.output.raw_members):
@@ -512,7 +517,7 @@ class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
     output_registers = ['rax', 'rdx']
     errno_register = 'rax'
 
-    clobbers = '"memory", "rcx", "rdx", "r8", "r9", "r10", "r11"'
+    clobbers = ['memory', 'rcx', 'rdx', 'r8', 'r9', 'r10', 'r11']
 
     register_t = int_types['uint64']
     okay_t = int_types['char']
@@ -530,11 +535,10 @@ class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
 
     output_register_start = 1
 
-    clobbers = ('"memory"\n'
-                '\t\t, "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7"\n'
-                '\t\t, "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"\n'
-                '\t\t, "x16", "x17", "x18"\n'
-                '\t\t, "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7"')
+    clobbers = ['memory',
+                'x0', 'x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9',
+                'x10', 'x11', 'x12', 'x13', 'x14', 'x15', 'x16', 'x17', 'x18',
+                'd0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7']
 
     register_t = int_types['uint64']
     okay_t = register_t

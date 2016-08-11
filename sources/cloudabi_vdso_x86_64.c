@@ -93,7 +93,7 @@ cloudabi_sys_condvar_signal(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -153,7 +153,7 @@ cloudabi_sys_fd_create2(
 		, "=r"(reg_rdx)
 		: "r"(reg_rax)
 		, "r"(reg_rdi)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*fd1 = (cloudabi_fd_t)reg_rax;
 		*fd2 = (cloudabi_fd_t)reg_rdx;
@@ -224,7 +224,7 @@ cloudabi_sys_fd_pread(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	if (okay) {
 		*nread = (size_t)reg_rax;
 		return 0;
@@ -256,7 +256,7 @@ cloudabi_sys_fd_pwrite(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	if (okay) {
 		*nwritten = (size_t)reg_rax;
 		return 0;
@@ -285,7 +285,7 @@ cloudabi_sys_fd_read(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*nread = (size_t)reg_rax;
 		return 0;
@@ -332,7 +332,7 @@ cloudabi_sys_fd_seek(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*newoffset = (cloudabi_filesize_t)reg_rax;
 		return 0;
@@ -375,7 +375,7 @@ cloudabi_sys_fd_stat_put(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -415,7 +415,7 @@ cloudabi_sys_fd_write(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*nwritten = (size_t)reg_rax;
 		return 0;
@@ -443,7 +443,7 @@ cloudabi_sys_file_advise(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -464,7 +464,7 @@ cloudabi_sys_file_allocate(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -488,7 +488,7 @@ cloudabi_sys_file_create(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -518,7 +518,7 @@ cloudabi_sys_file_link(
 		, "r"(reg_r10)
 		, "r"(reg_r8)
 		, "r"(reg_r9)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r11");
 	return reg_rax;
 }
 
@@ -549,7 +549,7 @@ cloudabi_sys_file_open(
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
 		, "r"(reg_r8)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r9", "r11");
 	if (okay) {
 		*fd = (cloudabi_fd_t)reg_rax;
 		return 0;
@@ -581,7 +581,7 @@ cloudabi_sys_file_readdir(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	if (okay) {
 		*bufused = (size_t)reg_rax;
 		return 0;
@@ -616,7 +616,7 @@ cloudabi_sys_file_readlink(
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
 		, "r"(reg_r8)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r9", "r11");
 	if (okay) {
 		*bufused = (size_t)reg_rax;
 		return 0;
@@ -650,7 +650,7 @@ cloudabi_sys_file_rename(
 		, "r"(reg_r10)
 		, "r"(reg_r8)
 		, "r"(reg_r9)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r11");
 	return reg_rax;
 }
 
@@ -689,7 +689,7 @@ cloudabi_sys_file_stat_fput(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -713,7 +713,7 @@ cloudabi_sys_file_stat_get(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -740,7 +740,7 @@ cloudabi_sys_file_stat_put(
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
 		, "r"(reg_r8)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r9", "r11");
 	return reg_rax;
 }
 
@@ -767,7 +767,7 @@ cloudabi_sys_file_symlink(
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
 		, "r"(reg_r8)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r9", "r11");
 	return reg_rax;
 }
 
@@ -791,7 +791,7 @@ cloudabi_sys_file_unlink(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -830,7 +830,7 @@ cloudabi_sys_mem_advise(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -882,7 +882,7 @@ cloudabi_sys_mem_map(
 		, "r"(reg_r10)
 		, "r"(reg_r8)
 		, "r"(reg_r9)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r11");
 	if (okay) {
 		*mem = (void *)reg_rax;
 		return 0;
@@ -907,7 +907,7 @@ cloudabi_sys_mem_protect(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -928,7 +928,7 @@ cloudabi_sys_mem_sync(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -989,7 +989,7 @@ cloudabi_sys_poll(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*nevents = (size_t)reg_rax;
 		return 0;
@@ -1027,7 +1027,7 @@ cloudabi_sys_poll_fd(
 		, "r"(reg_r10)
 		, "r"(reg_r8)
 		, "r"(reg_r9)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r11");
 	if (okay) {
 		*nevents = (size_t)reg_rax;
 		return 0;
@@ -1058,7 +1058,7 @@ cloudabi_sys_proc_exec(
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
 		, "r"(reg_r8)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r9", "r11");
 	return reg_rax;
 }
 
@@ -1092,7 +1092,7 @@ cloudabi_sys_proc_fork(
 		, "=r"(reg_rax)
 		, "=r"(reg_rdx)
 		: "r"(reg_rax)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	if (okay) {
 		*fd = (cloudabi_fd_t)reg_rax;
 		*tid = (cloudabi_tid_t)reg_rdx;
@@ -1180,7 +1180,7 @@ cloudabi_sys_sock_bind(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -1204,7 +1204,7 @@ cloudabi_sys_sock_connect(
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
 		, "r"(reg_r10)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r11");
 	return reg_rax;
 }
 
@@ -1243,7 +1243,7 @@ cloudabi_sys_sock_recv(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -1264,7 +1264,7 @@ cloudabi_sys_sock_send(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
@@ -1303,7 +1303,7 @@ cloudabi_sys_sock_stat_get(
 		, "r"(reg_rdi)
 		, "r"(reg_rsi)
 		, "r"(reg_rdx)
-		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+		: "memory", "rcx", "r8", "r9", "r10", "r11");
 	return reg_rax;
 }
 
