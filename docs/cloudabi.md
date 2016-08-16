@@ -2567,11 +2567,11 @@ Possible values:
 
 - <a href="#msflags.invalidate" name="msflags.invalidate"></a>**`CLOUDABI_MS_INVALIDATE`**
 
-    Perform synchronous writes.
+    Invalidate cached data.
 
 - <a href="#msflags.sync" name="msflags.sync"></a>**`CLOUDABI_MS_SYNC`**
 
-    Invalidate cached data.
+    Perform synchronous writes.
 
 #### <a href="#msgflags" name="msgflags"></a>`cloudabi_msgflags_t` (`uint16_t` bitfield)
 

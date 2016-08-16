@@ -593,9 +593,9 @@ flags uint8 msflags
 	0x01 async
 		| Perform asynchronous writes.
 	0x02 invalidate
-		| Perform synchronous writes.
-	0x04 sync
 		| Invalidate cached data.
+	0x04 sync
+		| Perform synchronous writes.
 
 flags uint16 msgflags
 	| Flags provided to and returned by [sock_recv] and [sock_send].
