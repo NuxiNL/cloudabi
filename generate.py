@@ -115,7 +115,13 @@ with open_and_format('sources/cloudabi_vdso_aarch64.c') as f:
             preamble='#include <cloudabi_types.h>\n'
         ).generate_abi(abi)
 
-with open('freebsd/syscalls.master', 'w') as f:
+with open('freebsd/syscalls32.master', 'w') as f:
+    with redirect_stdout(f):
+        SyscallsMasterGenerator(
+            naming=CNaming('cloudabi_', 'cloudabi32_', c11=False),
+        ).generate_abi(abi)
+
+with open('freebsd/syscalls64.master', 'w') as f:
     with redirect_stdout(f):
         SyscallsMasterGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_', c11=False),
