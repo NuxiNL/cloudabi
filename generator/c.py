@@ -510,22 +510,6 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
             return '({}){}'.format(self.naming.typename(type_to), name)
 
 
-class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
-
-    syscall_num_register = 'rax'
-    input_registers = ['rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
-    output_registers = ['rax', 'rdx']
-    errno_register = 'rax'
-
-    clobbers = ['memory', 'rcx', 'rdx', 'r8', 'r9', 'r10', 'r11']
-
-    register_t = int_types['uint64']
-    okay_t = int_types['char']
-
-    asm = '\t\t"\\tsyscall\\n"'
-    asm_check = '\t\t"\\tsetnc %0\\n"'
-
-
 class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
 
     syscall_num_register = 'x8'
@@ -545,6 +529,23 @@ class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
 
     asm = '\t\t"\\tsvc 0\\n"'
     asm_check = '\t\t"\\tcset %0, cc\\n"'
+
+
+class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
+
+    syscall_num_register = 'rax'
+    input_registers = ['rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
+    output_registers = ['rax', 'rdx']
+    errno_register = 'rax'
+
+    clobbers = ['memory', 'rcx', 'rdx', 'r8', 'r9', 'r10', 'r11']
+
+    register_t = int_types['uint64']
+    okay_t = int_types['char']
+
+    asm = '\t\t"\\tsyscall\\n"'
+    asm_check = '\t\t"\\tsetnc %0\\n"'
+
 
 class CLinuxSyscallTableGenerator(CGenerator):
 
