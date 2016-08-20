@@ -137,12 +137,12 @@ class CSyscalldefsGenerator(CGenerator):
                 for x in m.members:
                     if x.name is None:
                         self.generate_struct_members(
-                            abi, x.type, indent + '\t')
+                            abi, x.type, indent + '  ')
                     else:
-                        print('{}\tstruct {{'.format(indent))
+                        print('{}  struct {{'.format(indent))
                         self.generate_struct_members(
-                            abi, x.type, indent + '\t\t')
-                        print('{}\t}} {};'.format(indent, x.name))
+                            abi, x.type, indent + '    ')
+                        print('{}  }} {};'.format(indent, x.name))
                 print('{}}};'.format(indent))
             else:
                 raise Exception('Unknown struct member: {}'.format(m))
@@ -194,7 +194,7 @@ class CSyscalldefsGenerator(CGenerator):
             typename = self.naming.typename(type)
 
             print('typedef struct {')
-            self.generate_struct_members(abi, type, '\t')
+            self.generate_struct_members(abi, type, '  ')
             print('}} {};'.format(typename))
 
             self.generate_offset_asserts(typename, type.raw_members)
@@ -268,7 +268,7 @@ class CSyscallStructGenerator(CGenerator):
             return_type = VoidType()
         else:
             return_type = abi.types['errno']
-        print('\t{} (*{})('.format(
+        print('  {} (*{})('.format(
             self.naming.typename(return_type), syscall.name), end='')
         params = self.syscall_params(syscall)
         if params == []:
@@ -276,8 +276,8 @@ class CSyscallStructGenerator(CGenerator):
         else:
             print()
             for p in params[:-1]:
-                print('\t\t{},'.format(p))
-            print('\t\t{}'.format(params[-1]), end='')
+                print('    {},'.format(p))
+            print('    {}'.format(params[-1]), end='')
         print(');')
 
     def generate_types(self, abi, types):
@@ -286,33 +286,38 @@ class CSyscallStructGenerator(CGenerator):
 
 class CSyscallsInfoGenerator(CGenerator):
 
+    def print_with_line_continuation(self, text):
+        lines = str.splitlines(text)
+        width = max(len(line) for line in lines)
+        for line in lines[:-1]:
+            print('{}{} \\'.format(line, ' ' * (width - len(line))))
+        print(lines[-1])
+
     def generate_syscalls(self, abi, syscalls):
-        print('#define {}SYSCALL_NAMES(SYSCALL)'.format(
-            self.naming.prefix.upper()), end='')
+        prefix = self.naming.prefix.upper()
+        self.print_with_line_continuation(
+            '#define {}SYSCALL_NAMES(SYSCALL)\n'.format(prefix) +
+            '\n'.join('  SYSCALL({})'.format(s) for s in sorted(abi.syscalls))
+        )
+        print()
         for s in sorted(abi.syscalls):
-            print(' \\\n\tSYSCALL({})'.format(s), end='')
-        print('\n')
-        for s in sorted(abi.syscalls):
-            print('#define {}SYSCALL_PARAMETERS_{}'.format(
-                self.naming.prefix.upper(), s), end='')
             params = self.syscall_params(abi.syscalls[s])
-            if params == []:
-                print('\n')
-            else:
-                print(' \\\n\t{}\n'.format(
-                    ', \\\n\t'.join(params)))
+            self.print_with_line_continuation(
+                '#define {}SYSCALL_PARAMETERS_{}\n'.format(prefix, s) +
+                ',\n'.join('  {}'.format(p) for p in params)
+            )
+            print()
         for s in sorted(abi.syscalls):
-            print('#define {}SYSCALL_PARAMETER_NAMES_{}'.format(
-                self.naming.prefix.upper(), s), end='')
             syscall = abi.syscalls[s]
             params = (
                 [p.name for p in syscall.input.raw_members] +
                 [p.name for p in syscall.output.raw_members])
+            print('#define {}SYSCALL_PARAMETER_NAMES_{}'.format(prefix, s), end='')
             if params == []:
-                print('\n')
+                print()
             else:
-                print(' \\\n\t{}\n'.format(
-                    ', '.join(params)))
+                print(' \\\n  ' + ', '.join(params))
+            print()
         for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_HAS_PARAMETERS_{}(yes, no) {}'.format(
                 self.naming.prefix.upper(), s,

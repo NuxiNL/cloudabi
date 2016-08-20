@@ -50,7 +50,7 @@ with open_and_format('headers/cloudabi_types_common.h') as f:
                      '#endif\n'
         ).generate_abi(abi)
 
-with open_and_format('headers/cloudabi_types.h') as f:
+with open('headers/cloudabi_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
@@ -59,7 +59,7 @@ with open_and_format('headers/cloudabi_types.h') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open_and_format('headers/cloudabi32_types.h') as f:
+with open('headers/cloudabi32_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi32_'),
@@ -69,7 +69,7 @@ with open_and_format('headers/cloudabi32_types.h') as f:
             preamble='#include "cloudabi_types_common.h"\n'
         ).generate_abi(abi)
 
-with open_and_format('headers/cloudabi64_types.h') as f:
+with open('headers/cloudabi64_types.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_', 'cloudabi64_'),
@@ -95,7 +95,7 @@ with open_and_format('headers/cloudabi_syscalls.h') as f:
             preamble='#include "cloudabi_syscalls_struct.h"\n'
         ).generate_abi(abi)
 
-with open_and_format('headers/cloudabi_syscalls_info.h') as f:
+with open('headers/cloudabi_syscalls_info.h', 'w') as f:
     with redirect_stdout(f):
         CSyscallsInfoGenerator(
             naming=CNaming('cloudabi_'),
