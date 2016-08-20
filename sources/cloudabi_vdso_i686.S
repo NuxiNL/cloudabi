@@ -30,7 +30,7 @@
   .p2align 2, 0x90;      \
   .global name;          \
   .type name, @function; \
-  name:
+name:
 
 #define END(name) .size name, . - name
 

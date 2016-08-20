@@ -20,7 +20,7 @@ class AsmNativeSyscallsI686Generator(Generator):
         print('  .p2align 2, 0x90;      \\')
         print('  .global name;          \\')
         print('  .type name, @function; \\')
-        print('  name:')
+        print('name:')
         print()
         print('#define END(name) .size name, . - name')
 
