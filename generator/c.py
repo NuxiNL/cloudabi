@@ -347,23 +347,21 @@ class CSyscallsGenerator(CGenerator):
         else:
             return_type = abi.types['errno']
         print(self.naming.typename(return_type))
-        print('{}('.format(self.naming.syscallname(syscall)), end='')
+        print(self.naming.syscallname(syscall))
+        print('(')
         params = self.syscall_params(syscall)
         if params == []:
-            print('void', end='')
+            print('void')
         else:
-            print()
-            for p in params[:-1]:
-                print('\t{},'.format(p))
-            print('\t{}'.format(params[-1]))
-        print(')', end='')
+            print(','.join(params))
+        print(')')
         self.generate_syscall_body(abi, syscall)
         print()
 
     def generate_syscall_keywords(self, syscall):
         print(self.naming.function_keywords, end='')
         if syscall.noreturn:
-            print('_Noreturn ', end='')
+            print('_Noreturn')
 
     def generate_syscall_body(self, abi, syscall):
         print(';')
@@ -381,9 +379,7 @@ class CSyscallWrappersGenerator(CSyscallsGenerator):
             self.generate_syscall(abi, abi.syscalls[s])
 
     def generate_syscall_body(self, abi, syscall):
-        print(' {')
-
-        print('\t', end='')
+        print('{')
 
         if not syscall.noreturn:
             print('return ', end='')
@@ -398,13 +394,11 @@ class CSyscallWrappersGenerator(CSyscallsGenerator):
             params.append(p.name)
 
         if len(params) > 0:
-            for p in params[:-1]:
-                print('{}, '.format(p), end='')
-            print('{}'.format(params[-1]), end='')
+            print(','.join(params))
         print(');')
 
         if syscall.noreturn:
-            print('\tfor (;;);')
+            print('for (;;);')
 
         print('}')
 
@@ -432,7 +426,7 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
             else:
                 assert(register not in defined_regs)
                 defn = ' = {}'.format(value)
-            print('\tregister {decl} asm("{reg}"){defn};'.format(
+            print('register {decl} asm("{reg}"){defn};'.format(
                 decl=self.naming.vardecl(self.register_t,
                                          'reg_{}'.format(register)),
                 reg=register, defn=defn))
@@ -450,55 +444,55 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
         define_reg(self.errno_register)
 
         if check_okay:
-            print('\tregister {};'.format(
+            print('register {};'.format(
                 self.naming.vardecl(self.okay_t, 'okay')))
 
-        print('\tasm volatile (')
+        print('asm volatile (')
         print(self.asm)
         if check_okay:
             print(self.asm_check)
 
         first = True
         if check_okay:
-            print('\t\t: "=r"(okay)')
+            print(': "=r"(okay)')
             first = False
         for i in range(len(syscall.output.raw_members)):
-            print('\t\t{} "=r"(reg_{})'.format(
+            print('{} "=r"(reg_{})'.format(
                 ':' if first else ',', self.output_registers[i]))
             first = False
         if not syscall.noreturn:
             if (self.errno_register not in
                     self.output_registers[:len(syscall.output.raw_members)]):
-                print('\t\t{} "=r"(reg_{})'.format(
+                print('{} "=r"(reg_{})'.format(
                     ':' if first else ',', self.errno_register))
                 first = False
         if first:
-            print('\t\t:')
+            print(':')
 
-        print('\t\t: "r"(reg_{})'.format(self.syscall_num_register))
+        print(': "r"(reg_{})'.format(self.syscall_num_register))
         for i in range(len(syscall.input.raw_members)):
-            print('\t\t, "r"(reg_{})'.format(self.input_registers[i]))
+            print(', "r"(reg_{})'.format(self.input_registers[i]))
 
         # Print clobbered registers. Omit the ones that are already
         # declared previously, as GCC doesn't allow that.
-        print('\t\t: {});'.format(', '.join(
-            '"%s"' % r
+        print(': {});'.format(', '.join(
+            '"{}"'.format(r)
             for r in self.clobbers
             if r not in defined_regs)))
         if check_okay:
-            print('\tif (okay) {')
+            print('if (okay) {')
             for i, p in enumerate(syscall.output.raw_members):
-                print('\t\t*{} = {};'.format(p.name, self._ccast(
+                print('*{} = {};'.format(p.name, self._ccast(
                     self.register_t,
                     p.type,
                     "reg_{}".format(self.output_registers[i]))))
-            print('\t\treturn 0;')
-            print('\t}')
+            print('return 0;')
+            print('}')
 
         if syscall.noreturn:
-            print('\tfor (;;);')
+            print('for (;;);')
         else:
-            print('\treturn reg_{};'.format(self.errno_register))
+            print('return reg_{};'.format(self.errno_register))
 
         print('}')
 
@@ -531,8 +525,8 @@ class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
     register_t = int_types['uint64']
     okay_t = register_t
 
-    asm = '\t\t"\\tsvc 0\\n"'
-    asm_check = '\t\t"\\tcset %0, cc\\n"'
+    asm = '"\\tsvc 0\\n"'
+    asm_check = '"\\tcset %0, cc\\n"'
 
 
 class CNativeSyscallsI686OnX86_64Generator(CSyscallsGenerator):
@@ -607,8 +601,8 @@ class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
     register_t = int_types['uint64']
     okay_t = int_types['char']
 
-    asm = '\t\t"\\tsyscall\\n"'
-    asm_check = '\t\t"\\tsetnc %0\\n"'
+    asm = '"\\tsyscall\\n"'
+    asm_check = '"\\tsetnc %0\\n"'
 
 
 class CLinuxSyscallTableGenerator(CGenerator):
@@ -630,38 +624,35 @@ class CLinuxSyscallTableGenerator(CGenerator):
             '#endif\n'.format(regalign, regtype, regtype, regtype))
 
     def generate_syscall(self, abi, syscall):
-        print('static {} do_{}(const void *in, void *out)\n{{'.format(
+        print('static {} do_{}(const void *in, void *out) {{'.format(
              self.naming.typename(abi.types['errno']), syscall.name))
 
         # Map structures over the system call input and output registers.
         if syscall.input.raw_members:
-            print('\tconst struct {')
+            print('const struct {')
             for p in syscall.input.raw_members:
-                print('\t\tMEMBER({}, {});'.format(
+                print('MEMBER({}, {});'.format(
                     self.naming.typename(p.type), p.name))
-            print('\t} *vin = in;')
+            print('} *vin = in;')
         if syscall.output.raw_members:
-            print('\tstruct {')
+            print('struct {')
             for p in syscall.output.raw_members:
-                print('\t\tMEMBER({}, {});'.format(
+                print('MEMBER({}, {});'.format(
                     self.naming.typename(p.type), p.name))
-            print('\t} *vout = out;')
+            print('} *vout = out;')
 
         # Invoke the system call implementation function.
-        if syscall.noreturn:
-            print('\t{}('.format(self.naming.syscallname(syscall)), end='')
-        else:
-            print('\treturn {}('.format(self.naming.syscallname(syscall)),
-                  end='')
+        if not syscall.noreturn:
+            print('return')
+        print(self.naming.syscallname(syscall))
         params = []
         for p in syscall.input.raw_members:
             params.append('vin->' + p.name)
         for p in syscall.output.raw_members:
             params.append('&vout->' + p.name)
-        print(', '.join(params), end='')
-        print(');')
+        print('(', ', '.join(params), ');')
         if syscall.noreturn:
-            print('\treturn 0;')
+            print('return 0;')
         print('}\n')
 
     def generate_foot(self, abi):
@@ -670,7 +661,7 @@ class CLinuxSyscallTableGenerator(CGenerator):
             self.naming.typename(abi.types['errno'])))
         for idx in sorted(abi.syscalls):
             syscall = abi.syscalls[idx]
-            print('\tdo_{},'.format(syscall.name))
+            print('do_{},'.format(syscall.name))
         print('};')
 
         super().generate_foot(abi)
