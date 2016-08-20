@@ -199,9 +199,6 @@ class Syscall:
             if isinstance(p.type, PointerType):
                 if p.type.target_type.layout.machine_dep:
                     return True
-            # TODO: Uncomment this to do it correctly.
-            # elif not p.type.layout.fits_in(PointerType().layout):
-            #    return True
         return False
 
 
@@ -249,6 +246,9 @@ class Abi:
                 return None
             return [obj] + objs
         return [obj]
+
+    def syscall_number(self, syscall):
+        return sorted(self.syscalls).index(syscall.name)
 
 
 def _compute_dependencies(thing):

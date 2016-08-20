@@ -433,8 +433,7 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
                 reg=register, defn=defn))
             defined_regs.add(register)
 
-        define_reg(self.syscall_num_register,
-                   sorted(abi.syscalls).index(syscall.name))
+        define_reg(self.syscall_num_register, abi.syscall_number(syscall))
 
         for i, p in enumerate(syscall.input.raw_members):
             define_reg(self.input_registers[i], self._ccast(
@@ -529,6 +528,66 @@ class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
 
     asm = '\t\t"\\tsvc 0\\n"'
     asm_check = '\t\t"\\tcset %0, cc\\n"'
+
+
+class CNativeSyscallsI686OnX86_64Generator(CSyscallsGenerator):
+
+    def generate_syscall_body(self, abi, syscall):
+        print(' {')
+
+        # Align all arguments to 64 bits by storing them in a structure.
+        if syscall.input.raw_members:
+            print('\tstruct arguments {')
+            for p in syscall.input.raw_members:
+                if isinstance(p.type, PointerType) or p.type.name == 'size':
+                    print('\t\t_Alignas(8) uint64_t {};'.format(p.name))
+                else:
+                    print('\t\t_Alignas(8) {};'.format(self.naming.vardecl(p.type, p.name)))
+            print('\t} arguments = {')
+            for p in syscall.input.raw_members:
+                mi_type = self.mi_type(p.type)
+                if isinstance(p.type, PointerType):
+                    print('.{} = (uintptr_t){},'.format(p.name, p.name))
+                else:
+                    print('.{} = {},'.format(p.name, p.name))
+            print('\t};')
+
+        # Align return values to 64 bits similarly.
+        print('\tstruct returns {')
+        for p in syscall.output.raw_members:
+            print('\t\t_Alignas(8) {};'.format(self.naming.vardecl(p.type, p.name)))
+        for i in range(len(syscall.output.raw_members), 2):
+            print('_Alignas(8) char unused{};'.format(i))
+        print('\t} returns;')
+        print('\t_Static_assert(sizeof(returns) == 16, "Size mismatch");')
+
+        # Set up registers for system call entry.
+        print('\tregister uint32_t reg_eax asm("eax") = {};'.format(
+                   abi.syscall_number(syscall)))
+        if syscall.input.raw_members:
+            print('\tregister struct arguments *reg_ebx asm("ebx") = &arguments;')
+        print('\tregister struct returns *reg_ecx asm("ecx") = &returns;')
+
+        # Invoke system call.
+        print('\tasm volatile("\\tint $0x80\\n"')
+        print('\t\t: "=r"(reg_eax)')
+        if syscall.input.raw_members:
+            print('\t\t: "r"(reg_eax), "r"(reg_ebx), "r"(reg_ecx)')
+        else:
+            print('\t\t: "r"(reg_eax), "r"(reg_ecx)')
+        print('\t\t: "memory");')
+
+        # Set return values.
+        if syscall.noreturn:
+            print('\tfor (;;);')
+        else:
+            print('\tif (reg_eax != 0)')
+            print('\t\treturn reg_eax;')
+            for p in syscall.output.raw_members:
+                print('\t*{} = returns.{};'.format(p.name, p.name))
+            print('\treturn 0;')
+
+        print('}')
 
 
 class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):

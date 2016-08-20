@@ -49,7 +49,7 @@ class SyscallsMasterGenerator(Generator):
 
         return_type_name = self.naming.typename(return_type)
         print('\n{}\t{}\t{}\t{{ {}{}{}({}); }}'.format(
-            sorted(abi.syscalls).index(syscall.name),
+            abi.syscall_number(syscall),
             'AUE_NULL',
             'STD',
             return_type_name,
