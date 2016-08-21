@@ -7,7 +7,7 @@ from .abi import *
 from .generator import *
 
 
-class AsmNativeSyscallsGenerator(Generator):
+class AsmVdsoGenerator(Generator):
 
     def __init__(self, function_alignment):
         super().__init__(comment_prefix='// ')
@@ -42,7 +42,7 @@ class AsmNativeSyscallsGenerator(Generator):
         super().generate_foot(abi)
 
 
-class AsmNativeSyscallsCommonGenerator(AsmNativeSyscallsGenerator):
+class AsmVdsoCommonGenerator(AsmVdsoGenerator):
 
     def generate_syscall_body(self, number, args_input, args_output, noreturn):
         # Compute the number of registers/stack slots consumed by all of
@@ -115,7 +115,7 @@ class AsmNativeSyscallsCommonGenerator(AsmNativeSyscallsGenerator):
             self.print_return()
 
 
-class AsmNativeSyscallsI686Generator(AsmNativeSyscallsCommonGenerator):
+class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
     REGISTERS_PARAMS = []
     REGISTERS_RETURNS = ['ax', 'dx']
@@ -159,7 +159,7 @@ class AsmNativeSyscallsI686Generator(AsmNativeSyscallsCommonGenerator):
         print('  ret')
 
 
-class AsmNativeSyscallsX86_64Generator(AsmNativeSyscallsCommonGenerator):
+class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
     REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'),
                         ('cx', '10'), ('8', '8'), ('9', '9')]

@@ -409,7 +409,7 @@ class CLinuxSyscallsGenerator(CSyscallsGenerator):
         pass
 
 
-class CNativeSyscallsGenerator(CSyscallsGenerator):
+class CVdsoGenerator(CSyscallsGenerator):
 
     def generate_syscall_body(self, abi, syscall):
         print(' {')
@@ -508,7 +508,7 @@ class CNativeSyscallsGenerator(CSyscallsGenerator):
             return '({}){}'.format(self.naming.typename(type_to), name)
 
 
-class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
+class CVdsoAarch64Generator(CVdsoGenerator):
 
     syscall_num_register = 'x8'
     input_registers = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
@@ -527,7 +527,7 @@ class CNativeSyscallsAarch64Generator(CNativeSyscallsGenerator):
     asm_check = '"\\tcset %0, cc\\n"'
 
 
-class CNativeSyscallsI686OnX86_64Generator(CSyscallsGenerator):
+class CVdsoI686OnX86_64Generator(CSyscallsGenerator):
 
     def generate_syscall_body(self, abi, syscall):
         print(' {')
