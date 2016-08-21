@@ -102,12 +102,9 @@ with open('headers/cloudabi_syscalls_info.h', 'w') as f:
             header_guard='CLOUDABI_SYSCALLS_INFO_H',
         ).generate_abi(abi)
 
-with open_and_format('sources/cloudabi_vdso_aarch64.c') as f:
+with open('sources/cloudabi_vdso_aarch64.S', 'w') as f:
     with redirect_stdout(f):
-        CVdsoAarch64Generator(
-            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
-            preamble='#include <cloudabi_types.h>\n'
-        ).generate_abi(abi)
+        AsmVdsoAarch64Generator().generate_abi(abi)
 
 with open('sources/cloudabi_vdso_i686.S', 'w') as f:
     with redirect_stdout(f):

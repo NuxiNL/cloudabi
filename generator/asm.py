@@ -66,8 +66,8 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
         # Push the output registers containing the addresses where the
         # values should be stored to the stack. The system call may
         # clobber them.
-        for reg in regs_output:
-            self.print_push_address(reg[0])
+        if regs_output:
+            self.print_push_addresses([reg[0] for reg in regs_output])
 
         # Execute system call.
         self.print_syscall(number)
@@ -77,11 +77,9 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
                 # Pop the output addresses that we previously pushed on
                 # the stack into spare registers.
                 regs_spare = list(self.REGISTERS_SPARE)
-                regs_output_popped = []
-                for _ in regs_output:
-                    reg = regs_spare.pop(0)
-                    regs_output_popped.insert(0, reg)
-                    self.print_pop_address(reg)
+                regs_output_popped = [regs_spare.pop(0) for _ in regs_output]
+                if regs_output_popped:
+                    self.print_pop_addresses(regs_output_popped)
 
                 # No further processing if the system call failed.
                 self.print_jump_syscall_failed('1f')
@@ -113,6 +111,61 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
                 print('1:')
 
             self.print_return()
+
+
+class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
+
+    REGISTERS_PARAMS = [('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'),
+                        ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7')]
+    REGISTERS_RETURNS = ['0', '1']
+    REGISTERS_SPARE = ['2', '3']
+
+    def __init__(self):
+        super().__init__(function_alignment='2')
+
+    @staticmethod
+    def register_count(member):
+        return (member.type.layout.size[1] + 7) // 8
+
+    @staticmethod
+    def print_push_addresses(regs):
+        if len(regs) == 1:
+            print('  str x{}, [sp, #-8]'.format(regs[0]))
+        else:
+            assert len(regs) == 2
+            print('  stp x{}, x{}, [sp, #-16]'.format(regs[0], regs[1]))
+
+    @staticmethod
+    def print_syscall(number):
+        print('  mov w8, #{}'.format(number))
+        print('  svc #0')
+
+    @staticmethod
+    def print_pop_addresses(regs):
+        if len(regs) == 1:
+            print('  ldr x{}, [sp, #-8]'.format(regs[0]))
+        else:
+            assert len(regs) == 2
+            print('  ldp x{}, x{}, [sp, #-16]'.format(regs[0], regs[1]))
+
+    @staticmethod
+    def print_jump_syscall_failed(label):
+        print('  b.cs ' + label)
+
+    @staticmethod
+    def print_store_output(member, reg_from, reg_to, index):
+        assert index == 0
+        size = member.type.layout.size[1]
+        print('  str {}{}, [x{}]'.format({4: 'w', 8: 'x'}[size],
+                                         reg_from, reg_to))
+
+    @staticmethod
+    def print_retval_success():
+        print('  mov w0, wzr')
+
+    @staticmethod
+    def print_return():
+        print('  ret')
 
 
 class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
@@ -178,8 +231,9 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
         print('  mov %r{}, %r{}'.format(reg_old, reg_new))
 
     @staticmethod
-    def print_push_address(reg):
-        print('  push %r{}'.format(reg))
+    def print_push_addresses(regs):
+        for reg in regs:
+            print('  push %r{}'.format(reg))
 
     @staticmethod
     def print_syscall(number):
@@ -187,8 +241,9 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
         print('  syscall')
 
     @staticmethod
-    def print_pop_address(reg):
-        print('  pop %r{}'.format(reg))
+    def print_pop_addresses(regs):
+        for reg in reversed(regs):
+            print('  pop %r{}'.format(reg))
 
     @staticmethod
     def print_jump_syscall_failed(label):
@@ -200,12 +255,10 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
+        assert index == 0
         size = member.type.layout.size[1]
-        print('  mov {}{}, {}(%r{})'.format(
-            {4: '%e', 8: '%r'}[size],
-            reg_from,
-            index * 8 if size > 8 else '',
-            reg_to))
+        print('  mov {}{}, (%r{})'.format({4: '%e', 8: '%r'}[size],
+                                          reg_from, reg_to))
 
     @staticmethod
     def print_retval_success():

@@ -27,7 +27,7 @@
 
 #define ENTRY(name)      \
   .text;                 \
-  .p2align 4, 0x90;      \
+  .p2align 2;            \
   .global name;          \
   .type name, @function; \
 name:
@@ -35,477 +35,457 @@ name:
 #define END(name) .size name, . - name
 
 ENTRY(cloudabi_sys_clock_res_get)
-  push %rsi
-  mov $0, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x1, [sp, #-8]
+  mov w8, #0
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_clock_res_get)
 
 ENTRY(cloudabi_sys_clock_time_get)
-  push %rdx
-  mov $1, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x2, [sp, #-8]
+  mov w8, #1
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_clock_time_get)
 
 ENTRY(cloudabi_sys_condvar_signal)
-  mov $2, %eax
-  syscall
+  mov w8, #2
+  svc #0
   ret
 END(cloudabi_sys_condvar_signal)
 
 ENTRY(cloudabi_sys_fd_close)
-  mov $3, %eax
-  syscall
+  mov w8, #3
+  svc #0
   ret
 END(cloudabi_sys_fd_close)
 
 ENTRY(cloudabi_sys_fd_create1)
-  push %rsi
-  mov $4, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  xor %eax, %eax
+  str x1, [sp, #-8]
+  mov w8, #4
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str w0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_create1)
 
 ENTRY(cloudabi_sys_fd_create2)
-  push %rsi
-  push %rdx
-  mov $5, %eax
-  syscall
-  pop %rsi
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  mov %edx, (%rsi)
-  xor %eax, %eax
+  stp x1, x2, [sp, #-16]
+  mov w8, #5
+  svc #0
+  ldp x2, x3, [sp, #-16]
+  b.cs 1f
+  str w0, [x2]
+  str w1, [x3]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_create2)
 
 ENTRY(cloudabi_sys_fd_datasync)
-  mov $6, %eax
-  syscall
+  mov w8, #6
+  svc #0
   ret
 END(cloudabi_sys_fd_datasync)
 
 ENTRY(cloudabi_sys_fd_dup)
-  push %rsi
-  mov $7, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  xor %eax, %eax
+  str x1, [sp, #-8]
+  mov w8, #7
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str w0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_dup)
 
 ENTRY(cloudabi_sys_fd_pread)
-  mov %rcx, %r10
-  push %r8
-  mov $8, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x4, [sp, #-8]
+  mov w8, #8
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_pread)
 
 ENTRY(cloudabi_sys_fd_pwrite)
-  mov %rcx, %r10
-  push %r8
-  mov $9, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x4, [sp, #-8]
+  mov w8, #9
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_pwrite)
 
 ENTRY(cloudabi_sys_fd_read)
-  push %rcx
-  mov $10, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x3, [sp, #-8]
+  mov w8, #10
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_read)
 
 ENTRY(cloudabi_sys_fd_replace)
-  mov $11, %eax
-  syscall
+  mov w8, #11
+  svc #0
   ret
 END(cloudabi_sys_fd_replace)
 
 ENTRY(cloudabi_sys_fd_seek)
-  push %rcx
-  mov $12, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x3, [sp, #-8]
+  mov w8, #12
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_seek)
 
 ENTRY(cloudabi_sys_fd_stat_get)
-  mov $13, %eax
-  syscall
+  mov w8, #13
+  svc #0
   ret
 END(cloudabi_sys_fd_stat_get)
 
 ENTRY(cloudabi_sys_fd_stat_put)
-  mov $14, %eax
-  syscall
+  mov w8, #14
+  svc #0
   ret
 END(cloudabi_sys_fd_stat_put)
 
 ENTRY(cloudabi_sys_fd_sync)
-  mov $15, %eax
-  syscall
+  mov w8, #15
+  svc #0
   ret
 END(cloudabi_sys_fd_sync)
 
 ENTRY(cloudabi_sys_fd_write)
-  push %rcx
-  mov $16, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x3, [sp, #-8]
+  mov w8, #16
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_fd_write)
 
 ENTRY(cloudabi_sys_file_advise)
-  mov %rcx, %r10
-  mov $17, %eax
-  syscall
+  mov w8, #17
+  svc #0
   ret
 END(cloudabi_sys_file_advise)
 
 ENTRY(cloudabi_sys_file_allocate)
-  mov $18, %eax
-  syscall
+  mov w8, #18
+  svc #0
   ret
 END(cloudabi_sys_file_allocate)
 
 ENTRY(cloudabi_sys_file_create)
-  mov %rcx, %r10
-  mov $19, %eax
-  syscall
+  mov w8, #19
+  svc #0
   ret
 END(cloudabi_sys_file_create)
 
 ENTRY(cloudabi_sys_file_link)
-  mov %rcx, %r10
-  mov $20, %eax
-  syscall
+  mov w8, #20
+  svc #0
   ret
 END(cloudabi_sys_file_link)
 
 ENTRY(cloudabi_sys_file_open)
-  mov %rcx, %r10
-  push %r9
-  mov $21, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  xor %eax, %eax
+  str x5, [sp, #-8]
+  mov w8, #21
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str w0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_file_open)
 
 ENTRY(cloudabi_sys_file_readdir)
-  mov %rcx, %r10
-  push %r8
-  mov $22, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x4, [sp, #-8]
+  mov w8, #22
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_file_readdir)
 
 ENTRY(cloudabi_sys_file_readlink)
-  mov %rcx, %r10
-  push %r9
-  mov $23, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x5, [sp, #-8]
+  mov w8, #23
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_file_readlink)
 
 ENTRY(cloudabi_sys_file_rename)
-  mov %rcx, %r10
-  mov $24, %eax
-  syscall
+  mov w8, #24
+  svc #0
   ret
 END(cloudabi_sys_file_rename)
 
 ENTRY(cloudabi_sys_file_stat_fget)
-  mov $25, %eax
-  syscall
+  mov w8, #25
+  svc #0
   ret
 END(cloudabi_sys_file_stat_fget)
 
 ENTRY(cloudabi_sys_file_stat_fput)
-  mov $26, %eax
-  syscall
+  mov w8, #26
+  svc #0
   ret
 END(cloudabi_sys_file_stat_fput)
 
 ENTRY(cloudabi_sys_file_stat_get)
-  mov %rcx, %r10
-  mov $27, %eax
-  syscall
+  mov w8, #27
+  svc #0
   ret
 END(cloudabi_sys_file_stat_get)
 
 ENTRY(cloudabi_sys_file_stat_put)
-  mov %rcx, %r10
-  mov $28, %eax
-  syscall
+  mov w8, #28
+  svc #0
   ret
 END(cloudabi_sys_file_stat_put)
 
 ENTRY(cloudabi_sys_file_symlink)
-  mov %rcx, %r10
-  mov $29, %eax
-  syscall
+  mov w8, #29
+  svc #0
   ret
 END(cloudabi_sys_file_symlink)
 
 ENTRY(cloudabi_sys_file_unlink)
-  mov %rcx, %r10
-  mov $30, %eax
-  syscall
+  mov w8, #30
+  svc #0
   ret
 END(cloudabi_sys_file_unlink)
 
 ENTRY(cloudabi_sys_lock_unlock)
-  mov $31, %eax
-  syscall
+  mov w8, #31
+  svc #0
   ret
 END(cloudabi_sys_lock_unlock)
 
 ENTRY(cloudabi_sys_mem_advise)
-  mov $32, %eax
-  syscall
+  mov w8, #32
+  svc #0
   ret
 END(cloudabi_sys_mem_advise)
 
 ENTRY(cloudabi_sys_mem_lock)
-  mov $33, %eax
-  syscall
+  mov w8, #33
+  svc #0
   ret
 END(cloudabi_sys_mem_lock)
 
 ENTRY(cloudabi_sys_mem_map)
-  mov %rcx, %r10
-  mov $34, %eax
-  syscall
-  jc 1f
-  mov 8(%rsp), %rcx
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x6, [sp, #-8]
+  mov w8, #34
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_mem_map)
 
 ENTRY(cloudabi_sys_mem_protect)
-  mov $35, %eax
-  syscall
+  mov w8, #35
+  svc #0
   ret
 END(cloudabi_sys_mem_protect)
 
 ENTRY(cloudabi_sys_mem_sync)
-  mov $36, %eax
-  syscall
+  mov w8, #36
+  svc #0
   ret
 END(cloudabi_sys_mem_sync)
 
 ENTRY(cloudabi_sys_mem_unlock)
-  mov $37, %eax
-  syscall
+  mov w8, #37
+  svc #0
   ret
 END(cloudabi_sys_mem_unlock)
 
 ENTRY(cloudabi_sys_mem_unmap)
-  mov $38, %eax
-  syscall
+  mov w8, #38
+  svc #0
   ret
 END(cloudabi_sys_mem_unmap)
 
 ENTRY(cloudabi_sys_poll)
-  push %rcx
-  mov $39, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x3, [sp, #-8]
+  mov w8, #39
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_poll)
 
 ENTRY(cloudabi_sys_poll_fd)
-  mov %rcx, %r10
-  mov $40, %eax
-  syscall
-  jc 1f
-  mov 8(%rsp), %rcx
-  mov %rax, (%rcx)
-  xor %eax, %eax
+  str x6, [sp, #-8]
+  mov w8, #40
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str x0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_poll_fd)
 
 ENTRY(cloudabi_sys_proc_exec)
-  mov %rcx, %r10
-  mov $41, %eax
-  syscall
+  mov w8, #41
+  svc #0
   ret
 END(cloudabi_sys_proc_exec)
 
 ENTRY(cloudabi_sys_proc_exit)
-  mov $42, %eax
-  syscall
+  mov w8, #42
+  svc #0
 END(cloudabi_sys_proc_exit)
 
 ENTRY(cloudabi_sys_proc_fork)
-  push %rdi
-  push %rsi
-  mov $43, %eax
-  syscall
-  pop %rsi
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  mov %edx, (%rsi)
-  xor %eax, %eax
+  stp x0, x1, [sp, #-16]
+  mov w8, #43
+  svc #0
+  ldp x2, x3, [sp, #-16]
+  b.cs 1f
+  str w0, [x2]
+  str w1, [x3]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_proc_fork)
 
 ENTRY(cloudabi_sys_proc_raise)
-  mov $44, %eax
-  syscall
+  mov w8, #44
+  svc #0
   ret
 END(cloudabi_sys_proc_raise)
 
 ENTRY(cloudabi_sys_random_get)
-  mov $45, %eax
-  syscall
+  mov w8, #45
+  svc #0
   ret
 END(cloudabi_sys_random_get)
 
 ENTRY(cloudabi_sys_sock_accept)
-  push %rdx
-  mov $46, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  xor %eax, %eax
+  str x2, [sp, #-8]
+  mov w8, #46
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str w0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_sock_accept)
 
 ENTRY(cloudabi_sys_sock_bind)
-  mov %rcx, %r10
-  mov $47, %eax
-  syscall
+  mov w8, #47
+  svc #0
   ret
 END(cloudabi_sys_sock_bind)
 
 ENTRY(cloudabi_sys_sock_connect)
-  mov %rcx, %r10
-  mov $48, %eax
-  syscall
+  mov w8, #48
+  svc #0
   ret
 END(cloudabi_sys_sock_connect)
 
 ENTRY(cloudabi_sys_sock_listen)
-  mov $49, %eax
-  syscall
+  mov w8, #49
+  svc #0
   ret
 END(cloudabi_sys_sock_listen)
 
 ENTRY(cloudabi_sys_sock_recv)
-  mov $50, %eax
-  syscall
+  mov w8, #50
+  svc #0
   ret
 END(cloudabi_sys_sock_recv)
 
 ENTRY(cloudabi_sys_sock_send)
-  mov $51, %eax
-  syscall
+  mov w8, #51
+  svc #0
   ret
 END(cloudabi_sys_sock_send)
 
 ENTRY(cloudabi_sys_sock_shutdown)
-  mov $52, %eax
-  syscall
+  mov w8, #52
+  svc #0
   ret
 END(cloudabi_sys_sock_shutdown)
 
 ENTRY(cloudabi_sys_sock_stat_get)
-  mov $53, %eax
-  syscall
+  mov w8, #53
+  svc #0
   ret
 END(cloudabi_sys_sock_stat_get)
 
 ENTRY(cloudabi_sys_thread_create)
-  push %rsi
-  mov $54, %eax
-  syscall
-  pop %rcx
-  jc 1f
-  mov %eax, (%rcx)
-  xor %eax, %eax
+  str x1, [sp, #-8]
+  mov w8, #54
+  svc #0
+  ldr x2, [sp, #-8]
+  b.cs 1f
+  str w0, [x2]
+  mov w0, wzr
 1:
   ret
 END(cloudabi_sys_thread_create)
 
 ENTRY(cloudabi_sys_thread_exit)
-  mov $55, %eax
-  syscall
+  mov w8, #55
+  svc #0
 END(cloudabi_sys_thread_exit)
 
 ENTRY(cloudabi_sys_thread_yield)
-  mov $56, %eax
-  syscall
+  mov w8, #56
+  svc #0
   ret
 END(cloudabi_sys_thread_yield)
