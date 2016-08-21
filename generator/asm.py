@@ -48,11 +48,11 @@ class AsmNativeSyscallsI686Generator(Generator):
                     offset += (i.type.layout.size[0] + 3) // 4 * 4
 
                 # Store return value.
-                print('  mov %#x(%%esp), %%ecx' % offset)
+                print('  mov %d(%%esp), %%ecx' % offset)
                 if len(syscall.output.raw_members) > 1:
                     # Two 32-bit return values.
                     print('  mov %eax, (%ecx)')
-                    print('  mov %#x(%%esp), %%ecx' % (offset + 4))
+                    print('  mov %d(%%esp), %%ecx' % (offset + 4))
                     print('  mov %edx, (%ecx)')
                 elif syscall.output.raw_members[0].type.layout.size[0] > 4:
                     # Single 64-bit return value, spread out across
