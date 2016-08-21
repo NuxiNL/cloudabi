@@ -121,12 +121,9 @@ with open_and_format('sources/cloudabi_vdso_i686_on_x86_64.c') as f:
             preamble='#include <cloudabi_types.h>\n'
         ).generate_abi(abi)
 
-with open_and_format('sources/cloudabi_vdso_x86_64.c') as f:
+with open('sources/cloudabi_vdso_x86_64.S', 'w') as f:
     with redirect_stdout(f):
-        CNativeSyscallsX86_64Generator(
-            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
-            preamble='#include <cloudabi_types.h>\n'
-        ).generate_abi(abi)
+        AsmNativeSyscallsX86_64Generator().generate_abi(abi)
 
 with open('freebsd/syscalls32.master', 'w') as f:
     with redirect_stdout(f):

@@ -587,22 +587,6 @@ class CNativeSyscallsI686OnX86_64Generator(CSyscallsGenerator):
         print('}')
 
 
-class CNativeSyscallsX86_64Generator(CNativeSyscallsGenerator):
-
-    syscall_num_register = 'rax'
-    input_registers = ['rdi', 'rsi', 'rdx', 'r10', 'r8', 'r9']
-    output_registers = ['rax', 'rdx']
-    errno_register = 'rax'
-
-    clobbers = ['memory', 'rcx', 'rdx', 'r8', 'r9', 'r10', 'r11']
-
-    register_t = int_types['uint64']
-    okay_t = int_types['char']
-
-    asm = '"\\tsyscall\\n"'
-    asm_check = '"\\tsetnc %0\\n"'
-
-
 class CLinuxSyscallTableGenerator(CGenerator):
 
     def generate_head(self, abi):
