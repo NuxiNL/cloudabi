@@ -7,6 +7,14 @@ from .abi import *
 from .generator import *
 
 
+def howmany(a, b):
+    return (a + b - 1) // b
+
+
+def roundup(a, b):
+    return howmany(a, b) * b
+
+
 class AsmVdsoGenerator(Generator):
 
     def __init__(self, function_alignment):
@@ -125,7 +133,7 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def register_count(member):
-        return (member.type.layout.size[1] + 7) // 8
+        return howmany(member.type.layout.size[1], 8)
 
     @staticmethod
     def print_push_addresses(regs):
@@ -179,7 +187,7 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def register_count(member):
-        return (member.type.layout.size[0] + 3) // 4
+        return howmany(member.type.layout.size[0], 4)
 
     @staticmethod
     def print_syscall(number):
@@ -212,6 +220,81 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
         print('  ret')
 
 
+class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
+
+    def __init__(self):
+        super().__init__(function_alignment='2, 0x90')
+
+    def generate_syscall_body(self, number, args_input, args_output, noreturn):
+        print('  push %ebp')
+        print('  mov %esp, %ebp')
+
+        # When running on 64-bit operating systems, we need to ensure
+        # that the system call arguments are padded to 64 bits words, so
+        # that they are passed in properly to the system call handler.
+        #
+        # Determine the number of 64-bit slots we need to allocate on
+        # the stack to be able to store both the input and output
+        # arguments.
+        slots_input_padded = sum(howmany(m.type.layout.size[1], 8)
+                                 for m in args_input)
+        slots_stack = max(slots_input_padded, 2)
+
+        # Copy original arguments into a properly padded buffer.
+        offset_in = 8
+        offset_out = -8 * slots_stack
+        for member in args_input:
+            if member.type.layout.size[0] == member.type.layout.size[1]:
+                # Argument whose size doesn't differ between systems.
+                for i in range(0, howmany(member.type.layout.size[0], 4)):
+                    print('  mov {}(%ebp), %ecx'.format(offset_in + i * 4))
+                    print('  mov %ecx, {}(%ebp)'.format(offset_out + i * 4))
+            else:
+                # Pointer or size_t. Zero-extend it to 64 bits.
+                assert member.type.layout.size[0] == 4
+                assert member.type.layout.size[1] == 8
+                print('  mov {}(%ebp), %ecx'.format(offset_in))
+                print('  mov %ecx, {}(%ebp)'.format(offset_out))
+                print('  movl $0, {}(%ebp)'.format(offset_out + 4))
+            offset_in += roundup(member.type.layout.size[0], 4)
+            offset_out += roundup(member.type.layout.size[1], 8)
+        assert offset_in == 8 + sum(roundup(m.type.layout.size[0], 4)
+                                    for m in args_input)
+        assert offset_out <= 0
+
+        # Invoke system call, setting %ecx to the padded buffer.
+        print('  mov ${}, %eax'.format(number))
+        print('  mov %ebp, %ecx')
+        print('  sub ${}, %ecx'.format(slots_stack * 8))
+        print('  int $0x80')
+
+        if not noreturn:
+            if args_output:
+                print('  test %eax, %eax')
+                print('  jnz 1f')
+
+                # Extract arguments from the padded buffer.
+                offset_in = -8 * slots_stack
+                offset_out = 8 + sum(roundup(m.type.layout.size[0], 4)
+                                     for m in args_input)
+                for member in args_output:
+                    size = member.type.layout.size[0]
+                    assert (size == member.type.layout.size[1] or
+                            (size == 4 and member.type.layout.size[1] == 8))
+                    assert size % 4 == 0
+                    print('  mov {}(%ebp), %ecx'.format(offset_out))
+                    for i in range(0, howmany(size, 4)):
+                        print('  mov {}(%ebp), %edx'.format(offset_in + i * 4))
+                        print('  mov %edx, {}(%ecx)'.format(i * 4))
+                    offset_in += roundup(member.type.layout.size[1], 8)
+                    offset_out += 4
+
+                print('1:')
+
+            print('  pop %ebp')
+            print('  ret')
+
+
 class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
     REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'),
@@ -224,7 +307,7 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def register_count(member):
-        return (member.type.layout.size[1] + 7) // 8
+        return howmany(member.type.layout.size[1], 8)
 
     @staticmethod
     def print_remap_register(reg_old, reg_new):

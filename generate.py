@@ -110,13 +110,9 @@ with open('sources/cloudabi_vdso_i686.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoI686Generator().generate_abi(abi)
 
-with open_and_format('sources/cloudabi_vdso_i686_on_x86_64.c') as f:
+with open('sources/cloudabi_vdso_i686_on_64bit.S', 'w') as f:
     with redirect_stdout(f):
-        CVdsoI686OnX86_64Generator(
-            naming=CNaming('cloudabi_', syscall_prefix='cloudabi_sys_'),
-            md_type=int_types['uint64'],
-            preamble='#include <cloudabi_types.h>\n'
-        ).generate_abi(abi)
+        AsmVdsoI686On64bitGenerator().generate_abi(abi)
 
 with open('sources/cloudabi_vdso_x86_64.S', 'w') as f:
     with redirect_stdout(f):
