@@ -102,19 +102,19 @@ with open('headers/cloudabi_syscalls_info.h', 'w') as f:
             header_guard='CLOUDABI_SYSCALLS_INFO_H',
         ).generate_abi(abi)
 
-with open('sources/cloudabi_vdso_aarch64.S', 'w') as f:
+with open('vdsos/cloudabi_vdso_aarch64.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoAarch64Generator().generate_abi(abi)
 
-with open('sources/cloudabi_vdso_i686.S', 'w') as f:
+with open('vdsos/cloudabi_vdso_i686.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoI686Generator().generate_abi(abi)
 
-with open('sources/cloudabi_vdso_i686_on_64bit.S', 'w') as f:
+with open('vdsos/cloudabi_vdso_i686_on_64bit.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoI686On64bitGenerator().generate_abi(abi)
 
-with open('sources/cloudabi_vdso_x86_64.S', 'w') as f:
+with open('vdsos/cloudabi_vdso_x86_64.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoX86_64Generator().generate_abi(abi)
 
