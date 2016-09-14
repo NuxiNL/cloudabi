@@ -217,12 +217,12 @@
   size_t *bufused
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_rename \
-  cloudabi_fd_t oldfd,                          \
-  const char *old,                              \
-  size_t oldlen,                                \
-  cloudabi_fd_t newfd,                          \
-  const char *new,                              \
-  size_t newlen
+  cloudabi_fd_t fd1,                            \
+  const char *path1,                            \
+  size_t path1len,                              \
+  cloudabi_fd_t fd2,                            \
+  const char *path2,                            \
+  size_t path2len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_file_stat_fget \
   cloudabi_fd_t fd,                                \
@@ -458,7 +458,7 @@
   fd, path, pathlen, buf, bufsize, bufused
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_rename \
-  oldfd, old, oldlen, newfd, new, newlen
+  fd1, path1, path1len, fd2, path2, path2len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_file_stat_fget \
   fd, buf

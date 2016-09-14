@@ -1716,16 +1716,16 @@ syscall file_readlink
 syscall file_rename
 	| Renames a file.
 	in
-		fd          oldfd
+		fd          fd1
 			| The working directory at which the resolution
 			| of the source path starts.
-		crange char old oldlen old
+		crange char path1 path1len path1
 			| The source path of the file that should be
 			| renamed.
-		fd          newfd
+		fd          fd2
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char new newlen new
+		crange char path2 path2len path2
 			| The destination path to which the file should
 			| be renamed.
 

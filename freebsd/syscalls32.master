@@ -153,12 +153,12 @@
 					size_t bufsize); }
 
 24	AUE_NULL	STD	{ void cloudabi_sys_file_rename( \
-					cloudabi_fd_t oldfd, \
-					const char *old, \
-					size_t oldlen, \
-					cloudabi_fd_t newfd, \
-					const char *new, \
-					size_t newlen); }
+					cloudabi_fd_t fd1, \
+					const char *path1, \
+					size_t path1len, \
+					cloudabi_fd_t fd2, \
+					const char *path2, \
+					size_t path2len); }
 
 25	AUE_NULL	STD	{ void cloudabi_sys_file_stat_fget( \
 					cloudabi_fd_t fd, \

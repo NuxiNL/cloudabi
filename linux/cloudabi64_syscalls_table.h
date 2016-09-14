@@ -288,15 +288,15 @@ static cloudabi_errno_t do_file_readlink(const void *in, void *out) {
 
 static cloudabi_errno_t do_file_rename(const void *in, void *out) {
   const struct {
-    MEMBER(cloudabi_fd_t, oldfd);
-    MEMBER(const char __user *, old);
-    MEMBER(size_t, oldlen);
-    MEMBER(cloudabi_fd_t, newfd);
-    MEMBER(const char __user *, new);
-    MEMBER(size_t, newlen);
+    MEMBER(cloudabi_fd_t, fd1);
+    MEMBER(const char __user *, path1);
+    MEMBER(size_t, path1len);
+    MEMBER(cloudabi_fd_t, fd2);
+    MEMBER(const char __user *, path2);
+    MEMBER(size_t, path2len);
   } *vin = in;
-  return cloudabi_sys_file_rename(vin->oldfd, vin->old, vin->oldlen, vin->newfd,
-                                  vin->new, vin->newlen);
+  return cloudabi_sys_file_rename(vin->fd1, vin->path1, vin->path1len, vin->fd2,
+                                  vin->path2, vin->path2len);
 }
 
 static cloudabi_errno_t do_file_stat_fget(const void *in, void *out) {

@@ -106,11 +106,11 @@ cloudabi_errno_t cloudabi_sys_file_readlink(cloudabi_fd_t fd,
                                             size_t pathlen, char __user *buf,
                                             size_t bufsize, size_t *bufused);
 
-cloudabi_errno_t cloudabi_sys_file_rename(cloudabi_fd_t oldfd,
-                                          const char __user *old, size_t oldlen,
-                                          cloudabi_fd_t newfd,
-                                          const char __user *new,
-                                          size_t newlen);
+cloudabi_errno_t cloudabi_sys_file_rename(cloudabi_fd_t fd1,
+                                          const char __user *path1,
+                                          size_t path1len, cloudabi_fd_t fd2,
+                                          const char __user *path2,
+                                          size_t path2len);
 
 cloudabi_errno_t cloudabi_sys_file_stat_fget(cloudabi_fd_t fd,
                                              cloudabi_filestat_t __user *buf);

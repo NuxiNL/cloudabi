@@ -167,9 +167,10 @@ static inline cloudabi_errno_t cloudabi_sys_file_readlink(
 }
 
 static inline cloudabi_errno_t cloudabi_sys_file_rename(
-    cloudabi_fd_t oldfd, const char *old, size_t oldlen, cloudabi_fd_t newfd,
-    const char *new, size_t newlen) {
-  return cloudabi_syscalls.file_rename(oldfd, old, oldlen, newfd, new, newlen);
+    cloudabi_fd_t fd1, const char *path1, size_t path1len, cloudabi_fd_t fd2,
+    const char *path2, size_t path2len) {
+  return cloudabi_syscalls.file_rename(fd1, path1, path1len, fd2, path2,
+                                       path2len);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_file_stat_fget(

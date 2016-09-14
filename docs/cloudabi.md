@@ -752,22 +752,22 @@ Renames a file.
 
 Inputs:
 
-- <a href="#file_rename.oldfd" name="file_rename.oldfd"></a><code>[cloudabi\_fd\_t](#fd) <strong>oldfd</strong></code>
+- <a href="#file_rename.fd1" name="file_rename.fd1"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd1</strong></code>
 
     The working directory at which the resolution
     of the source path starts.
 
-- <a href="#file_rename.old" name="file_rename.old"></a><code>const char *<strong>old</strong></code> and <a href="#file_rename.oldlen" name="file_rename.oldlen"></a><code>size\_t <strong>oldlen</strong></code>
+- <a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1len" name="file_rename.path1len"></a><code>size\_t <strong>path1len</strong></code>
 
     The source path of the file that should be
     renamed.
 
-- <a href="#file_rename.newfd" name="file_rename.newfd"></a><code>[cloudabi\_fd\_t](#fd) <strong>newfd</strong></code>
+- <a href="#file_rename.fd2" name="file_rename.fd2"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd2</strong></code>
 
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_rename.new" name="file_rename.new"></a><code>const char *<strong>new</strong></code> and <a href="#file_rename.newlen" name="file_rename.newlen"></a><code>size\_t <strong>newlen</strong></code>
+- <a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2len" name="file_rename.path2len"></a><code>size\_t <strong>path2len</strong></code>
 
     The destination path to which the file should
     be renamed.
