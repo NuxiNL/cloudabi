@@ -1662,8 +1662,18 @@ syscall file_open
 		oflags      oflags
 			| The method at which the file should be opened.
 		cptr fdstat fds
-			| The initial attributes of the file descriptor
-			| that is returned by this system call.
+			| [fdstat.fs_rights_base] and
+			| [fdstat.fs_rights_inheriting] specify the
+			| initial rights of the newly created file
+			| descriptor. The operating system is allowed to
+			| return a file descriptor with fewer rights
+			| than specified, if and only if those rights do
+			| not apply to the type of file being opened.
+			|
+			| [fdstat.fs_flags] specifies the initial flags
+			| of the file descriptor.
+			|
+			| [fdstat.fs_filetype] is ignored.
 	out
 		fd fd
 			| The file descriptor of the file that has been

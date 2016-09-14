@@ -670,8 +670,18 @@ Inputs:
 
 - <a href="#file_open.fds" name="file_open.fds"></a><code>const [cloudabi\_fdstat\_t](#fdstat) *<strong>fds</strong></code>
 
-    The initial attributes of the file descriptor
-    that is returned by this system call.
+    [`cloudabi_fdstat_t::fs_rights_base`](#fdstat.fs_rights_base) and
+    [`cloudabi_fdstat_t::fs_rights_inheriting`](#fdstat.fs_rights_inheriting) specify the
+    initial rights of the newly created file
+    descriptor. The operating system is allowed to
+    return a file descriptor with fewer rights
+    than specified, if and only if those rights do
+    not apply to the type of file being opened.
+
+    [`cloudabi_fdstat_t::fs_flags`](#fdstat.fs_flags) specifies the initial flags
+    of the file descriptor.
+
+    [`cloudabi_fdstat_t::fs_filetype`](#fdstat.fs_filetype) is ignored.
 
 Outputs:
 

@@ -815,8 +815,18 @@ of the file to be opened starts.</p></li>
 <p>The method at which the file should be opened.</p></li>
 <li><p><a href="#file_open.fds" name="file_open.fds"></a><code>const <a href="#fdstat">cloudabi_fdstat_t</a> *<strong>fds</strong></code></p>
 
-<p>The initial attributes of the file descriptor
-that is returned by this system call.</p></li>
+<p><a href="#fdstat.fs_rights_base"><code>cloudabi_fdstat_t::fs_rights_base</code></a> and
+<a href="#fdstat.fs_rights_inheriting"><code>cloudabi_fdstat_t::fs_rights_inheriting</code></a> specify the
+initial rights of the newly created file
+descriptor. The operating system is allowed to
+return a file descriptor with fewer rights
+than specified, if and only if those rights do
+not apply to the type of file being opened.</p>
+
+<p><a href="#fdstat.fs_flags"><code>cloudabi_fdstat_t::fs_flags</code></a> specifies the initial flags
+of the file descriptor.</p>
+
+<p><a href="#fdstat.fs_filetype"><code>cloudabi_fdstat_t::fs_filetype</code></a> is ignored.</p></li>
 </ul>
 
 <p>Outputs:</p>
