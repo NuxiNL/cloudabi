@@ -57,7 +57,10 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
         # Compute the number of registers/stack slots consumed by all of
         # the input and output arguments. We assume that a pointer
         # always fits in a single slot.
-        slots_input = sum(self.register_count(m) for m in args_input)
+        slots_input = 0
+        for m in args_input:
+            slots_input = (roundup(slots_input, self.register_align(m)) +
+                           self.register_count(m))
         slots_output = len(args_output)
 
         # Determine which registers correspond to these slots. If these
@@ -133,6 +136,10 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
         super().__init__(function_alignment='2', type_character='@')
 
     @staticmethod
+    def register_align(member):
+        return 1
+
+    @staticmethod
     def register_count(member):
         return howmany(member.type.layout.size[1], 8)
 
@@ -187,6 +194,10 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
         super().__init__(function_alignment='2', type_character='%')
 
     @staticmethod
+    def register_align(member):
+        return howmany(member.type.layout.size[0], 4)
+
+    @staticmethod
     def register_count(member):
         return howmany(member.type.layout.size[0], 4)
 
@@ -219,7 +230,7 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def print_load_address_from_stack(slot, reg):
-        print('  ldr r{}, [sp, #{}]'.format(reg, slot * 4 + 4))
+        print('  ldr r{}, [sp, #{}]'.format(reg, slot * 4))
 
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
@@ -247,6 +258,10 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
     def __init__(self):
         super().__init__(function_alignment='2, 0x90', type_character='@')
+
+    @staticmethod
+    def register_align(member):
+        return 1
 
     @staticmethod
     def register_count(member):
@@ -367,6 +382,10 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
     def __init__(self):
         super().__init__(function_alignment='4, 0x90', type_character='@')
+
+    @staticmethod
+    def register_align(member):
+        return 1
 
     @staticmethod
     def register_count(member):
