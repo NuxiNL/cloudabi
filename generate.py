@@ -106,6 +106,10 @@ with open('vdsos/cloudabi_vdso_aarch64.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoAarch64Generator().generate_abi(abi)
 
+with open('vdsos/cloudabi_vdso_armv6.S', 'w') as f:
+    with redirect_stdout(f):
+        AsmVdsoArmv6Generator().generate_abi(abi)
+
 with open('vdsos/cloudabi_vdso_i686.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoI686Generator().generate_abi(abi)

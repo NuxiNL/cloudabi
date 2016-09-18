@@ -17,9 +17,10 @@ def roundup(a, b):
 
 class AsmVdsoGenerator(Generator):
 
-    def __init__(self, function_alignment):
+    def __init__(self, function_alignment, type_character):
         super().__init__(comment_prefix='// ')
         self._function_alignment = function_alignment
+        self._type_character = type_character
 
     def generate_head(self, abi):
         super().generate_head(abi)
@@ -29,7 +30,7 @@ class AsmVdsoGenerator(Generator):
         print('  .text;                 \\')
         print('  .p2align %-13s \\' % (self._function_alignment + ';'))
         print('  .global name;          \\')
-        print('  .type name, @function; \\')
+        print('  .type name, %cfunction; \\' % self._type_character)
         print('name:')
         print()
         print('#define END(name) .size name, . - name')
@@ -129,7 +130,7 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
     REGISTERS_SPARE = ['2', '3']
 
     def __init__(self):
-        super().__init__(function_alignment='2')
+        super().__init__(function_alignment='2', type_character='@')
 
     @staticmethod
     def register_count(member):
@@ -176,6 +177,68 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
         print('  ret')
 
 
+class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
+
+    REGISTERS_PARAMS = [('0', '0'), ('1', '1'), ('2', '2'), ('3', '3')]
+    REGISTERS_RETURNS = ['0', '1']
+    REGISTERS_SPARE = ['2', '3']
+
+    def __init__(self):
+        super().__init__(function_alignment='2', type_character='%')
+
+    @staticmethod
+    def register_count(member):
+        return howmany(member.type.layout.size[0], 4)
+
+    @staticmethod
+    def print_push_addresses(regs):
+        if len(regs) == 1:
+            print('  str r{}, [sp, #-4]'.format(regs[0]))
+        else:
+            assert len(regs) == 2
+            print('  str r{}, [sp, #-4]'.format(regs[0]))
+            print('  str r{}, [sp, #-8]'.format(regs[1]))
+
+    @staticmethod
+    def print_syscall(number):
+        print('  mov ip, #{}'.format(number))
+        print('  swi 0')
+
+    @staticmethod
+    def print_pop_addresses(regs):
+        if len(regs) == 1:
+            print('  ldr r{}, [sp, #-4]'.format(regs[0]))
+        else:
+            assert len(regs) == 2
+            print('  ldr r{}, [sp, #-4]'.format(regs[0]))
+            print('  ldr r{}, [sp, #-8]'.format(regs[1]))
+
+    @staticmethod
+    def print_jump_syscall_failed(label):
+        print('  bcs ' + label)
+
+    @staticmethod
+    def print_load_address_from_stack(slot, reg):
+        print('  ldr r{}, [sp, #{}]'.format(reg, slot * 4 + 4))
+
+    @staticmethod
+    def print_store_output(member, reg_from, reg_to, index):
+        size = member.type.layout.size[0]
+        print('  str {}{}, [r{}{}]'.format(
+            {4: 'r', 8: 'r'}[size],
+            reg_from,
+            reg_to,
+            ', {}'.format(index * 4) if size > 4 else ''))
+
+    @staticmethod
+    def print_retval_success():
+        print('  mov r0, $0')
+
+    @staticmethod
+    def print_return():
+        print('  bx lr')
+
+
 class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
     REGISTERS_PARAMS = []
@@ -183,7 +246,7 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
     REGISTERS_SPARE = ['cx']
 
     def __init__(self):
-        super().__init__(function_alignment='2, 0x90')
+        super().__init__(function_alignment='2, 0x90', type_character='@')
 
     @staticmethod
     def register_count(member):
@@ -223,7 +286,7 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
 
     def __init__(self):
-        super().__init__(function_alignment='2, 0x90')
+        super().__init__(function_alignment='2, 0x90', type_character='@')
 
     def generate_syscall_body(self, number, args_input, args_output, noreturn):
         print('  push %ebp')
@@ -303,7 +366,7 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
     REGISTERS_SPARE = ['cx', 'si', 'di', '8', '9', '10', '11']
 
     def __init__(self):
-        super().__init__(function_alignment='4, 0x90')
+        super().__init__(function_alignment='4, 0x90', type_character='@')
 
     @staticmethod
     def register_count(member):
