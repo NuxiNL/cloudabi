@@ -120,7 +120,6 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
                                                 reg, j)
 
                 self.print_retval_success()
-                print('1:')
 
             self.print_return()
 
@@ -178,6 +177,7 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_retval_success():
         print('  mov w0, wzr')
+        print('1:')
 
     @staticmethod
     def print_return():
@@ -218,24 +218,24 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_pop_addresses(regs):
         if len(regs) == 1:
-            print('  ldr r{}, [sp, #-4]'.format(regs[0]))
+            print('  ldrcc r{}, [sp, #-4]'.format(regs[0]))
         else:
             assert len(regs) == 2
-            print('  ldr r{}, [sp, #-4]'.format(regs[0]))
-            print('  ldr r{}, [sp, #-8]'.format(regs[1]))
+            print('  ldrcc r{}, [sp, #-4]'.format(regs[0]))
+            print('  ldrcc r{}, [sp, #-8]'.format(regs[1]))
 
     @staticmethod
     def print_jump_syscall_failed(label):
-        print('  bcs ' + label)
+        pass
 
     @staticmethod
     def print_load_address_from_stack(slot, reg):
-        print('  ldr r{}, [sp, #{}]'.format(reg, slot * 4))
+        print('  ldrcc r{}, [sp, #{}]'.format(reg, slot * 4))
 
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
         size = member.type.layout.size[0]
-        print('  str {}{}, [r{}{}]'.format(
+        print('  strcc {}{}, [r{}{}]'.format(
             {4: 'r', 8: 'r'}[size],
             reg_from,
             reg_to,
@@ -243,7 +243,7 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
 
     @staticmethod
     def print_retval_success():
-        print('  mov r0, $0')
+        print('  movcc r0, $0')
 
     @staticmethod
     def print_return():
@@ -292,6 +292,7 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_retval_success():
         print('  xor %eax, %eax')
+        print('1:')
 
     @staticmethod
     def print_return():
@@ -428,6 +429,7 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_retval_success():
         print('  xor %eax, %eax')
+        print('1:')
 
     @staticmethod
     def print_return():
