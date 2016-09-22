@@ -34,7 +34,7 @@ def open_and_format(filename):
     return io.TextIOWrapper(proc.stdin, encoding='UTF-8')
 
 
-with open_and_format('headers/cloudabi_types_common.h') as f:
+with open('headers/cloudabi_types_common.h', 'w') as f:
     with redirect_stdout(f):
         CSyscalldefsGenerator(
             naming=CNaming('cloudabi_'),
