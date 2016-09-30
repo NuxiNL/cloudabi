@@ -8,6 +8,7 @@ import re
 from .abi import *
 from .generator import *
 from .c import CNaming
+from .rust import RustNaming
 
 
 class MarkdownNaming:
@@ -46,6 +47,9 @@ class MarkdownNaming:
         else:
             return None
 
+    def variantmem(self, member):
+        return member.name
+
 
 class MarkdownCNaming(MarkdownNaming, CNaming):
 
@@ -63,6 +67,28 @@ class MarkdownCNaming(MarkdownNaming, CNaming):
 
     def syscallname(self, syscall):
         return CNaming.syscallname(self, syscall) + '()'
+
+
+class MarkdownRustNaming(MarkdownNaming, RustNaming):
+
+    def typename(self, type, link=True, **kwargs):
+        if link:
+            return self.link(type, code=False)
+        else:
+            return super().typename(type, **kwargs)
+
+    def memname(self, *path):
+        name = self.typename(path[0], link=False) + '.'
+        name += '.'.join(
+                self.variantmem(m) if isinstance(m, VariantMember) else m.name
+                for m in path[1:])
+        return name
+
+    def variantmem(self, member):
+        return member.name + '()'
+
+    def syscallname(self, syscall):
+        return RustNaming.syscallname(self, syscall) + '()'
 
 
 class MarkdownGenerator(Generator):
@@ -135,13 +161,17 @@ class MarkdownGenerator(Generator):
                     self.naming.link(type.return_type)))
                 self.generate_doc(abi, type.return_type.doc, '    ')
 
-    def generate_struct_member(self, abi, m, parents, indent=''):
+    def generate_struct_member(
+            self, abi, m, parents, indent='', is_variant_member = False):
         print(indent, end='')
         if isinstance(m, SimpleStructMember):
+            name = m.name
+            if is_variant_member:
+                name = self.naming.variantmem(m)
             print('- {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m])),
                 self.naming.vardecl(
-                    m.type, '<strong>{}</strong>'.format(_escape(m.name)))))
+                    m.type, '<strong>{}</strong>'.format(_escape(name)))))
             self.generate_doc(abi, m, indent + '    ')
             if m.special_values:
                 print('    Possible values:\n')
@@ -168,12 +198,14 @@ class MarkdownGenerator(Generator):
                     _list('or', [self.naming.link(m.tag.type, v)
                                  for v in vm.tag_values])))
                 if vm.name is None:
-                    for mm in vm.type.members:
-                        self.generate_struct_member(
-                            abi, mm, parents, indent + '    ')
+                    assert(len(vm.type.members) == 1)
+                    mm = vm.type.members[0]
+                    self.generate_struct_member(
+                        abi, mm, parents, indent + '    ', True)
                 else:
                     print('    - {}**`{}`**\n'.format(
-                        self.anchor(*(parents + [vm])), vm.name))
+                        self.anchor(*(parents + [vm])),
+                        self.naming.variantmem(vm)))
                     for mm in vm.type.members:
                         self.generate_struct_member(
                             abi, mm, parents + [vm], indent + '        ')

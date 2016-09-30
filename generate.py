@@ -14,6 +14,7 @@ from generator.asm import *
 from generator.c import *
 from generator.markdown import *
 from generator.parser import *
+from generator.rust import *
 from generator.syscalls_master import *
 
 abi = AbiParser().parse_abi_file(
@@ -102,6 +103,12 @@ with open('headers/cloudabi_syscalls_info.h', 'w') as f:
             header_guard='CLOUDABI_SYSCALLS_INFO_H',
         ).generate_abi(abi)
 
+with open('rust/cloudabi-types.rs', 'w') as f:
+    with redirect_stdout(f):
+        RustSyscalldefsGenerator(
+            naming=RustNaming()
+        ).generate_abi(abi)
+
 with open('vdsos/cloudabi_vdso_aarch64.S', 'w') as f:
     with redirect_stdout(f):
         AsmVdsoAarch64Generator().generate_abi(abi)
@@ -171,8 +178,22 @@ with open('docs/cloudabi.md', 'w') as f:
             naming=MarkdownCNaming('cloudabi_'),
         ).generate_abi(abi)
 
+with open('docs/cloudabi-rust.md', 'w') as f:
+    with redirect_stdout(f):
+        MarkdownGenerator(
+            naming=MarkdownRustNaming(),
+        ).generate_abi(abi)
+
 html = subprocess.check_output('markdown docs/cloudabi.md', shell=True)
 with open('docs/cloudabi.html', 'wb') as f:
+    with open('parts/head.html', 'rb') as p:
+        f.write(p.read())
+    f.write(html)
+    with open('parts/foot.html', 'rb') as p:
+        f.write(p.read())
+
+html = subprocess.check_output('markdown docs/cloudabi-rust.md', shell=True)
+with open('docs/cloudabi-rust.html', 'wb') as f:
     with open('parts/head.html', 'rb') as p:
         f.write(p.read())
     f.write(html)
