@@ -3546,6 +3546,10 @@ Threads must be aware of their thread identifier, as it is
 written it into locks when acquiring them for writing. It is
 not advised to use these identifiers for any other purpose.
 
+As the thread identifier is also stored in [`cloudabi_lock_t`](#lock) when
+[`CLOUDABI_LOCK_WRLOCKED`](#lock.wrlocked) is set, the top two bits of the thread
+must always be set to zero.
+
 Used by [`cloudabi_threadentry_t`](#threadentry), [`cloudabi_sys_proc_fork()`](#proc_fork), and [`cloudabi_sys_thread_create()`](#thread_create).
 
 #### <a href="#timestamp" name="timestamp"></a>`cloudabi_timestamp_t` (`uint64_t`)

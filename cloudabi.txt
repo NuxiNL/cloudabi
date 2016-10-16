@@ -986,6 +986,10 @@ opaque uint32 tid
 	| Threads must be aware of their thread identifier, as it is
 	| written it into locks when acquiring them for writing. It is
 	| not advised to use these identifiers for any other purpose.
+	|
+	| As the thread identifier is also stored in [lock] when
+	| [lock.wrlocked] is set, the top two bits of the thread
+	| must always be set to zero.
 
 alias uint64 timestamp
 	| Timestamp in nanoseconds.
