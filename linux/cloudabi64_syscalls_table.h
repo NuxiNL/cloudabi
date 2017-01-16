@@ -373,19 +373,19 @@ static cloudabi_errno_t do_lock_unlock(const void *in, void *out) {
 
 static cloudabi_errno_t do_mem_advise(const void *in, void *out) {
   const struct {
-    MEMBER(void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(void __user *, mapping);
+    MEMBER(size_t, mapping_len);
     MEMBER(cloudabi_advice_t, advice);
   } *vin = in;
-  return cloudabi_sys_mem_advise(vin->addr, vin->addr_len, vin->advice);
+  return cloudabi_sys_mem_advise(vin->mapping, vin->mapping_len, vin->advice);
 }
 
 static cloudabi_errno_t do_mem_lock(const void *in, void *out) {
   const struct {
-    MEMBER(const void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(const void __user *, mapping);
+    MEMBER(size_t, mapping_len);
   } *vin = in;
-  return cloudabi_sys_mem_lock(vin->addr, vin->addr_len);
+  return cloudabi_sys_mem_lock(vin->mapping, vin->mapping_len);
 }
 
 static cloudabi_errno_t do_mem_map(const void *in, void *out) {
@@ -406,36 +406,36 @@ static cloudabi_errno_t do_mem_map(const void *in, void *out) {
 
 static cloudabi_errno_t do_mem_protect(const void *in, void *out) {
   const struct {
-    MEMBER(void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(void __user *, mapping);
+    MEMBER(size_t, mapping_len);
     MEMBER(cloudabi_mprot_t, prot);
   } *vin = in;
-  return cloudabi_sys_mem_protect(vin->addr, vin->addr_len, vin->prot);
+  return cloudabi_sys_mem_protect(vin->mapping, vin->mapping_len, vin->prot);
 }
 
 static cloudabi_errno_t do_mem_sync(const void *in, void *out) {
   const struct {
-    MEMBER(void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(void __user *, mapping);
+    MEMBER(size_t, mapping_len);
     MEMBER(cloudabi_msflags_t, flags);
   } *vin = in;
-  return cloudabi_sys_mem_sync(vin->addr, vin->addr_len, vin->flags);
+  return cloudabi_sys_mem_sync(vin->mapping, vin->mapping_len, vin->flags);
 }
 
 static cloudabi_errno_t do_mem_unlock(const void *in, void *out) {
   const struct {
-    MEMBER(const void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(const void __user *, mapping);
+    MEMBER(size_t, mapping_len);
   } *vin = in;
-  return cloudabi_sys_mem_unlock(vin->addr, vin->addr_len);
+  return cloudabi_sys_mem_unlock(vin->mapping, vin->mapping_len);
 }
 
 static cloudabi_errno_t do_mem_unmap(const void *in, void *out) {
   const struct {
-    MEMBER(void __user *, addr);
-    MEMBER(size_t, addr_len);
+    MEMBER(void __user *, mapping);
+    MEMBER(size_t, mapping_len);
   } *vin = in;
-  return cloudabi_sys_mem_unmap(vin->addr, vin->addr_len);
+  return cloudabi_sys_mem_unmap(vin->mapping, vin->mapping_len);
 }
 
 static cloudabi_errno_t do_poll(const void *in, void *out) {

@@ -200,13 +200,13 @@
 					cloudabi_scope_t scope); }
 
 32	AUE_NULL	STD	{ void cloudabi_sys_mem_advise( \
-					void *addr, \
-					size_t addr_len, \
+					void *mapping, \
+					size_t mapping_len, \
 					cloudabi_advice_t advice); }
 
 33	AUE_NULL	STD	{ void cloudabi_sys_mem_lock( \
-					const void *addr, \
-					size_t addr_len); }
+					const void *mapping, \
+					size_t mapping_len); }
 
 34	AUE_NULL	STD	{ void cloudabi_sys_mem_map( \
 					void *addr, \
@@ -217,22 +217,22 @@
 					cloudabi_filesize_t off); }
 
 35	AUE_NULL	STD	{ void cloudabi_sys_mem_protect( \
-					void *addr, \
-					size_t addr_len, \
+					void *mapping, \
+					size_t mapping_len, \
 					cloudabi_mprot_t prot); }
 
 36	AUE_NULL	STD	{ void cloudabi_sys_mem_sync( \
-					void *addr, \
-					size_t addr_len, \
+					void *mapping, \
+					size_t mapping_len, \
 					cloudabi_msflags_t flags); }
 
 37	AUE_NULL	STD	{ void cloudabi_sys_mem_unlock( \
-					const void *addr, \
-					size_t addr_len); }
+					const void *mapping, \
+					size_t mapping_len); }
 
 38	AUE_NULL	STD	{ void cloudabi_sys_mem_unmap( \
-					void *addr, \
-					size_t addr_len); }
+					void *mapping, \
+					size_t mapping_len); }
 
 39	AUE_NULL	STD	{ size_t cloudabi64_sys_poll( \
 					const cloudabi64_subscription_t *in, \

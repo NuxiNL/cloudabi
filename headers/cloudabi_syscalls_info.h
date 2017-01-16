@@ -264,13 +264,13 @@
   cloudabi_scope_t scope
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_advise \
-  void *addr,                                  \
-  size_t addr_len,                             \
+  void *mapping,                               \
+  size_t mapping_len,                          \
   cloudabi_advice_t advice
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_lock \
-  const void *addr,                          \
-  size_t addr_len
+  const void *mapping,                       \
+  size_t mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_map \
   void *addr,                               \
@@ -282,22 +282,22 @@
   void **mem
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_protect \
-  void *addr,                                   \
-  size_t addr_len,                              \
+  void *mapping,                                \
+  size_t mapping_len,                           \
   cloudabi_mprot_t prot
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_sync \
-  void *addr,                                \
-  size_t addr_len,                           \
+  void *mapping,                             \
+  size_t mapping_len,                        \
   cloudabi_msflags_t flags
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_unlock \
-  const void *addr,                            \
-  size_t addr_len
+  const void *mapping,                         \
+  size_t mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_unmap \
-  void *addr,                                 \
-  size_t addr_len
+  void *mapping,                              \
+  size_t mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_poll \
   const cloudabi_subscription_t *in,     \
@@ -482,25 +482,25 @@
   lock, scope
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_advise \
-  addr, addr_len, advice
+  mapping, mapping_len, advice
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_lock \
-  addr, addr_len
+  mapping, mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_map \
   addr, len, prot, flags, fd, off, mem
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_protect \
-  addr, addr_len, prot
+  mapping, mapping_len, prot
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_sync \
-  addr, addr_len, flags
+  mapping, mapping_len, flags
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unlock \
-  addr, addr_len
+  mapping, mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unmap \
-  addr, addr_len
+  mapping, mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll \
   in, out, nsubscriptions, nevents

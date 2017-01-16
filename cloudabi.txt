@@ -1846,7 +1846,7 @@ syscall lock_unlock
 syscall mem_advise
 	| Provides memory advisory information on a region of memory.
 	in
-		range void addr
+		range void mapping
 			| The pages for which to provide memory advisory
 			| information.
 		advice     advice
@@ -1856,7 +1856,7 @@ syscall mem_lock
 	| Increments the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
-		crange void addr
+		crange void mapping
 			| The pages that need its lock count
 			| incremented.
 
@@ -1894,7 +1894,7 @@ syscall mem_map
 syscall mem_protect
 	| Change the protection of a memory mapping.
 	in
-		range void addr
+		range void mapping
 			| The pages that need their protection changed.
 		mprot      prot
 			| New protection options.
@@ -1902,7 +1902,7 @@ syscall mem_protect
 syscall mem_sync
 	| Synchronize a region of memory with its physical storage.
 	in
-		range void addr
+		range void mapping
 			| The pages that need to be synchronized.
 		msflags    flags
 			| The method of synchronization.
@@ -1911,14 +1911,14 @@ syscall mem_unlock
 	| Decrements the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
-		crange void addr
+		crange void mapping
 			| The pages that need its lock count
 			| decremented.
 
 syscall mem_unmap
 	| Unmaps a region of memory.
 	in
-		range void addr
+		range void mapping
 			| The pages that needs to be unmapped.
 
 syscall poll

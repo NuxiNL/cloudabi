@@ -945,7 +945,7 @@ Provides memory advisory information on a region of memory.
 
 Inputs:
 
-- <a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.addr_len" name="mem_advise.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_advise.mapping" name="mem_advise.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_advise.mapping_len" name="mem_advise.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages for which to provide memory advisory
     information.
@@ -961,7 +961,7 @@ prevents it from leaving system memory.
 
 Inputs:
 
-- <a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.addr_len" name="mem_lock.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_lock.mapping" name="mem_lock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_lock.mapping_len" name="mem_lock.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages that need its lock count
     incremented.
@@ -1020,7 +1020,7 @@ Change the protection of a memory mapping.
 
 Inputs:
 
-- <a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.addr_len" name="mem_protect.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_protect.mapping" name="mem_protect.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_protect.mapping_len" name="mem_protect.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages that need their protection changed.
 
@@ -1034,7 +1034,7 @@ Synchronize a region of memory with its physical storage.
 
 Inputs:
 
-- <a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.addr_len" name="mem_sync.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_sync.mapping" name="mem_sync.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_sync.mapping_len" name="mem_sync.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages that need to be synchronized.
 
@@ -1049,7 +1049,7 @@ prevents it from leaving system memory.
 
 Inputs:
 
-- <a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.addr_len" name="mem_unlock.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_unlock.mapping" name="mem_unlock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_unlock.mapping_len" name="mem_unlock.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages that need its lock count
     decremented.
@@ -1060,7 +1060,7 @@ Unmaps a region of memory.
 
 Inputs:
 
-- <a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.addr_len" name="mem_unmap.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
+- <a href="#mem_unmap.mapping" name="mem_unmap.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_unmap.mapping_len" name="mem_unmap.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
 
     The pages that needs to be unmapped.
 

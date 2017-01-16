@@ -106,18 +106,18 @@ typedef struct {
                                   size_t path_len, cloudabi_ulflags_t flags);
   cloudabi_errno_t (*lock_unlock)(_Atomic(cloudabi_lock_t) * lock,
                                   cloudabi_scope_t scope);
-  cloudabi_errno_t (*mem_advise)(void *addr, size_t addr_len,
+  cloudabi_errno_t (*mem_advise)(void *mapping, size_t mapping_len,
                                  cloudabi_advice_t advice);
-  cloudabi_errno_t (*mem_lock)(const void *addr, size_t addr_len);
+  cloudabi_errno_t (*mem_lock)(const void *mapping, size_t mapping_len);
   cloudabi_errno_t (*mem_map)(void *addr, size_t len, cloudabi_mprot_t prot,
                               cloudabi_mflags_t flags, cloudabi_fd_t fd,
                               cloudabi_filesize_t off, void **mem);
-  cloudabi_errno_t (*mem_protect)(void *addr, size_t addr_len,
+  cloudabi_errno_t (*mem_protect)(void *mapping, size_t mapping_len,
                                   cloudabi_mprot_t prot);
-  cloudabi_errno_t (*mem_sync)(void *addr, size_t addr_len,
+  cloudabi_errno_t (*mem_sync)(void *mapping, size_t mapping_len,
                                cloudabi_msflags_t flags);
-  cloudabi_errno_t (*mem_unlock)(const void *addr, size_t addr_len);
-  cloudabi_errno_t (*mem_unmap)(void *addr, size_t addr_len);
+  cloudabi_errno_t (*mem_unlock)(const void *mapping, size_t mapping_len);
+  cloudabi_errno_t (*mem_unmap)(void *mapping, size_t mapping_len);
   cloudabi_errno_t (*poll)(const cloudabi_subscription_t *in,
                            cloudabi_event_t *out, size_t nsubscriptions,
                            size_t *nevents);

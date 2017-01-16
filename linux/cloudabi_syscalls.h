@@ -142,11 +142,12 @@ cloudabi_errno_t cloudabi_sys_file_unlink(cloudabi_fd_t fd,
 cloudabi_errno_t cloudabi_sys_lock_unlock(cloudabi_lock_t __user *lock,
                                           cloudabi_scope_t scope);
 
-cloudabi_errno_t cloudabi_sys_mem_advise(void __user *addr, size_t addr_len,
+cloudabi_errno_t cloudabi_sys_mem_advise(void __user *mapping,
+                                         size_t mapping_len,
                                          cloudabi_advice_t advice);
 
-cloudabi_errno_t cloudabi_sys_mem_lock(const void __user *addr,
-                                       size_t addr_len);
+cloudabi_errno_t cloudabi_sys_mem_lock(const void __user *mapping,
+                                       size_t mapping_len);
 
 cloudabi_errno_t cloudabi_sys_mem_map(void __user *addr, size_t len,
                                       cloudabi_mprot_t prot,
@@ -154,16 +155,18 @@ cloudabi_errno_t cloudabi_sys_mem_map(void __user *addr, size_t len,
                                       cloudabi_filesize_t off,
                                       void __user **mem);
 
-cloudabi_errno_t cloudabi_sys_mem_protect(void __user *addr, size_t addr_len,
+cloudabi_errno_t cloudabi_sys_mem_protect(void __user *mapping,
+                                          size_t mapping_len,
                                           cloudabi_mprot_t prot);
 
-cloudabi_errno_t cloudabi_sys_mem_sync(void __user *addr, size_t addr_len,
+cloudabi_errno_t cloudabi_sys_mem_sync(void __user *mapping, size_t mapping_len,
                                        cloudabi_msflags_t flags);
 
-cloudabi_errno_t cloudabi_sys_mem_unlock(const void __user *addr,
-                                         size_t addr_len);
+cloudabi_errno_t cloudabi_sys_mem_unlock(const void __user *mapping,
+                                         size_t mapping_len);
 
-cloudabi_errno_t cloudabi_sys_mem_unmap(void __user *addr, size_t addr_len);
+cloudabi_errno_t cloudabi_sys_mem_unmap(void __user *mapping,
+                                        size_t mapping_len);
 
 cloudabi_errno_t cloudabi_sys_proc_exec(cloudabi_fd_t fd,
                                         const void __user *data,

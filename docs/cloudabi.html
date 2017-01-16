@@ -1100,7 +1100,7 @@ shared memory.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.addr_len" name="mem_advise.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_advise.mapping" name="mem_advise.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_advise.mapping_len" name="mem_advise.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages for which to provide memory advisory
 information.</p></li>
@@ -1117,7 +1117,7 @@ prevents it from leaving system memory.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.addr_len" name="mem_lock.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_lock.mapping" name="mem_lock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_lock.mapping_len" name="mem_lock.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need its lock count
 incremented.</p></li>
@@ -1177,7 +1177,7 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.addr_len" name="mem_protect.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_protect.mapping" name="mem_protect.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_protect.mapping_len" name="mem_protect.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need their protection changed.</p></li>
 <li><p><a href="#mem_protect.prot" name="mem_protect.prot"></a><code><a href="#mprot">cloudabi_mprot_t</a> <strong>prot</strong></code></p>
@@ -1192,7 +1192,7 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.addr_len" name="mem_sync.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_sync.mapping" name="mem_sync.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_sync.mapping_len" name="mem_sync.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need to be synchronized.</p></li>
 <li><p><a href="#mem_sync.flags" name="mem_sync.flags"></a><code><a href="#msflags">cloudabi_msflags_t</a> <strong>flags</strong></code></p>
@@ -1208,7 +1208,7 @@ prevents it from leaving system memory.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.addr_len" name="mem_unlock.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_unlock.mapping" name="mem_unlock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_unlock.mapping_len" name="mem_unlock.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need its lock count
 decremented.</p></li>
@@ -1221,7 +1221,7 @@ decremented.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.addr_len" name="mem_unmap.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
+<li><p><a href="#mem_unmap.mapping" name="mem_unmap.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_unmap.mapping_len" name="mem_unmap.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that needs to be unmapped.</p></li>
 </ul>

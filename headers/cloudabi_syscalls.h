@@ -215,13 +215,13 @@ static inline cloudabi_errno_t cloudabi_sys_lock_unlock(
 }
 
 static inline cloudabi_errno_t cloudabi_sys_mem_advise(
-    void *addr, size_t addr_len, cloudabi_advice_t advice) {
-  return cloudabi_syscalls.mem_advise(addr, addr_len, advice);
+    void *mapping, size_t mapping_len, cloudabi_advice_t advice) {
+  return cloudabi_syscalls.mem_advise(mapping, mapping_len, advice);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_lock(const void *addr,
-                                                     size_t addr_len) {
-  return cloudabi_syscalls.mem_lock(addr, addr_len);
+static inline cloudabi_errno_t cloudabi_sys_mem_lock(const void *mapping,
+                                                     size_t mapping_len) {
+  return cloudabi_syscalls.mem_lock(mapping, mapping_len);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_mem_map(
@@ -230,26 +230,26 @@ static inline cloudabi_errno_t cloudabi_sys_mem_map(
   return cloudabi_syscalls.mem_map(addr, len, prot, flags, fd, off, mem);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_protect(void *addr,
-                                                        size_t addr_len,
+static inline cloudabi_errno_t cloudabi_sys_mem_protect(void *mapping,
+                                                        size_t mapping_len,
                                                         cloudabi_mprot_t prot) {
-  return cloudabi_syscalls.mem_protect(addr, addr_len, prot);
+  return cloudabi_syscalls.mem_protect(mapping, mapping_len, prot);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_sync(void *addr,
-                                                     size_t addr_len,
+static inline cloudabi_errno_t cloudabi_sys_mem_sync(void *mapping,
+                                                     size_t mapping_len,
                                                      cloudabi_msflags_t flags) {
-  return cloudabi_syscalls.mem_sync(addr, addr_len, flags);
+  return cloudabi_syscalls.mem_sync(mapping, mapping_len, flags);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_unlock(const void *addr,
-                                                       size_t addr_len) {
-  return cloudabi_syscalls.mem_unlock(addr, addr_len);
+static inline cloudabi_errno_t cloudabi_sys_mem_unlock(const void *mapping,
+                                                       size_t mapping_len) {
+  return cloudabi_syscalls.mem_unlock(mapping, mapping_len);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_unmap(void *addr,
-                                                      size_t addr_len) {
-  return cloudabi_syscalls.mem_unmap(addr, addr_len);
+static inline cloudabi_errno_t cloudabi_sys_mem_unmap(void *mapping,
+                                                      size_t mapping_len) {
+  return cloudabi_syscalls.mem_unmap(mapping, mapping_len);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_poll(
