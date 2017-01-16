@@ -143,16 +143,14 @@ class SimpleStructMember(StructMember):
 
 class RangeStructMember(StructMember):
 
-    def __init__(self, base_name, length_name, name, const, target_type):
+    def __init__(self, name, const, target_type):
         super().__init__(name, layout=None)
         self.type = type
-        self.base_name = base_name
-        self.length_name = length_name
         self.const = const
         self.target_type = target_type
         self.raw_members = [
-            SimpleStructMember(base_name, PointerType(target_type, const)),
-            SimpleStructMember(length_name, int_types['size'])]
+            SimpleStructMember(name, PointerType(target_type, const)),
+            SimpleStructMember(name + '_len', int_types['size'])]
 
 
 class VariantStructMember(StructMember):

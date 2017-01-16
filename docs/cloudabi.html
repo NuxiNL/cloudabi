@@ -494,7 +494,7 @@ file descriptor's offset.</p>
 
 <p>The file descriptor from which data should be
 read.</p></li>
-<li><p><a href="#fd_pread.iov" name="fd_pread.iov"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iov</strong></code> and <a href="#fd_pread.iovcnt" name="fd_pread.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_pread.iovs" name="fd_pread.iovs"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_pread.iovs_len" name="fd_pread.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be stored.</p></li>
@@ -524,7 +524,7 @@ file descriptor's offset.</p>
 
 <p>The file descriptor to which data should be
 written.</p></li>
-<li><p><a href="#fd_pwrite.iov" name="fd_pwrite.iov"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iov</strong></code> and <a href="#fd_pwrite.iovcnt" name="fd_pwrite.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_pwrite.iovs" name="fd_pwrite.iovs"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_pwrite.iovs_len" name="fd_pwrite.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be retrieved.</p></li>
@@ -553,7 +553,7 @@ should start.</p></li>
 
 <p>The file descriptor from which data should be
 read.</p></li>
-<li><p><a href="#fd_read.iov" name="fd_read.iov"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iov</strong></code> and <a href="#fd_read.iovcnt" name="fd_read.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_read.iovs" name="fd_read.iovs"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_read.iovs_len" name="fd_read.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be stored.</p></li>
@@ -685,7 +685,7 @@ and metadata needs to be synchronized to disk.</p></li>
 
 <p>The file descriptor to which data should be
 written.</p></li>
-<li><p><a href="#fd_write.iov" name="fd_write.iov"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iov</strong></code> and <a href="#fd_write.iovcnt" name="fd_write.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_write.iovs" name="fd_write.iovs"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_write.iovs_len" name="fd_write.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be retrieved.</p></li>
@@ -754,7 +754,7 @@ start.</p></li>
 
 <p>The working directory at which the resolution
 of the file to be created starts.</p></li>
-<li><p><a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.pathlen" name="file_create.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.path_len" name="file_create.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path at which the file should be created.</p></li>
 <li><p><a href="#file_create.type" name="file_create.type"></a><code><a href="#filetype">cloudabi_filetype_t</a> <strong>type</strong></code></p>
@@ -782,7 +782,7 @@ of the file to be created starts.</p></li>
 
 <p>The working directory at which the resolution
 of the source path starts.</p></li>
-<li><p><a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1len" name="file_link.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1_len" name="file_link.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The source path of the file that should be
 hard linked.</p></li>
@@ -790,7 +790,7 @@ hard linked.</p></li>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2len" name="file_link.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2_len" name="file_link.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path at which the hard link
 should be created.</p></li>
@@ -807,7 +807,7 @@ should be created.</p></li>
 
 <p>The working directory at which the resolution
 of the file to be opened starts.</p></li>
-<li><p><a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.pathlen" name="file_open.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.path_len" name="file_open.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file that should be opened.</p></li>
 <li><p><a href="#file_open.oflags" name="file_open.oflags"></a><code><a href="#oflags">cloudabi_oflags_t</a> <strong>oflags</strong></code></p>
@@ -860,7 +860,7 @@ directory entry.</p>
 
 <p>The directory from which to read the directory
 entries.</p></li>
-<li><p><a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.nbyte" name="file_readdir.nbyte"></a><code>size_t <strong>nbyte</strong></code></p>
+<li><p><a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.buf_len" name="file_readdir.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer where directory entries are stored.</p></li>
 <li><p><a href="#file_readdir.cookie" name="file_readdir.cookie"></a><code><a href="#dircookie">cloudabi_dircookie_t</a> <strong>cookie</strong></code></p>
@@ -890,11 +890,11 @@ end of the directory has been reached.</p></li>
 
 <p>The working directory at which the resolution
 of the path of the symbolic starts.</p></li>
-<li><p><a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.pathlen" name="file_readlink.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.path_len" name="file_readlink.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the symbolic link whose contents
 should be read.</p></li>
-<li><p><a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.bufsize" name="file_readlink.bufsize"></a><code>size_t <strong>bufsize</strong></code></p>
+<li><p><a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.buf_len" name="file_readlink.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer where the contents of the symbolic
 link should be stored.</p></li>
@@ -919,7 +919,7 @@ link should be stored.</p></li>
 
 <p>The working directory at which the resolution
 of the source path starts.</p></li>
-<li><p><a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1len" name="file_rename.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1_len" name="file_rename.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The source path of the file that should be
 renamed.</p></li>
@@ -927,7 +927,7 @@ renamed.</p></li>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2len" name="file_rename.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2_len" name="file_rename.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path to which the file should
 be renamed.</p></li>
@@ -983,7 +983,7 @@ be adjusted.</p></li>
 <p>The working directory at which the resolution
 of the path whose attributes have to be
 obtained starts.</p></li>
-<li><p><a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.pathlen" name="file_stat_get.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.path_len" name="file_stat_get.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file whose attributes have to
 be obtained.</p></li>
@@ -1005,7 +1005,7 @@ stored.</p></li>
 <p>The working directory at which the resolution
 of the path whose attributes have to be
 adjusted starts.</p></li>
-<li><p><a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.pathlen" name="file_stat_put.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.path_len" name="file_stat_put.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file whose attributes have to
 be adjusted.</p></li>
@@ -1026,14 +1026,14 @@ be adjusted.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1len" name="file_symlink.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1_len" name="file_symlink.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The contents of the symbolic link.</p></li>
 <li><p><a href="#file_symlink.fd" name="file_symlink.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2len" name="file_symlink.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2_len" name="file_symlink.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path at which the symbolic
 link should be created.</p></li>
@@ -1050,7 +1050,7 @@ link should be created.</p></li>
 
 <p>The working directory at which the resolution
 of the path starts.</p></li>
-<li><p><a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.pathlen" name="file_unlink.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.path_len" name="file_unlink.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path that needs to be unlinked or removed.</p></li>
 <li><p><a href="#file_unlink.flags" name="file_unlink.flags"></a><code><a href="#ulflags">cloudabi_ulflags_t</a> <strong>flags</strong></code></p>
@@ -1100,7 +1100,7 @@ shared memory.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.len" name="mem_advise.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.addr_len" name="mem_advise.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages for which to provide memory advisory
 information.</p></li>
@@ -1117,7 +1117,7 @@ prevents it from leaving system memory.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.len" name="mem_lock.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.addr_len" name="mem_lock.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages that need its lock count
 incremented.</p></li>
@@ -1177,7 +1177,7 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.len" name="mem_protect.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.addr_len" name="mem_protect.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages that need their protection changed.</p></li>
 <li><p><a href="#mem_protect.prot" name="mem_protect.prot"></a><code><a href="#mprot">cloudabi_mprot_t</a> <strong>prot</strong></code></p>
@@ -1192,7 +1192,7 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.len" name="mem_sync.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.addr_len" name="mem_sync.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages that need to be synchronized.</p></li>
 <li><p><a href="#mem_sync.flags" name="mem_sync.flags"></a><code><a href="#msflags">cloudabi_msflags_t</a> <strong>flags</strong></code></p>
@@ -1208,7 +1208,7 @@ prevents it from leaving system memory.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.len" name="mem_unlock.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.addr_len" name="mem_unlock.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages that need its lock count
 decremented.</p></li>
@@ -1221,7 +1221,7 @@ decremented.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.len" name="mem_unmap.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.addr_len" name="mem_unmap.addr_len"></a><code>size_t <strong>addr_len</strong></code></p>
 
 <p>The pages that needs to be unmapped.</p></li>
 </ul>
@@ -1263,11 +1263,11 @@ while retaining subscriptions across calls.</p>
 <li><p><a href="#poll_fd.fd" name="poll_fd.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
 
 <p>The polling event queue.</p></li>
-<li><p><a href="#poll_fd.in" name="poll_fd.in"></a><code>const <a href="#subscription">cloudabi_subscription_t</a> *<strong>in</strong></code> and <a href="#poll_fd.nin" name="poll_fd.nin"></a><code>size_t <strong>nin</strong></code></p>
+<li><p><a href="#poll_fd.in" name="poll_fd.in"></a><code>const <a href="#subscription">cloudabi_subscription_t</a> *<strong>in</strong></code> and <a href="#poll_fd.in_len" name="poll_fd.in_len"></a><code>size_t <strong>in_len</strong></code></p>
 
 <p>Changes that need to be made to the polling
 event queue.</p></li>
-<li><p><a href="#poll_fd.out" name="poll_fd.out"></a><code><a href="#event">cloudabi_event_t</a> *<strong>out</strong></code> and <a href="#poll_fd.nout" name="poll_fd.nout"></a><code>size_t <strong>nout</strong></code></p>
+<li><p><a href="#poll_fd.out" name="poll_fd.out"></a><code><a href="#event">cloudabi_event_t</a> *<strong>out</strong></code> and <a href="#poll_fd.out_len" name="poll_fd.out_len"></a><code>size_t <strong>out_len</strong></code></p>
 
 <p>The events that have occurred.</p></li>
 <li><p><a href="#poll_fd.timeout" name="poll_fd.timeout"></a><code>const <a href="#subscription">cloudabi_subscription_t</a> *<strong>timeout</strong></code></p>
@@ -1315,11 +1315,11 @@ original process.</p>
 <li><p><a href="#proc_exec.fd" name="proc_exec.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
 
 <p>A file descriptor of the new executable.</p></li>
-<li><p><a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.datalen" name="proc_exec.datalen"></a><code>size_t <strong>datalen</strong></code></p>
+<li><p><a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.data_len" name="proc_exec.data_len"></a><code>size_t <strong>data_len</strong></code></p>
 
 <p>Binary argument data that is passed on to the
 new executable.</p></li>
-<li><p><a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>fds</strong></code> and <a href="#proc_exec.fdslen" name="proc_exec.fdslen"></a><code>size_t <strong>fdslen</strong></code></p>
+<li><p><a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>fds</strong></code> and <a href="#proc_exec.fds_len" name="proc_exec.fds_len"></a><code>size_t <strong>fds_len</strong></code></p>
 
 <p>The layout of the file descriptor table after
 execution.</p></li>
@@ -1394,7 +1394,7 @@ as the seed for a userspace pseudo-random number generator.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.nbyte" name="random_get.nbyte"></a><code>size_t <strong>nbyte</strong></code></p>
+<li><p><a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.buf_len" name="random_get.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer that needs to be filled with random
 data.</p></li>
@@ -1439,7 +1439,7 @@ connection.</p></li>
 
 <p>The working directory at which the resolution
 of the path to which to bind starts.</p></li>
-<li><p><a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.pathlen" name="sock_bind.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.path_len" name="sock_bind.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path to which the socket should bind.</p></li>
 </ul>
@@ -1458,7 +1458,7 @@ of the path to which to bind starts.</p></li>
 
 <p>The working directory at which the resolution
 of the path to which to connect starts.</p></li>
-<li><p><a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.pathlen" name="sock_connect.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path to which the socket should onnect.</p></li>
 </ul>
@@ -1765,7 +1765,7 @@ in its backlog.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#ciovec.iov_base" name="ciovec.iov_base"></a><code>const void *<strong>iov_base</strong></code> and <a href="#ciovec.iov_len" name="ciovec.iov_len"></a><code>size_t <strong>iov_len</strong></code></p>
+<li><p><a href="#ciovec.buf" name="ciovec.buf"></a><code>const void *<strong>buf</strong></code> and <a href="#ciovec.buf_len" name="ciovec.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The address and length of the buffer to be written.</p></li>
 </ul>
@@ -2524,7 +2524,7 @@ time of clock <a href="#clockid.realtime"><code>CLOUDABI_CLOCK_REALTIME</code></
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#iovec.iov_base" name="iovec.iov_base"></a><code>void *<strong>iov_base</strong></code> and <a href="#iovec.iov_len" name="iovec.iov_len"></a><code>size_t <strong>iov_len</strong></code></p>
+<li><p><a href="#iovec.buf" name="iovec.buf"></a><code>void *<strong>buf</strong></code> and <a href="#iovec.buf_len" name="iovec.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The address and length of the buffer to be filled.</p></li>
 </ul>
@@ -2762,11 +2762,11 @@ variable that should be woken up.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>ri_data</strong></code> and <a href="#recv_in.ri_datalen" name="recv_in.ri_datalen"></a><code>size_t <strong>ri_datalen</strong></code></p>
+<li><p><a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>ri_data</strong></code> and <a href="#recv_in.ri_data_len" name="recv_in.ri_data_len"></a><code>size_t <strong>ri_data_len</strong></code></p>
 
 <p>List of scatter/gather vectors where message data
 should be stored.</p></li>
-<li><p><a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><a href="#fd">cloudabi_fd_t</a> *<strong>ri_fds</strong></code> and <a href="#recv_in.ri_fdslen" name="recv_in.ri_fdslen"></a><code>size_t <strong>ri_fdslen</strong></code></p>
+<li><p><a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><a href="#fd">cloudabi_fd_t</a> *<strong>ri_fds</strong></code> and <a href="#recv_in.ri_fds_len" name="recv_in.ri_fds_len"></a><code>size_t <strong>ri_fds_len</strong></code></p>
 
 <p>Buffer where numbers of incoming file descriptors
 should be stored.</p></li>
@@ -3058,11 +3058,11 @@ memory.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#send_in.si_data" name="send_in.si_data"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>si_data</strong></code> and <a href="#send_in.si_datalen" name="send_in.si_datalen"></a><code>size_t <strong>si_datalen</strong></code></p>
+<li><p><a href="#send_in.si_data" name="send_in.si_data"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>si_data</strong></code> and <a href="#send_in.si_data_len" name="send_in.si_data_len"></a><code>size_t <strong>si_data_len</strong></code></p>
 
 <p>List of scatter/gather vectors where message data
 should be retrieved.</p></li>
-<li><p><a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>si_fds</strong></code> and <a href="#send_in.si_fdslen" name="send_in.si_fdslen"></a><code>size_t <strong>si_fdslen</strong></code></p>
+<li><p><a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>si_fds</strong></code> and <a href="#send_in.si_fds_len" name="send_in.si_fds_len"></a><code>size_t <strong>si_fds_len</strong></code></p>
 
 <p>File descriptors that need to be attached to the
 message.</p></li>
@@ -3568,7 +3568,7 @@ value cannot be interpreted by the application.</p></li>
 <li><p><a href="#threadattr.entry_point" name="threadattr.entry_point"></a><code><a href="#threadentry">cloudabi_threadentry_t</a> *<strong>entry_point</strong></code></p>
 
 <p>Initial program counter value.</p></li>
-<li><p><a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_size" name="threadattr.stack_size"></a><code>size_t <strong>stack_size</strong></code></p>
+<li><p><a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_len" name="threadattr.stack_len"></a><code>size_t <strong>stack_len</strong></code></p>
 
 <p>Region allocated to serve as stack space.</p></li>
 <li><p><a href="#threadattr.argument" name="threadattr.argument"></a><code>void *<strong>argument</strong></code></p>

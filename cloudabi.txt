@@ -1054,7 +1054,7 @@ function processentry
 
 struct ciovec
 	| A region of memory for scatter/gather writes.
-	crange void iov_base iov_len iov_data
+	crange void buf
 		| The address and length of the buffer to be written.
 
 struct dirent
@@ -1161,7 +1161,7 @@ struct filestat
 
 struct iovec
 	| A region of memory for scatter/gather reads.
-	range void iov_base iov_len iov_data
+	range void buf
 		| The address and length of the buffer to be filled.
 
 struct lookup
@@ -1175,10 +1175,10 @@ struct lookup
 
 struct recv_in
 	| Arguments of [sock_recv].
-	crange iovec ri_data ri_datalen ri_data
+	crange iovec ri_data
 		| List of scatter/gather vectors where message data
 		| should be stored.
-	range fd     ri_fds  ri_fdslen  ri_fds
+	range fd     ri_fds
 		| Buffer where numbers of incoming file descriptors
 		| should be stored.
 	msgflags     ri_flags
@@ -1187,10 +1187,10 @@ struct recv_in
 
 struct send_in
 	| Arguments of [sock_send].
-	crange ciovec si_data si_datalen si_data
+	crange ciovec si_data
 		| List of scatter/gather vectors where message data
 		| should be retrieved.
-	crange fd     si_fds  si_fdslen  si_fds
+	crange fd     si_fds
 		| File descriptors that need to be attached to the
 		| message.
 	msgflags      si_flags
@@ -1358,7 +1358,7 @@ struct threadattr
 	| Attributes for thread creation.
 	ptr threadentry entry_point
 		| Initial program counter value.
-	range void      stack stack_size stack
+	range void      stack
 		| Region allocated to serve as stack space.
 	ptr void        argument
 		| Argument to be forwarded to the entry point function.
@@ -1479,7 +1479,7 @@ syscall fd_pread
 		fd           fd
 			| The file descriptor from which data should be
 			| read.
-		crange iovec iov iovcnt iovs
+		crange iovec iovs
 			| List of scatter/gather vectors where data
 			| should be stored.
 		filesize     offset
@@ -1496,7 +1496,7 @@ syscall fd_pwrite
 		fd            fd
 			| The file descriptor to which data should be
 			| written.
-		crange ciovec iov iovcnt iovs
+		crange ciovec iovs
 			| List of scatter/gather vectors where data
 			| should be retrieved.
 		filesize      offset
@@ -1512,7 +1512,7 @@ syscall fd_read
 		fd           fd
 			| The file descriptor from which data should be
 			| read.
-		crange iovec iov iovcnt iovs
+		crange iovec iovs
 			| List of scatter/gather vectors where data
 			| should be stored.
 	out
@@ -1591,7 +1591,7 @@ syscall fd_write
 		fd            fd
 			| The file descriptor to which data should be
 			| written.
-		crange ciovec iov iovcnt iovs
+		crange ciovec iovs
 			| List of scatter/gather vectors where data
 			| should be retrieved.
 	out
@@ -1631,7 +1631,7 @@ syscall file_create
 		fd          fd
 			| The working directory at which the resolution
 			| of the file to be created starts.
-		crange char path pathlen path
+		crange char path
 			| The path at which the file should be created.
 		filetype    type
 			directory
@@ -1645,13 +1645,13 @@ syscall file_link
 		lookup      fd1
 			| The working directory at which the resolution
 			| of the source path starts.
-		crange char path1 path1len path1
+		crange char path1
 			| The source path of the file that should be
 			| hard linked.
 		fd          fd2
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path at which the hard link
 			| should be created.
 
@@ -1661,7 +1661,7 @@ syscall file_open
 		lookup      dirfd
 			| The working directory at which the resolution
 			| of the file to be opened starts.
-		crange char path pathlen path
+		crange char path
 			| The path of the file that should be opened.
 		oflags      oflags
 			| The method at which the file should be opened.
@@ -1700,7 +1700,7 @@ syscall file_readdir
 		fd         fd
 			| The directory from which to read the directory
 			| entries.
-		range void buf nbyte buf
+		range void buf
 			| The buffer where directory entries are stored.
 		dircookie  cookie
 			| The location within the directory to start
@@ -1717,10 +1717,10 @@ syscall file_readlink
 		fd          fd
 			| The working directory at which the resolution
 			| of the path of the symbolic starts.
-		crange char path pathlen path
+		crange char path
 			| The path of the symbolic link whose contents
 			| should be read.
-		range char  buf bufsize  buf
+		range char  buf
 			| The buffer where the contents of the symbolic
 			| link should be stored.
 	out
@@ -1733,13 +1733,13 @@ syscall file_rename
 		fd          fd1
 			| The working directory at which the resolution
 			| of the source path starts.
-		crange char path1 path1len path1
+		crange char path1
 			| The source path of the file that should be
 			| renamed.
 		fd          fd2
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path to which the file should
 			| be renamed.
 
@@ -1773,7 +1773,7 @@ syscall file_stat_get
 			| The working directory at which the resolution
 			| of the path whose attributes have to be
 			| obtained starts.
-		crange char  path pathlen path
+		crange char  path
 			| The path of the file whose attributes have to
 			| be obtained.
 		ptr filestat buf
@@ -1787,7 +1787,7 @@ syscall file_stat_put
 			| The working directory at which the resolution
 			| of the path whose attributes have to be
 			| adjusted starts.
-		crange char   path pathlen path
+		crange char   path
 			| The path of the file whose attributes have to
 			| be adjusted.
 		cptr filestat buf
@@ -1800,12 +1800,12 @@ syscall file_stat_put
 syscall file_symlink
 	| Creates a symbolic link.
 	in
-		crange char path1 path1len path1
+		crange char path1
 			| The contents of the symbolic link.
 		fd          fd
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path at which the symbolic
 			| link should be created.
 
@@ -1815,7 +1815,7 @@ syscall file_unlink
 		fd          fd
 			| The working directory at which the resolution
 			| of the path starts.
-		crange char path pathlen path
+		crange char path
 			| The path that needs to be unlinked or removed.
 		ulflags     flags
 			removedir
@@ -1846,7 +1846,7 @@ syscall lock_unlock
 syscall mem_advise
 	| Provides memory advisory information on a region of memory.
 	in
-		range void addr len mem
+		range void addr
 			| The pages for which to provide memory advisory
 			| information.
 		advice     advice
@@ -1856,7 +1856,7 @@ syscall mem_lock
 	| Increments the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
-		crange void addr len mem
+		crange void addr
 			| The pages that need its lock count
 			| incremented.
 
@@ -1894,7 +1894,7 @@ syscall mem_map
 syscall mem_protect
 	| Change the protection of a memory mapping.
 	in
-		range void addr len mem
+		range void addr
 			| The pages that need their protection changed.
 		mprot      prot
 			| New protection options.
@@ -1902,7 +1902,7 @@ syscall mem_protect
 syscall mem_sync
 	| Synchronize a region of memory with its physical storage.
 	in
-		range void addr len mem
+		range void addr
 			| The pages that need to be synchronized.
 		msflags    flags
 			| The method of synchronization.
@@ -1911,14 +1911,14 @@ syscall mem_unlock
 	| Decrements the lock count on a region of memory, which
 	| prevents it from leaving system memory.
 	in
-		crange void addr len mem
+		crange void addr
 			| The pages that need its lock count
 			| decremented.
 
 syscall mem_unmap
 	| Unmaps a region of memory.
 	in
-		range void addr len mem
+		range void addr
 			| The pages that needs to be unmapped.
 
 syscall poll
@@ -1940,10 +1940,10 @@ syscall poll_fd
 	in
 		fd                  fd
 			| The polling event queue.
-		crange subscription in nin in
+		crange subscription in
 			| Changes that need to be made to the polling
 			| event queue.
-		range event         out nout out
+		range event         out
 			| The events that have occurred.
 		cptr subscription   timeout
 			| Subscription of type [eventtype.clock] to
@@ -1978,10 +1978,10 @@ syscall proc_exec
 	in
 		fd          fd
 			| A file descriptor of the new executable.
-		crange void data datalen data
+		crange void data
 			| Binary argument data that is passed on to the
 			| new executable.
-		crange fd   fds fdslen fds
+		crange fd   fds
 			| The layout of the file descriptor table after
 			| execution.
 
@@ -2030,7 +2030,7 @@ syscall random_get
 	| that the random data obtained through this system call is used
 	| as the seed for a userspace pseudo-random number generator.
 	in
-		range void buf nbyte buf
+		range void buf
 			| The buffer that needs to be filled with random
 			| data.
 
@@ -2055,7 +2055,7 @@ syscall sock_bind
 		fd          fd
 			| The working directory at which the resolution
 			| of the path to which to bind starts.
-		crange char path pathlen path
+		crange char path
 			| The path to which the socket should bind.
 
 syscall sock_connect
@@ -2066,7 +2066,7 @@ syscall sock_connect
 		fd          fd
 			| The working directory at which the resolution
 			| of the path to which to connect starts.
-		crange char path pathlen path
+		crange char path
 			| The path to which the socket should onnect.
 
 syscall sock_listen

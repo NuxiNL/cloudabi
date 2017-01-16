@@ -135,13 +135,11 @@ class AbiParser:
             elif mem_decl[0] in {'range', 'crange'}:
                 doc = self.pop_documentation(node)
                 self.__expect_no_children(node)
-                if len(mem_decl) < 5:
+                if len(mem_decl) < 3:
                     raise Exception('Invalid range: {}'.format(node.text))
-                mem_type = self.parse_type(abi, mem_decl[1:-3])
-                mem_base_name, mem_length_name, mem_name = mem_decl[-3:]
+                mem_type = self.parse_type(abi, mem_decl[1:-1])
+                mem_name = mem_decl[-1]
                 mem = RangeStructMember(
-                    mem_base_name,
-                    mem_length_name,
                     mem_name,
                     mem_decl[0] == 'crange',
                     mem_type)

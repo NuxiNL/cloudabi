@@ -362,7 +362,7 @@ Inputs:
     The file descriptor from which data should be
     read.
 
-- <a href="#fd_pread.iov" name="fd_pread.iov"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>iov</strong></code> and <a href="#fd_pread.iovcnt" name="fd_pread.iovcnt"></a><code>size\_t <strong>iovcnt</strong></code>
+- <a href="#fd_pread.iovs" name="fd_pread.iovs"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>iovs</strong></code> and <a href="#fd_pread.iovs_len" name="fd_pread.iovs_len"></a><code>size\_t <strong>iovs\_len</strong></code>
 
     List of scatter/gather vectors where data
     should be stored.
@@ -390,7 +390,7 @@ Inputs:
     The file descriptor to which data should be
     written.
 
-- <a href="#fd_pwrite.iov" name="fd_pwrite.iov"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>iov</strong></code> and <a href="#fd_pwrite.iovcnt" name="fd_pwrite.iovcnt"></a><code>size\_t <strong>iovcnt</strong></code>
+- <a href="#fd_pwrite.iovs" name="fd_pwrite.iovs"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>iovs</strong></code> and <a href="#fd_pwrite.iovs_len" name="fd_pwrite.iovs_len"></a><code>size\_t <strong>iovs\_len</strong></code>
 
     List of scatter/gather vectors where data
     should be retrieved.
@@ -417,7 +417,7 @@ Inputs:
     The file descriptor from which data should be
     read.
 
-- <a href="#fd_read.iov" name="fd_read.iov"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>iov</strong></code> and <a href="#fd_read.iovcnt" name="fd_read.iovcnt"></a><code>size\_t <strong>iovcnt</strong></code>
+- <a href="#fd_read.iovs" name="fd_read.iovs"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>iovs</strong></code> and <a href="#fd_read.iovs_len" name="fd_read.iovs_len"></a><code>size\_t <strong>iovs\_len</strong></code>
 
     List of scatter/gather vectors where data
     should be stored.
@@ -540,7 +540,7 @@ Inputs:
     The file descriptor to which data should be
     written.
 
-- <a href="#fd_write.iov" name="fd_write.iov"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>iov</strong></code> and <a href="#fd_write.iovcnt" name="fd_write.iovcnt"></a><code>size\_t <strong>iovcnt</strong></code>
+- <a href="#fd_write.iovs" name="fd_write.iovs"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>iovs</strong></code> and <a href="#fd_write.iovs_len" name="fd_write.iovs_len"></a><code>size\_t <strong>iovs\_len</strong></code>
 
     List of scatter/gather vectors where data
     should be retrieved.
@@ -607,7 +607,7 @@ Inputs:
     The working directory at which the resolution
     of the file to be created starts.
 
-- <a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.pathlen" name="file_create.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.path_len" name="file_create.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path at which the file should be created.
 
@@ -634,7 +634,7 @@ Inputs:
     The working directory at which the resolution
     of the source path starts.
 
-- <a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1len" name="file_link.path1len"></a><code>size\_t <strong>path1len</strong></code>
+- <a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1_len" name="file_link.path1_len"></a><code>size\_t <strong>path1\_len</strong></code>
 
     The source path of the file that should be
     hard linked.
@@ -644,7 +644,7 @@ Inputs:
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2len" name="file_link.path2len"></a><code>size\_t <strong>path2len</strong></code>
+- <a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2_len" name="file_link.path2_len"></a><code>size\_t <strong>path2\_len</strong></code>
 
     The destination path at which the hard link
     should be created.
@@ -660,7 +660,7 @@ Inputs:
     The working directory at which the resolution
     of the file to be opened starts.
 
-- <a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.pathlen" name="file_open.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.path_len" name="file_open.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path of the file that should be opened.
 
@@ -712,7 +712,7 @@ Inputs:
     The directory from which to read the directory
     entries.
 
-- <a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.nbyte" name="file_readdir.nbyte"></a><code>size\_t <strong>nbyte</strong></code>
+- <a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.buf_len" name="file_readdir.buf_len"></a><code>size\_t <strong>buf\_len</strong></code>
 
     The buffer where directory entries are stored.
 
@@ -740,12 +740,12 @@ Inputs:
     The working directory at which the resolution
     of the path of the symbolic starts.
 
-- <a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.pathlen" name="file_readlink.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.path_len" name="file_readlink.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path of the symbolic link whose contents
     should be read.
 
-- <a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.bufsize" name="file_readlink.bufsize"></a><code>size\_t <strong>bufsize</strong></code>
+- <a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.buf_len" name="file_readlink.buf_len"></a><code>size\_t <strong>buf\_len</strong></code>
 
     The buffer where the contents of the symbolic
     link should be stored.
@@ -767,7 +767,7 @@ Inputs:
     The working directory at which the resolution
     of the source path starts.
 
-- <a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1len" name="file_rename.path1len"></a><code>size\_t <strong>path1len</strong></code>
+- <a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1_len" name="file_rename.path1_len"></a><code>size\_t <strong>path1\_len</strong></code>
 
     The source path of the file that should be
     renamed.
@@ -777,7 +777,7 @@ Inputs:
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2len" name="file_rename.path2len"></a><code>size\_t <strong>path2len</strong></code>
+- <a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2_len" name="file_rename.path2_len"></a><code>size\_t <strong>path2\_len</strong></code>
 
     The destination path to which the file should
     be renamed.
@@ -831,7 +831,7 @@ Inputs:
     of the path whose attributes have to be
     obtained starts.
 
-- <a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.pathlen" name="file_stat_get.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.path_len" name="file_stat_get.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path of the file whose attributes have to
     be obtained.
@@ -853,7 +853,7 @@ Inputs:
     of the path whose attributes have to be
     adjusted starts.
 
-- <a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.pathlen" name="file_stat_put.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.path_len" name="file_stat_put.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path of the file whose attributes have to
     be adjusted.
@@ -874,7 +874,7 @@ Creates a symbolic link.
 
 Inputs:
 
-- <a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1len" name="file_symlink.path1len"></a><code>size\_t <strong>path1len</strong></code>
+- <a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1_len" name="file_symlink.path1_len"></a><code>size\_t <strong>path1\_len</strong></code>
 
     The contents of the symbolic link.
 
@@ -883,7 +883,7 @@ Inputs:
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2len" name="file_symlink.path2len"></a><code>size\_t <strong>path2len</strong></code>
+- <a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2_len" name="file_symlink.path2_len"></a><code>size\_t <strong>path2\_len</strong></code>
 
     The destination path at which the symbolic
     link should be created.
@@ -899,7 +899,7 @@ Inputs:
     The working directory at which the resolution
     of the path starts.
 
-- <a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.pathlen" name="file_unlink.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.path_len" name="file_unlink.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path that needs to be unlinked or removed.
 
@@ -945,7 +945,7 @@ Provides memory advisory information on a region of memory.
 
 Inputs:
 
-- <a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.len" name="mem_advise.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.addr_len" name="mem_advise.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages for which to provide memory advisory
     information.
@@ -961,7 +961,7 @@ prevents it from leaving system memory.
 
 Inputs:
 
-- <a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.len" name="mem_lock.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.addr_len" name="mem_lock.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages that need its lock count
     incremented.
@@ -1020,7 +1020,7 @@ Change the protection of a memory mapping.
 
 Inputs:
 
-- <a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.len" name="mem_protect.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.addr_len" name="mem_protect.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages that need their protection changed.
 
@@ -1034,7 +1034,7 @@ Synchronize a region of memory with its physical storage.
 
 Inputs:
 
-- <a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.len" name="mem_sync.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.addr_len" name="mem_sync.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages that need to be synchronized.
 
@@ -1049,7 +1049,7 @@ prevents it from leaving system memory.
 
 Inputs:
 
-- <a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.len" name="mem_unlock.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.addr_len" name="mem_unlock.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages that need its lock count
     decremented.
@@ -1060,7 +1060,7 @@ Unmaps a region of memory.
 
 Inputs:
 
-- <a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.len" name="mem_unmap.len"></a><code>size\_t <strong>len</strong></code>
+- <a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.addr_len" name="mem_unmap.addr_len"></a><code>size\_t <strong>addr\_len</strong></code>
 
     The pages that needs to be unmapped.
 
@@ -1099,12 +1099,12 @@ Inputs:
 
     The polling event queue.
 
-- <a href="#poll_fd.in" name="poll_fd.in"></a><code>const [cloudabi\_subscription\_t](#subscription) *<strong>in</strong></code> and <a href="#poll_fd.nin" name="poll_fd.nin"></a><code>size\_t <strong>nin</strong></code>
+- <a href="#poll_fd.in" name="poll_fd.in"></a><code>const [cloudabi\_subscription\_t](#subscription) *<strong>in</strong></code> and <a href="#poll_fd.in_len" name="poll_fd.in_len"></a><code>size\_t <strong>in\_len</strong></code>
 
     Changes that need to be made to the polling
     event queue.
 
-- <a href="#poll_fd.out" name="poll_fd.out"></a><code>[cloudabi\_event\_t](#event) *<strong>out</strong></code> and <a href="#poll_fd.nout" name="poll_fd.nout"></a><code>size\_t <strong>nout</strong></code>
+- <a href="#poll_fd.out" name="poll_fd.out"></a><code>[cloudabi\_event\_t](#event) *<strong>out</strong></code> and <a href="#poll_fd.out_len" name="poll_fd.out_len"></a><code>size\_t <strong>out\_len</strong></code>
 
     The events that have occurred.
 
@@ -1150,12 +1150,12 @@ Inputs:
 
     A file descriptor of the new executable.
 
-- <a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.datalen" name="proc_exec.datalen"></a><code>size\_t <strong>datalen</strong></code>
+- <a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.data_len" name="proc_exec.data_len"></a><code>size\_t <strong>data\_len</strong></code>
 
     Binary argument data that is passed on to the
     new executable.
 
-- <a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const [cloudabi\_fd\_t](#fd) *<strong>fds</strong></code> and <a href="#proc_exec.fdslen" name="proc_exec.fdslen"></a><code>size\_t <strong>fdslen</strong></code>
+- <a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const [cloudabi\_fd\_t](#fd) *<strong>fds</strong></code> and <a href="#proc_exec.fds_len" name="proc_exec.fds_len"></a><code>size\_t <strong>fds\_len</strong></code>
 
     The layout of the file descriptor table after
     execution.
@@ -1223,7 +1223,7 @@ as the seed for a userspace pseudo-random number generator.
 
 Inputs:
 
-- <a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.nbyte" name="random_get.nbyte"></a><code>size\_t <strong>nbyte</strong></code>
+- <a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.buf_len" name="random_get.buf_len"></a><code>size\_t <strong>buf\_len</strong></code>
 
     The buffer that needs to be filled with random
     data.
@@ -1265,7 +1265,7 @@ Inputs:
     The working directory at which the resolution
     of the path to which to bind starts.
 
-- <a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.pathlen" name="sock_bind.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.path_len" name="sock_bind.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path to which the socket should bind.
 
@@ -1284,7 +1284,7 @@ Inputs:
     The working directory at which the resolution
     of the path to which to connect starts.
 
-- <a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.pathlen" name="sock_connect.pathlen"></a><code>size\_t <strong>pathlen</strong></code>
+- <a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
     The path to which the socket should onnect.
 
@@ -1590,7 +1590,7 @@ Used by [`cloudabi_send_in_t`](#send_in), [`cloudabi_sys_fd_pwrite()`](#fd_pwrit
 
 Members:
 
-- <a href="#ciovec.iov_base" name="ciovec.iov_base"></a><code>const void *<strong>iov\_base</strong></code> and <a href="#ciovec.iov_len" name="ciovec.iov_len"></a><code>size\_t <strong>iov\_len</strong></code>
+- <a href="#ciovec.buf" name="ciovec.buf"></a><code>const void *<strong>buf</strong></code> and <a href="#ciovec.buf_len" name="ciovec.buf_len"></a><code>size\_t <strong>buf\_len</strong></code>
 
     The address and length of the buffer to be written.
 
@@ -2427,7 +2427,7 @@ Used by [`cloudabi_recv_in_t`](#recv_in), [`cloudabi_sys_fd_pread()`](#fd_pread)
 
 Members:
 
-- <a href="#iovec.iov_base" name="iovec.iov_base"></a><code>void *<strong>iov\_base</strong></code> and <a href="#iovec.iov_len" name="iovec.iov_len"></a><code>size\_t <strong>iov\_len</strong></code>
+- <a href="#iovec.buf" name="iovec.buf"></a><code>void *<strong>buf</strong></code> and <a href="#iovec.buf_len" name="iovec.buf_len"></a><code>size\_t <strong>buf\_len</strong></code>
 
     The address and length of the buffer to be filled.
 
@@ -2663,12 +2663,12 @@ Arguments of [`cloudabi_sys_sock_recv()`](#sock_recv).
 
 Members:
 
-- <a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>ri\_data</strong></code> and <a href="#recv_in.ri_datalen" name="recv_in.ri_datalen"></a><code>size\_t <strong>ri\_datalen</strong></code>
+- <a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const [cloudabi\_iovec\_t](#iovec) *<strong>ri\_data</strong></code> and <a href="#recv_in.ri_data_len" name="recv_in.ri_data_len"></a><code>size\_t <strong>ri\_data\_len</strong></code>
 
     List of scatter/gather vectors where message data
     should be stored.
 
-- <a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code>[cloudabi\_fd\_t](#fd) *<strong>ri\_fds</strong></code> and <a href="#recv_in.ri_fdslen" name="recv_in.ri_fdslen"></a><code>size\_t <strong>ri\_fdslen</strong></code>
+- <a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code>[cloudabi\_fd\_t](#fd) *<strong>ri\_fds</strong></code> and <a href="#recv_in.ri_fds_len" name="recv_in.ri_fds_len"></a><code>size\_t <strong>ri\_fds\_len</strong></code>
 
     Buffer where numbers of incoming file descriptors
     should be stored.
@@ -2998,12 +2998,12 @@ Arguments of [`cloudabi_sys_sock_send()`](#sock_send).
 
 Members:
 
-- <a href="#send_in.si_data" name="send_in.si_data"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>si\_data</strong></code> and <a href="#send_in.si_datalen" name="send_in.si_datalen"></a><code>size\_t <strong>si\_datalen</strong></code>
+- <a href="#send_in.si_data" name="send_in.si_data"></a><code>const [cloudabi\_ciovec\_t](#ciovec) *<strong>si\_data</strong></code> and <a href="#send_in.si_data_len" name="send_in.si_data_len"></a><code>size\_t <strong>si\_data\_len</strong></code>
 
     List of scatter/gather vectors where message data
     should be retrieved.
 
-- <a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const [cloudabi\_fd\_t](#fd) *<strong>si\_fds</strong></code> and <a href="#send_in.si_fdslen" name="send_in.si_fdslen"></a><code>size\_t <strong>si\_fdslen</strong></code>
+- <a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const [cloudabi\_fd\_t](#fd) *<strong>si\_fds</strong></code> and <a href="#send_in.si_fds_len" name="send_in.si_fds_len"></a><code>size\_t <strong>si\_fds\_len</strong></code>
 
     File descriptors that need to be attached to the
     message.
@@ -3512,7 +3512,7 @@ Members:
 
     Initial program counter value.
 
-- <a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_size" name="threadattr.stack_size"></a><code>size\_t <strong>stack\_size</strong></code>
+- <a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_len" name="threadattr.stack_len"></a><code>size\_t <strong>stack\_len</strong></code>
 
     Region allocated to serve as stack space.
 

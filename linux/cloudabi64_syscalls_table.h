@@ -107,41 +107,42 @@ static cloudabi_errno_t do_fd_dup(const void *in, void *out) {
 static cloudabi_errno_t do_fd_pread(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const cloudabi64_iovec_t __user *, iov);
-    MEMBER(size_t, iovcnt);
+    MEMBER(const cloudabi64_iovec_t __user *, iovs);
+    MEMBER(size_t, iovs_len);
     MEMBER(cloudabi_filesize_t, offset);
   } *vin = in;
   struct {
     MEMBER(size_t, nread);
   } *vout = out;
-  return cloudabi64_sys_fd_pread(vin->fd, vin->iov, vin->iovcnt, vin->offset,
+  return cloudabi64_sys_fd_pread(vin->fd, vin->iovs, vin->iovs_len, vin->offset,
                                  &vout->nread);
 }
 
 static cloudabi_errno_t do_fd_pwrite(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const cloudabi64_ciovec_t __user *, iov);
-    MEMBER(size_t, iovcnt);
+    MEMBER(const cloudabi64_ciovec_t __user *, iovs);
+    MEMBER(size_t, iovs_len);
     MEMBER(cloudabi_filesize_t, offset);
   } *vin = in;
   struct {
     MEMBER(size_t, nwritten);
   } *vout = out;
-  return cloudabi64_sys_fd_pwrite(vin->fd, vin->iov, vin->iovcnt, vin->offset,
-                                  &vout->nwritten);
+  return cloudabi64_sys_fd_pwrite(vin->fd, vin->iovs, vin->iovs_len,
+                                  vin->offset, &vout->nwritten);
 }
 
 static cloudabi_errno_t do_fd_read(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const cloudabi64_iovec_t __user *, iov);
-    MEMBER(size_t, iovcnt);
+    MEMBER(const cloudabi64_iovec_t __user *, iovs);
+    MEMBER(size_t, iovs_len);
   } *vin = in;
   struct {
     MEMBER(size_t, nread);
   } *vout = out;
-  return cloudabi64_sys_fd_read(vin->fd, vin->iov, vin->iovcnt, &vout->nread);
+  return cloudabi64_sys_fd_read(vin->fd, vin->iovs, vin->iovs_len,
+                                &vout->nread);
 }
 
 static cloudabi_errno_t do_fd_replace(const void *in, void *out) {
@@ -190,13 +191,13 @@ static cloudabi_errno_t do_fd_sync(const void *in, void *out) {
 static cloudabi_errno_t do_fd_write(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const cloudabi64_ciovec_t __user *, iov);
-    MEMBER(size_t, iovcnt);
+    MEMBER(const cloudabi64_ciovec_t __user *, iovs);
+    MEMBER(size_t, iovs_len);
   } *vin = in;
   struct {
     MEMBER(size_t, nwritten);
   } *vout = out;
-  return cloudabi64_sys_fd_write(vin->fd, vin->iov, vin->iovcnt,
+  return cloudabi64_sys_fd_write(vin->fd, vin->iovs, vin->iovs_len,
                                  &vout->nwritten);
 }
 
@@ -223,37 +224,37 @@ static cloudabi_errno_t do_file_create(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(cloudabi_filetype_t, type);
   } *vin = in;
-  return cloudabi_sys_file_create(vin->fd, vin->path, vin->pathlen, vin->type);
+  return cloudabi_sys_file_create(vin->fd, vin->path, vin->path_len, vin->type);
 }
 
 static cloudabi_errno_t do_file_link(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_lookup_t, fd1);
     MEMBER(const char __user *, path1);
-    MEMBER(size_t, path1len);
+    MEMBER(size_t, path1_len);
     MEMBER(cloudabi_fd_t, fd2);
     MEMBER(const char __user *, path2);
-    MEMBER(size_t, path2len);
+    MEMBER(size_t, path2_len);
   } *vin = in;
-  return cloudabi_sys_file_link(vin->fd1, vin->path1, vin->path1len, vin->fd2,
-                                vin->path2, vin->path2len);
+  return cloudabi_sys_file_link(vin->fd1, vin->path1, vin->path1_len, vin->fd2,
+                                vin->path2, vin->path2_len);
 }
 
 static cloudabi_errno_t do_file_open(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_lookup_t, dirfd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(cloudabi_oflags_t, oflags);
     MEMBER(const cloudabi_fdstat_t __user *, fds);
   } *vin = in;
   struct {
     MEMBER(cloudabi_fd_t, fd);
   } *vout = out;
-  return cloudabi_sys_file_open(vin->dirfd, vin->path, vin->pathlen,
+  return cloudabi_sys_file_open(vin->dirfd, vin->path, vin->path_len,
                                 vin->oflags, vin->fds, &vout->fd);
 }
 
@@ -261,13 +262,13 @@ static cloudabi_errno_t do_file_readdir(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(void __user *, buf);
-    MEMBER(size_t, nbyte);
+    MEMBER(size_t, buf_len);
     MEMBER(cloudabi_dircookie_t, cookie);
   } *vin = in;
   struct {
     MEMBER(size_t, bufused);
   } *vout = out;
-  return cloudabi_sys_file_readdir(vin->fd, vin->buf, vin->nbyte, vin->cookie,
+  return cloudabi_sys_file_readdir(vin->fd, vin->buf, vin->buf_len, vin->cookie,
                                    &vout->bufused);
 }
 
@@ -275,28 +276,28 @@ static cloudabi_errno_t do_file_readlink(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(char __user *, buf);
-    MEMBER(size_t, bufsize);
+    MEMBER(size_t, buf_len);
   } *vin = in;
   struct {
     MEMBER(size_t, bufused);
   } *vout = out;
-  return cloudabi_sys_file_readlink(vin->fd, vin->path, vin->pathlen, vin->buf,
-                                    vin->bufsize, &vout->bufused);
+  return cloudabi_sys_file_readlink(vin->fd, vin->path, vin->path_len, vin->buf,
+                                    vin->buf_len, &vout->bufused);
 }
 
 static cloudabi_errno_t do_file_rename(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd1);
     MEMBER(const char __user *, path1);
-    MEMBER(size_t, path1len);
+    MEMBER(size_t, path1_len);
     MEMBER(cloudabi_fd_t, fd2);
     MEMBER(const char __user *, path2);
-    MEMBER(size_t, path2len);
+    MEMBER(size_t, path2_len);
   } *vin = in;
-  return cloudabi_sys_file_rename(vin->fd1, vin->path1, vin->path1len, vin->fd2,
-                                  vin->path2, vin->path2len);
+  return cloudabi_sys_file_rename(vin->fd1, vin->path1, vin->path1_len,
+                                  vin->fd2, vin->path2, vin->path2_len);
 }
 
 static cloudabi_errno_t do_file_stat_fget(const void *in, void *out) {
@@ -320,44 +321,46 @@ static cloudabi_errno_t do_file_stat_get(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_lookup_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(cloudabi_filestat_t __user *, buf);
   } *vin = in;
-  return cloudabi_sys_file_stat_get(vin->fd, vin->path, vin->pathlen, vin->buf);
+  return cloudabi_sys_file_stat_get(vin->fd, vin->path, vin->path_len,
+                                    vin->buf);
 }
 
 static cloudabi_errno_t do_file_stat_put(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_lookup_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(const cloudabi_filestat_t __user *, buf);
     MEMBER(cloudabi_fsflags_t, flags);
   } *vin = in;
-  return cloudabi_sys_file_stat_put(vin->fd, vin->path, vin->pathlen, vin->buf,
+  return cloudabi_sys_file_stat_put(vin->fd, vin->path, vin->path_len, vin->buf,
                                     vin->flags);
 }
 
 static cloudabi_errno_t do_file_symlink(const void *in, void *out) {
   const struct {
     MEMBER(const char __user *, path1);
-    MEMBER(size_t, path1len);
+    MEMBER(size_t, path1_len);
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path2);
-    MEMBER(size_t, path2len);
+    MEMBER(size_t, path2_len);
   } *vin = in;
-  return cloudabi_sys_file_symlink(vin->path1, vin->path1len, vin->fd,
-                                   vin->path2, vin->path2len);
+  return cloudabi_sys_file_symlink(vin->path1, vin->path1_len, vin->fd,
+                                   vin->path2, vin->path2_len);
 }
 
 static cloudabi_errno_t do_file_unlink(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
     MEMBER(cloudabi_ulflags_t, flags);
   } *vin = in;
-  return cloudabi_sys_file_unlink(vin->fd, vin->path, vin->pathlen, vin->flags);
+  return cloudabi_sys_file_unlink(vin->fd, vin->path, vin->path_len,
+                                  vin->flags);
 }
 
 static cloudabi_errno_t do_lock_unlock(const void *in, void *out) {
@@ -371,18 +374,18 @@ static cloudabi_errno_t do_lock_unlock(const void *in, void *out) {
 static cloudabi_errno_t do_mem_advise(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
     MEMBER(cloudabi_advice_t, advice);
   } *vin = in;
-  return cloudabi_sys_mem_advise(vin->addr, vin->len, vin->advice);
+  return cloudabi_sys_mem_advise(vin->addr, vin->addr_len, vin->advice);
 }
 
 static cloudabi_errno_t do_mem_lock(const void *in, void *out) {
   const struct {
     MEMBER(const void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
   } *vin = in;
-  return cloudabi_sys_mem_lock(vin->addr, vin->len);
+  return cloudabi_sys_mem_lock(vin->addr, vin->addr_len);
 }
 
 static cloudabi_errno_t do_mem_map(const void *in, void *out) {
@@ -404,35 +407,35 @@ static cloudabi_errno_t do_mem_map(const void *in, void *out) {
 static cloudabi_errno_t do_mem_protect(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
     MEMBER(cloudabi_mprot_t, prot);
   } *vin = in;
-  return cloudabi_sys_mem_protect(vin->addr, vin->len, vin->prot);
+  return cloudabi_sys_mem_protect(vin->addr, vin->addr_len, vin->prot);
 }
 
 static cloudabi_errno_t do_mem_sync(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
     MEMBER(cloudabi_msflags_t, flags);
   } *vin = in;
-  return cloudabi_sys_mem_sync(vin->addr, vin->len, vin->flags);
+  return cloudabi_sys_mem_sync(vin->addr, vin->addr_len, vin->flags);
 }
 
 static cloudabi_errno_t do_mem_unlock(const void *in, void *out) {
   const struct {
     MEMBER(const void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
   } *vin = in;
-  return cloudabi_sys_mem_unlock(vin->addr, vin->len);
+  return cloudabi_sys_mem_unlock(vin->addr, vin->addr_len);
 }
 
 static cloudabi_errno_t do_mem_unmap(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, addr);
-    MEMBER(size_t, len);
+    MEMBER(size_t, addr_len);
   } *vin = in;
-  return cloudabi_sys_mem_unmap(vin->addr, vin->len);
+  return cloudabi_sys_mem_unmap(vin->addr, vin->addr_len);
 }
 
 static cloudabi_errno_t do_poll(const void *in, void *out) {
@@ -452,28 +455,28 @@ static cloudabi_errno_t do_poll_fd(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const cloudabi64_subscription_t __user *, in);
-    MEMBER(size_t, nin);
+    MEMBER(size_t, in_len);
     MEMBER(cloudabi64_event_t __user *, out);
-    MEMBER(size_t, nout);
+    MEMBER(size_t, out_len);
     MEMBER(const cloudabi64_subscription_t __user *, timeout);
   } *vin = in;
   struct {
     MEMBER(size_t, nevents);
   } *vout = out;
-  return cloudabi64_sys_poll_fd(vin->fd, vin->in, vin->nin, vin->out, vin->nout,
-                                vin->timeout, &vout->nevents);
+  return cloudabi64_sys_poll_fd(vin->fd, vin->in, vin->in_len, vin->out,
+                                vin->out_len, vin->timeout, &vout->nevents);
 }
 
 static cloudabi_errno_t do_proc_exec(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const void __user *, data);
-    MEMBER(size_t, datalen);
+    MEMBER(size_t, data_len);
     MEMBER(const cloudabi_fd_t __user *, fds);
-    MEMBER(size_t, fdslen);
+    MEMBER(size_t, fds_len);
   } *vin = in;
-  return cloudabi_sys_proc_exec(vin->fd, vin->data, vin->datalen, vin->fds,
-                                vin->fdslen);
+  return cloudabi_sys_proc_exec(vin->fd, vin->data, vin->data_len, vin->fds,
+                                vin->fds_len);
 }
 
 static cloudabi_errno_t do_proc_exit(const void *in, void *out) {
@@ -498,9 +501,9 @@ static cloudabi_errno_t do_proc_raise(const void *in, void *out) {
 static cloudabi_errno_t do_random_get(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, buf);
-    MEMBER(size_t, nbyte);
+    MEMBER(size_t, buf_len);
   } *vin = in;
-  return cloudabi_sys_random_get(vin->buf, vin->nbyte);
+  return cloudabi_sys_random_get(vin->buf, vin->buf_len);
 }
 
 static cloudabi_errno_t do_sock_accept(const void *in, void *out) {
@@ -519,9 +522,9 @@ static cloudabi_errno_t do_sock_bind(const void *in, void *out) {
     MEMBER(cloudabi_fd_t, sock);
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
   } *vin = in;
-  return cloudabi_sys_sock_bind(vin->sock, vin->fd, vin->path, vin->pathlen);
+  return cloudabi_sys_sock_bind(vin->sock, vin->fd, vin->path, vin->path_len);
 }
 
 static cloudabi_errno_t do_sock_connect(const void *in, void *out) {
@@ -529,9 +532,10 @@ static cloudabi_errno_t do_sock_connect(const void *in, void *out) {
     MEMBER(cloudabi_fd_t, sock);
     MEMBER(cloudabi_fd_t, fd);
     MEMBER(const char __user *, path);
-    MEMBER(size_t, pathlen);
+    MEMBER(size_t, path_len);
   } *vin = in;
-  return cloudabi_sys_sock_connect(vin->sock, vin->fd, vin->path, vin->pathlen);
+  return cloudabi_sys_sock_connect(vin->sock, vin->fd, vin->path,
+                                   vin->path_len);
 }
 
 static cloudabi_errno_t do_sock_listen(const void *in, void *out) {
