@@ -76,7 +76,7 @@ information about what capability-based security for UNIX means.
 [Cloudlibc](https://github.com/NuxiNL/cloudlibc) is an implementation
 of the C standard library, without all CloudABI-incompatible
 functions. For example, Cloudlibc does not have `printf`, but does
-have `fprintf`.
+have `fprintf`. It does not have `open`, but does have `openat`.
 
 ## CloudABI-Ports
 
