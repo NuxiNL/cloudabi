@@ -1129,11 +1129,12 @@ Replaces the process by a new executable.
 Process execution in CloudABI differs from POSIX in two ways:
 handling of arguments and inheritance of file descriptors.
 
-CloudABI does not use string command line arguments. A buffer
-with binary data is copied into the new executable instead.
-The kernel does not enforce any specific structure to this
-data, although CloudABI's C library uses it to store a tree
-structure that is semantically identical to YAML.
+CloudABI does not use string command line arguments. Instead,
+a buffer with binary data is copied into the address space of
+the new executable. The kernel does not enforce any specific
+structure to this data, although CloudABI's C library uses it
+to store a tree structure that is semantically identical to
+YAML.
 
 Due to the strong focus on thread safety, file descriptors
 aren't inherited through close-on-exec flags. An explicit
