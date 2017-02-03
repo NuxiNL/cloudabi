@@ -141,11 +141,9 @@ and documentation (including the one you're reading now) is generated.
 - [`cloudabi_sys_file_unlink()`](#file_unlink)
 - [`cloudabi_sys_lock_unlock()`](#lock_unlock)
 - [`cloudabi_sys_mem_advise()`](#mem_advise)
-- [`cloudabi_sys_mem_lock()`](#mem_lock)
 - [`cloudabi_sys_mem_map()`](#mem_map)
 - [`cloudabi_sys_mem_protect()`](#mem_protect)
 - [`cloudabi_sys_mem_sync()`](#mem_sync)
-- [`cloudabi_sys_mem_unlock()`](#mem_unlock)
 - [`cloudabi_sys_mem_unmap()`](#mem_unmap)
 - [`cloudabi_sys_poll()`](#poll)
 - [`cloudabi_sys_poll_fd()`](#poll_fd)
@@ -954,18 +952,6 @@ Inputs:
 
     The advice.
 
-#### <a href="#mem_lock" name="mem_lock"></a>`cloudabi_sys_mem_lock()`
-
-Increments the lock count on a region of memory, which
-prevents it from leaving system memory.
-
-Inputs:
-
-- <a href="#mem_lock.mapping" name="mem_lock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_lock.mapping_len" name="mem_lock.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
-
-    The pages that need its lock count
-    incremented.
-
 #### <a href="#mem_map" name="mem_map"></a>`cloudabi_sys_mem_map()`
 
 Creates a memory mapping, making the contents of a file
@@ -1041,18 +1027,6 @@ Inputs:
 - <a href="#mem_sync.flags" name="mem_sync.flags"></a><code>[cloudabi\_msflags\_t](#msflags) <strong>flags</strong></code>
 
     The method of synchronization.
-
-#### <a href="#mem_unlock" name="mem_unlock"></a>`cloudabi_sys_mem_unlock()`
-
-Decrements the lock count on a region of memory, which
-prevents it from leaving system memory.
-
-Inputs:
-
-- <a href="#mem_unlock.mapping" name="mem_unlock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_unlock.mapping_len" name="mem_unlock.mapping_len"></a><code>size\_t <strong>mapping\_len</strong></code>
-
-    The pages that need its lock count
-    decremented.
 
 #### <a href="#mem_unmap" name="mem_unmap"></a>`cloudabi_sys_mem_unmap()`
 

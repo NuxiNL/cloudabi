@@ -62,11 +62,9 @@
   SYSCALL(file_unlink)                  \
   SYSCALL(lock_unlock)                  \
   SYSCALL(mem_advise)                   \
-  SYSCALL(mem_lock)                     \
   SYSCALL(mem_map)                      \
   SYSCALL(mem_protect)                  \
   SYSCALL(mem_sync)                     \
-  SYSCALL(mem_unlock)                   \
   SYSCALL(mem_unmap)                    \
   SYSCALL(poll)                         \
   SYSCALL(poll_fd)                      \
@@ -268,10 +266,6 @@
   size_t mapping_len,                          \
   cloudabi_advice_t advice
 
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_lock \
-  const void *mapping,                       \
-  size_t mapping_len
-
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_map \
   void *addr,                               \
   size_t len,                               \
@@ -290,10 +284,6 @@
   void *mapping,                             \
   size_t mapping_len,                        \
   cloudabi_msflags_t flags
-
-#define CLOUDABI_SYSCALL_PARAMETERS_mem_unlock \
-  const void *mapping,                         \
-  size_t mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETERS_mem_unmap \
   void *mapping,                              \
@@ -484,9 +474,6 @@
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_advise \
   mapping, mapping_len, advice
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_lock \
-  mapping, mapping_len
-
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_map \
   addr, len, prot, flags, fd, off, mem
 
@@ -495,9 +482,6 @@
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_sync \
   mapping, mapping_len, flags
-
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unlock \
-  mapping, mapping_len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_mem_unmap \
   mapping, mapping_len
@@ -588,11 +572,9 @@
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_file_unlink(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_lock_unlock(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_advise(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_lock(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_map(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_protect(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_sync(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_unlock(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_unmap(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_poll(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_poll_fd(yes, no) yes
@@ -646,11 +628,9 @@
 #define CLOUDABI_SYSCALL_RETURNS_file_unlink(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_lock_unlock(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_advise(yes, no) yes
-#define CLOUDABI_SYSCALL_RETURNS_mem_lock(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_map(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_protect(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_sync(yes, no) yes
-#define CLOUDABI_SYSCALL_RETURNS_mem_unlock(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_unmap(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_poll(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_poll_fd(yes, no) yes

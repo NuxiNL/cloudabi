@@ -1852,14 +1852,6 @@ syscall mem_advise
 		advice     advice
 			| The advice.
 
-syscall mem_lock
-	| Increments the lock count on a region of memory, which
-	| prevents it from leaving system memory.
-	in
-		crange void mapping
-			| The pages that need its lock count
-			| incremented.
-
 syscall mem_map
 	| Creates a memory mapping, making the contents of a file
 	| accessible through memory.
@@ -1906,14 +1898,6 @@ syscall mem_sync
 			| The pages that need to be synchronized.
 		msflags    flags
 			| The method of synchronization.
-
-syscall mem_unlock
-	| Decrements the lock count on a region of memory, which
-	| prevents it from leaving system memory.
-	in
-		crange void mapping
-			| The pages that need its lock count
-			| decremented.
 
 syscall mem_unmap
 	| Unmaps a region of memory.

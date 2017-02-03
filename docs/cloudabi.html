@@ -253,11 +253,9 @@ and documentation (including the one you're reading now) is generated.</p>
 <li><a href="#file_unlink"><code>cloudabi_sys_file_unlink()</code></a></li>
 <li><a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a></li>
 <li><a href="#mem_advise"><code>cloudabi_sys_mem_advise()</code></a></li>
-<li><a href="#mem_lock"><code>cloudabi_sys_mem_lock()</code></a></li>
 <li><a href="#mem_map"><code>cloudabi_sys_mem_map()</code></a></li>
 <li><a href="#mem_protect"><code>cloudabi_sys_mem_protect()</code></a></li>
 <li><a href="#mem_sync"><code>cloudabi_sys_mem_sync()</code></a></li>
-<li><a href="#mem_unlock"><code>cloudabi_sys_mem_unlock()</code></a></li>
 <li><a href="#mem_unmap"><code>cloudabi_sys_mem_unmap()</code></a></li>
 <li><a href="#poll"><code>cloudabi_sys_poll()</code></a></li>
 <li><a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a></li>
@@ -1109,20 +1107,6 @@ information.</p></li>
 <p>The advice.</p></li>
 </ul>
 
-<h4><a href="#mem_lock" name="mem_lock"></a><code>cloudabi_sys_mem_lock()</code></h4>
-
-<p>Increments the lock count on a region of memory, which
-prevents it from leaving system memory.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#mem_lock.mapping" name="mem_lock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_lock.mapping_len" name="mem_lock.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
-
-<p>The pages that need its lock count
-incremented.</p></li>
-</ul>
-
 <h4><a href="#mem_map" name="mem_map"></a><code>cloudabi_sys_mem_map()</code></h4>
 
 <p>Creates a memory mapping, making the contents of a file
@@ -1198,20 +1182,6 @@ starts.</p></li>
 <li><p><a href="#mem_sync.flags" name="mem_sync.flags"></a><code><a href="#msflags">cloudabi_msflags_t</a> <strong>flags</strong></code></p>
 
 <p>The method of synchronization.</p></li>
-</ul>
-
-<h4><a href="#mem_unlock" name="mem_unlock"></a><code>cloudabi_sys_mem_unlock()</code></h4>
-
-<p>Decrements the lock count on a region of memory, which
-prevents it from leaving system memory.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#mem_unlock.mapping" name="mem_unlock.mapping"></a><code>const void *<strong>mapping</strong></code> and <a href="#mem_unlock.mapping_len" name="mem_unlock.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
-
-<p>The pages that need its lock count
-decremented.</p></li>
 </ul>
 
 <h4><a href="#mem_unmap" name="mem_unmap"></a><code>cloudabi_sys_mem_unmap()</code></h4>

@@ -219,11 +219,6 @@ static inline cloudabi_errno_t cloudabi_sys_mem_advise(
   return cloudabi_syscalls.mem_advise(mapping, mapping_len, advice);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_mem_lock(const void *mapping,
-                                                     size_t mapping_len) {
-  return cloudabi_syscalls.mem_lock(mapping, mapping_len);
-}
-
 static inline cloudabi_errno_t cloudabi_sys_mem_map(
     void *addr, size_t len, cloudabi_mprot_t prot, cloudabi_mflags_t flags,
     cloudabi_fd_t fd, cloudabi_filesize_t off, void **mem) {
@@ -240,11 +235,6 @@ static inline cloudabi_errno_t cloudabi_sys_mem_sync(void *mapping,
                                                      size_t mapping_len,
                                                      cloudabi_msflags_t flags) {
   return cloudabi_syscalls.mem_sync(mapping, mapping_len, flags);
-}
-
-static inline cloudabi_errno_t cloudabi_sys_mem_unlock(const void *mapping,
-                                                       size_t mapping_len) {
-  return cloudabi_syscalls.mem_unlock(mapping, mapping_len);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_mem_unmap(void *mapping,

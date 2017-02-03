@@ -380,14 +380,6 @@ static cloudabi_errno_t do_mem_advise(const void *in, void *out) {
   return cloudabi_sys_mem_advise(vin->mapping, vin->mapping_len, vin->advice);
 }
 
-static cloudabi_errno_t do_mem_lock(const void *in, void *out) {
-  const struct {
-    MEMBER(const void __user *, mapping);
-    MEMBER(size_t, mapping_len);
-  } *vin = in;
-  return cloudabi_sys_mem_lock(vin->mapping, vin->mapping_len);
-}
-
 static cloudabi_errno_t do_mem_map(const void *in, void *out) {
   const struct {
     MEMBER(void __user *, addr);
@@ -420,14 +412,6 @@ static cloudabi_errno_t do_mem_sync(const void *in, void *out) {
     MEMBER(cloudabi_msflags_t, flags);
   } *vin = in;
   return cloudabi_sys_mem_sync(vin->mapping, vin->mapping_len, vin->flags);
-}
-
-static cloudabi_errno_t do_mem_unlock(const void *in, void *out) {
-  const struct {
-    MEMBER(const void __user *, mapping);
-    MEMBER(size_t, mapping_len);
-  } *vin = in;
-  return cloudabi_sys_mem_unlock(vin->mapping, vin->mapping_len);
 }
 
 static cloudabi_errno_t do_mem_unmap(const void *in, void *out) {
@@ -611,11 +595,10 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
     do_file_link,     do_file_open,      do_file_readdir,   do_file_readlink,
     do_file_rename,   do_file_stat_fget, do_file_stat_fput, do_file_stat_get,
     do_file_stat_put, do_file_symlink,   do_file_unlink,    do_lock_unlock,
-    do_mem_advise,    do_mem_lock,       do_mem_map,        do_mem_protect,
-    do_mem_sync,      do_mem_unlock,     do_mem_unmap,      do_poll,
-    do_poll_fd,       do_proc_exec,      do_proc_exit,      do_proc_fork,
-    do_proc_raise,    do_random_get,     do_sock_accept,    do_sock_bind,
-    do_sock_connect,  do_sock_listen,    do_sock_recv,      do_sock_send,
-    do_sock_shutdown, do_sock_stat_get,  do_thread_create,  do_thread_exit,
-    do_thread_yield,
+    do_mem_advise,    do_mem_map,        do_mem_protect,    do_mem_sync,
+    do_mem_unmap,     do_poll,           do_poll_fd,        do_proc_exec,
+    do_proc_exit,     do_proc_fork,      do_proc_raise,     do_random_get,
+    do_sock_accept,   do_sock_bind,      do_sock_connect,   do_sock_listen,
+    do_sock_recv,     do_sock_send,      do_sock_shutdown,  do_sock_stat_get,
+    do_thread_create, do_thread_exit,    do_thread_yield,
 };
