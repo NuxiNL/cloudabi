@@ -41,7 +41,7 @@
 | connections on the given socket.
 |
 | So, unknown CloudABI binaries can safely be executed without the need
-| for containers, virtual machines, or other sandboxing techonologies.
+| for containers, virtual machines, or other sandboxing technologies.
 |
 | Watch [Ed Schouten's Talk at
 | 32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
@@ -371,14 +371,14 @@ flags uint16 eventrwflags
 		| disconnected.
 
 enum uint8 eventtype
-	| Type of a subscription to an event or its occurence.
+	| Type of a subscription to an event or its occurrence.
 	1 clock
 		| The time value of clock [subscription.clock.clock_id]
 		| has reached timestamp [subscription.clock.timeout].
 	2 condvar
 		| Condition variable [subscription.condvar.condvar] has
 		| been woken up and [subscription.condvar.lock] has been
-		| aqcuired for writing.
+		| acquired for writing.
 	3 fd_read
 		| File descriptor [subscription.fd_readwrite.fd] has
 		| data available for reading.
@@ -838,7 +838,7 @@ enum uint8 signal
 		|
 		| Action: Terminates the process.
 	9  int
-		| Terminale interrupt signal.
+		| Terminate interrupt signal.
 		|
 		| Action: Terminates the process.
 	10 kill
@@ -1273,7 +1273,7 @@ struct subscription
 					| The clock against which the
 					| timestamp should be compared.
 		# What happens when waiting for thread_cputime_id?
-		# UB? Wait forever? Actually uses monotonic intstead?
+		# UB? Wait forever? Actually uses monotonic instead?
 		# And how about realtime? Can I wait for a specific
 		# date/time?
 				timestamp timeout
@@ -1985,7 +1985,7 @@ syscall proc_fork
 	| After forking, a new process shall be created, having only a
 	| copy of the calling thread. The parent process will obtain a
 	| process descriptor. When closed, the child process is
-	| automatically signalled with [signal.kill].
+	| automatically signaled with [signal.kill].
 	out
 		fd  fd
 			| In the parent process: the file descriptor
@@ -2052,7 +2052,7 @@ syscall sock_connect
 			| The working directory at which the resolution
 			| of the path to which to connect starts.
 		crange char path
-			| The path to which the socket should onnect.
+			| The path to which the socket should connect.
 
 syscall sock_listen
 	| Listens for incoming connections on a socket.
