@@ -174,7 +174,7 @@ do anything other than reading files in that directory, and accept
 connections on the given socket.</p>
 
 <p>So, unknown CloudABI binaries can safely be executed without the need
-for containers, virtual machines, or other sandboxing techonologies.</p>
+for containers, virtual machines, or other sandboxing technologies.</p>
 
 <p>Watch <a href="https://www.youtube.com/watch?v=62cYMmSY2Dc">Ed Schouten's Talk at
 32C3</a> for more
@@ -1319,7 +1319,7 @@ through <a href="#event.proc_terminate.exitcode"><code>cloudabi_event_t::proc_te
 <p>After forking, a new process shall be created, having only a
 copy of the calling thread. The parent process will obtain a
 process descriptor. When closed, the child process is
-automatically signalled with <a href="#signal.kill"><code>CLOUDABI_SIGKILL</code></a>.</p>
+automatically signaled with <a href="#signal.kill"><code>CLOUDABI_SIGKILL</code></a>.</p>
 
 <p>Outputs:</p>
 
@@ -1431,7 +1431,7 @@ of the path to which to bind starts.</p></li>
 of the path to which to connect starts.</p></li>
 <li><p><a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
-<p>The path to which the socket should onnect.</p></li>
+<p>The path to which the socket should connect.</p></li>
 </ul>
 
 <h4><a href="#sock_listen" name="sock_listen"></a><code>cloudabi_sys_sock_listen()</code></h4>
@@ -2199,7 +2199,7 @@ disconnected.</p></li>
 
 <h4><a href="#eventtype" name="eventtype"></a><code>cloudabi_eventtype_t</code> (<code>uint8_t</code>)</h4>
 
-<p>Type of a subscription to an event or its occurence.</p>
+<p>Type of a subscription to an event or its occurrence.</p>
 
 <p>Used by <a href="#event"><code>cloudabi_event_t</code></a> and <a href="#subscription"><code>cloudabi_subscription_t</code></a>.</p>
 
@@ -2214,7 +2214,7 @@ has reached timestamp <a href="#subscription.clock.timeout"><code>cloudabi_subsc
 
 <p>Condition variable <a href="#subscription.condvar.condvar"><code>cloudabi_subscription_t::condvar.condvar</code></a> has
 been woken up and <a href="#subscription.condvar.lock"><code>cloudabi_subscription_t::condvar.lock</code></a> has been
-aqcuired for writing.</p></li>
+acquired for writing.</p></li>
 <li><p><a href="#eventtype.fd_read" name="eventtype.fd_read"></a><strong><code>CLOUDABI_EVENTTYPE_FD_READ</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
@@ -3105,7 +3105,7 @@ message.</p></li>
 <p>Action: Terminates the process.</p></li>
 <li><p><a href="#signal.int" name="signal.int"></a><strong><code>CLOUDABI_SIGINT</code></strong></p>
 
-<p>Terminale interrupt signal.</p>
+<p>Terminate interrupt signal.</p>
 
 <p>Action: Terminates the process.</p></li>
 <li><p><a href="#signal.kill" name="signal.kill"></a><strong><code>CLOUDABI_SIGKILL</code></strong></p>

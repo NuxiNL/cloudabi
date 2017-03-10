@@ -65,7 +65,7 @@ do anything other than reading files in that directory, and accept
 connections on the given socket.
 
 So, unknown CloudABI binaries can safely be executed without the need
-for containers, virtual machines, or other sandboxing techonologies.
+for containers, virtual machines, or other sandboxing technologies.
 
 Watch [Ed Schouten's Talk at
 32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
@@ -1156,7 +1156,7 @@ Forks the process of the calling thread.
 After forking, a new process shall be created, having only a
 copy of the calling thread. The parent process will obtain a
 process descriptor. When closed, the child process is
-automatically signalled with [`CLOUDABI_SIGKILL`](#signal.kill).
+automatically signaled with [`CLOUDABI_SIGKILL`](#signal.kill).
 
 Outputs:
 
@@ -1261,7 +1261,7 @@ Inputs:
 
 - <a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size\_t <strong>path\_len</strong></code>
 
-    The path to which the socket should onnect.
+    The path to which the socket should connect.
 
 #### <a href="#sock_listen" name="sock_listen"></a>`cloudabi_sys_sock_listen()`
 
@@ -2085,7 +2085,7 @@ Possible values:
 
 #### <a href="#eventtype" name="eventtype"></a>`cloudabi_eventtype_t` (`uint8_t`)
 
-Type of a subscription to an event or its occurence.
+Type of a subscription to an event or its occurrence.
 
 Used by [`cloudabi_event_t`](#event) and [`cloudabi_subscription_t`](#subscription).
 
@@ -2100,7 +2100,7 @@ Possible values:
 
     Condition variable [`cloudabi_subscription_t::condvar.condvar`](#subscription.condvar.condvar) has
     been woken up and [`cloudabi_subscription_t::condvar.lock`](#subscription.condvar.lock) has been
-    aqcuired for writing.
+    acquired for writing.
 
 - <a href="#eventtype.fd_read" name="eventtype.fd_read"></a>**`CLOUDABI_EVENTTYPE_FD_READ`**
 
@@ -3055,7 +3055,7 @@ Possible values:
 
 - <a href="#signal.int" name="signal.int"></a>**`CLOUDABI_SIGINT`**
 
-    Terminale interrupt signal.
+    Terminate interrupt signal.
 
     Action: Terminates the process.
 
