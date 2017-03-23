@@ -109,7 +109,7 @@ typedef struct {
   _Alignas(8) uint64_t ri_data_len;
   _Alignas(8) uint64_t ri_fds;
   _Alignas(8) uint64_t ri_fds_len;
-  _Alignas(2) cloudabi_msgflags_t ri_flags;
+  _Alignas(2) cloudabi_riflags_t ri_flags;
 } cloudabi64_recv_in_t;
 _Static_assert(offsetof(cloudabi64_recv_in_t, ri_data) == 0, "Incorrect layout");
 _Static_assert(offsetof(cloudabi64_recv_in_t, ri_data_len) == 8, "Incorrect layout");
@@ -124,7 +124,7 @@ typedef struct {
   _Alignas(8) uint64_t si_data_len;
   _Alignas(8) uint64_t si_fds;
   _Alignas(8) uint64_t si_fds_len;
-  _Alignas(2) cloudabi_msgflags_t si_flags;
+  _Alignas(2) cloudabi_siflags_t si_flags;
 } cloudabi64_send_in_t;
 _Static_assert(offsetof(cloudabi64_send_in_t, si_data) == 0, "Incorrect layout");
 _Static_assert(offsetof(cloudabi64_send_in_t, si_data_len) == 8, "Incorrect layout");
@@ -206,7 +206,7 @@ typedef struct {
   _Alignas(8) uint64_t ro_fdslen;
   _Alignas(2) cloudabi_sockaddr_t ro_sockname;
   _Alignas(2) cloudabi_sockaddr_t ro_peername;
-  _Alignas(2) cloudabi_msgflags_t ro_flags;
+  _Alignas(2) cloudabi_roflags_t ro_flags;
 } cloudabi64_recv_out_t;
 _Static_assert(offsetof(cloudabi64_recv_out_t, ro_datalen) == 0, "Incorrect layout");
 _Static_assert(offsetof(cloudabi64_recv_out_t, ro_fdslen) == 8, "Incorrect layout");

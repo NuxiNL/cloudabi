@@ -386,10 +386,6 @@ object.</p></li>
 <li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
 
 <p>Creates a UNIX datagram socket.</p></li>
-<li><p><a href="#filetype.socket_seqpacket"><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></a></p>
-
-<p>Creates a UNIX sequenced-packet
-socket.</p></li>
 <li><p><a href="#filetype.socket_stream"><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></a></p>
 
 <p>Creates a UNIX byte-stream socket.</p></li>
@@ -422,10 +418,6 @@ socket.</p></li>
 <li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
 
 <p>Creates a UNIX datagram socket pair.</p></li>
-<li><p><a href="#filetype.socket_seqpacket"><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></a></p>
-
-<p>Creates a UNIX sequenced-packet socket
-pair.</p></li>
 <li><p><a href="#filetype.socket_stream"><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></a></p>
 
 <p>Creates a UNIX byte-stream socket
@@ -2436,10 +2428,6 @@ inode.</p></li>
 
 <p>The file descriptor or file refers to a datagram
 socket.</p></li>
-<li><p><a href="#filetype.socket_seqpacket" name="filetype.socket_seqpacket"></a><strong><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></strong></p>
-
-<p>The file descriptor or file refers to a
-sequenced-packet socket.</p></li>
 <li><p><a href="#filetype.socket_stream" name="filetype.socket_stream"></a><strong><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></strong></p>
 
 <p>The file descriptor or file refers to a byte-stream
@@ -2653,39 +2641,6 @@ mapped for execution while also mapped for writing.</p>
 <p>Perform synchronous writes.</p></li>
 </ul>
 
-<h4><a href="#msgflags" name="msgflags"></a><code>cloudabi_msgflags_t</code> (<code>uint16_t</code> bitfield)</h4>
-
-<p>Flags provided to and returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a> and <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>.</p>
-
-<p>Used by <a href="#recv_in"><code>cloudabi_recv_in_t</code></a>, <a href="#recv_out"><code>cloudabi_recv_out_t</code></a>, and <a href="#send_in"><code>cloudabi_send_in_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#msgflags.ctrunc" name="msgflags.ctrunc"></a><strong><code>CLOUDABI_MSG_CTRUNC</code></strong></p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: File descriptors truncated.</p></li>
-<li><p><a href="#msgflags.eor" name="msgflags.eor"></a><strong><code>CLOUDABI_MSG_EOR</code></strong></p>
-
-<p>Provided to <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>: Terminates a record (if
-supported by the protocol).</p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: End-of-record was received
-(if supported by the protocol).</p></li>
-<li><p><a href="#msgflags.peek" name="msgflags.peek"></a><strong><code>CLOUDABI_MSG_PEEK</code></strong></p>
-
-<p>Provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Returns the message without
-removing it from the socket's receive queue.</p></li>
-<li><p><a href="#msgflags.trunc" name="msgflags.trunc"></a><strong><code>CLOUDABI_MSG_TRUNC</code></strong></p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Message data has been
-truncated.</p></li>
-<li><p><a href="#msgflags.waitall" name="msgflags.waitall"></a><strong><code>CLOUDABI_MSG_WAITALL</code></strong></p>
-
-<p>Provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: On byte-stream sockets, block
-until the full amount of data can be returned.</p></li>
-</ul>
-
 <h4><a href="#nthreads" name="nthreads"></a><code>cloudabi_nthreads_t</code> (<code>uint32_t</code>)</h4>
 
 <p>Specifies the number of threads sleeping on a condition
@@ -2741,10 +2696,9 @@ should be stored.</p></li>
 
 <p>Buffer where numbers of incoming file descriptors
 should be stored.</p></li>
-<li><p><a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>ri_flags</strong></code></p>
+<li><p><a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><a href="#riflags">cloudabi_riflags_t</a> <strong>ri_flags</strong></code></p>
 
-<p>Message flags. Only <a href="#msgflags.peek"><code>CLOUDABI_MSG_PEEK</code></a> and
-<a href="#msgflags.waitall"><code>CLOUDABI_MSG_WAITALL</code></a> are valid.</p></li>
+<p>Message flags.</p></li>
 </ul>
 
 <h4><a href="#recv_out" name="recv_out"></a><code>cloudabi_recv_out_t</code> (<code>struct</code>)</h4>
@@ -2766,10 +2720,28 @@ should be stored.</p></li>
 <li><p><a href="#recv_out.ro_peername" name="recv_out.ro_peername"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ro_peername</strong></code></p>
 
 <p>Address of the peer sending the message.</p></li>
-<li><p><a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>ro_flags</strong></code></p>
+<li><p><a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><a href="#roflags">cloudabi_roflags_t</a> <strong>ro_flags</strong></code></p>
 
-<p>Message flags. Only <a href="#msgflags.ctrunc"><code>CLOUDABI_MSG_CTRUNC</code></a>, <a href="#msgflags.eor"><code>CLOUDABI_MSG_EOR</code></a>,
-and <a href="#msgflags.trunc"><code>CLOUDABI_MSG_TRUNC</code></a> are valid.</p></li>
+<p>Message flags.</p></li>
+</ul>
+
+<h4><a href="#riflags" name="riflags"></a><code>cloudabi_riflags_t</code> (<code>uint16_t</code> bitfield)</h4>
+
+<p>Flags provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>.</p>
+
+<p>Used by <a href="#recv_in"><code>cloudabi_recv_in_t</code></a>.</p>
+
+<p>Possible values:</p>
+
+<ul>
+<li><p><a href="#riflags.peek" name="riflags.peek"></a><strong><code>CLOUDABI_SOCK_RECV_PEEK</code></strong></p>
+
+<p>Returns the message without removing it from the
+socket's receive queue.</p></li>
+<li><p><a href="#riflags.waitall" name="riflags.waitall"></a><strong><code>CLOUDABI_SOCK_RECV_WAITALL</code></strong></p>
+
+<p>On byte-stream sockets, block until the full amount
+of data can be returned.</p></li>
 </ul>
 
 <h4><a href="#rights" name="rights"></a><code>cloudabi_rights_t</code> (<code>uint64_t</code> bitfield)</h4>
@@ -2962,6 +2934,25 @@ descriptor as the socket.</p></li>
 <p>The right to invoke <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p></li>
 </ul>
 
+<h4><a href="#roflags" name="roflags"></a><code>cloudabi_roflags_t</code> (<code>uint16_t</code> bitfield)</h4>
+
+<p>Flags returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>.</p>
+
+<p>Used by <a href="#recv_out"><code>cloudabi_recv_out_t</code></a>.</p>
+
+<p>Possible values:</p>
+
+<ul>
+<li><p><a href="#roflags.fds_truncated" name="roflags.fds_truncated"></a><strong><code>CLOUDABI_SOCK_RECV_FDS_TRUNCATED</code></strong></p>
+
+<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: List of file descriptors
+has been truncated.</p></li>
+<li><p><a href="#roflags.data_truncated" name="roflags.data_truncated"></a><strong><code>CLOUDABI_SOCK_RECV_DATA_TRUNCATED</code></strong></p>
+
+<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Message data has been
+truncated.</p></li>
+</ul>
+
 <h4><a href="#sa_family" name="sa_family"></a><code>cloudabi_sa_family_t</code> (<code>uint8_t</code>)</h4>
 
 <p>Socket address family.</p>
@@ -3037,9 +3028,9 @@ should be retrieved.</p></li>
 
 <p>File descriptors that need to be attached to the
 message.</p></li>
-<li><p><a href="#send_in.si_flags" name="send_in.si_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>si_flags</strong></code></p>
+<li><p><a href="#send_in.si_flags" name="send_in.si_flags"></a><code><a href="#siflags">cloudabi_siflags_t</a> <strong>si_flags</strong></code></p>
 
-<p>Message flags. Only <a href="#msgflags.eor"><code>CLOUDABI_MSG_EOR</code></a> is valid.</p></li>
+<p>Message flags.</p></li>
 </ul>
 
 <h4><a href="#send_out" name="send_out"></a><code>cloudabi_send_out_t</code> (<code>struct</code>)</h4>
@@ -3053,6 +3044,13 @@ message.</p></li>
 
 <p>Number of bytes transmitted.</p></li>
 </ul>
+
+<h4><a href="#siflags" name="siflags"></a><code>cloudabi_siflags_t</code> (<code>uint16_t</code> bitfield)</h4>
+
+<p>Flags provided to <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>. As there are currently no flags
+defined, it must be set to zero.</p>
+
+<p>Used by <a href="#send_in"><code>cloudabi_send_in_t</code></a>.</p>
 
 <h4><a href="#signal" name="signal"></a><code>cloudabi_signal_t</code> (<code>uint8_t</code>)</h4>
 

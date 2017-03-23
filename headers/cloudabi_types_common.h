@@ -197,7 +197,6 @@ typedef uint8_t cloudabi_filetype_t;
 #define CLOUDABI_FILETYPE_REGULAR_FILE      96
 #define CLOUDABI_FILETYPE_SHARED_MEMORY    112
 #define CLOUDABI_FILETYPE_SOCKET_DGRAM     128
-#define CLOUDABI_FILETYPE_SOCKET_SEQPACKET 129
 #define CLOUDABI_FILETYPE_SOCKET_STREAM    130
 #define CLOUDABI_FILETYPE_SYMBOLIC_LINK    144
 
@@ -237,13 +236,6 @@ typedef uint8_t cloudabi_msflags_t;
 #define CLOUDABI_MS_INVALIDATE 0x02
 #define CLOUDABI_MS_SYNC       0x04
 
-typedef uint16_t cloudabi_msgflags_t;
-#define CLOUDABI_MSG_CTRUNC  0x0001
-#define CLOUDABI_MSG_EOR     0x0002
-#define CLOUDABI_MSG_PEEK    0x0004
-#define CLOUDABI_MSG_TRUNC   0x0008
-#define CLOUDABI_MSG_WAITALL 0x0010
-
 typedef uint32_t cloudabi_nthreads_t;
 
 typedef uint16_t cloudabi_oflags_t;
@@ -251,6 +243,10 @@ typedef uint16_t cloudabi_oflags_t;
 #define CLOUDABI_O_DIRECTORY 0x0002
 #define CLOUDABI_O_EXCL      0x0004
 #define CLOUDABI_O_TRUNC     0x0008
+
+typedef uint16_t cloudabi_riflags_t;
+#define CLOUDABI_SOCK_RECV_PEEK    0x0004
+#define CLOUDABI_SOCK_RECV_WAITALL 0x0010
 
 typedef uint64_t cloudabi_rights_t;
 #define CLOUDABI_RIGHT_FD_DATASYNC            0x0000000000000001
@@ -295,6 +291,10 @@ typedef uint64_t cloudabi_rights_t;
 #define CLOUDABI_RIGHT_SOCK_SHUTDOWN          0x0000008000000000
 #define CLOUDABI_RIGHT_SOCK_STAT_GET          0x0000010000000000
 
+typedef uint16_t cloudabi_roflags_t;
+#define CLOUDABI_SOCK_RECV_FDS_TRUNCATED  0x0001
+#define CLOUDABI_SOCK_RECV_DATA_TRUNCATED 0x0008
+
 typedef uint8_t cloudabi_sa_family_t;
 #define CLOUDABI_AF_UNSPEC 0
 #define CLOUDABI_AF_INET   1
@@ -308,6 +308,8 @@ typedef uint8_t cloudabi_scope_t;
 typedef uint8_t cloudabi_sdflags_t;
 #define CLOUDABI_SHUT_RD 0x01
 #define CLOUDABI_SHUT_WR 0x02
+
+typedef uint16_t cloudabi_siflags_t;
 
 typedef uint8_t cloudabi_signal_t;
 #define CLOUDABI_SIGABRT    1
