@@ -68,7 +68,7 @@ So, unknown CloudABI binaries can safely be executed without the need
 for containers, virtual machines, or other sandboxing technologies.
 
 Watch [Ed Schouten's Talk at
-32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
+32C3](https://www.youtube.com/watch?v=3N29vrPoDv8) for more
 information about what capability-based security for UNIX means.
 
 ## Cloudlibc
