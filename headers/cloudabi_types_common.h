@@ -295,12 +295,6 @@ typedef uint16_t cloudabi_roflags_t;
 #define CLOUDABI_SOCK_RECV_FDS_TRUNCATED  0x0001
 #define CLOUDABI_SOCK_RECV_DATA_TRUNCATED 0x0008
 
-typedef uint8_t cloudabi_sa_family_t;
-#define CLOUDABI_AF_UNSPEC 0
-#define CLOUDABI_AF_INET   1
-#define CLOUDABI_AF_INET6  2
-#define CLOUDABI_AF_UNIX   3
-
 typedef uint8_t cloudabi_scope_t;
 #define CLOUDABI_SCOPE_PRIVATE 4
 #define CLOUDABI_SCOPE_SHARED  8
@@ -430,34 +424,11 @@ _Static_assert(sizeof(cloudabi_lookup_t) == 8, "Incorrect layout");
 _Static_assert(_Alignof(cloudabi_lookup_t) == 4, "Incorrect layout");
 
 typedef struct {
-  _Alignas(1) cloudabi_sa_family_t sa_family;
-  union {
-    struct {
-      _Alignas(1) uint8_t addr[4];
-      _Alignas(2) uint16_t port;
-    } sa_inet;
-    struct {
-      _Alignas(1) uint8_t addr[16];
-      _Alignas(2) uint16_t port;
-    } sa_inet6;
-  };
-} cloudabi_sockaddr_t;
-_Static_assert(offsetof(cloudabi_sockaddr_t, sa_family) == 0, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_sockaddr_t, sa_inet.addr) == 2, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_sockaddr_t, sa_inet.port) == 6, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_sockaddr_t, sa_inet6.addr) == 2, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_sockaddr_t, sa_inet6.port) == 18, "Incorrect layout");
-_Static_assert(sizeof(cloudabi_sockaddr_t) == 20, "Incorrect layout");
-_Static_assert(_Alignof(cloudabi_sockaddr_t) == 2, "Incorrect layout");
-
-typedef struct {
-  _Alignas(2) cloudabi_sockaddr_t ss_sockname;
-  _Alignas(2) cloudabi_sockaddr_t ss_peername;
+  _Alignas(1) char ss_unused[40];
   _Alignas(2) cloudabi_errno_t ss_error;
   _Alignas(4) cloudabi_sstate_t ss_state;
 } cloudabi_sockstat_t;
-_Static_assert(offsetof(cloudabi_sockstat_t, ss_sockname) == 0, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_sockstat_t, ss_peername) == 20, "Incorrect layout");
+_Static_assert(offsetof(cloudabi_sockstat_t, ss_unused) == 0, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_sockstat_t, ss_error) == 40, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_sockstat_t, ss_state) == 44, "Incorrect layout");
 _Static_assert(sizeof(cloudabi_sockstat_t) == 48, "Incorrect layout");

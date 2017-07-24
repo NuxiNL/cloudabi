@@ -493,12 +493,12 @@ static cloudabi_errno_t do_random_get(const void *in, void *out) {
 static cloudabi_errno_t do_sock_accept(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, sock);
-    MEMBER(cloudabi_sockstat_t __user *, buf);
+    MEMBER(void __user *, unused);
   } *vin = in;
   struct {
     MEMBER(cloudabi_fd_t, conn);
   } *vout = out;
-  return cloudabi_sys_sock_accept(vin->sock, vin->buf, &vout->conn);
+  return cloudabi_sys_sock_accept(vin->sock, vin->unused, &vout->conn);
 }
 
 static cloudabi_errno_t do_sock_bind(const void *in, void *out) {

@@ -756,20 +756,6 @@ flags uint64 rights
 	0x0000010000000000 sock_stat_get
 		| The right to invoke [sock_stat_get].
 
-enum uint8 sa_family
-	| Socket address family.
-	@cprefix AF_
-	0 unspec
-		| The socket address family is unknown or is different
-		| from any of the other address families specified.
-	1 inet
-		| An IPv4 address.
-	2 inet6
-		| An IPv6 address.
-	3 unix
-		| The socket is local to the system, and may be bound to
-		| the file system.
-
 flags uint8 sdflags
 	| Which channels on a socket need to be shut down.
 	@cprefix SHUT_
@@ -1200,43 +1186,21 @@ struct send_out
 	size so_datalen
 		| Number of bytes transmitted.
 
-struct sockaddr
-	| Network address of a bound socket or its peer.
-	sa_family sa_family
-		| Address family.
-	variant sa_family
-		inet
-			struct sa_inet
-				array 4 uint8 addr
-					| IPv4 address.
-				uint16        port
-					| IPv4 port number.
-		inet6
-			struct sa_inet6
-				array 16 uint8 addr
-					| IPv6 address.
-				uint16         port
-					| IPv6 port number.
-
 struct recv_out
 	| Results of [sock_recv].
 	size     ro_datalen
 		| Number of bytes stored in [recv_in.ri_data].
 	size     ro_fdslen
 		| Number of file descriptors stored in [recv_in.ri_fds].
-	sockaddr ro_sockname
-		| Address on which the message was received.
-	sockaddr ro_peername
-		| Address of the peer sending the message.
+	array 40 char ro_unused
+		| Fields that were used by previous implementations.
 	roflags  ro_flags
 		| Message flags.
 
 struct sockstat
 	| Socket attributes.
-	sockaddr ss_sockname
-		| The address to which this socket is bound.
-	sockaddr ss_peername
-		| The address to which this socket is connected.
+	array 40 char ss_unused
+		| Fields that were used by previous implementations.
 	errno    ss_error
 		| Error code of the last completed asynchronous
 		| operation performed on this socket.
@@ -2016,9 +1980,9 @@ syscall sock_accept
 	in
 		fd           sock
 			| The file descriptor of the listening socket.
-		ptr sockstat buf
-			| The attributes of the socket associated with
-			| the incoming connection.
+		ptr void     unused
+			| Previously used to return the peer address.
+			| Should be null.
 	out
 		fd conn
 			| The socket associated with the incoming

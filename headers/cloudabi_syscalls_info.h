@@ -327,7 +327,7 @@
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_accept \
   cloudabi_fd_t sock,                           \
-  cloudabi_sockstat_t *buf,                     \
+  void *unused,                                 \
   cloudabi_fd_t *conn
 
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_bind \
@@ -508,7 +508,7 @@
   buf, buf_len
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_accept \
-  sock, buf, conn
+  sock, unused, conn
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_bind \
   sock, fd, path, path_len

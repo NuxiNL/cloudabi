@@ -177,7 +177,7 @@ cloudabi_errno_t cloudabi_sys_proc_raise(cloudabi_signal_t sig);
 cloudabi_errno_t cloudabi_sys_random_get(void __user *buf, size_t buf_len);
 
 cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
-                                          cloudabi_sockstat_t __user *buf,
+                                          void __user *unused,
                                           cloudabi_fd_t *conn);
 
 cloudabi_errno_t cloudabi_sys_sock_bind(cloudabi_fd_t sock, cloudabi_fd_t fd,

@@ -131,7 +131,7 @@ typedef struct {
   cloudabi_errno_t (*proc_fork)(cloudabi_fd_t *fd, cloudabi_tid_t *tid);
   cloudabi_errno_t (*proc_raise)(cloudabi_signal_t sig);
   cloudabi_errno_t (*random_get)(void *buf, size_t buf_len);
-  cloudabi_errno_t (*sock_accept)(cloudabi_fd_t sock, cloudabi_sockstat_t *buf,
+  cloudabi_errno_t (*sock_accept)(cloudabi_fd_t sock, void *unused,
                                   cloudabi_fd_t *conn);
   cloudabi_errno_t (*sock_bind)(cloudabi_fd_t sock, cloudabi_fd_t fd,
                                 const char *path, size_t path_len);

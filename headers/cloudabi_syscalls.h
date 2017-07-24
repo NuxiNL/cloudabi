@@ -284,9 +284,10 @@ static inline cloudabi_errno_t cloudabi_sys_random_get(void *buf,
   return cloudabi_syscalls.random_get(buf, buf_len);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_sock_accept(
-    cloudabi_fd_t sock, cloudabi_sockstat_t *buf, cloudabi_fd_t *conn) {
-  return cloudabi_syscalls.sock_accept(sock, buf, conn);
+static inline cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
+                                                        void *unused,
+                                                        cloudabi_fd_t *conn) {
+  return cloudabi_syscalls.sock_accept(sock, unused, conn);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_sock_bind(cloudabi_fd_t sock,

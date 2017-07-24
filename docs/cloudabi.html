@@ -1373,10 +1373,10 @@ data.</p></li>
 <li><p><a href="#sock_accept.sock" name="sock_accept.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
 
 <p>The file descriptor of the listening socket.</p></li>
-<li><p><a href="#sock_accept.buf" name="sock_accept.buf"></a><code><a href="#sockstat">cloudabi_sockstat_t</a> *<strong>buf</strong></code></p>
+<li><p><a href="#sock_accept.unused" name="sock_accept.unused"></a><code>void *<strong>unused</strong></code></p>
 
-<p>The attributes of the socket associated with
-the incoming connection.</p></li>
+<p>Previously used to return the peer address.
+Should be null.</p></li>
 </ul>
 
 <p>Outputs:</p>
@@ -2714,12 +2714,9 @@ should be stored.</p></li>
 <li><p><a href="#recv_out.ro_fdslen" name="recv_out.ro_fdslen"></a><code>size_t <strong>ro_fdslen</strong></code></p>
 
 <p>Number of file descriptors stored in <a href="#recv_in.ri_fds"><code>cloudabi_recv_in_t::ri_fds</code></a>.</p></li>
-<li><p><a href="#recv_out.ro_sockname" name="recv_out.ro_sockname"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ro_sockname</strong></code></p>
+<li><p><a href="#recv_out.ro_unused" name="recv_out.ro_unused"></a><code>char <strong>ro_unused</strong>[40]</code></p>
 
-<p>Address on which the message was received.</p></li>
-<li><p><a href="#recv_out.ro_peername" name="recv_out.ro_peername"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ro_peername</strong></code></p>
-
-<p>Address of the peer sending the message.</p></li>
+<p>Fields that were used by previous implementations.</p></li>
 <li><p><a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><a href="#roflags">cloudabi_roflags_t</a> <strong>ro_flags</strong></code></p>
 
 <p>Message flags.</p></li>
@@ -2953,31 +2950,6 @@ has been truncated.</p></li>
 truncated.</p></li>
 </ul>
 
-<h4><a href="#sa_family" name="sa_family"></a><code>cloudabi_sa_family_t</code> (<code>uint8_t</code>)</h4>
-
-<p>Socket address family.</p>
-
-<p>Used by <a href="#sockaddr"><code>cloudabi_sockaddr_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#sa_family.unspec" name="sa_family.unspec"></a><strong><code>CLOUDABI_AF_UNSPEC</code></strong></p>
-
-<p>The socket address family is unknown or is different
-from any of the other address families specified.</p></li>
-<li><p><a href="#sa_family.inet" name="sa_family.inet"></a><strong><code>CLOUDABI_AF_INET</code></strong></p>
-
-<p>An IPv4 address.</p></li>
-<li><p><a href="#sa_family.inet6" name="sa_family.inet6"></a><strong><code>CLOUDABI_AF_INET6</code></strong></p>
-
-<p>An IPv6 address.</p></li>
-<li><p><a href="#sa_family.unix" name="sa_family.unix"></a><strong><code>CLOUDABI_AF_UNIX</code></strong></p>
-
-<p>The socket is local to the system, and may be bound to
-the file system.</p></li>
-</ul>
-
 <h4><a href="#scope" name="scope"></a><code>cloudabi_scope_t</code> (<code>uint8_t</code>)</h4>
 
 <p>Indicates whether an object is stored in private or shared
@@ -3193,63 +3165,18 @@ defined, it must be set to zero.</p>
 <p>Action: Terminates the process.</p></li>
 </ul>
 
-<h4><a href="#sockaddr" name="sockaddr"></a><code>cloudabi_sockaddr_t</code> (<code>struct</code>)</h4>
-
-<p>Network address of a bound socket or its peer.</p>
-
-<p>Used by <a href="#recv_out"><code>cloudabi_recv_out_t</code></a> and <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
-
-<p>Members:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_family" name="sockaddr.sa_family"></a><code><a href="#sa_family">cloudabi_sa_family_t</a> <strong>sa_family</strong></code></p>
-
-<p>Address family.</p></li>
-<li><p>When <code>sa_family</code> is <a href="#sa_family.inet"><code>CLOUDABI_AF_INET</code></a>:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet" name="sockaddr.sa_inet"></a><strong><code>sa_inet</code></strong></p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet.addr" name="sockaddr.sa_inet.addr"></a><code>uint8_t <strong>addr</strong>[4]</code></p>
-
-<p>IPv4 address.</p></li>
-<li><p><a href="#sockaddr.sa_inet.port" name="sockaddr.sa_inet.port"></a><code>uint16_t <strong>port</strong></code></p>
-
-<p>IPv4 port number.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>sa_family</code> is <a href="#sa_family.inet6"><code>CLOUDABI_AF_INET6</code></a>:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet6" name="sockaddr.sa_inet6"></a><strong><code>sa_inet6</code></strong></p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet6.addr" name="sockaddr.sa_inet6.addr"></a><code>uint8_t <strong>addr</strong>[16]</code></p>
-
-<p>IPv6 address.</p></li>
-<li><p><a href="#sockaddr.sa_inet6.port" name="sockaddr.sa_inet6.port"></a><code>uint16_t <strong>port</strong></code></p>
-
-<p>IPv6 port number.</p></li>
-</ul></li>
-</ul></li>
-</ul>
-
 <h4><a href="#sockstat" name="sockstat"></a><code>cloudabi_sockstat_t</code> (<code>struct</code>)</h4>
 
 <p>Socket attributes.</p>
 
-<p>Used by <a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a> and <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
+<p>Used by <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
 
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#sockstat.ss_sockname" name="sockstat.ss_sockname"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ss_sockname</strong></code></p>
+<li><p><a href="#sockstat.ss_unused" name="sockstat.ss_unused"></a><code>char <strong>ss_unused</strong>[40]</code></p>
 
-<p>The address to which this socket is bound.</p></li>
-<li><p><a href="#sockstat.ss_peername" name="sockstat.ss_peername"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ss_peername</strong></code></p>
-
-<p>The address to which this socket is connected.</p></li>
+<p>Fields that were used by previous implementations.</p></li>
 <li><p><a href="#sockstat.ss_error" name="sockstat.ss_error"></a><code><a href="#errno">cloudabi_errno_t</a> <strong>ss_error</strong></code></p>
 
 <p>Error code of the last completed asynchronous

@@ -260,7 +260,7 @@
 
 44	AUE_NULL	STD	{ cloudabi_fd_t cloudabi_sys_sock_accept( \
 					cloudabi_fd_t sock, \
-					cloudabi_sockstat_t *buf); }
+					void *unused); }
 
 45	AUE_NULL	STD	{ void cloudabi_sys_sock_bind( \
 					cloudabi_fd_t sock, \
