@@ -180,17 +180,6 @@ cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
                                           void __user *unused,
                                           cloudabi_fd_t *conn);
 
-cloudabi_errno_t cloudabi_sys_sock_bind(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                        const char __user *path,
-                                        size_t path_len);
-
-cloudabi_errno_t cloudabi_sys_sock_connect(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                           const char __user *path,
-                                           size_t path_len);
-
-cloudabi_errno_t cloudabi_sys_sock_listen(cloudabi_fd_t sock,
-                                          cloudabi_backlog_t backlog);
-
 cloudabi_errno_t cloudabi_sys_sock_shutdown(cloudabi_fd_t sock,
                                             cloudabi_sdflags_t how);
 

@@ -140,7 +140,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 <p>CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 55 syscalls.</p>
+result is a minimal ABI consisting of only 52 syscalls.</p>
 
 <p>CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and <a href="https://github.com/NuxiNL/netbsd">a patch-set
@@ -265,9 +265,6 @@ and documentation (including the one you're reading now) is generated.</p>
 <li><a href="#proc_raise"><code>cloudabi_sys_proc_raise()</code></a></li>
 <li><a href="#random_get"><code>cloudabi_sys_random_get()</code></a></li>
 <li><a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a></li>
-<li><a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a></li>
-<li><a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a></li>
-<li><a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a></li>
 <li><a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a></li>
 <li><a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a></li>
 <li><a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a></li>
@@ -383,12 +380,6 @@ threads, all threads are woken up.</p></li>
 
 <p>Creates an anonymous shared memory
 object.</p></li>
-<li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
-
-<p>Creates a UNIX datagram socket.</p></li>
-<li><p><a href="#filetype.socket_stream"><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></a></p>
-
-<p>Creates a UNIX byte-stream socket.</p></li>
 </ul></li>
 </ul>
 
@@ -1367,6 +1358,14 @@ data.</p></li>
 
 <p>Accepts an incoming connection on a listening socket.</p>
 
+<p>As it is impossible to create listening sockets from within
+CloudABI, this function is only useful for accepting
+connections on pre-existing sockets. It is expected that this
+system call will disappear at some point in the future.</p>
+
+<p>This functionality can be mimicked by using file descriptor
+passing to push incoming connections through a UNIX socket.</p>
+
 <p>Inputs:</p>
 
 <ul>
@@ -1386,61 +1385,6 @@ Should be null.</p></li>
 
 <p>The socket associated with the incoming
 connection.</p></li>
-</ul>
-
-<h4><a href="#sock_bind" name="sock_bind"></a><code>cloudabi_sys_sock_bind()</code></h4>
-
-<p>Binds a UNIX socket to a path.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_bind.sock" name="sock_bind.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the socket to be bound.</p></li>
-<li><p><a href="#sock_bind.fd" name="sock_bind.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
-
-<p>The working directory at which the resolution
-of the path to which to bind starts.</p></li>
-<li><p><a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.path_len" name="sock_bind.path_len"></a><code>size_t <strong>path_len</strong></code></p>
-
-<p>The path to which the socket should bind.</p></li>
-</ul>
-
-<h4><a href="#sock_connect" name="sock_connect"></a><code>cloudabi_sys_sock_connect()</code></h4>
-
-<p>Connects a UNIX socket to another UNIX socket bound at a path.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_connect.sock" name="sock_connect.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the socket to connect.</p></li>
-<li><p><a href="#sock_connect.fd" name="sock_connect.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
-
-<p>The working directory at which the resolution
-of the path to which to connect starts.</p></li>
-<li><p><a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size_t <strong>path_len</strong></code></p>
-
-<p>The path to which the socket should connect.</p></li>
-</ul>
-
-<h4><a href="#sock_listen" name="sock_listen"></a><code>cloudabi_sys_sock_listen()</code></h4>
-
-<p>Listens for incoming connections on a socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_listen.sock" name="sock_listen.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The socket on which listening should be
-enabled.</p></li>
-<li><p><a href="#sock_listen.backlog" name="sock_listen.backlog"></a><code><a href="#backlog">cloudabi_backlog_t</a> <strong>backlog</strong></code></p>
-
-<p>Number of incoming connections the socket is
-capable of keeping in its backlog.</p></li>
 </ul>
 
 <h4><a href="#sock_recv" name="sock_recv"></a><code>cloudabi_sys_sock_recv()</code></h4>
@@ -1716,8 +1660,6 @@ this environment on all architectures.</p>
 
 <p>Number of incoming connections a socket is capable of keeping
 in its backlog.</p>
-
-<p>Used by <a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a>.</p>
 
 <h4><a href="#ciovec" name="ciovec"></a><code>cloudabi_ciovec_t</code> (<code>struct</code>)</h4>
 
@@ -2904,25 +2846,6 @@ and extract them.</p></li>
 <li><p><a href="#rights.sock_accept" name="rights.sock_accept"></a><strong><code>CLOUDABI_RIGHT_SOCK_ACCEPT</code></strong></p>
 
 <p>The right to invoke <a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a>.</p></li>
-<li><p><a href="#rights.sock_bind_directory" name="rights.sock_bind_directory"></a><strong><code>CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY</code></strong></p>
-
-<p>The right to invoke <a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a> with the file
-descriptor as the directory.</p></li>
-<li><p><a href="#rights.sock_bind_socket" name="rights.sock_bind_socket"></a><strong><code>CLOUDABI_RIGHT_SOCK_BIND_SOCKET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a> with the file
-descriptor as the socket.</p></li>
-<li><p><a href="#rights.sock_connect_directory" name="rights.sock_connect_directory"></a><strong><code>CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY</code></strong></p>
-
-<p>The right to invoke <a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a> with the file
-descriptor as the directory.</p></li>
-<li><p><a href="#rights.sock_connect_socket" name="rights.sock_connect_socket"></a><strong><code>CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a> with the file
-descriptor as the socket.</p></li>
-<li><p><a href="#rights.sock_listen" name="rights.sock_listen"></a><strong><code>CLOUDABI_RIGHT_SOCK_LISTEN</code></strong></p>
-
-<p>The right to invoke <a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a>.</p></li>
 <li><p><a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a><strong><code>CLOUDABI_RIGHT_SOCK_SHUTDOWN</code></strong></p>
 
 <p>The right to invoke <a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a>.</p></li>
@@ -3210,8 +3133,7 @@ calling <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.<
 <ul>
 <li><p><a href="#sstate.acceptconn" name="sstate.acceptconn"></a><strong><code>CLOUDABI_SOCKSTATE_ACCEPTCONN</code></strong></p>
 
-<p><a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a> has been called on the socket. The
-socket is accepting incoming connections.</p></li>
+<p>The socket is accepting incoming connections.</p></li>
 </ul>
 
 <h4><a href="#subclockflags" name="subclockflags"></a><code>cloudabi_subclockflags_t</code> (<code>uint16_t</code> bitfield)</h4>

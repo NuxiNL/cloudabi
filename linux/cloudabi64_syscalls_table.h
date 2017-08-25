@@ -501,35 +501,6 @@ static cloudabi_errno_t do_sock_accept(const void *in, void *out) {
   return cloudabi_sys_sock_accept(vin->sock, vin->unused, &vout->conn);
 }
 
-static cloudabi_errno_t do_sock_bind(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, sock);
-    MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const char __user *, path);
-    MEMBER(size_t, path_len);
-  } *vin = in;
-  return cloudabi_sys_sock_bind(vin->sock, vin->fd, vin->path, vin->path_len);
-}
-
-static cloudabi_errno_t do_sock_connect(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, sock);
-    MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const char __user *, path);
-    MEMBER(size_t, path_len);
-  } *vin = in;
-  return cloudabi_sys_sock_connect(vin->sock, vin->fd, vin->path,
-                                   vin->path_len);
-}
-
-static cloudabi_errno_t do_sock_listen(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, sock);
-    MEMBER(cloudabi_backlog_t, backlog);
-  } *vin = in;
-  return cloudabi_sys_sock_listen(vin->sock, vin->backlog);
-}
-
 static cloudabi_errno_t do_sock_recv(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, sock);
@@ -598,7 +569,6 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
     do_mem_advise,    do_mem_map,        do_mem_protect,    do_mem_sync,
     do_mem_unmap,     do_poll,           do_poll_fd,        do_proc_exec,
     do_proc_exit,     do_proc_fork,      do_proc_raise,     do_random_get,
-    do_sock_accept,   do_sock_bind,      do_sock_connect,   do_sock_listen,
-    do_sock_recv,     do_sock_send,      do_sock_shutdown,  do_sock_stat_get,
-    do_thread_create, do_thread_exit,    do_thread_yield,
+    do_sock_accept,   do_sock_recv,      do_sock_send,      do_sock_shutdown,
+    do_sock_stat_get, do_thread_create,  do_thread_exit,    do_thread_yield,
 };

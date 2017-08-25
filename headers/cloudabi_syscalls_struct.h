@@ -133,12 +133,6 @@ typedef struct {
   cloudabi_errno_t (*random_get)(void *buf, size_t buf_len);
   cloudabi_errno_t (*sock_accept)(cloudabi_fd_t sock, void *unused,
                                   cloudabi_fd_t *conn);
-  cloudabi_errno_t (*sock_bind)(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                const char *path, size_t path_len);
-  cloudabi_errno_t (*sock_connect)(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                   const char *path, size_t path_len);
-  cloudabi_errno_t (*sock_listen)(cloudabi_fd_t sock,
-                                  cloudabi_backlog_t backlog);
   cloudabi_errno_t (*sock_recv)(cloudabi_fd_t sock,
                                 const cloudabi_recv_in_t *in,
                                 cloudabi_recv_out_t *out);

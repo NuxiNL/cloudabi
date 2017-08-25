@@ -31,7 +31,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 55 syscalls.
+result is a minimal ABI consisting of only 52 syscalls.
 
 CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
@@ -153,9 +153,6 @@ and documentation (including the one you're reading now) is generated.
 - [`cloudabi_sys_proc_raise()`](#proc_raise)
 - [`cloudabi_sys_random_get()`](#random_get)
 - [`cloudabi_sys_sock_accept()`](#sock_accept)
-- [`cloudabi_sys_sock_bind()`](#sock_bind)
-- [`cloudabi_sys_sock_connect()`](#sock_connect)
-- [`cloudabi_sys_sock_listen()`](#sock_listen)
 - [`cloudabi_sys_sock_recv()`](#sock_recv)
 - [`cloudabi_sys_sock_send()`](#sock_send)
 - [`cloudabi_sys_sock_shutdown()`](#sock_shutdown)
@@ -260,14 +257,6 @@ Inputs:
 
         Creates an anonymous shared memory
         object.
-
-    - [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
-
-        Creates a UNIX datagram socket.
-
-    - [`CLOUDABI_FILETYPE_SOCKET_STREAM`](#filetype.socket_stream)
-
-        Creates a UNIX byte-stream socket.
 
 Outputs:
 
@@ -1197,6 +1186,14 @@ Inputs:
 
 Accepts an incoming connection on a listening socket.
 
+As it is impossible to create listening sockets from within
+CloudABI, this function is only useful for accepting
+connections on pre-existing sockets. It is expected that this
+system call will disappear at some point in the future.
+
+This functionality can be mimicked by using file descriptor
+passing to push incoming connections through a UNIX socket.
+
 Inputs:
 
 - <a href="#sock_accept.sock" name="sock_accept.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
@@ -1214,60 +1211,6 @@ Outputs:
 
     The socket associated with the incoming
     connection.
-
-#### <a href="#sock_bind" name="sock_bind"></a>`cloudabi_sys_sock_bind()`
-
-Binds a UNIX socket to a path.
-
-Inputs:
-
-- <a href="#sock_bind.sock" name="sock_bind.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
-
-    The file descriptor of the socket to be bound.
-
-- <a href="#sock_bind.fd" name="sock_bind.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
-
-    The working directory at which the resolution
-    of the path to which to bind starts.
-
-- <a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.path_len" name="sock_bind.path_len"></a><code>size\_t <strong>path\_len</strong></code>
-
-    The path to which the socket should bind.
-
-#### <a href="#sock_connect" name="sock_connect"></a>`cloudabi_sys_sock_connect()`
-
-Connects a UNIX socket to another UNIX socket bound at a path.
-
-Inputs:
-
-- <a href="#sock_connect.sock" name="sock_connect.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
-
-    The file descriptor of the socket to connect.
-
-- <a href="#sock_connect.fd" name="sock_connect.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
-
-    The working directory at which the resolution
-    of the path to which to connect starts.
-
-- <a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.path_len" name="sock_connect.path_len"></a><code>size\_t <strong>path\_len</strong></code>
-
-    The path to which the socket should connect.
-
-#### <a href="#sock_listen" name="sock_listen"></a>`cloudabi_sys_sock_listen()`
-
-Listens for incoming connections on a socket.
-
-Inputs:
-
-- <a href="#sock_listen.sock" name="sock_listen.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
-
-    The socket on which listening should be
-    enabled.
-
-- <a href="#sock_listen.backlog" name="sock_listen.backlog"></a><code>[cloudabi\_backlog\_t](#backlog) <strong>backlog</strong></code>
-
-    Number of incoming connections the socket is
-    capable of keeping in its backlog.
 
 #### <a href="#sock_recv" name="sock_recv"></a>`cloudabi_sys_sock_recv()`
 
@@ -1544,8 +1487,6 @@ Members:
 
 Number of incoming connections a socket is capable of keeping
 in its backlog.
-
-Used by [`cloudabi_sys_sock_listen()`](#sock_listen).
 
 #### <a href="#ciovec" name="ciovec"></a>`cloudabi_ciovec_t` (`struct`)
 
@@ -2838,30 +2779,6 @@ Possible values:
 
     The right to invoke [`cloudabi_sys_sock_accept()`](#sock_accept).
 
-- <a href="#rights.sock_bind_directory" name="rights.sock_bind_directory"></a>**`CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY`**
-
-    The right to invoke [`cloudabi_sys_sock_bind()`](#sock_bind) with the file
-    descriptor as the directory.
-
-- <a href="#rights.sock_bind_socket" name="rights.sock_bind_socket"></a>**`CLOUDABI_RIGHT_SOCK_BIND_SOCKET`**
-
-    The right to invoke [`cloudabi_sys_sock_bind()`](#sock_bind) with the file
-    descriptor as the socket.
-
-- <a href="#rights.sock_connect_directory" name="rights.sock_connect_directory"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY`**
-
-    The right to invoke [`cloudabi_sys_sock_connect()`](#sock_connect) with the file
-    descriptor as the directory.
-
-- <a href="#rights.sock_connect_socket" name="rights.sock_connect_socket"></a>**`CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET`**
-
-    The right to invoke [`cloudabi_sys_sock_connect()`](#sock_connect) with the file
-    descriptor as the socket.
-
-- <a href="#rights.sock_listen" name="rights.sock_listen"></a>**`CLOUDABI_RIGHT_SOCK_LISTEN`**
-
-    The right to invoke [`cloudabi_sys_sock_listen()`](#sock_listen).
-
 - <a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a>**`CLOUDABI_RIGHT_SOCK_SHUTDOWN`**
 
     The right to invoke [`cloudabi_sys_sock_shutdown()`](#sock_shutdown).
@@ -3164,8 +3081,7 @@ Possible values:
 
 - <a href="#sstate.acceptconn" name="sstate.acceptconn"></a>**`CLOUDABI_SOCKSTATE_ACCEPTCONN`**
 
-    [`cloudabi_sys_sock_listen()`](#sock_listen) has been called on the socket. The
-    socket is accepting incoming connections.
+    The socket is accepting incoming connections.
 
 #### <a href="#subclockflags" name="subclockflags"></a>`cloudabi_subclockflags_t` (`uint16_t` bitfield)
 

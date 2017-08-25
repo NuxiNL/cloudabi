@@ -290,25 +290,6 @@ static inline cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
   return cloudabi_syscalls.sock_accept(sock, unused, conn);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_sock_bind(cloudabi_fd_t sock,
-                                                      cloudabi_fd_t fd,
-                                                      const char *path,
-                                                      size_t path_len) {
-  return cloudabi_syscalls.sock_bind(sock, fd, path, path_len);
-}
-
-static inline cloudabi_errno_t cloudabi_sys_sock_connect(cloudabi_fd_t sock,
-                                                         cloudabi_fd_t fd,
-                                                         const char *path,
-                                                         size_t path_len) {
-  return cloudabi_syscalls.sock_connect(sock, fd, path, path_len);
-}
-
-static inline cloudabi_errno_t cloudabi_sys_sock_listen(
-    cloudabi_fd_t sock, cloudabi_backlog_t backlog) {
-  return cloudabi_syscalls.sock_listen(sock, backlog);
-}
-
 static inline cloudabi_errno_t cloudabi_sys_sock_recv(
     cloudabi_fd_t sock, const cloudabi_recv_in_t *in,
     cloudabi_recv_out_t *out) {
