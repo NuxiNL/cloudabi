@@ -73,11 +73,9 @@
   SYSCALL(proc_fork)                    \
   SYSCALL(proc_raise)                   \
   SYSCALL(random_get)                   \
-  SYSCALL(sock_accept)                  \
   SYSCALL(sock_recv)                    \
   SYSCALL(sock_send)                    \
   SYSCALL(sock_shutdown)                \
-  SYSCALL(sock_stat_get)                \
   SYSCALL(thread_create)                \
   SYSCALL(thread_exit)                  \
   SYSCALL(thread_yield)
@@ -322,11 +320,6 @@
   void *buf,                                   \
   size_t buf_len
 
-#define CLOUDABI_SYSCALL_PARAMETERS_sock_accept \
-  cloudabi_fd_t sock,                           \
-  void *unused,                                 \
-  cloudabi_fd_t *conn
-
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_recv \
   cloudabi_fd_t sock,                         \
   const cloudabi_recv_in_t *in,               \
@@ -340,11 +333,6 @@
 #define CLOUDABI_SYSCALL_PARAMETERS_sock_shutdown \
   cloudabi_fd_t sock,                             \
   cloudabi_sdflags_t how
-
-#define CLOUDABI_SYSCALL_PARAMETERS_sock_stat_get \
-  cloudabi_fd_t sock,                             \
-  cloudabi_sockstat_t *buf,                       \
-  cloudabi_ssflags_t flags
 
 #define CLOUDABI_SYSCALL_PARAMETERS_thread_create \
   cloudabi_threadattr_t *attr,                    \
@@ -488,9 +476,6 @@
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_random_get \
   buf, buf_len
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_accept \
-  sock, unused, conn
-
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_recv \
   sock, in, out
 
@@ -499,9 +484,6 @@
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_shutdown \
   sock, how
-
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_sock_stat_get \
-  sock, buf, flags
 
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_thread_create \
   attr, tid
@@ -555,11 +537,9 @@
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_proc_fork(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_proc_raise(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_random_get(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_accept(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_recv(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_send(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_shutdown(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_sock_stat_get(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_create(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_exit(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_thread_yield(yes, no) no
@@ -608,11 +588,9 @@
 #define CLOUDABI_SYSCALL_RETURNS_proc_fork(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_proc_raise(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_random_get(yes, no) yes
-#define CLOUDABI_SYSCALL_RETURNS_sock_accept(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_sock_recv(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_sock_send(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_sock_shutdown(yes, no) yes
-#define CLOUDABI_SYSCALL_RETURNS_sock_stat_get(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_create(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_exit(yes, no) no
 #define CLOUDABI_SYSCALL_RETURNS_thread_yield(yes, no) yes

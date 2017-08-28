@@ -284,12 +284,6 @@ static inline cloudabi_errno_t cloudabi_sys_random_get(void *buf,
   return cloudabi_syscalls.random_get(buf, buf_len);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
-                                                        void *unused,
-                                                        cloudabi_fd_t *conn) {
-  return cloudabi_syscalls.sock_accept(sock, unused, conn);
-}
-
 static inline cloudabi_errno_t cloudabi_sys_sock_recv(
     cloudabi_fd_t sock, const cloudabi_recv_in_t *in,
     cloudabi_recv_out_t *out) {
@@ -305,11 +299,6 @@ static inline cloudabi_errno_t cloudabi_sys_sock_send(
 static inline cloudabi_errno_t cloudabi_sys_sock_shutdown(
     cloudabi_fd_t sock, cloudabi_sdflags_t how) {
   return cloudabi_syscalls.sock_shutdown(sock, how);
-}
-
-static inline cloudabi_errno_t cloudabi_sys_sock_stat_get(
-    cloudabi_fd_t sock, cloudabi_sockstat_t *buf, cloudabi_ssflags_t flags) {
-  return cloudabi_syscalls.sock_stat_get(sock, buf, flags);
 }
 
 static inline cloudabi_errno_t cloudabi_sys_thread_create(

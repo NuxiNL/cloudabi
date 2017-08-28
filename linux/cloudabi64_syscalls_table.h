@@ -490,17 +490,6 @@ static cloudabi_errno_t do_random_get(const void *in, void *out) {
   return cloudabi_sys_random_get(vin->buf, vin->buf_len);
 }
 
-static cloudabi_errno_t do_sock_accept(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, sock);
-    MEMBER(void __user *, unused);
-  } *vin = in;
-  struct {
-    MEMBER(cloudabi_fd_t, conn);
-  } *vout = out;
-  return cloudabi_sys_sock_accept(vin->sock, vin->unused, &vout->conn);
-}
-
 static cloudabi_errno_t do_sock_recv(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, sock);
@@ -525,15 +514,6 @@ static cloudabi_errno_t do_sock_shutdown(const void *in, void *out) {
     MEMBER(cloudabi_sdflags_t, how);
   } *vin = in;
   return cloudabi_sys_sock_shutdown(vin->sock, vin->how);
-}
-
-static cloudabi_errno_t do_sock_stat_get(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, sock);
-    MEMBER(cloudabi_sockstat_t __user *, buf);
-    MEMBER(cloudabi_ssflags_t, flags);
-  } *vin = in;
-  return cloudabi_sys_sock_stat_get(vin->sock, vin->buf, vin->flags);
 }
 
 static cloudabi_errno_t do_thread_create(const void *in, void *out) {
@@ -569,6 +549,6 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
     do_mem_advise,    do_mem_map,        do_mem_protect,    do_mem_sync,
     do_mem_unmap,     do_poll,           do_poll_fd,        do_proc_exec,
     do_proc_exit,     do_proc_fork,      do_proc_raise,     do_random_get,
-    do_sock_accept,   do_sock_recv,      do_sock_send,      do_sock_shutdown,
-    do_sock_stat_get, do_thread_create,  do_thread_exit,    do_thread_yield,
+    do_sock_recv,     do_sock_send,      do_sock_shutdown,  do_thread_create,
+    do_thread_exit,   do_thread_yield,
 };

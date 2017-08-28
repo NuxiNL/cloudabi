@@ -176,16 +176,8 @@ cloudabi_errno_t cloudabi_sys_proc_raise(cloudabi_signal_t sig);
 
 cloudabi_errno_t cloudabi_sys_random_get(void __user *buf, size_t buf_len);
 
-cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
-                                          void __user *unused,
-                                          cloudabi_fd_t *conn);
-
 cloudabi_errno_t cloudabi_sys_sock_shutdown(cloudabi_fd_t sock,
                                             cloudabi_sdflags_t how);
-
-cloudabi_errno_t cloudabi_sys_sock_stat_get(cloudabi_fd_t sock,
-                                            cloudabi_sockstat_t __user *buf,
-                                            cloudabi_ssflags_t flags);
 
 void cloudabi_sys_thread_exit(cloudabi_lock_t __user *lock,
                               cloudabi_scope_t scope);

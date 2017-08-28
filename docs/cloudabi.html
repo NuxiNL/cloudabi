@@ -140,7 +140,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 <p>CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 52 syscalls.</p>
+result is a minimal ABI consisting of only 50 syscalls.</p>
 
 <p>CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and <a href="https://github.com/NuxiNL/netbsd">a patch-set
@@ -264,11 +264,9 @@ and documentation (including the one you're reading now) is generated.</p>
 <li><a href="#proc_fork"><code>cloudabi_sys_proc_fork()</code></a></li>
 <li><a href="#proc_raise"><code>cloudabi_sys_proc_raise()</code></a></li>
 <li><a href="#random_get"><code>cloudabi_sys_random_get()</code></a></li>
-<li><a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a></li>
 <li><a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a></li>
 <li><a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a></li>
 <li><a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a></li>
-<li><a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a></li>
 <li><a href="#thread_create"><code>cloudabi_sys_thread_create()</code></a></li>
 <li><a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a></li>
 <li><a href="#thread_yield"><code>cloudabi_sys_thread_yield()</code></a></li>
@@ -1354,39 +1352,6 @@ as the seed for a userspace pseudo-random number generator.</p>
 data.</p></li>
 </ul>
 
-<h4><a href="#sock_accept" name="sock_accept"></a><code>cloudabi_sys_sock_accept()</code></h4>
-
-<p>Accepts an incoming connection on a listening socket.</p>
-
-<p>As it is impossible to create listening sockets from within
-CloudABI, this function is only useful for accepting
-connections on pre-existing sockets. It is expected that this
-system call will disappear at some point in the future.</p>
-
-<p>This functionality can be mimicked by using file descriptor
-passing to push incoming connections through a UNIX socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_accept.sock" name="sock_accept.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the listening socket.</p></li>
-<li><p><a href="#sock_accept.unused" name="sock_accept.unused"></a><code>void *<strong>unused</strong></code></p>
-
-<p>Previously used to return the peer address.
-Should be null.</p></li>
-</ul>
-
-<p>Outputs:</p>
-
-<ul>
-<li><p><a href="#sock_accept.conn" name="sock_accept.conn"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>conn</strong></code></p>
-
-<p>The socket associated with the incoming
-connection.</p></li>
-</ul>
-
 <h4><a href="#sock_recv" name="sock_recv"></a><code>cloudabi_sys_sock_recv()</code></h4>
 
 <p>Receives a message on a socket.</p>
@@ -1438,27 +1403,6 @@ received.</p></li>
 
 <p>Which channels on the socket need to be shut
 down.</p></li>
-</ul>
-
-<h4><a href="#sock_stat_get" name="sock_stat_get"></a><code>cloudabi_sys_sock_stat_get()</code></h4>
-
-<p>Gets attributes of a socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_stat_get.sock" name="sock_stat_get.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The socket whose attributes have to be
-obtained.</p></li>
-<li><p><a href="#sock_stat_get.buf" name="sock_stat_get.buf"></a><code><a href="#sockstat">cloudabi_sockstat_t</a> *<strong>buf</strong></code></p>
-
-<p>The buffer where the socket's attributes are
-stored.</p></li>
-<li><p><a href="#sock_stat_get.flags" name="sock_stat_get.flags"></a><code><a href="#ssflags">cloudabi_ssflags_t</a> <strong>flags</strong></code></p>
-
-<p>Flags indicating how the existing socket
-attributes need to be changed.</p></li>
 </ul>
 
 <h4><a href="#thread_create" name="thread_create"></a><code>cloudabi_sys_thread_create()</code></h4>
@@ -1777,7 +1721,7 @@ entry.</p></li>
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a> and <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
+<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>.</p>
 
 <p>Possible values:</p>
 
@@ -2843,15 +2787,9 @@ and extract them.</p></li>
 <li><p><a href="#rights.proc_exec" name="rights.proc_exec"></a><strong><code>CLOUDABI_RIGHT_PROC_EXEC</code></strong></p>
 
 <p>The right to invoke <a href="#proc_exec"><code>cloudabi_sys_proc_exec()</code></a>.</p></li>
-<li><p><a href="#rights.sock_accept" name="rights.sock_accept"></a><strong><code>CLOUDABI_RIGHT_SOCK_ACCEPT</code></strong></p>
-
-<p>The right to invoke <a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a>.</p></li>
 <li><p><a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a><strong><code>CLOUDABI_RIGHT_SOCK_SHUTDOWN</code></strong></p>
 
 <p>The right to invoke <a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a>.</p></li>
-<li><p><a href="#rights.sock_stat_get" name="rights.sock_stat_get"></a><strong><code>CLOUDABI_RIGHT_SOCK_STAT_GET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p></li>
 </ul>
 
 <h4><a href="#roflags" name="roflags"></a><code>cloudabi_roflags_t</code> (<code>uint16_t</code> bitfield)</h4>
@@ -3086,54 +3024,6 @@ defined, it must be set to zero.</p>
 <p>File size limit exceeded.</p>
 
 <p>Action: Terminates the process.</p></li>
-</ul>
-
-<h4><a href="#sockstat" name="sockstat"></a><code>cloudabi_sockstat_t</code> (<code>struct</code>)</h4>
-
-<p>Socket attributes.</p>
-
-<p>Used by <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
-
-<p>Members:</p>
-
-<ul>
-<li><p><a href="#sockstat.ss_unused" name="sockstat.ss_unused"></a><code>char <strong>ss_unused</strong>[40]</code></p>
-
-<p>Fields that were used by previous implementations.</p></li>
-<li><p><a href="#sockstat.ss_error" name="sockstat.ss_error"></a><code><a href="#errno">cloudabi_errno_t</a> <strong>ss_error</strong></code></p>
-
-<p>Error code of the last completed asynchronous
-operation performed on this socket.</p></li>
-<li><p><a href="#sockstat.ss_state" name="sockstat.ss_state"></a><code><a href="#sstate">cloudabi_sstate_t</a> <strong>ss_state</strong></code></p>
-
-<p>Flags describing the state of the socket.</p></li>
-</ul>
-
-<h4><a href="#ssflags" name="ssflags"></a><code>cloudabi_ssflags_t</code> (<code>uint8_t</code> bitfield)</h4>
-
-<p>Specifies which socket attributes need to be altered when
-calling <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#ssflags.clear_error" name="ssflags.clear_error"></a><strong><code>CLOUDABI_SOCKSTAT_CLEAR_ERROR</code></strong></p>
-
-<p>Clear <a href="#sockstat.ss_error"><code>cloudabi_sockstat_t::ss_error</code></a>.</p></li>
-</ul>
-
-<h4><a href="#sstate" name="sstate"></a><code>cloudabi_sstate_t</code> (<code>uint32_t</code> bitfield)</h4>
-
-<p>State of the socket.</p>
-
-<p>Used by <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#sstate.acceptconn" name="sstate.acceptconn"></a><strong><code>CLOUDABI_SOCKSTATE_ACCEPTCONN</code></strong></p>
-
-<p>The socket is accepting incoming connections.</p></li>
 </ul>
 
 <h4><a href="#subclockflags" name="subclockflags"></a><code>cloudabi_subclockflags_t</code> (<code>uint16_t</code> bitfield)</h4>

@@ -131,8 +131,6 @@ typedef struct {
   cloudabi_errno_t (*proc_fork)(cloudabi_fd_t *fd, cloudabi_tid_t *tid);
   cloudabi_errno_t (*proc_raise)(cloudabi_signal_t sig);
   cloudabi_errno_t (*random_get)(void *buf, size_t buf_len);
-  cloudabi_errno_t (*sock_accept)(cloudabi_fd_t sock, void *unused,
-                                  cloudabi_fd_t *conn);
   cloudabi_errno_t (*sock_recv)(cloudabi_fd_t sock,
                                 const cloudabi_recv_in_t *in,
                                 cloudabi_recv_out_t *out);
@@ -140,9 +138,6 @@ typedef struct {
                                 const cloudabi_send_in_t *in,
                                 cloudabi_send_out_t *out);
   cloudabi_errno_t (*sock_shutdown)(cloudabi_fd_t sock, cloudabi_sdflags_t how);
-  cloudabi_errno_t (*sock_stat_get)(cloudabi_fd_t sock,
-                                    cloudabi_sockstat_t *buf,
-                                    cloudabi_ssflags_t flags);
   cloudabi_errno_t (*thread_create)(cloudabi_threadattr_t *attr,
                                     cloudabi_tid_t *tid);
   void (*thread_exit)(_Atomic(cloudabi_lock_t) * lock, cloudabi_scope_t scope);

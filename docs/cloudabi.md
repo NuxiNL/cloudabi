@@ -31,7 +31,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 52 syscalls.
+result is a minimal ABI consisting of only 50 syscalls.
 
 CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
@@ -152,11 +152,9 @@ and documentation (including the one you're reading now) is generated.
 - [`cloudabi_sys_proc_fork()`](#proc_fork)
 - [`cloudabi_sys_proc_raise()`](#proc_raise)
 - [`cloudabi_sys_random_get()`](#random_get)
-- [`cloudabi_sys_sock_accept()`](#sock_accept)
 - [`cloudabi_sys_sock_recv()`](#sock_recv)
 - [`cloudabi_sys_sock_send()`](#sock_send)
 - [`cloudabi_sys_sock_shutdown()`](#sock_shutdown)
-- [`cloudabi_sys_sock_stat_get()`](#sock_stat_get)
 - [`cloudabi_sys_thread_create()`](#thread_create)
 - [`cloudabi_sys_thread_exit()`](#thread_exit)
 - [`cloudabi_sys_thread_yield()`](#thread_yield)
@@ -1182,36 +1180,6 @@ Inputs:
     The buffer that needs to be filled with random
     data.
 
-#### <a href="#sock_accept" name="sock_accept"></a>`cloudabi_sys_sock_accept()`
-
-Accepts an incoming connection on a listening socket.
-
-As it is impossible to create listening sockets from within
-CloudABI, this function is only useful for accepting
-connections on pre-existing sockets. It is expected that this
-system call will disappear at some point in the future.
-
-This functionality can be mimicked by using file descriptor
-passing to push incoming connections through a UNIX socket.
-
-Inputs:
-
-- <a href="#sock_accept.sock" name="sock_accept.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
-
-    The file descriptor of the listening socket.
-
-- <a href="#sock_accept.unused" name="sock_accept.unused"></a><code>void *<strong>unused</strong></code>
-
-    Previously used to return the peer address.
-    Should be null.
-
-Outputs:
-
-- <a href="#sock_accept.conn" name="sock_accept.conn"></a><code>[cloudabi\_fd\_t](#fd) <strong>conn</strong></code>
-
-    The socket associated with the incoming
-    connection.
-
 #### <a href="#sock_recv" name="sock_recv"></a>`cloudabi_sys_sock_recv()`
 
 Receives a message on a socket.
@@ -1263,27 +1231,6 @@ Inputs:
 
     Which channels on the socket need to be shut
     down.
-
-#### <a href="#sock_stat_get" name="sock_stat_get"></a>`cloudabi_sys_sock_stat_get()`
-
-Gets attributes of a socket.
-
-Inputs:
-
-- <a href="#sock_stat_get.sock" name="sock_stat_get.sock"></a><code>[cloudabi\_fd\_t](#fd) <strong>sock</strong></code>
-
-    The socket whose attributes have to be
-    obtained.
-
-- <a href="#sock_stat_get.buf" name="sock_stat_get.buf"></a><code>[cloudabi\_sockstat\_t](#sockstat) *<strong>buf</strong></code>
-
-    The buffer where the socket's attributes are
-    stored.
-
-- <a href="#sock_stat_get.flags" name="sock_stat_get.flags"></a><code>[cloudabi\_ssflags\_t](#ssflags) <strong>flags</strong></code>
-
-    Flags indicating how the existing socket
-    attributes need to be changed.
 
 #### <a href="#thread_create" name="thread_create"></a>`cloudabi_sys_thread_create()`
 
@@ -1600,7 +1547,7 @@ Not all of these error codes are returned by the system calls
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.
 
-Used by [`cloudabi_event_t`](#event) and [`cloudabi_sockstat_t`](#sockstat).
+Used by [`cloudabi_event_t`](#event).
 
 Possible values:
 
@@ -2775,17 +2722,9 @@ Possible values:
 
     The right to invoke [`cloudabi_sys_proc_exec()`](#proc_exec).
 
-- <a href="#rights.sock_accept" name="rights.sock_accept"></a>**`CLOUDABI_RIGHT_SOCK_ACCEPT`**
-
-    The right to invoke [`cloudabi_sys_sock_accept()`](#sock_accept).
-
 - <a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a>**`CLOUDABI_RIGHT_SOCK_SHUTDOWN`**
 
     The right to invoke [`cloudabi_sys_sock_shutdown()`](#sock_shutdown).
-
-- <a href="#rights.sock_stat_get" name="rights.sock_stat_get"></a>**`CLOUDABI_RIGHT_SOCK_STAT_GET`**
-
-    The right to invoke [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
 
 #### <a href="#roflags" name="roflags"></a>`cloudabi_roflags_t` (`uint16_t` bitfield)
 
@@ -3038,50 +2977,6 @@ Possible values:
     File size limit exceeded.
 
     Action: Terminates the process.
-
-#### <a href="#sockstat" name="sockstat"></a>`cloudabi_sockstat_t` (`struct`)
-
-Socket attributes.
-
-Used by [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
-
-Members:
-
-- <a href="#sockstat.ss_unused" name="sockstat.ss_unused"></a><code>char <strong>ss\_unused</strong>[40]</code>
-
-    Fields that were used by previous implementations.
-
-- <a href="#sockstat.ss_error" name="sockstat.ss_error"></a><code>[cloudabi\_errno\_t](#errno) <strong>ss\_error</strong></code>
-
-    Error code of the last completed asynchronous
-    operation performed on this socket.
-
-- <a href="#sockstat.ss_state" name="sockstat.ss_state"></a><code>[cloudabi\_sstate\_t](#sstate) <strong>ss\_state</strong></code>
-
-    Flags describing the state of the socket.
-
-#### <a href="#ssflags" name="ssflags"></a>`cloudabi_ssflags_t` (`uint8_t` bitfield)
-
-Specifies which socket attributes need to be altered when
-calling [`cloudabi_sys_sock_stat_get()`](#sock_stat_get).
-
-Possible values:
-
-- <a href="#ssflags.clear_error" name="ssflags.clear_error"></a>**`CLOUDABI_SOCKSTAT_CLEAR_ERROR`**
-
-    Clear [`cloudabi_sockstat_t::ss_error`](#sockstat.ss_error).
-
-#### <a href="#sstate" name="sstate"></a>`cloudabi_sstate_t` (`uint32_t` bitfield)
-
-State of the socket.
-
-Used by [`cloudabi_sockstat_t`](#sockstat).
-
-Possible values:
-
-- <a href="#sstate.acceptconn" name="sstate.acceptconn"></a>**`CLOUDABI_SOCKSTATE_ACCEPTCONN`**
-
-    The socket is accepting incoming connections.
 
 #### <a href="#subclockflags" name="subclockflags"></a>`cloudabi_subclockflags_t` (`uint16_t` bitfield)
 
