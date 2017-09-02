@@ -35,10 +35,11 @@
 | In CloudABI, a process depends on its parent process to launch it with
 | the right set of resources, since the process will not be able to open
 | any new resources. For example, a simple static web server would need
-| to be started with an fd to a listening socket, and an fd to the
-| directory to serve files out of. The web server will then be unable to
-| do anything other than reading files in that directory, and accept
-| connections on the given socket.
+| to be started with a file descriptor to a [TCP
+| listener](https://github.com/NuxiNL/flower), and a file descriptor to
+| the directory for which to serve files. The web server will then be
+| unable to do anything other than reading files in that directory, and
+| process incoming network connections.
 |
 | So, unknown CloudABI binaries can safely be executed without the need
 | for containers, virtual machines, or other sandboxing technologies.
