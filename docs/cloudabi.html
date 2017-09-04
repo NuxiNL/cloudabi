@@ -402,9 +402,6 @@ object.</p></li>
 <p>Possible values:</p>
 
 <ul>
-<li><p><a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a></p>
-
-<p>Creates a pipe.</p></li>
 <li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
 
 <p>Creates a UNIX datagram socket pair.</p></li>
@@ -420,12 +417,10 @@ pair.</p></li>
 <ul>
 <li><p><a href="#fd_create2.fd1" name="fd_create2.fd1"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd1</strong></code></p>
 
-<p>The first file descriptor of the pair. For
-pipes, this corresponds to the read end.</p></li>
+<p>The first file descriptor of the pair.</p></li>
 <li><p><a href="#fd_create2.fd2" name="fd_create2.fd2"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd2</strong></code></p>
 
-<p>The second file descriptor of the pair. For
-pipes, this corresponds to the write end.</p></li>
+<p>The second file descriptor of the pair.</p></li>
 </ul>
 
 <h4><a href="#fd_datasync" name="fd_datasync"></a><code>cloudabi_sys_fd_datasync()</code></h4>
@@ -745,9 +740,6 @@ of the file to be created starts.</p></li>
 <li><p><a href="#filetype.directory"><code>CLOUDABI_FILETYPE_DIRECTORY</code></a></p>
 
 <p>Creates a directory.</p></li>
-<li><p><a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a></p>
-
-<p>Creates a FIFO.</p></li>
 </ul></li>
 </ul>
 
@@ -2072,8 +2064,7 @@ the process.</p></li>
 <ul>
 <li><p><a href="#eventrwflags.hangup" name="eventrwflags.hangup"></a><strong><code>CLOUDABI_EVENT_FD_READWRITE_HANGUP</code></strong></p>
 
-<p>The peer of this FIFO or socket has closed or
-disconnected.</p></li>
+<p>The peer of this socket has closed or disconnected.</p></li>
 </ul>
 
 <h4><a href="#eventtype" name="eventtype"></a><code>cloudabi_eventtype_t</code> (<code>uint8_t</code>)</h4>
@@ -2294,10 +2285,6 @@ device inode.</p></li>
 
 <p>The file descriptor or file refers to a directory
 inode.</p></li>
-<li><p><a href="#filetype.fifo" name="filetype.fifo"></a><strong><code>CLOUDABI_FILETYPE_FIFO</code></strong></p>
-
-<p>The file descriptor or file refers to a FIFO inode or
-one of the two endpoints of a pipe.</p></li>
 <li><p><a href="#filetype.poll" name="filetype.poll"></a><strong><code>CLOUDABI_FILETYPE_POLL</code></strong></p>
 
 <p>The file descriptor refers to a polling event queue.</p></li>
@@ -2698,10 +2685,6 @@ invoke <a href="#fd_pwrite"><code>cloudabi_sys_fd_pwrite()</code></a>.</p></li>
 
 <p>If <a href="#rights.file_open"><code>CLOUDABI_RIGHT_FILE_OPEN</code></a> is set, the right to invoke
 <a href="#file_open"><code>cloudabi_sys_file_open()</code></a> with <a href="#oflags.creat"><code>CLOUDABI_O_CREAT</code></a>.</p></li>
-<li><p><a href="#rights.file_create_fifo" name="rights.file_create_fifo"></a><strong><code>CLOUDABI_RIGHT_FILE_CREATE_FIFO</code></strong></p>
-
-<p>The right to invoke <a href="#file_create"><code>cloudabi_sys_file_create()</code></a> with
-<a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a>.</p></li>
 <li><p><a href="#rights.file_link_source" name="rights.file_link_source"></a><strong><code>CLOUDABI_RIGHT_FILE_LINK_SOURCE</code></strong></p>
 
 <p>The right to invoke <a href="#file_link"><code>cloudabi_sys_file_link()</code></a> with the file

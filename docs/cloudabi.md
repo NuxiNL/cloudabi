@@ -273,10 +273,6 @@ Inputs:
 
     Possible values:
 
-    - [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo)
-
-        Creates a pipe.
-
     - [`CLOUDABI_FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
 
         Creates a UNIX datagram socket pair.
@@ -290,13 +286,11 @@ Outputs:
 
 - <a href="#fd_create2.fd1" name="fd_create2.fd1"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd1</strong></code>
 
-    The first file descriptor of the pair. For
-    pipes, this corresponds to the read end.
+    The first file descriptor of the pair.
 
 - <a href="#fd_create2.fd2" name="fd_create2.fd2"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd2</strong></code>
 
-    The second file descriptor of the pair. For
-    pipes, this corresponds to the write end.
+    The second file descriptor of the pair.
 
 #### <a href="#fd_datasync" name="fd_datasync"></a>`cloudabi_sys_fd_datasync()`
 
@@ -594,10 +588,6 @@ Inputs:
     - [`CLOUDABI_FILETYPE_DIRECTORY`](#filetype.directory)
 
         Creates a directory.
-
-    - [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo)
-
-        Creates a FIFO.
 
 #### <a href="#file_link" name="file_link"></a>`cloudabi_sys_file_link()`
 
@@ -1959,8 +1949,7 @@ Possible values:
 
 - <a href="#eventrwflags.hangup" name="eventrwflags.hangup"></a>**`CLOUDABI_EVENT_FD_READWRITE_HANGUP`**
 
-    The peer of this FIFO or socket has closed or
-    disconnected.
+    The peer of this socket has closed or disconnected.
 
 #### <a href="#eventtype" name="eventtype"></a>`cloudabi_eventtype_t` (`uint8_t`)
 
@@ -2192,11 +2181,6 @@ Possible values:
 
     The file descriptor or file refers to a directory
     inode.
-
-- <a href="#filetype.fifo" name="filetype.fifo"></a>**`CLOUDABI_FILETYPE_FIFO`**
-
-    The file descriptor or file refers to a FIFO inode or
-    one of the two endpoints of a pipe.
 
 - <a href="#filetype.poll" name="filetype.poll"></a>**`CLOUDABI_FILETYPE_POLL`**
 
@@ -2610,11 +2594,6 @@ Possible values:
 
     If [`CLOUDABI_RIGHT_FILE_OPEN`](#rights.file_open) is set, the right to invoke
     [`cloudabi_sys_file_open()`](#file_open) with [`CLOUDABI_O_CREAT`](#oflags.creat).
-
-- <a href="#rights.file_create_fifo" name="rights.file_create_fifo"></a>**`CLOUDABI_RIGHT_FILE_CREATE_FIFO`**
-
-    The right to invoke [`cloudabi_sys_file_create()`](#file_create) with
-    [`CLOUDABI_FILETYPE_FIFO`](#filetype.fifo).
 
 - <a href="#rights.file_link_source" name="rights.file_link_source"></a>**`CLOUDABI_RIGHT_FILE_LINK_SOURCE`**
 

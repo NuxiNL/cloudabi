@@ -368,8 +368,7 @@ flags uint16 eventrwflags
 	| [eventtype.fd_read] or [eventtype.fd_write].
 	@cprefix EVENT_FD_READWRITE_
 	0x01 hangup
-		| The peer of this FIFO or socket has closed or
-		| disconnected.
+		| The peer of this socket has closed or disconnected.
 
 enum uint8 eventtype
 	| Type of a subscription to an event or its occurrence.
@@ -483,9 +482,6 @@ enum uint8 filetype
 	0x20 directory
 		| The file descriptor or file refers to a directory
 		| inode.
-	0x30 fifo
-		| The file descriptor or file refers to a FIFO inode or
-		| one of the two endpoints of a pipe.
 	0x40 poll
 		| The file descriptor refers to a polling event queue.
 	0x50 process
@@ -664,9 +660,6 @@ flags uint64 rights
 	0x0000000000000400 file_create_file
 		| If [rights.file_open] is set, the right to invoke
 		| [file_open] with [oflags.creat].
-	0x0000000000000800 file_create_fifo
-		| The right to invoke [file_create] with
-		| [filetype.fifo].
 	0x0000000000001000 file_link_source
 		| The right to invoke [file_link] with the file
 		| descriptor as the source directory.
@@ -1351,8 +1344,6 @@ syscall fd_create2
 	| Creates a pair of file descriptors.
 	in
 		filetype type
-			fifo
-				| Creates a pipe.
 			socket_dgram
 				| Creates a UNIX datagram socket pair.
 			socket_stream
@@ -1360,11 +1351,9 @@ syscall fd_create2
 				| pair.
 	out
 		fd       fd1
-			| The first file descriptor of the pair. For
-			| pipes, this corresponds to the read end.
+			| The first file descriptor of the pair.
 		fd       fd2
-			| The second file descriptor of the pair. For
-			| pipes, this corresponds to the write end.
+			| The second file descriptor of the pair.
 
 syscall fd_datasync
 	| Synchronizes the data of a file to disk.
@@ -1547,8 +1536,6 @@ syscall file_create
 		filetype    type
 			directory
 				| Creates a directory.
-			fifo
-				| Creates a FIFO.
 
 syscall file_link
 	| Creates a hard link.
