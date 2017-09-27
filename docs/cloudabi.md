@@ -1421,11 +1421,6 @@ Members:
 
         A pointer value.
 
-#### <a href="#backlog" name="backlog"></a>`cloudabi_backlog_t` (`uint32_t`)
-
-Number of incoming connections a socket is capable of keeping
-in its backlog.
-
 #### <a href="#ciovec" name="ciovec"></a>`cloudabi_ciovec_t` (`struct`)
 
 A region of memory for scatter/gather writes.

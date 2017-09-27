@@ -59,8 +59,6 @@ typedef uint32_t cloudabi_auxtype_t;
 #define CLOUDABI_AT_SYSINFO_EHDR 262
 #define CLOUDABI_AT_TID          261
 
-typedef uint32_t cloudabi_backlog_t;
-
 typedef uint32_t cloudabi_clockid_t;
 #define CLOUDABI_CLOCK_MONOTONIC          1
 #define CLOUDABI_CLOCK_PROCESS_CPUTIME_ID 2

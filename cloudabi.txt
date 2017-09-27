@@ -161,10 +161,6 @@ enum uint32 auxtype
 	261 tid
 		| Thread ID of the initial thread of the process.
 
-alias uint32 backlog
-	| Number of incoming connections a socket is capable of keeping
-	| in its backlog.
-
 enum uint32 clockid
 	| Identifiers for clocks.
 	@cprefix CLOCK_
