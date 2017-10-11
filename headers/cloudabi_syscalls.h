@@ -248,14 +248,6 @@ static inline cloudabi_errno_t cloudabi_sys_poll(
   return cloudabi_syscalls.poll(in, out, nsubscriptions, nevents);
 }
 
-static inline cloudabi_errno_t cloudabi_sys_poll_fd(
-    cloudabi_fd_t fd, const cloudabi_subscription_t *in, size_t in_len,
-    cloudabi_event_t *out, size_t out_len,
-    const cloudabi_subscription_t *timeout, size_t *nevents) {
-  return cloudabi_syscalls.poll_fd(fd, in, in_len, out, out_len, timeout,
-                                   nevents);
-}
-
 static inline cloudabi_errno_t cloudabi_sys_proc_exec(cloudabi_fd_t fd,
                                                       const void *data,
                                                       size_t data_len,

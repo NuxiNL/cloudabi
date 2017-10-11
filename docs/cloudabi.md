@@ -31,7 +31,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 50 syscalls.
+result is a minimal ABI consisting of only 49 syscalls.
 
 CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
@@ -147,7 +147,6 @@ and documentation (including the one you're reading now) is generated.
 - [`cloudabi_sys_mem_sync()`](#mem_sync)
 - [`cloudabi_sys_mem_unmap()`](#mem_unmap)
 - [`cloudabi_sys_poll()`](#poll)
-- [`cloudabi_sys_poll_fd()`](#poll_fd)
 - [`cloudabi_sys_proc_exec()`](#proc_exec)
 - [`cloudabi_sys_proc_exit()`](#proc_exit)
 - [`cloudabi_sys_proc_fork()`](#proc_fork)
@@ -247,10 +246,6 @@ Inputs:
 - <a href="#fd_create1.type" name="fd_create1.type"></a><code>[cloudabi\_filetype\_t](#filetype) <strong>type</strong></code>
 
     Possible values:
-
-    - [`CLOUDABI_FILETYPE_POLL`](#filetype.poll)
-
-        Creates a polling event queue.
 
     - [`CLOUDABI_FILETYPE_SHARED_MEMORY`](#filetype.shared_memory)
 
@@ -1027,40 +1022,6 @@ Inputs:
 Outputs:
 
 - <a href="#poll.nevents" name="poll.nevents"></a><code>size\_t <strong>nevents</strong></code>
-
-    The number of events stored.
-
-#### <a href="#poll_fd" name="poll_fd"></a>`cloudabi_sys_poll_fd()`
-
-Concurrently polls for the occurrence of a set of events,
-while retaining subscriptions across calls.
-
-Inputs:
-
-- <a href="#poll_fd.fd" name="poll_fd.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
-
-    The polling event queue.
-
-- <a href="#poll_fd.in" name="poll_fd.in"></a><code>const [cloudabi\_subscription\_t](#subscription) *<strong>in</strong></code> and <a href="#poll_fd.in_len" name="poll_fd.in_len"></a><code>size\_t <strong>in\_len</strong></code>
-
-    Changes that need to be made to the polling
-    event queue.
-
-- <a href="#poll_fd.out" name="poll_fd.out"></a><code>[cloudabi\_event\_t](#event) *<strong>out</strong></code> and <a href="#poll_fd.out_len" name="poll_fd.out_len"></a><code>size\_t <strong>out\_len</strong></code>
-
-    The events that have occurred.
-
-- <a href="#poll_fd.timeout" name="poll_fd.timeout"></a><code>const [cloudabi\_subscription\_t](#subscription) *<strong>timeout</strong></code>
-
-    Subscription of type [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock) to
-    serve as a timeout for the system call. The
-    subscription is local to this invocation of
-    this system call and is automatically purged
-    upon completion.
-
-Outputs:
-
-- <a href="#poll_fd.nevents" name="poll_fd.nevents"></a><code>size\_t <strong>nevents</strong></code>
 
     The number of events stored.
 
@@ -1845,7 +1806,7 @@ Possible values:
 
 An event that occurred.
 
-Used by [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd).
+Used by [`cloudabi_sys_poll()`](#poll).
 
 Members:
 
@@ -2176,10 +2137,6 @@ Possible values:
 
     The file descriptor or file refers to a directory
     inode.
-
-- <a href="#filetype.poll" name="filetype.poll"></a>**`CLOUDABI_FILETYPE_POLL`**
-
-    The file descriptor refers to a polling event queue.
 
 - <a href="#filetype.process" name="filetype.process"></a>**`CLOUDABI_FILETYPE_PROCESS`**
 
@@ -2671,27 +2628,15 @@ Possible values:
 - <a href="#rights.poll_fd_readwrite" name="rights.poll_fd_readwrite"></a>**`CLOUDABI_RIGHT_POLL_FD_READWRITE`**
 
     If [`CLOUDABI_RIGHT_FD_READ`](#rights.fd_read) is set, includes the right to
-    invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to subscribe to
-    [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read).
+    invoke [`cloudabi_sys_poll()`](#poll) to subscribe to [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read).
 
     If [`CLOUDABI_RIGHT_FD_WRITE`](#rights.fd_write) is set, includes the right to
-    invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to subscribe to
-    [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
-
-- <a href="#rights.poll_modify" name="rights.poll_modify"></a>**`CLOUDABI_RIGHT_POLL_MODIFY`**
-
-    The right to modify the events a polling event queue
-    is subscribed to.
+    invoke [`cloudabi_sys_poll()`](#poll) to subscribe to [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
 
 - <a href="#rights.poll_proc_terminate" name="rights.poll_proc_terminate"></a>**`CLOUDABI_RIGHT_POLL_PROC_TERMINATE`**
 
-    The right to invoke [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd) to
-    subscribe to [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate).
-
-- <a href="#rights.poll_wait" name="rights.poll_wait"></a>**`CLOUDABI_RIGHT_POLL_WAIT`**
-
-    The right to wait for events on a polling event queue
-    and extract them.
+    The right to invoke [`cloudabi_sys_poll()`](#poll) to subscribe to
+    [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate).
 
 - <a href="#rights.proc_exec" name="rights.proc_exec"></a>**`CLOUDABI_RIGHT_PROC_EXEC`**
 
@@ -2972,43 +2917,6 @@ Possible values:
     [`cloudabi_subscription_t::clock.timeout`](#subscription.clock.timeout) relative to the current
     time value of clock [`cloudabi_subscription_t::clock.clock_id`](#subscription.clock.clock_id).
 
-#### <a href="#subflags" name="subflags"></a>`cloudabi_subflags_t` (`uint16_t` bitfield)
-
-Flags for [`cloudabi_sys_poll_fd()`](#poll_fd) to determine how to process a
-subscription request. These flags are ignored by [`cloudabi_sys_poll()`](#poll).
-
-Used by [`cloudabi_subscription_t`](#subscription).
-
-Possible values:
-
-- <a href="#subflags.add" name="subflags.add"></a>**`CLOUDABI_SUBSCRIPTION_ADD`**
-
-    Adds and enables the subscription. Implies
-    [`CLOUDABI_SUBSCRIPTION_ENABLE`](#subflags.enable), unless [`CLOUDABI_SUBSCRIPTION_DISABLE`](#subflags.disable) is
-    specified.
-
-- <a href="#subflags.clear" name="subflags.clear"></a>**`CLOUDABI_SUBSCRIPTION_CLEAR`**
-
-    Sets the event back to the initial state, so that it
-    no longer triggers.
-
-- <a href="#subflags.delete" name="subflags.delete"></a>**`CLOUDABI_SUBSCRIPTION_DELETE`**
-
-    Deletes the subscription.
-
-- <a href="#subflags.disable" name="subflags.disable"></a>**`CLOUDABI_SUBSCRIPTION_DISABLE`**
-
-    Disables the subscription so that it does not trigger,
-    but does not delete it.
-
-- <a href="#subflags.enable" name="subflags.enable"></a>**`CLOUDABI_SUBSCRIPTION_ENABLE`**
-
-    Enables the subscription so that it can trigger.
-
-- <a href="#subflags.oneshot" name="subflags.oneshot"></a>**`CLOUDABI_SUBSCRIPTION_ONESHOT`**
-
-    Automatically deletes the subscription once triggered.
-
 #### <a href="#subrwflags" name="subrwflags"></a>`cloudabi_subrwflags_t` (`uint16_t` bitfield)
 
 Flags influencing the method of polling for read or writing on
@@ -3028,7 +2936,7 @@ Possible values:
 
 Subscription to an event.
 
-Used by [`cloudabi_sys_poll()`](#poll) and [`cloudabi_sys_poll_fd()`](#poll_fd).
+Used by [`cloudabi_sys_poll()`](#poll).
 
 Members:
 
@@ -3038,10 +2946,9 @@ Members:
     subscription in the kernel and returned through
     [`cloudabi_event_t::userdata`](#event.userdata).
 
-- <a href="#subscription.flags" name="subscription.flags"></a><code>[cloudabi\_subflags\_t](#subflags) <strong>flags</strong></code>
+- <a href="#subscription.unused" name="subscription.unused"></a><code>uint16\_t <strong>unused</strong></code>
 
-    Subscription adjustment flags used by [`cloudabi_sys_poll_fd()`](#poll_fd).
-    Ignored by [`cloudabi_sys_poll()`](#poll).
+    Used by previous implementations. Ignored.
 
 - <a href="#subscription.type" name="subscription.type"></a><code>[cloudabi\_eventtype\_t](#eventtype) <strong>type</strong></code>
 
@@ -3049,10 +2956,10 @@ Members:
 
     Currently, [`CLOUDABI_EVENTTYPE_CONDVAR`](#eventtype.condvar),
     [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock)
-    can only be used with [`cloudabi_sys_poll()`](#poll).  It must be provided as
-    the first subscription and may only be followed by up
-    to one other subscription, having type
-    [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock) with [`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`](#subclockflags.abstime).
+    must be provided as the first subscription and may
+    only be followed by up to one other subscription,
+    having type [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock) with
+    [`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`](#subclockflags.abstime).
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
 

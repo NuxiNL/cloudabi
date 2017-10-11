@@ -119,11 +119,6 @@ typedef struct {
   cloudabi_errno_t (*poll)(const cloudabi_subscription_t *in,
                            cloudabi_event_t *out, size_t nsubscriptions,
                            size_t *nevents);
-  cloudabi_errno_t (*poll_fd)(cloudabi_fd_t fd,
-                              const cloudabi_subscription_t *in, size_t in_len,
-                              cloudabi_event_t *out, size_t out_len,
-                              const cloudabi_subscription_t *timeout,
-                              size_t *nevents);
   cloudabi_errno_t (*proc_exec)(cloudabi_fd_t fd, const void *data,
                                 size_t data_len, const cloudabi_fd_t *fds,
                                 size_t fds_len);

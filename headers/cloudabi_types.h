@@ -185,7 +185,7 @@ _Static_assert(sizeof(void *) != 8 || _Alignof(cloudabi_send_out_t) == 8, "Incor
 
 typedef struct {
   _Alignas(8) cloudabi_userdata_t userdata;
-  _Alignas(2) cloudabi_subflags_t flags;
+  _Alignas(2) uint16_t unused;
   _Alignas(1) cloudabi_eventtype_t type;
   union {
     struct {
@@ -215,7 +215,7 @@ typedef struct {
   };
 } cloudabi_subscription_t;
 _Static_assert(offsetof(cloudabi_subscription_t, userdata) == 0, "Incorrect layout");
-_Static_assert(offsetof(cloudabi_subscription_t, flags) == 8, "Incorrect layout");
+_Static_assert(offsetof(cloudabi_subscription_t, unused) == 8, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_subscription_t, type) == 10, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_subscription_t, clock.identifier) == 16, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_subscription_t, clock.clock_id) == 24, "Incorrect layout");

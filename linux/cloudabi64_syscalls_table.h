@@ -435,22 +435,6 @@ static cloudabi_errno_t do_poll(const void *in, void *out) {
                              &vout->nevents);
 }
 
-static cloudabi_errno_t do_poll_fd(const void *in, void *out) {
-  const struct {
-    MEMBER(cloudabi_fd_t, fd);
-    MEMBER(const cloudabi64_subscription_t __user *, in);
-    MEMBER(size_t, in_len);
-    MEMBER(cloudabi64_event_t __user *, out);
-    MEMBER(size_t, out_len);
-    MEMBER(const cloudabi64_subscription_t __user *, timeout);
-  } *vin = in;
-  struct {
-    MEMBER(size_t, nevents);
-  } *vout = out;
-  return cloudabi64_sys_poll_fd(vin->fd, vin->in, vin->in_len, vin->out,
-                                vin->out_len, vin->timeout, &vout->nevents);
-}
-
 static cloudabi_errno_t do_proc_exec(const void *in, void *out) {
   const struct {
     MEMBER(cloudabi_fd_t, fd);
@@ -547,8 +531,8 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
     do_file_rename,   do_file_stat_fget, do_file_stat_fput, do_file_stat_get,
     do_file_stat_put, do_file_symlink,   do_file_unlink,    do_lock_unlock,
     do_mem_advise,    do_mem_map,        do_mem_protect,    do_mem_sync,
-    do_mem_unmap,     do_poll,           do_poll_fd,        do_proc_exec,
-    do_proc_exit,     do_proc_fork,      do_proc_raise,     do_random_get,
-    do_sock_recv,     do_sock_send,      do_sock_shutdown,  do_thread_create,
-    do_thread_exit,   do_thread_yield,
+    do_mem_unmap,     do_poll,           do_proc_exec,      do_proc_exit,
+    do_proc_fork,     do_proc_raise,     do_random_get,     do_sock_recv,
+    do_sock_send,     do_sock_shutdown,  do_thread_create,  do_thread_exit,
+    do_thread_yield,
 };

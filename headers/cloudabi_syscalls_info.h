@@ -67,7 +67,6 @@
   SYSCALL(mem_sync)                     \
   SYSCALL(mem_unmap)                    \
   SYSCALL(poll)                         \
-  SYSCALL(poll_fd)                      \
   SYSCALL(proc_exec)                    \
   SYSCALL(proc_exit)                    \
   SYSCALL(proc_fork)                    \
@@ -290,15 +289,6 @@
   size_t nsubscriptions,                 \
   size_t *nevents
 
-#define CLOUDABI_SYSCALL_PARAMETERS_poll_fd \
-  cloudabi_fd_t fd,                         \
-  const cloudabi_subscription_t *in,        \
-  size_t in_len,                            \
-  cloudabi_event_t *out,                    \
-  size_t out_len,                           \
-  const cloudabi_subscription_t *timeout,   \
-  size_t *nevents
-
 #define CLOUDABI_SYSCALL_PARAMETERS_proc_exec \
   cloudabi_fd_t fd,                           \
   const void *data,                           \
@@ -458,9 +448,6 @@
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll \
   in, out, nsubscriptions, nevents
 
-#define CLOUDABI_SYSCALL_PARAMETER_NAMES_poll_fd \
-  fd, in, in_len, out, out_len, timeout, nevents
-
 #define CLOUDABI_SYSCALL_PARAMETER_NAMES_proc_exec \
   fd, data, data_len, fds, fds_len
 
@@ -531,7 +518,6 @@
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_sync(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_mem_unmap(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_poll(yes, no) yes
-#define CLOUDABI_SYSCALL_HAS_PARAMETERS_poll_fd(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_proc_exec(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_proc_exit(yes, no) yes
 #define CLOUDABI_SYSCALL_HAS_PARAMETERS_proc_fork(yes, no) yes
@@ -582,7 +568,6 @@
 #define CLOUDABI_SYSCALL_RETURNS_mem_sync(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_mem_unmap(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_poll(yes, no) yes
-#define CLOUDABI_SYSCALL_RETURNS_poll_fd(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_proc_exec(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_proc_exit(yes, no) no
 #define CLOUDABI_SYSCALL_RETURNS_proc_fork(yes, no) yes

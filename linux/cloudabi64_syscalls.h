@@ -52,11 +52,6 @@ cloudabi_errno_t cloudabi64_sys_poll(const cloudabi64_subscription_t __user *in,
                                      cloudabi64_event_t __user *out,
                                      size_t nsubscriptions, size_t *nevents);
 
-cloudabi_errno_t cloudabi64_sys_poll_fd(
-    cloudabi_fd_t fd, const cloudabi64_subscription_t __user *in, size_t in_len,
-    cloudabi64_event_t __user *out, size_t out_len,
-    const cloudabi64_subscription_t __user *timeout, size_t *nevents);
-
 cloudabi_errno_t cloudabi64_sys_sock_recv(cloudabi_fd_t sock,
                                           const cloudabi64_recv_in_t __user *in,
                                           cloudabi64_recv_out_t __user *out);
