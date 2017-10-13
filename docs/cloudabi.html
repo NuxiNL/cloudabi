@@ -2044,11 +2044,13 @@ acquired for writing.</p></li>
 <li><p><a href="#eventtype.fd_read" name="eventtype.fd_read"></a><strong><code>CLOUDABI_EVENTTYPE_FD_READ</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
-data available for reading.</p></li>
+data available for reading. This event always triggers
+for regular files.</p></li>
 <li><p><a href="#eventtype.fd_write" name="eventtype.fd_write"></a><strong><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
-capacity available for writing.</p></li>
+capacity available for writing. This event always
+triggers for regular files.</p></li>
 <li><p><a href="#eventtype.lock_rdlock" name="eventtype.lock_rdlock"></a><strong><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></strong></p>
 
 <p>Lock <a href="#subscription.lock.lock"><code>cloudabi_subscription_t::lock.lock</code></a> has been acquired for
@@ -2986,9 +2988,8 @@ a file descriptor.</p>
 <ul>
 <li><p><a href="#subrwflags.poll" name="subrwflags.poll"></a><strong><code>CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL</code></strong></p>
 
-<p>If set, trigger immediately when polling for reading
-on a regular file, just like the POSIX poll function.
-Otherwise, only trigger when not at the end-of-file.</p></li>
+<p>Deprecated. Must be set by callers and ignored by
+implementations.</p></li>
 </ul>
 
 <h4><a href="#subscription" name="subscription"></a><code>cloudabi_subscription_t</code> (<code>struct</code>)</h4>

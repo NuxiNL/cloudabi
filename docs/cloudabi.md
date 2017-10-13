@@ -1929,12 +1929,14 @@ Possible values:
 - <a href="#eventtype.fd_read" name="eventtype.fd_read"></a>**`CLOUDABI_EVENTTYPE_FD_READ`**
 
     File descriptor [`cloudabi_subscription_t::fd_readwrite.fd`](#subscription.fd_readwrite.fd) has
-    data available for reading.
+    data available for reading. This event always triggers
+    for regular files.
 
 - <a href="#eventtype.fd_write" name="eventtype.fd_write"></a>**`CLOUDABI_EVENTTYPE_FD_WRITE`**
 
     File descriptor [`cloudabi_subscription_t::fd_readwrite.fd`](#subscription.fd_readwrite.fd) has
-    capacity available for writing.
+    capacity available for writing. This event always
+    triggers for regular files.
 
 - <a href="#eventtype.lock_rdlock" name="eventtype.lock_rdlock"></a>**`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`**
 
@@ -2928,9 +2930,8 @@ Possible values:
 
 - <a href="#subrwflags.poll" name="subrwflags.poll"></a>**`CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL`**
 
-    If set, trigger immediately when polling for reading
-    on a regular file, just like the POSIX poll function.
-    Otherwise, only trigger when not at the end-of-file.
+    Deprecated. Must be set by callers and ignored by
+    implementations.
 
 #### <a href="#subscription" name="subscription"></a>`cloudabi_subscription_t` (`struct`)
 
