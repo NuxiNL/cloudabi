@@ -1602,7 +1602,7 @@ zero corresponds with 1970-01-01T00:00:00Z.</p></li>
 
 <p>A userspace condition variable.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>, <a href="#subscription"><code>cloudabi_subscription_t</code></a>, and <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>.</p>
+<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a> and <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>.</p>
 
 <p>Special values:</p>
 
@@ -1925,30 +1925,6 @@ the subscription request.</p></li>
 <li><p><a href="#event.type" name="event.type"></a><code><a href="#eventtype">cloudabi_eventtype_t</a> <strong>type</strong></code></p>
 
 <p>The type of the event that occurred.</p></li>
-<li><p>When <code>type</code> is <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.clock" name="event.clock"></a><strong><code>clock</code></strong></p>
-
-<ul>
-<li><p><a href="#event.clock.identifier" name="event.clock.identifier"></a><code><a href="#userdata">cloudabi_userdata_t</a> <strong>identifier</strong></code></p>
-
-<p>The user-defined unique
-identifier of the clock.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>type</code> is <a href="#eventtype.condvar"><code>CLOUDABI_EVENTTYPE_CONDVAR</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.condvar" name="event.condvar"></a><strong><code>condvar</code></strong></p>
-
-<ul>
-<li><p><a href="#event.condvar.condvar" name="event.condvar.condvar"></a><code>_Atomic(<a href="#condvar">cloudabi_condvar_t</a>) *<strong>condvar</strong></code></p>
-
-<p>The condition variable that
-got woken up.</p></li>
-</ul></li>
-</ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a> or <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
 
 <ul>
@@ -1959,28 +1935,13 @@ got woken up.</p></li>
 
 <p>The number of bytes available
 for reading or writing.</p></li>
-<li><p><a href="#event.fd_readwrite.fd" name="event.fd_readwrite.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
+<li><p><a href="#event.fd_readwrite.unused" name="event.fd_readwrite.unused"></a><code>char <strong>unused</strong>[4]</code></p>
 
-<p>The file descriptor that has
-data available for reading or
-writing.</p></li>
+<p>Obsolete.</p></li>
 <li><p><a href="#event.fd_readwrite.flags" name="event.fd_readwrite.flags"></a><code><a href="#eventrwflags">cloudabi_eventrwflags_t</a> <strong>flags</strong></code></p>
 
 <p>The state of the file
 descriptor.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>type</code> is <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a> or <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.lock" name="event.lock"></a><strong><code>lock</code></strong></p>
-
-<ul>
-<li><p><a href="#event.lock.lock" name="event.lock.lock"></a><code>_Atomic(<a href="#lock">cloudabi_lock_t</a>) *<strong>lock</strong></code></p>
-
-<p>The lock that has been
-acquired for reading or
-writing.</p></li>
 </ul></li>
 </ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.proc_terminate"><code>CLOUDABI_EVENTTYPE_PROC_TERMINATE</code></a>:</p>
@@ -1989,10 +1950,9 @@ writing.</p></li>
 <li><p><a href="#event.proc_terminate" name="event.proc_terminate"></a><strong><code>proc_terminate</code></strong></p>
 
 <ul>
-<li><p><a href="#event.proc_terminate.fd" name="event.proc_terminate.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
+<li><p><a href="#event.proc_terminate.unused" name="event.proc_terminate.unused"></a><code>char <strong>unused</strong>[4]</code></p>
 
-<p>The process descriptor of the
-process that has terminated.</p></li>
+<p>Obsolete.</p></li>
 <li><p><a href="#event.proc_terminate.signal" name="event.proc_terminate.signal"></a><code><a href="#signal">cloudabi_signal_t</a> <strong>signal</strong></code></p>
 
 <p>If zero, the process has
@@ -2328,7 +2288,7 @@ time of clock <a href="#clockid.realtime"><code>CLOUDABI_CLOCK_REALTIME</code></
 <p>A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>, <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
+<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
 
 <p>Special values:</p>
 

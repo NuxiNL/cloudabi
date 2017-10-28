@@ -982,46 +982,27 @@ struct event
 	eventtype type
 		| The type of the event that occurred.
 	variant type
-		clock
-			struct clock
-				userdata identifier
-					| The user-defined unique
-					| identifier of the clock.
-		condvar
-			struct condvar
-				ptr atomic condvar condvar
-					| The condition variable that
-					| got woken up.
 		fd_read fd_write
 			struct fd_readwrite
 				filesize     nbytes
 					| The number of bytes available
 					| for reading or writing.
-				fd           fd
-					| The file descriptor that has
-					| data available for reading or
-					| writing.
+				array 4 char unused
+					| Obsolete.
 				eventrwflags flags
 					| The state of the file
 					| descriptor.
-		lock_rdlock lock_wrlock
-			struct lock
-				ptr atomic lock lock
-					| The lock that has been
-					| acquired for reading or
-					| writing.
 		proc_terminate
 			struct proc_terminate
-				fd       fd
-					| The process descriptor of the
-					| process that has terminated.
-				signal   signal
+				array 4 char unused
+					| Obsolete.
+				signal       signal
 					| If zero, the process has
 					| exited.
 					| Otherwise, the signal
 					| condition causing it to
 					| terminated.
-				exitcode exitcode
+				exitcode     exitcode
 					| If exited, the exit code of
 					| the process.
 

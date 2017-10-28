@@ -1429,7 +1429,7 @@ Possible values:
 
 A userspace condition variable.
 
-Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), and [`cloudabi_sys_condvar_signal()`](#condvar_signal).
+Used by [`cloudabi_subscription_t`](#subscription) and [`cloudabi_sys_condvar_signal()`](#condvar_signal).
 
 Special values:
 
@@ -1824,24 +1824,6 @@ Members:
 
     The type of the event that occurred.
 
-- When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
-
-    - <a href="#event.clock" name="event.clock"></a>**`clock`**
-
-        - <a href="#event.clock.identifier" name="event.clock.identifier"></a><code>[cloudabi\_userdata\_t](#userdata) <strong>identifier</strong></code>
-
-            The user-defined unique
-            identifier of the clock.
-
-- When `type` is [`CLOUDABI_EVENTTYPE_CONDVAR`](#eventtype.condvar):
-
-    - <a href="#event.condvar" name="event.condvar"></a>**`condvar`**
-
-        - <a href="#event.condvar.condvar" name="event.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
-
-            The condition variable that
-            got woken up.
-
 - When `type` is [`CLOUDABI_EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`CLOUDABI_EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
 
     - <a href="#event.fd_readwrite" name="event.fd_readwrite"></a>**`fd_readwrite`**
@@ -1851,35 +1833,22 @@ Members:
             The number of bytes available
             for reading or writing.
 
-        - <a href="#event.fd_readwrite.fd" name="event.fd_readwrite.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a href="#event.fd_readwrite.unused" name="event.fd_readwrite.unused"></a><code>char <strong>unused</strong>[4]</code>
 
-            The file descriptor that has
-            data available for reading or
-            writing.
+            Obsolete.
 
         - <a href="#event.fd_readwrite.flags" name="event.fd_readwrite.flags"></a><code>[cloudabi\_eventrwflags\_t](#eventrwflags) <strong>flags</strong></code>
 
             The state of the file
             descriptor.
 
-- When `type` is [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
-
-    - <a href="#event.lock" name="event.lock"></a>**`lock`**
-
-        - <a href="#event.lock.lock" name="event.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
-
-            The lock that has been
-            acquired for reading or
-            writing.
-
 - When `type` is [`CLOUDABI_EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
 
     - <a href="#event.proc_terminate" name="event.proc_terminate"></a>**`proc_terminate`**
 
-        - <a href="#event.proc_terminate.fd" name="event.proc_terminate.fd"></a><code>[cloudabi\_fd\_t](#fd) <strong>fd</strong></code>
+        - <a href="#event.proc_terminate.unused" name="event.proc_terminate.unused"></a><code>char <strong>unused</strong>[4]</code>
 
-            The process descriptor of the
-            process that has terminated.
+            Obsolete.
 
         - <a href="#event.proc_terminate.signal" name="event.proc_terminate.signal"></a><code>[cloudabi\_signal\_t](#signal) <strong>signal</strong></code>
 
@@ -2229,7 +2198,7 @@ Used by [`cloudabi_filestat_t`](#filestat).
 A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.
 
-Used by [`cloudabi_event_t`](#event), [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_lock_unlock()`](#lock_unlock), and [`cloudabi_sys_thread_exit()`](#thread_exit).
+Used by [`cloudabi_subscription_t`](#subscription), [`cloudabi_sys_lock_unlock()`](#lock_unlock), and [`cloudabi_sys_thread_exit()`](#thread_exit).
 
 Special values:
 

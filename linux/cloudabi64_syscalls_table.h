@@ -425,7 +425,7 @@ static cloudabi_errno_t do_mem_unmap(const void *in, void *out) {
 static cloudabi_errno_t do_poll(const void *in, void *out) {
   const struct {
     MEMBER(const cloudabi64_subscription_t __user *, in);
-    MEMBER(cloudabi64_event_t __user *, out);
+    MEMBER(cloudabi_event_t __user *, out);
     MEMBER(size_t, nsubscriptions);
   } *vin = in;
   struct {

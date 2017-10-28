@@ -49,7 +49,7 @@ cloudabi_errno_t cloudabi64_sys_fd_write(cloudabi_fd_t fd,
                                          size_t iovs_len, size_t *nwritten);
 
 cloudabi_errno_t cloudabi64_sys_poll(const cloudabi64_subscription_t __user *in,
-                                     cloudabi64_event_t __user *out,
+                                     cloudabi_event_t __user *out,
                                      size_t nsubscriptions, size_t *nevents);
 
 cloudabi_errno_t cloudabi64_sys_sock_recv(cloudabi_fd_t sock,
