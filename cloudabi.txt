@@ -160,6 +160,16 @@ enum uint32 auxtype
 		| system calls.
 	261 tid
 		| Thread ID of the initial thread of the process.
+	263 uuid
+		| Universally unique identifier of the process.
+		|
+		| This environment does not provide any simple numerical
+		| process identifiers, for the reason that these are not
+		| useful in distributed contexts. Instead, processes are
+		| identified by a UUID.
+		|
+		| This record should point to sixteen bytes of binary
+		| data, containing a version 4 UUID (fully random).
 
 enum uint32 clockid
 	| Identifiers for clocks.
@@ -942,7 +952,7 @@ struct auxv
 		argdatalen canarylen ncpus pagesz phnum tid
 			size a_val
 				| A numerical value.
-		argdata base canary phdr sysinfo_ehdr
+		argdata base canary phdr sysinfo_ehdr uuid
 			ptr void a_ptr
 				| A pointer value.
 

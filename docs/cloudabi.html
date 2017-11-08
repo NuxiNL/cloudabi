@@ -1515,6 +1515,17 @@ system calls.</p></li>
 <li><p><a href="#auxtype.tid" name="auxtype.tid"></a><strong><code>CLOUDABI_AT_TID</code></strong></p>
 
 <p>Thread ID of the initial thread of the process.</p></li>
+<li><p><a href="#auxtype.uuid" name="auxtype.uuid"></a><strong><code>CLOUDABI_AT_UUID</code></strong></p>
+
+<p>Universally unique identifier of the process.</p>
+
+<p>This environment does not provide any simple numerical
+process identifiers, for the reason that these are not
+useful in distributed contexts. Instead, processes are
+identified by a UUID.</p>
+
+<p>This record should point to sixteen bytes of binary
+data, containing a version 4 UUID (fully random).</p></li>
 </ul>
 
 <h4><a href="#auxv" name="auxv"></a><code>cloudabi_auxv_t</code> (<code>struct</code>)</h4>
@@ -1545,7 +1556,7 @@ this environment on all architectures.</p>
 
 <p>A numerical value.</p></li>
 </ul></li>
-<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.base"><code>CLOUDABI_AT_BASE</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>, or <a href="#auxtype.sysinfo_ehdr"><code>CLOUDABI_AT_SYSINFO_EHDR</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.base"><code>CLOUDABI_AT_BASE</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>, <a href="#auxtype.sysinfo_ehdr"><code>CLOUDABI_AT_SYSINFO_EHDR</code></a>, or <a href="#auxtype.uuid"><code>CLOUDABI_AT_UUID</code></a>:</p>
 
 <ul>
 <li><p><a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code>void *<strong>a_ptr</strong></code></p>
