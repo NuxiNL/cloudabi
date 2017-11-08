@@ -1322,6 +1322,18 @@ Possible values:
 
     Number of ELF program headers of the executable.
 
+- <a href="#auxtype.pid" name="auxtype.pid"></a>**`CLOUDABI_AT_PID`**
+
+    Identifier of the process.
+
+    This environment does not provide any simple numerical
+    process identifiers, for the reason that these are not
+    useful in distributed contexts. Instead, processes are
+    identified by a UUID.
+
+    This record should point to sixteen bytes of binary
+    data, containing a version 4 UUID (fully random).
+
 - <a href="#auxtype.sysinfo_ehdr" name="auxtype.sysinfo_ehdr"></a>**`CLOUDABI_AT_SYSINFO_EHDR`**
 
     Address of the ELF header of the vDSO.
@@ -1348,18 +1360,6 @@ Possible values:
 - <a href="#auxtype.tid" name="auxtype.tid"></a>**`CLOUDABI_AT_TID`**
 
     Thread ID of the initial thread of the process.
-
-- <a href="#auxtype.uuid" name="auxtype.uuid"></a>**`CLOUDABI_AT_UUID`**
-
-    Universally unique identifier of the process.
-
-    This environment does not provide any simple numerical
-    process identifiers, for the reason that these are not
-    useful in distributed contexts. Instead, processes are
-    identified by a UUID.
-
-    This record should point to sixteen bytes of binary
-    data, containing a version 4 UUID (fully random).
 
 #### <a href="#auxv" name="auxv"></a>`cloudabi_auxv_t` (`struct`)
 
@@ -1388,7 +1388,7 @@ Members:
 
         A numerical value.
 
-- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_BASE`](#auxtype.base), [`CLOUDABI_AT_CANARY`](#auxtype.canary), [`CLOUDABI_AT_PHDR`](#auxtype.phdr), [`CLOUDABI_AT_SYSINFO_EHDR`](#auxtype.sysinfo_ehdr), or [`CLOUDABI_AT_UUID`](#auxtype.uuid):
+- When `a_type` is [`CLOUDABI_AT_ARGDATA`](#auxtype.argdata), [`CLOUDABI_AT_BASE`](#auxtype.base), [`CLOUDABI_AT_CANARY`](#auxtype.canary), [`CLOUDABI_AT_PHDR`](#auxtype.phdr), [`CLOUDABI_AT_PID`](#auxtype.pid), or [`CLOUDABI_AT_SYSINFO_EHDR`](#auxtype.sysinfo_ehdr):
 
     - <a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code>void *<strong>a\_ptr</strong></code>
 
