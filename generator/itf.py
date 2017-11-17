@@ -75,9 +75,8 @@ def read_itf(file_name):
             else:
                 while indent != previndent:
                     if not previndent.startswith(indent):
-                        raise Exception(
-                            '%s:%d: Invalid indentation' %
-                            (file_name, line_num))
+                        raise Exception('%s:%d: Invalid indentation' %
+                                        (file_name, line_num))
                     pop_stack()
                     previndent = stack[-1][0]
 

@@ -8,8 +8,13 @@ from .generator import *
 
 
 class CNaming:
-
-    def __init__(self, prefix, md_prefix=None, c11=True, syscall_prefix=None, pointer_prefix='', function_keywords=''):
+    def __init__(self,
+                 prefix,
+                 md_prefix=None,
+                 c11=True,
+                 syscall_prefix=None,
+                 pointer_prefix='',
+                 function_keywords=''):
         self.prefix = prefix
         self.md_prefix = md_prefix
         self.c11 = c11
@@ -31,8 +36,7 @@ class CNaming:
             return '{}{}_t'.format(prefix, type.name)
         elif isinstance(type, AtomicType):
             if self.c11:
-                return '_Atomic({})'.format(
-                    self.typename(type.target_type))
+                return '_Atomic({})'.format(self.typename(type.target_type))
             else:
                 return self.typename(type.target_type)
         elif isinstance(type, PointerType) or isinstance(type, ArrayType):
@@ -56,29 +60,33 @@ class CNaming:
 
     def vardecl(self, type, name, array_need_parens=False):
         if isinstance(type, OutputPointerType):
-            return self.vardecl(type.target_type, '*{}'.format(name),
-                                array_need_parens=True)
+            return self.vardecl(
+                type.target_type, '*{}'.format(name), array_need_parens=True)
         elif isinstance(type, PointerType):
-            decl = self.vardecl(type.target_type,
-                                '{}*{}'.format(self.pointer_prefix, name),
-                                array_need_parens=True)
+            decl = self.vardecl(
+                type.target_type,
+                '{}*{}'.format(self.pointer_prefix, name),
+                array_need_parens=True)
             if type.const:
                 decl = 'const ' + decl
             return decl
         elif isinstance(type, ArrayType):
             if array_need_parens:
                 name = '({})'.format(name)
-            return self.vardecl(
-                type.element_type, '{}[{}]'.format(
-                    name, type.count))
+            return self.vardecl(type.element_type, '{}[{}]'.format(
+                name, type.count))
         else:
             return '{} {}'.format(self.typename(type), name)
 
 
 class CGenerator(Generator):
-
-    def __init__(self, naming, header_guard=None, machine_dep=None,
-                 md_type=None, preamble='', postamble=''):
+    def __init__(self,
+                 naming,
+                 header_guard=None,
+                 machine_dep=None,
+                 md_type=None,
+                 preamble='',
+                 postamble=''):
         super().__init__(comment_prefix='// ')
         self.naming = naming
         self.header_guard = header_guard
@@ -118,13 +126,12 @@ class CGenerator(Generator):
         for p in syscall.input.raw_members:
             params.append(self.naming.vardecl(p.type, p.name))
         for p in syscall.output.raw_members:
-            params.append(self.naming.vardecl(OutputPointerType(p.type),
-                                              p.name))
+            params.append(
+                self.naming.vardecl(OutputPointerType(p.type), p.name))
         return params
 
 
 class CSyscalldefsGenerator(CGenerator):
-
     def generate_struct_members(self, abi, type, indent=''):
         for m in type.raw_members:
             if isinstance(m, SimpleStructMember):
@@ -133,18 +140,18 @@ class CSyscalldefsGenerator(CGenerator):
                     alignas = '_Alignas({}) '.format(mtype.layout.align[0])
                 else:
                     alignas = ''
-                print('{}{}{};'.format(
-                    indent, alignas, self.naming.vardecl(mtype, m.name)))
+                print('{}{}{};'.format(indent, alignas,
+                                       self.naming.vardecl(mtype, m.name)))
             elif isinstance(m, VariantStructMember):
                 print('{}union {{'.format(indent))
                 for x in m.members:
                     if x.name is None:
-                        self.generate_struct_members(
-                            abi, x.type, indent + '  ')
+                        self.generate_struct_members(abi, x.type,
+                                                     indent + '  ')
                     else:
                         print('{}  struct {{'.format(indent))
-                        self.generate_struct_members(
-                            abi, x.type, indent + '    ')
+                        self.generate_struct_members(abi, x.type,
+                                                     indent + '    ')
                         print('{}  }} {};'.format(indent, x.name))
                 print('{}}};'.format(indent))
             else:
@@ -157,18 +164,19 @@ class CSyscalldefsGenerator(CGenerator):
                 return
 
         if isinstance(type, IntLikeType):
-            print('typedef {};'.format(self.naming.vardecl(
-                type.int_type, self.naming.typename(type))))
+            print('typedef {};'.format(
+                self.naming.vardecl(type.int_type,
+                                    self.naming.typename(type))))
             if len(type.values) > 0:
                 width = max(
                     len(self.naming.valname(type, v)) for v in type.values)
-                if (isinstance(type, FlagsType) or
-                        isinstance(type, OpaqueType)):
+                if (isinstance(type, FlagsType)
+                        or isinstance(type, OpaqueType)):
                     if len(type.values) == 1 and type.values[0].value == 0:
                         val_format = 'd'
                     else:
-                        val_format = '#0{}x'.format(
-                            type.layout.size[0] * 2 + 2)
+                        val_format = '#0{}x'.format(type.layout.size[0] * 2 +
+                                                    2)
                 else:
                     val_width = max(len(str(v.value)) for v in type.values)
                     val_format = '{}d'.format(val_width)
@@ -184,13 +192,13 @@ class CSyscalldefsGenerator(CGenerator):
         elif isinstance(type, FunctionType):
             parameters = []
             for p in type.parameters.raw_members:
-                parameters.append(self.naming.vardecl(
-                    self.mi_type(p.type), p.name))
+                parameters.append(
+                    self.naming.vardecl(self.mi_type(p.type), p.name))
             print('typedef {};'.format(
                 self.naming.vardecl(
                     self.mi_type(type.return_type),
-                    '{}({})'.format(self.naming.typename(type),
-                                    ', '.join(parameters)),
+                    '{}({})'.format(
+                        self.naming.typename(type), ', '.join(parameters)),
                     array_need_parens=True)))
 
         elif isinstance(type, StructType):
@@ -209,27 +217,30 @@ class CSyscalldefsGenerator(CGenerator):
 
         print()
 
-    def generate_offset_asserts(
-            self, type_name, members, prefix='', offset=(0, 0)):
+    def generate_offset_asserts(self,
+                                type_name,
+                                members,
+                                prefix='',
+                                offset=(0, 0)):
         for m in members:
             if isinstance(m, VariantMember):
                 mprefix = prefix
                 if m.name is not None:
                     mprefix += m.name + '.'
-                self.generate_offset_asserts(
-                    type_name, m.type.members, mprefix, offset)
+                self.generate_offset_asserts(type_name, m.type.members,
+                                             mprefix, offset)
             elif m.offset is not None:
                 moffset = (offset[0] + m.offset[0], offset[1] + m.offset[1])
                 if isinstance(m, VariantStructMember):
-                    self.generate_offset_asserts(
-                        type_name, m.members, prefix, moffset)
+                    self.generate_offset_asserts(type_name, m.members, prefix,
+                                                 moffset)
                 else:
-                    self.generate_offset_assert(
-                        type_name, prefix + m.name, moffset)
+                    self.generate_offset_assert(type_name, prefix + m.name,
+                                                moffset)
 
     def generate_offset_assert(self, type_name, member_name, offset):
-        self.generate_layout_assert(
-            'offsetof({}, {})'.format(type_name, member_name), offset)
+        self.generate_layout_assert('offsetof({}, {})'.format(
+            type_name, member_name), offset)
 
     def generate_size_assert(self, type_name, size):
         self.generate_layout_assert('sizeof({})'.format(type_name), size)
@@ -239,26 +250,27 @@ class CSyscalldefsGenerator(CGenerator):
 
     def generate_layout_assert(self, expression, value):
         static_assert = '_Static_assert({}, "Incorrect layout");'
-        if value[0] == value[1] or (
-                self.md_type is not None and
-                self.md_type.layout.size in ((4, 4), (8, 8))):
+        if value[0] == value[1] or (self.md_type is not None
+                                    and self.md_type.layout.size in ((4, 4),
+                                                                     (8, 8))):
             v = value[1]
             if self.md_type is not None and self.md_type.layout.size == (4, 4):
                 v = value[0]
             print(static_assert.format('{} == {}'.format(expression, v)))
         else:
             voidptr = self.naming.typename(PointerType())
-            print(static_assert.format('sizeof({}) != 4 || {} == {}'.format(
-                voidptr, expression, value[0])))
-            print(static_assert.format('sizeof({}) != 8 || {} == {}'.format(
-                voidptr, expression, value[1])))
+            print(
+                static_assert.format('sizeof({}) != 4 || {} == {}'.format(
+                    voidptr, expression, value[0])))
+            print(
+                static_assert.format('sizeof({}) != 8 || {} == {}'.format(
+                    voidptr, expression, value[1])))
 
     def generate_syscalls(self, abi, syscalls):
         pass
 
 
 class CSyscallStructGenerator(CGenerator):
-
     def generate_syscalls(self, abi, syscalls):
         print('typedef struct {')
         for s in sorted(abi.syscalls):
@@ -271,8 +283,10 @@ class CSyscallStructGenerator(CGenerator):
             return_type = VoidType()
         else:
             return_type = abi.types['errno']
-        print('  {} (*{})('.format(
-            self.naming.typename(return_type), syscall.name), end='')
+        print(
+            '  {} (*{})('.format(
+                self.naming.typename(return_type), syscall.name),
+            end='')
         params = self.syscall_params(syscall)
         if params == []:
             print('void', end='')
@@ -288,7 +302,6 @@ class CSyscallStructGenerator(CGenerator):
 
 
 class CSyscallsInfoGenerator(CGenerator):
-
     def print_with_line_continuation(self, text):
         lines = str.splitlines(text)
         width = max(len(line) for line in lines)
@@ -300,22 +313,21 @@ class CSyscallsInfoGenerator(CGenerator):
         prefix = self.naming.prefix.upper()
         self.print_with_line_continuation(
             '#define {}SYSCALL_NAMES(SYSCALL)\n'.format(prefix) +
-            '\n'.join('  SYSCALL({})'.format(s) for s in sorted(abi.syscalls))
-        )
+            '\n'.join('  SYSCALL({})'.format(s) for s in sorted(abi.syscalls)))
         print()
         for s in sorted(abi.syscalls):
             params = self.syscall_params(abi.syscalls[s])
             self.print_with_line_continuation(
-                '#define {}SYSCALL_PARAMETERS_{}\n'.format(prefix, s) +
-                ',\n'.join('  {}'.format(p) for p in params)
-            )
+                '#define {}SYSCALL_PARAMETERS_{}\n'.format(
+                    prefix, s) + ',\n'.join('  {}'.format(p) for p in params))
             print()
         for s in sorted(abi.syscalls):
             syscall = abi.syscalls[s]
-            params = (
-                [p.name for p in syscall.input.raw_members] +
-                [p.name for p in syscall.output.raw_members])
-            print('#define {}SYSCALL_PARAMETER_NAMES_{}'.format(prefix, s), end='')
+            params = ([p.name for p in syscall.input.raw_members] +
+                      [p.name for p in syscall.output.raw_members])
+            print(
+                '#define {}SYSCALL_PARAMETER_NAMES_{}'.format(prefix, s),
+                end='')
             if params == []:
                 print()
             else:
@@ -324,13 +336,13 @@ class CSyscallsInfoGenerator(CGenerator):
         for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_HAS_PARAMETERS_{}(yes, no) {}'.format(
                 self.naming.prefix.upper(), s,
-                ('no' if self.syscall_params(abi.syscalls[s]) == []
-                     else 'yes')))
+                ('no'
+                 if self.syscall_params(abi.syscalls[s]) == [] else 'yes')))
         print()
         for s in sorted(abi.syscalls):
             print('#define {}SYSCALL_RETURNS_{}(yes, no) {}'.format(
-                self.naming.prefix.upper(), s,
-                'no' if abi.syscalls[s].noreturn else 'yes'))
+                self.naming.prefix.upper(), s, 'no'
+                if abi.syscalls[s].noreturn else 'yes'))
         print()
 
     def generate_types(self, abi, types):
@@ -338,7 +350,6 @@ class CSyscallsInfoGenerator(CGenerator):
 
 
 class CSyscallsGenerator(CGenerator):
-
     def generate_syscall(self, abi, syscall):
         if self.machine_dep is not None:
             if syscall.machine_dep != self.machine_dep:
@@ -374,7 +385,6 @@ class CSyscallsGenerator(CGenerator):
 
 
 class CSyscallWrappersGenerator(CSyscallsGenerator):
-
     def generate_syscalls(self, abi, syscalls):
         print('extern {prefix}syscalls_t {prefix}syscalls;\n'.format(
             prefix=self.naming.prefix))
@@ -387,8 +397,8 @@ class CSyscallWrappersGenerator(CSyscallsGenerator):
         if not syscall.noreturn:
             print('return ', end='')
 
-        print('{}syscalls.{}('.format(
-            self.naming.prefix, syscall.name), end='')
+        print(
+            '{}syscalls.{}('.format(self.naming.prefix, syscall.name), end='')
 
         params = []
         for p in syscall.input.raw_members:
@@ -407,13 +417,11 @@ class CSyscallWrappersGenerator(CSyscallsGenerator):
 
 
 class CLinuxSyscallsGenerator(CSyscallsGenerator):
-
     def generate_syscall_keywords(self, syscall):
         pass
 
 
 class CLinuxSyscallTableGenerator(CGenerator):
-
     def generate_head(self, abi):
         super().generate_head(abi)
 
@@ -432,7 +440,7 @@ class CLinuxSyscallTableGenerator(CGenerator):
 
     def generate_syscall(self, abi, syscall):
         print('static {} do_{}(const void *in, void *out) {{'.format(
-             self.naming.typename(abi.types['errno']), syscall.name))
+            self.naming.typename(abi.types['errno']), syscall.name))
 
         # Map structures over the system call input and output registers.
         if syscall.input.raw_members:

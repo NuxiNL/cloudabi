@@ -16,7 +16,6 @@ def roundup(a, b):
 
 
 class AsmVdsoGenerator(Generator):
-
     def __init__(self, function_alignment, type_character):
         super().__init__(comment_prefix='// ')
         self._function_alignment = function_alignment
@@ -52,7 +51,6 @@ class AsmVdsoGenerator(Generator):
 
 
 class AsmVdsoCommonGenerator(AsmVdsoGenerator):
-
     def generate_syscall_body(self, number, args_input, args_output, noreturn):
         # Compute the number of registers/stack slots consumed by all of
         # the input and output arguments. We assume that a pointer
@@ -116,8 +114,8 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
 
                     # Copy the value from one or more registers.
                     for j in range(0, self.register_count(member)):
-                        self.print_store_output(member, regs_returns.pop(0),
-                                                reg, j)
+                        self.print_store_output(member,
+                                                regs_returns.pop(0), reg, j)
 
                 self.print_retval_success()
 
@@ -171,8 +169,10 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
     def print_store_output(member, reg_from, reg_to, index):
         assert index == 0
         size = member.type.layout.size[1]
-        print('  str {}{}, [x{}]'.format({4: 'w', 8: 'x'}[size],
-                                         reg_from, reg_to))
+        print('  str {}{}, [x{}]'.format({
+            4: 'w',
+            8: 'x'
+        }[size], reg_from, reg_to))
 
     @staticmethod
     def print_retval_success():
@@ -235,11 +235,11 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
         size = member.type.layout.size[0]
-        print('  strcc {}{}, [r{}{}]'.format(
-            {4: 'r', 8: 'r'}[size],
-            reg_from,
-            reg_to,
-            ', {}'.format(index * 4) if size > 4 else ''))
+        print('  strcc {}{}, [r{}{}]'.format({
+            4: 'r',
+            8: 'r'
+        }[size], reg_from, reg_to, ', {}'.format(index * 4)
+                                             if size > 4 else ''))
 
     @staticmethod
     def print_retval_success():
@@ -283,11 +283,10 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
         size = member.type.layout.size[0]
-        print('  mov {}{}, {}(%e{})'.format(
-            {4: '%e', 8: '%e'}[size],
-            reg_from,
-            index * 4 if size > 4 else '',
-            reg_to))
+        print('  mov {}{}, {}(%e{})'.format({
+            4: '%e',
+            8: '%e'
+        }[size], reg_from, index * 4 if size > 4 else '', reg_to))
 
     @staticmethod
     def print_retval_success():
@@ -300,7 +299,6 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
 
 class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
-
     def __init__(self):
         super().__init__(function_alignment='2, 0x90', type_character='@')
 
@@ -315,8 +313,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
         # Determine the number of 64-bit slots we need to allocate on
         # the stack to be able to store both the input and output
         # arguments.
-        slots_input_padded = sum(howmany(m.type.layout.size[1], 8)
-                                 for m in args_input)
+        slots_input_padded = sum(
+            howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
 
         # Copy original arguments into a properly padded buffer.
@@ -337,8 +335,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
                 print('  movl $0, {}(%ebp)'.format(offset_out + 4))
             offset_in += roundup(member.type.layout.size[0], 4)
             offset_out += roundup(member.type.layout.size[1], 8)
-        assert offset_in == 8 + sum(roundup(m.type.layout.size[0], 4)
-                                    for m in args_input)
+        assert offset_in == 8 + sum(
+            roundup(m.type.layout.size[0], 4) for m in args_input)
         assert offset_out <= 0
 
         # Invoke system call, setting %ecx to the padded buffer.
@@ -354,12 +352,12 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
 
                 # Extract arguments from the padded buffer.
                 offset_in = -8 * slots_stack
-                offset_out = 8 + sum(roundup(m.type.layout.size[0], 4)
-                                     for m in args_input)
+                offset_out = 8 + sum(
+                    roundup(m.type.layout.size[0], 4) for m in args_input)
                 for member in args_output:
                     size = member.type.layout.size[0]
-                    assert (size == member.type.layout.size[1] or
-                            (size == 4 and member.type.layout.size[1] == 8))
+                    assert (size == member.type.layout.size[1]
+                            or (size == 4 and member.type.layout.size[1] == 8))
                     assert size % 4 == 0
                     print('  mov {}(%ebp), %ecx'.format(offset_out))
                     for i in range(0, howmany(size, 4)):
@@ -376,8 +374,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
 
 class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
-    REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'),
-                        ('cx', '10'), ('8', '8'), ('9', '9')]
+    REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'), ('cx', '10'),
+                        ('8', '8'), ('9', '9')]
     REGISTERS_RETURNS = ['ax', 'dx']
     REGISTERS_SPARE = ['cx', 'si', 'di', '8', '9', '10', '11']
 
@@ -423,8 +421,10 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
     def print_store_output(member, reg_from, reg_to, index):
         assert index == 0
         size = member.type.layout.size[1]
-        print('  mov {}{}, (%r{})'.format({4: '%e', 8: '%r'}[size],
-                                          reg_from, reg_to))
+        print('  mov {}{}, (%r{})'.format({
+            4: '%e',
+            8: '%r'
+        }[size], reg_from, reg_to))
 
     @staticmethod
     def print_retval_success():
