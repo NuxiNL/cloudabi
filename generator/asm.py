@@ -269,6 +269,8 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
         # Determine the number of 64-bit slots we need to allocate on
         # the stack to be able to store both the input and output
         # arguments.
+        #
+        # TODO(ed): Unify this with AsmVdsoI686On64bitGenerator.
         slots_input_padded = sum(
             howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
@@ -387,6 +389,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
         # Determine the number of 64-bit slots we need to allocate on
         # the stack to be able to store both the input and output
         # arguments.
+        #
+        # TODO(ed): Unify this with AsmVdsoArmv6On64bitGenerator.
         slots_input_padded = sum(
             howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
