@@ -250,6 +250,80 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
         print('  bx lr')
 
 
+class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
+    def __init__(self):
+        super().__init__(function_alignment='2', type_character='%')
+
+    @staticmethod
+    def load_argument(offset, condition):
+        if offset < 16:
+            return 'r{}'.format(offset // 4)
+        print('  ldr{} r0, [sp, #{}]'.format(condition, offset - 16))
+        return 'r0'
+
+    def generate_syscall_body(self, number, args_input, args_output, noreturn):
+        # When running on 64-bit operating systems, we need to ensure
+        # that the system call arguments are padded to 64 bits words, so
+        # that they are passed in properly to the system call handler.
+        #
+        # Determine the number of 64-bit slots we need to allocate on
+        # the stack to be able to store both the input and output
+        # arguments.
+        slots_input_padded = sum(
+            howmany(m.type.layout.size[1], 8) for m in args_input)
+        slots_stack = max(slots_input_padded, 2)
+
+        # Copy original arguments into a properly padded buffer.
+        offset_in = 0
+        offset_out = -8 * slots_stack
+        for member in args_input:
+            offset_in = roundup(offset_in, member.type.layout.size[0])
+            if member.type.layout.size[0] == member.type.layout.size[1]:
+                # Argument whose size doesn't differ between systems.
+                for i in range(0, howmany(member.type.layout.size[0], 4)):
+                    register = self.load_argument(offset_in + i * 4, '')
+                    print('  str {}, [sp, #{}]'.format(register,
+                                                       offset_out + i * 4))
+            else:
+                # Pointer or size_t. Zero-extend it to 64 bits.
+                assert member.type.layout.size[0] == 4
+                assert member.type.layout.size[1] == 8
+                register = self.load_argument(offset_in, '')
+                print('  str {}, [sp, #{}]'.format(register, offset_out))
+                print('  mov ip, #0')
+                print('  str ip, [sp, #{}]'.format(offset_out + 4))
+            offset_in += roundup(member.type.layout.size[0], 4)
+            offset_out += roundup(member.type.layout.size[1], 8)
+        assert offset_out <= 0
+        offset_out = offset_in
+
+        # Invoke system call.
+        print('  sub sp, #{}'.format(slots_stack * 8))
+        print('  mov ip, #{}'.format(number))
+        print('  swi 0')
+        print('  add sp, #{}'.format(slots_stack * 8))
+
+        if not noreturn:
+            if args_output:
+                # Extract arguments from the padded buffer.
+                offset_in = -8 * slots_stack
+                for member in args_output:
+                    size = member.type.layout.size[0]
+                    assert (size == member.type.layout.size[1]
+                            or (size == 4 and member.type.layout.size[1] == 8))
+                    assert size % 4 == 0
+                    register = self.load_argument(offset_out, 'cc')
+                    for i in range(0, howmany(size, 4)):
+                        print(
+                            '  ldrcc ip, [sp, #{}]'.format(offset_in + i * 4))
+                        print('  strcc ip, [{}, #{}]'.format(register, i * 4))
+                    offset_in += roundup(member.type.layout.size[1], 8)
+                    offset_out += 4
+            print('  movcc r0, #0')
+
+        print('  bx lr')
+
+
 class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
     REGISTERS_PARAMS = []
