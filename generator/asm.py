@@ -303,9 +303,9 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
         print('  sub sp, #{}'.format(slots_stack * 8))
         print('  mov ip, #{}'.format(number))
         print('  swi 0')
-        print('  add sp, #{}'.format(slots_stack * 8))
 
         if not noreturn:
+            print('  add sp, #{}'.format(slots_stack * 8))
             if args_output:
                 # Extract arguments from the padded buffer.
                 offset_in = -8 * slots_stack
@@ -322,8 +322,7 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
                     offset_in += roundup(member.type.layout.size[1], 8)
                     offset_out += 4
             print('  movcc r0, #0')
-
-        print('  bx lr')
+            print('  bx lr')
 
 
 class AsmVdsoI686Generator(AsmVdsoCommonGenerator):

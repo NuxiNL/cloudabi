@@ -725,8 +725,6 @@ ENTRY(cloudabi_sys_proc_exit)
   sub sp, #16
   mov ip, #39
   swi 0
-  add sp, #16
-  bx lr
 END(cloudabi_sys_proc_exit)
 
 ENTRY(cloudabi_sys_proc_fork)
@@ -832,8 +830,6 @@ ENTRY(cloudabi_sys_thread_exit)
   sub sp, #16
   mov ip, #47
   swi 0
-  add sp, #16
-  bx lr
 END(cloudabi_sys_thread_exit)
 
 ENTRY(cloudabi_sys_thread_yield)
