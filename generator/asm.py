@@ -238,12 +238,12 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
         print('  strcc {}{}, [r{}{}]'.format({
             4: 'r',
             8: 'r'
-        }[size], reg_from, reg_to, ', {}'.format(index * 4)
+        }[size], reg_from, reg_to, ', #{}'.format(index * 4)
                                              if size > 4 else ''))
 
     @staticmethod
     def print_retval_success():
-        print('  movcc r0, $0')
+        print('  movcc r0, #0')
 
     @staticmethod
     def print_return():
