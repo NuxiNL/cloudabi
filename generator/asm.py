@@ -275,6 +275,11 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
             howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
 
+	# Zero bytes for padding the original arguments.
+        if any(member.type.layout.size[0] != member.type.layout.size[1]
+               for member in args_input):
+            print('  mov ip, #0')
+
         # Copy original arguments into a properly padded buffer.
         offset_in = 0
         offset_out = -8 * slots_stack
@@ -292,7 +297,6 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
                 assert member.type.layout.size[1] == 8
                 register = self.load_argument(offset_in, '')
                 print('  str {}, [sp, #{}]'.format(register, offset_out))
-                print('  mov ip, #0')
                 print('  str ip, [sp, #{}]'.format(offset_out + 4))
             offset_in += roundup(member.type.layout.size[0], 4)
             offset_out += roundup(member.type.layout.size[1], 8)

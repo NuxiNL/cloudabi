@@ -66,8 +66,8 @@ ENTRY(cloudabi_sys_clock_time_get)
 END(cloudabi_sys_clock_time_get)
 
 ENTRY(cloudabi_sys_condvar_signal)
-  str r0, [sp, #-24]
   mov ip, #0
+  str r0, [sp, #-24]
   str ip, [sp, #-20]
   str r1, [sp, #-16]
   str r2, [sp, #-8]
@@ -138,12 +138,11 @@ ENTRY(cloudabi_sys_fd_dup)
 END(cloudabi_sys_fd_dup)
 
 ENTRY(cloudabi_sys_fd_pread)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r2, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
@@ -161,12 +160,11 @@ ENTRY(cloudabi_sys_fd_pread)
 END(cloudabi_sys_fd_pread)
 
 ENTRY(cloudabi_sys_fd_pwrite)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r2, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
@@ -184,12 +182,11 @@ ENTRY(cloudabi_sys_fd_pwrite)
 END(cloudabi_sys_fd_pwrite)
 
 ENTRY(cloudabi_sys_fd_read)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #24
   mov ip, #10
@@ -232,9 +229,9 @@ ENTRY(cloudabi_sys_fd_seek)
 END(cloudabi_sys_fd_seek)
 
 ENTRY(cloudabi_sys_fd_stat_get)
+  mov ip, #0
   str r0, [sp, #-16]
   str r1, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #16
   mov ip, #13
@@ -245,9 +242,9 @@ ENTRY(cloudabi_sys_fd_stat_get)
 END(cloudabi_sys_fd_stat_get)
 
 ENTRY(cloudabi_sys_fd_stat_put)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
   sub sp, #24
@@ -269,12 +266,11 @@ ENTRY(cloudabi_sys_fd_sync)
 END(cloudabi_sys_fd_sync)
 
 ENTRY(cloudabi_sys_fd_write)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #24
   mov ip, #16
@@ -321,12 +317,11 @@ ENTRY(cloudabi_sys_file_allocate)
 END(cloudabi_sys_file_allocate)
 
 ENTRY(cloudabi_sys_file_create)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r2, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r3, [sp, #-8]
   sub sp, #32
@@ -338,23 +333,20 @@ ENTRY(cloudabi_sys_file_create)
 END(cloudabi_sys_file_create)
 
 ENTRY(cloudabi_sys_file_link)
+  mov ip, #0
   str r0, [sp, #-48]
   str r1, [sp, #-44]
   str r2, [sp, #-40]
-  mov ip, #0
   str ip, [sp, #-36]
   str r3, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   ldr r0, [sp, #0]
   str r0, [sp, #-24]
   ldr r0, [sp, #4]
   str r0, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #8]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #48
   mov ip, #20
@@ -365,19 +357,17 @@ ENTRY(cloudabi_sys_file_link)
 END(cloudabi_sys_file_link)
 
 ENTRY(cloudabi_sys_file_open)
+  mov ip, #0
   str r0, [sp, #-40]
   str r1, [sp, #-36]
   str r2, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r3, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   ldr r0, [sp, #0]
   str r0, [sp, #-16]
   ldr r0, [sp, #4]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #40
   mov ip, #21
@@ -391,12 +381,11 @@ ENTRY(cloudabi_sys_file_open)
 END(cloudabi_sys_file_open)
 
 ENTRY(cloudabi_sys_file_readdir)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r2, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
@@ -414,19 +403,16 @@ ENTRY(cloudabi_sys_file_readdir)
 END(cloudabi_sys_file_readdir)
 
 ENTRY(cloudabi_sys_file_readlink)
+  mov ip, #0
   str r0, [sp, #-40]
   str r1, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r2, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r3, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #40
   mov ip, #23
@@ -440,21 +426,18 @@ ENTRY(cloudabi_sys_file_readlink)
 END(cloudabi_sys_file_readlink)
 
 ENTRY(cloudabi_sys_file_rename)
+  mov ip, #0
   str r0, [sp, #-48]
   str r1, [sp, #-40]
-  mov ip, #0
   str ip, [sp, #-36]
   str r2, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r3, [sp, #-24]
   ldr r0, [sp, #0]
   str r0, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #4]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #48
   mov ip, #24
@@ -465,9 +448,9 @@ ENTRY(cloudabi_sys_file_rename)
 END(cloudabi_sys_file_rename)
 
 ENTRY(cloudabi_sys_file_stat_fget)
+  mov ip, #0
   str r0, [sp, #-16]
   str r1, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #16
   mov ip, #25
@@ -478,9 +461,9 @@ ENTRY(cloudabi_sys_file_stat_fget)
 END(cloudabi_sys_file_stat_fget)
 
 ENTRY(cloudabi_sys_file_stat_fput)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
   sub sp, #24
@@ -492,17 +475,15 @@ ENTRY(cloudabi_sys_file_stat_fput)
 END(cloudabi_sys_file_stat_fput)
 
 ENTRY(cloudabi_sys_file_stat_get)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-28]
   str r2, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r3, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #32
   mov ip, #27
@@ -513,17 +494,15 @@ ENTRY(cloudabi_sys_file_stat_get)
 END(cloudabi_sys_file_stat_get)
 
 ENTRY(cloudabi_sys_file_stat_put)
+  mov ip, #0
   str r0, [sp, #-40]
   str r1, [sp, #-36]
   str r2, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r3, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   ldr r0, [sp, #0]
   str r0, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #4]
   str r0, [sp, #-8]
@@ -536,19 +515,16 @@ ENTRY(cloudabi_sys_file_stat_put)
 END(cloudabi_sys_file_stat_put)
 
 ENTRY(cloudabi_sys_file_symlink)
-  str r0, [sp, #-40]
   mov ip, #0
+  str r0, [sp, #-40]
   str ip, [sp, #-36]
   str r1, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r2, [sp, #-24]
   str r3, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #40
   mov ip, #29
@@ -559,12 +535,11 @@ ENTRY(cloudabi_sys_file_symlink)
 END(cloudabi_sys_file_symlink)
 
 ENTRY(cloudabi_sys_file_unlink)
+  mov ip, #0
   str r0, [sp, #-32]
   str r1, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r2, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r3, [sp, #-8]
   sub sp, #32
@@ -576,8 +551,8 @@ ENTRY(cloudabi_sys_file_unlink)
 END(cloudabi_sys_file_unlink)
 
 ENTRY(cloudabi_sys_lock_unlock)
-  str r0, [sp, #-16]
   mov ip, #0
+  str r0, [sp, #-16]
   str ip, [sp, #-12]
   str r1, [sp, #-8]
   sub sp, #16
@@ -589,11 +564,10 @@ ENTRY(cloudabi_sys_lock_unlock)
 END(cloudabi_sys_lock_unlock)
 
 ENTRY(cloudabi_sys_mem_advise)
-  str r0, [sp, #-24]
   mov ip, #0
+  str r0, [sp, #-24]
   str ip, [sp, #-20]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
   sub sp, #24
@@ -605,11 +579,10 @@ ENTRY(cloudabi_sys_mem_advise)
 END(cloudabi_sys_mem_advise)
 
 ENTRY(cloudabi_sys_mem_map)
-  str r0, [sp, #-48]
   mov ip, #0
+  str r0, [sp, #-48]
   str ip, [sp, #-44]
   str r1, [sp, #-40]
-  mov ip, #0
   str ip, [sp, #-36]
   str r2, [sp, #-32]
   str r3, [sp, #-24]
@@ -631,11 +604,10 @@ ENTRY(cloudabi_sys_mem_map)
 END(cloudabi_sys_mem_map)
 
 ENTRY(cloudabi_sys_mem_protect)
-  str r0, [sp, #-24]
   mov ip, #0
+  str r0, [sp, #-24]
   str ip, [sp, #-20]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
   sub sp, #24
@@ -647,11 +619,10 @@ ENTRY(cloudabi_sys_mem_protect)
 END(cloudabi_sys_mem_protect)
 
 ENTRY(cloudabi_sys_mem_sync)
-  str r0, [sp, #-24]
   mov ip, #0
+  str r0, [sp, #-24]
   str ip, [sp, #-20]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
   sub sp, #24
@@ -663,11 +634,10 @@ ENTRY(cloudabi_sys_mem_sync)
 END(cloudabi_sys_mem_sync)
 
 ENTRY(cloudabi_sys_mem_unmap)
-  str r0, [sp, #-16]
   mov ip, #0
+  str r0, [sp, #-16]
   str ip, [sp, #-12]
   str r1, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #16
   mov ip, #36
@@ -678,14 +648,12 @@ ENTRY(cloudabi_sys_mem_unmap)
 END(cloudabi_sys_mem_unmap)
 
 ENTRY(cloudabi_sys_poll)
-  str r0, [sp, #-24]
   mov ip, #0
+  str r0, [sp, #-24]
   str ip, [sp, #-20]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #24
   mov ip, #37
@@ -698,19 +666,16 @@ ENTRY(cloudabi_sys_poll)
 END(cloudabi_sys_poll)
 
 ENTRY(cloudabi_sys_proc_exec)
+  mov ip, #0
   str r0, [sp, #-40]
   str r1, [sp, #-32]
-  mov ip, #0
   str ip, [sp, #-28]
   str r2, [sp, #-24]
-  mov ip, #0
   str ip, [sp, #-20]
   str r3, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   ldr r0, [sp, #0]
   str r0, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #40
   mov ip, #38
@@ -751,11 +716,10 @@ ENTRY(cloudabi_sys_proc_raise)
 END(cloudabi_sys_proc_raise)
 
 ENTRY(cloudabi_sys_random_get)
-  str r0, [sp, #-16]
   mov ip, #0
+  str r0, [sp, #-16]
   str ip, [sp, #-12]
   str r1, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #16
   mov ip, #42
@@ -766,12 +730,11 @@ ENTRY(cloudabi_sys_random_get)
 END(cloudabi_sys_random_get)
 
 ENTRY(cloudabi_sys_sock_recv)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #24
   mov ip, #43
@@ -782,12 +745,11 @@ ENTRY(cloudabi_sys_sock_recv)
 END(cloudabi_sys_sock_recv)
 
 ENTRY(cloudabi_sys_sock_send)
+  mov ip, #0
   str r0, [sp, #-24]
   str r1, [sp, #-16]
-  mov ip, #0
   str ip, [sp, #-12]
   str r2, [sp, #-8]
-  mov ip, #0
   str ip, [sp, #-4]
   sub sp, #24
   mov ip, #44
@@ -809,8 +771,8 @@ ENTRY(cloudabi_sys_sock_shutdown)
 END(cloudabi_sys_sock_shutdown)
 
 ENTRY(cloudabi_sys_thread_create)
-  str r0, [sp, #-16]
   mov ip, #0
+  str r0, [sp, #-16]
   str ip, [sp, #-12]
   sub sp, #16
   mov ip, #46
@@ -823,8 +785,8 @@ ENTRY(cloudabi_sys_thread_create)
 END(cloudabi_sys_thread_create)
 
 ENTRY(cloudabi_sys_thread_exit)
-  str r0, [sp, #-16]
   mov ip, #0
+  str r0, [sp, #-16]
   str ip, [sp, #-12]
   str r1, [sp, #-8]
   sub sp, #16
