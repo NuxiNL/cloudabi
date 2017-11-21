@@ -255,11 +255,11 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
         super().__init__(function_alignment='2', type_character='%')
 
     @staticmethod
-    def load_argument(offset, condition):
+    def load_argument(offset):
         if offset < 16:
             return 'r{}'.format(offset // 4)
-        print('  ldr{} r0, [sp, #{}]'.format(condition, offset - 16))
-        return 'r0'
+        print('  ldr r1, [sp, #{}]'.format(offset - 16))
+        return 'r1'
 
     def generate_syscall_body(self, number, args_input, args_output, noreturn):
         # When running on 64-bit operating systems, we need to ensure
@@ -275,57 +275,67 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
             howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
 
-	# Zero bytes for padding the original arguments.
-        if any(member.type.layout.size[0] != member.type.layout.size[1]
-               for member in args_input):
-            print('  mov ip, #0')
-
         # Copy original arguments into a properly padded buffer.
         offset_in = 0
         offset_out = -8 * slots_stack
+        r0_is_zero = False
         for member in args_input:
             offset_in = roundup(offset_in, member.type.layout.size[0])
             if member.type.layout.size[0] == member.type.layout.size[1]:
                 # Argument whose size doesn't differ between systems.
                 for i in range(0, howmany(member.type.layout.size[0], 4)):
-                    register = self.load_argument(offset_in + i * 4, '')
+                    register = self.load_argument(offset_in + i * 4)
                     print('  str {}, [sp, #{}]'.format(register,
                                                        offset_out + i * 4))
             else:
                 # Pointer or size_t. Zero-extend it to 64 bits.
                 assert member.type.layout.size[0] == 4
                 assert member.type.layout.size[1] == 8
-                register = self.load_argument(offset_in, '')
+                register = self.load_argument(offset_in)
                 print('  str {}, [sp, #{}]'.format(register, offset_out))
-                print('  str ip, [sp, #{}]'.format(offset_out + 4))
+                if not r0_is_zero:
+                    print('  mov r0, #0')
+                    r0_is_zero = True
+                print('  str r0, [sp, #{}]'.format(offset_out + 4))
             offset_in += roundup(member.type.layout.size[0], 4)
             offset_out += roundup(member.type.layout.size[1], 8)
         assert offset_out <= 0
-        offset_out = offset_in
+
+        # Store addresses of return values on the stack.
+        slots_out = []
+        offset_out = -8 * slots_stack
+        for i in range(0, len(args_output)):
+            reg_from = offset_in // 4 + i
+            if reg_from < 4:
+                # Move the value to a register that is retained.
+                offset_out -= 4
+                print('  str r{}, [sp, #{}]'.format(reg_from, offset_out))
+                slots_out.append(offset_out)
+            else:
+                # Value is stored on the stack. No need to preserve.
+                slots_out.append((reg_from - 4) * 4)
 
         # Invoke system call.
-        print('  sub sp, #{}'.format(slots_stack * 8))
-        print('  mov ip, #{}'.format(number))
+        print('  mov r0, #{}'.format(number))
+        print('  sub r2, sp, #{}'.format(slots_stack * 8))
         print('  swi 0')
 
         if not noreturn:
-            print('  add sp, #{}'.format(slots_stack * 8))
             if args_output:
                 # Extract arguments from the padded buffer.
                 offset_in = -8 * slots_stack
-                for member in args_output:
+                for member, slot in zip(args_output, slots_out):
                     size = member.type.layout.size[0]
                     assert (size == member.type.layout.size[1]
                             or (size == 4 and member.type.layout.size[1] == 8))
                     assert size % 4 == 0
-                    register = self.load_argument(offset_out, 'cc')
+                    print('  ldrcc r1, [sp, #{}]'.format(slot))
                     for i in range(0, howmany(size, 4)):
                         print(
-                            '  ldrcc ip, [sp, #{}]'.format(offset_in + i * 4))
-                        print('  strcc ip, [{}, #{}]'.format(register, i * 4))
+                            '  ldrcc r2, [sp, #{}]'.format(offset_in + i * 4))
+                        print('  strcc r2, [r1, #{}]'.format(i * 4))
                     offset_in += roundup(member.type.layout.size[1], 8)
                     offset_out += 4
-            print('  movcc r0, #0')
             print('  bx lr')
 
 
