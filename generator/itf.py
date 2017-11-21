@@ -1,7 +1,6 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
 # SPDX-License-Identifier: BSD-2-Clause
-# See the LICENSE and CONTRIBUTORS files for details.
 
 # 'Indented Tree Format': An extremely simple text format to describe a tree
 # using indentation. Every non-empty line represents a node, with the

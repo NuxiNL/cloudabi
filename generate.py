@@ -2,7 +2,6 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
 # SPDX-License-Identifier: BSD-2-Clause
-# See the LICENSE and CONTRIBUTORS files for details.
 
 from contextlib import redirect_stdout
 import io
