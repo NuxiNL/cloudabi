@@ -1,27 +1,23 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 from .itf import read_itf
 from .layout import Layout
 
 
 class Type:
-
     def __init__(self, name, layout=None):
         self.name = name
         self.layout = layout
 
 
 class VoidType(Type):
-
     def __init__(self):
         super().__init__('void', layout=Layout(None))
 
 
 class IntType(Type):
-
     def __init__(self, name, size):
         super().__init__(name, layout=Layout(size))
 
@@ -45,7 +41,6 @@ class UserDefinedType(Type):
 
 
 class IntLikeType(UserDefinedType):
-
     def __init__(self, name, int_type, values, cprefix=None):
         super().__init__(name, layout=int_type.layout)
         self.int_type = int_type
@@ -54,7 +49,6 @@ class IntLikeType(UserDefinedType):
 
 
 class SpecialValue:
-
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -85,7 +79,6 @@ int_like_types = {
 
 
 class ArrayType(Type):
-
     def __init__(self, count, element_type):
         super().__init__(None, layout=Layout.array(element_type, count))
         self.count = count
@@ -93,7 +86,6 @@ class ArrayType(Type):
 
 
 class PointerType(Type):
-
     def __init__(self, target_type=VoidType(), const=False):
         super().__init__(None, layout=Layout((4, 8), (4, 8)))
         self.const = const
@@ -105,14 +97,12 @@ class OutputPointerType(PointerType):
 
 
 class AtomicType(Type):
-
     def __init__(self, target_type):
         super().__init__(None, layout=target_type.layout)
         self.target_type = target_type
 
 
 class StructType(UserDefinedType):
-
     def __init__(self, name, members):
         self.members = members
         self.raw_members = []
@@ -126,7 +116,6 @@ class StructType(UserDefinedType):
 
 
 class StructMember:
-
     def __init__(self, name, layout=None):
         self.name = name
         self.layout = layout
@@ -134,29 +123,25 @@ class StructMember:
 
 
 class SimpleStructMember(StructMember):
-
-    def __init__(self, name, type, special_values = None):
+    def __init__(self, name, type, special_values=None):
         super().__init__(name, layout=type.layout)
         self.type = type
         self.special_values = special_values or []
 
 
 class RangeStructMember(StructMember):
-
-    def __init__(self, base_name, length_name, name, const, target_type):
+    def __init__(self, name, const, target_type):
         super().__init__(name, layout=None)
         self.type = type
-        self.base_name = base_name
-        self.length_name = length_name
         self.const = const
         self.target_type = target_type
         self.raw_members = [
-            SimpleStructMember(base_name, PointerType(target_type, const)),
-            SimpleStructMember(length_name, int_types['size'])]
+            SimpleStructMember(name, PointerType(target_type, const)),
+            SimpleStructMember(name + '_len', int_types['size'])
+        ]
 
 
 class VariantStructMember(StructMember):
-
     def __init__(self, tag, members):
         super().__init__(None, layout=Layout.union(members))
         self.tag = tag
@@ -164,7 +149,6 @@ class VariantStructMember(StructMember):
 
 
 class VariantMember:
-
     def __init__(self, name, tag_values, type):
         self.name = name
         self.tag_values = tag_values
@@ -173,10 +157,9 @@ class VariantMember:
 
 
 class FunctionType(UserDefinedType):
-
     def __init__(self, name, parameters, return_type):
-        machine_dep = (parameters.layout.machine_dep or
-                       return_type.layout.machine_dep)
+        machine_dep = (parameters.layout.machine_dep
+                       or return_type.layout.machine_dep)
         super().__init__(name, layout=Layout(None, None, machine_dep))
         self.parameters = parameters
         self.return_type = return_type
@@ -184,7 +167,6 @@ class FunctionType(UserDefinedType):
 
 
 class Syscall:
-
     def __init__(self, name, input, output, noreturn=False):
         self.name = name
         self.input = input
@@ -203,7 +185,6 @@ class Syscall:
 
 
 class Abi:
-
     def __init__(self):
         self.types = {}
         self.syscalls = {}
@@ -259,8 +240,10 @@ def _compute_dependencies(thing):
     deps = set()
 
     members = set(getattr(thing, 'members', []))
-    for attr in ['type', 'target_type', 'element_type',
-                 'parameters', 'return_type', 'input', 'output']:
+    for attr in [
+            'type', 'target_type', 'element_type', 'parameters', 'return_type',
+            'input', 'output'
+    ]:
         m = getattr(thing, attr, None)
         if m is not None:
             members.add(m)

@@ -1,11 +1,9 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 
 class Layout:
-
     def __init__(self, size, align=None, machine_dep=None):
         if align is None:
             align = size
@@ -32,13 +30,12 @@ class Layout:
 
         offset = (0, 0)
         for m in members:
-            m.offset = (_align(offset[0], m.layout.align[0]),
-                        _align(offset[1], m.layout.align[1]))
+            m.offset = (_align(offset[0], m.layout.align[0]), _align(
+                offset[1], m.layout.align[1]))
             offset = (m.offset[0] + m.layout.size[0],
                       m.offset[1] + m.layout.size[1])
 
-        size = (_align(offset[0], align[0]),
-                _align(offset[1], align[1]))
+        size = (_align(offset[0], align[0]), _align(offset[1], align[1]))
 
         machine_dep = any(m.layout.machine_dep for m in members)
 
@@ -52,8 +49,7 @@ class Layout:
         if type.layout is None:
             return None
 
-        size = (type.layout.size[0] * count,
-                type.layout.size[1] * count)
+        size = (type.layout.size[0] * count, type.layout.size[1] * count)
 
         return Layout(size, type.layout.align, type.layout.machine_dep)
 
@@ -76,8 +72,8 @@ class Layout:
         return Layout(size, align, machine_dep)
 
     def fits_in(self, other_layout):
-        return (self.size[0] <= other_layout.size[0] and
-                self.size[1] <= other_layout.size[1])
+        return (self.size[0] <= other_layout.size[0]
+                and self.size[1] <= other_layout.size[1])
 
 
 def _align(size, align):

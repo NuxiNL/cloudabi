@@ -1,14 +1,12 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 from .abi import *
 from .generator import *
 
 
 class SyscallsMasterGenerator(Generator):
-
     def __init__(self, naming):
         super().__init__(comment_prefix='; ')
         self.naming = naming
@@ -38,8 +36,10 @@ class SyscallsMasterGenerator(Generator):
     def generate_syscall(self, abi, syscall):
         line_break = ' \\\n\t\t\t\t\t'
 
-        params = [line_break + self.naming.vardecl(p.type, p.name)
-                  for p in syscall.input.raw_members]
+        params = [
+            line_break + self.naming.vardecl(p.type, p.name)
+            for p in syscall.input.raw_members
+        ]
 
         return_type = VoidType()
         if len(syscall.output.raw_members) == 1:
@@ -49,10 +49,6 @@ class SyscallsMasterGenerator(Generator):
 
         return_type_name = self.naming.typename(return_type)
         print('\n{}\t{}\t{}\t{{ {}{}{}({}); }}'.format(
-            abi.syscall_number(syscall),
-            'AUE_NULL',
-            'STD',
-            return_type_name,
+            abi.syscall_number(syscall), 'AUE_NULL', 'STD', return_type_name,
             ' ' if len(return_type_name) < 16 else line_break,
-            self.naming.syscallname(syscall),
-            ','.join(params)))
+            self.naming.syscallname(syscall), ','.join(params)))

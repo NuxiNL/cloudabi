@@ -140,7 +140,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 <p>CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 58 syscalls.</p>
+result is a minimal ABI consisting of only 49 syscalls.</p>
 
 <p>CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and <a href="https://github.com/NuxiNL/netbsd">a patch-set
@@ -168,15 +168,16 @@ specific purposes.</p>
 <p>In CloudABI, a process depends on its parent process to launch it with
 the right set of resources, since the process will not be able to open
 any new resources. For example, a simple static web server would need
-to be started with an fd to a listening socket, and an fd to the
-directory to serve files out of. The web server will then be unable to
-do anything other than reading files in that directory, and accept
-connections on the given socket.</p>
+to be started with a file descriptor to a <a href="https://github.com/NuxiNL/flower">TCP
+listener</a>, and a file descriptor to
+the directory for which to serve files. The web server will then be
+unable to do anything other than reading files in that directory, and
+process incoming network connections.</p>
 
 <p>So, unknown CloudABI binaries can safely be executed without the need
-for containers, virtual machines, or other sandboxing techonologies.</p>
+for containers, virtual machines, or other sandboxing technologies.</p>
 
-<p>Watch <a href="https://www.youtube.com/watch?v=62cYMmSY2Dc">Ed Schouten's Talk at
+<p>Watch <a href="https://www.youtube.com/watch?v=3N29vrPoDv8">Ed Schouten's Talk at
 32C3</a> for more
 information about what capability-based security for UNIX means.</p>
 
@@ -185,7 +186,7 @@ information about what capability-based security for UNIX means.</p>
 <p><a href="https://github.com/NuxiNL/cloudlibc">Cloudlibc</a> is an implementation
 of the C standard library, without all CloudABI-incompatible
 functions. For example, Cloudlibc does not have <code>printf</code>, but does
-have <code>fprintf</code>.</p>
+have <code>fprintf</code>. It does not have <code>open</code>, but does have <code>openat</code>.</p>
 
 <h2>CloudABI-Ports</h2>
 
@@ -253,27 +254,19 @@ and documentation (including the one you're reading now) is generated.</p>
 <li><a href="#file_unlink"><code>cloudabi_sys_file_unlink()</code></a></li>
 <li><a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a></li>
 <li><a href="#mem_advise"><code>cloudabi_sys_mem_advise()</code></a></li>
-<li><a href="#mem_lock"><code>cloudabi_sys_mem_lock()</code></a></li>
 <li><a href="#mem_map"><code>cloudabi_sys_mem_map()</code></a></li>
 <li><a href="#mem_protect"><code>cloudabi_sys_mem_protect()</code></a></li>
 <li><a href="#mem_sync"><code>cloudabi_sys_mem_sync()</code></a></li>
-<li><a href="#mem_unlock"><code>cloudabi_sys_mem_unlock()</code></a></li>
 <li><a href="#mem_unmap"><code>cloudabi_sys_mem_unmap()</code></a></li>
 <li><a href="#poll"><code>cloudabi_sys_poll()</code></a></li>
-<li><a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a></li>
 <li><a href="#proc_exec"><code>cloudabi_sys_proc_exec()</code></a></li>
 <li><a href="#proc_exit"><code>cloudabi_sys_proc_exit()</code></a></li>
 <li><a href="#proc_fork"><code>cloudabi_sys_proc_fork()</code></a></li>
 <li><a href="#proc_raise"><code>cloudabi_sys_proc_raise()</code></a></li>
 <li><a href="#random_get"><code>cloudabi_sys_random_get()</code></a></li>
-<li><a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a></li>
-<li><a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a></li>
-<li><a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a></li>
-<li><a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a></li>
 <li><a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a></li>
 <li><a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a></li>
 <li><a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a></li>
-<li><a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a></li>
 <li><a href="#thread_create"><code>cloudabi_sys_thread_create()</code></a></li>
 <li><a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a></li>
 <li><a href="#thread_yield"><code>cloudabi_sys_thread_yield()</code></a></li>
@@ -378,23 +371,10 @@ threads, all threads are woken up.</p></li>
 <p>Possible values:</p>
 
 <ul>
-<li><p><a href="#filetype.poll"><code>CLOUDABI_FILETYPE_POLL</code></a></p>
-
-<p>Creates a polling event queue.</p></li>
 <li><p><a href="#filetype.shared_memory"><code>CLOUDABI_FILETYPE_SHARED_MEMORY</code></a></p>
 
 <p>Creates an anonymous shared memory
 object.</p></li>
-<li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
-
-<p>Creates a UNIX datagram socket.</p></li>
-<li><p><a href="#filetype.socket_seqpacket"><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></a></p>
-
-<p>Creates a UNIX sequenced-packet
-socket.</p></li>
-<li><p><a href="#filetype.socket_stream"><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></a></p>
-
-<p>Creates a UNIX byte-stream socket.</p></li>
 </ul></li>
 </ul>
 
@@ -418,16 +398,9 @@ socket.</p></li>
 <p>Possible values:</p>
 
 <ul>
-<li><p><a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a></p>
-
-<p>Creates a pipe.</p></li>
 <li><p><a href="#filetype.socket_dgram"><code>CLOUDABI_FILETYPE_SOCKET_DGRAM</code></a></p>
 
 <p>Creates a UNIX datagram socket pair.</p></li>
-<li><p><a href="#filetype.socket_seqpacket"><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></a></p>
-
-<p>Creates a UNIX sequenced-packet socket
-pair.</p></li>
 <li><p><a href="#filetype.socket_stream"><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></a></p>
 
 <p>Creates a UNIX byte-stream socket
@@ -440,12 +413,10 @@ pair.</p></li>
 <ul>
 <li><p><a href="#fd_create2.fd1" name="fd_create2.fd1"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd1</strong></code></p>
 
-<p>The first file descriptor of the pair. For
-pipes, this corresponds to the read end.</p></li>
+<p>The first file descriptor of the pair.</p></li>
 <li><p><a href="#fd_create2.fd2" name="fd_create2.fd2"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd2</strong></code></p>
 
-<p>The second file descriptor of the pair. For
-pipes, this corresponds to the write end.</p></li>
+<p>The second file descriptor of the pair.</p></li>
 </ul>
 
 <h4><a href="#fd_datasync" name="fd_datasync"></a><code>cloudabi_sys_fd_datasync()</code></h4>
@@ -494,7 +465,7 @@ file descriptor's offset.</p>
 
 <p>The file descriptor from which data should be
 read.</p></li>
-<li><p><a href="#fd_pread.iov" name="fd_pread.iov"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iov</strong></code> and <a href="#fd_pread.iovcnt" name="fd_pread.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_pread.iovs" name="fd_pread.iovs"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_pread.iovs_len" name="fd_pread.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be stored.</p></li>
@@ -524,7 +495,7 @@ file descriptor's offset.</p>
 
 <p>The file descriptor to which data should be
 written.</p></li>
-<li><p><a href="#fd_pwrite.iov" name="fd_pwrite.iov"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iov</strong></code> and <a href="#fd_pwrite.iovcnt" name="fd_pwrite.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_pwrite.iovs" name="fd_pwrite.iovs"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_pwrite.iovs_len" name="fd_pwrite.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be retrieved.</p></li>
@@ -553,7 +524,7 @@ should start.</p></li>
 
 <p>The file descriptor from which data should be
 read.</p></li>
-<li><p><a href="#fd_read.iov" name="fd_read.iov"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iov</strong></code> and <a href="#fd_read.iovcnt" name="fd_read.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_read.iovs" name="fd_read.iovs"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_read.iovs_len" name="fd_read.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be stored.</p></li>
@@ -685,7 +656,7 @@ and metadata needs to be synchronized to disk.</p></li>
 
 <p>The file descriptor to which data should be
 written.</p></li>
-<li><p><a href="#fd_write.iov" name="fd_write.iov"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iov</strong></code> and <a href="#fd_write.iovcnt" name="fd_write.iovcnt"></a><code>size_t <strong>iovcnt</strong></code></p>
+<li><p><a href="#fd_write.iovs" name="fd_write.iovs"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>iovs</strong></code> and <a href="#fd_write.iovs_len" name="fd_write.iovs_len"></a><code>size_t <strong>iovs_len</strong></code></p>
 
 <p>List of scatter/gather vectors where data
 should be retrieved.</p></li>
@@ -754,7 +725,7 @@ start.</p></li>
 
 <p>The working directory at which the resolution
 of the file to be created starts.</p></li>
-<li><p><a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.pathlen" name="file_create.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_create.path" name="file_create.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_create.path_len" name="file_create.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path at which the file should be created.</p></li>
 <li><p><a href="#file_create.type" name="file_create.type"></a><code><a href="#filetype">cloudabi_filetype_t</a> <strong>type</strong></code></p>
@@ -765,9 +736,6 @@ of the file to be created starts.</p></li>
 <li><p><a href="#filetype.directory"><code>CLOUDABI_FILETYPE_DIRECTORY</code></a></p>
 
 <p>Creates a directory.</p></li>
-<li><p><a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a></p>
-
-<p>Creates a FIFO.</p></li>
 </ul></li>
 </ul>
 
@@ -782,7 +750,7 @@ of the file to be created starts.</p></li>
 
 <p>The working directory at which the resolution
 of the source path starts.</p></li>
-<li><p><a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1len" name="file_link.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_link.path1" name="file_link.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_link.path1_len" name="file_link.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The source path of the file that should be
 hard linked.</p></li>
@@ -790,7 +758,7 @@ hard linked.</p></li>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2len" name="file_link.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_link.path2" name="file_link.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_link.path2_len" name="file_link.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path at which the hard link
 should be created.</p></li>
@@ -807,7 +775,7 @@ should be created.</p></li>
 
 <p>The working directory at which the resolution
 of the file to be opened starts.</p></li>
-<li><p><a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.pathlen" name="file_open.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_open.path" name="file_open.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_open.path_len" name="file_open.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file that should be opened.</p></li>
 <li><p><a href="#file_open.oflags" name="file_open.oflags"></a><code><a href="#oflags">cloudabi_oflags_t</a> <strong>oflags</strong></code></p>
@@ -860,7 +828,7 @@ directory entry.</p>
 
 <p>The directory from which to read the directory
 entries.</p></li>
-<li><p><a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.nbyte" name="file_readdir.nbyte"></a><code>size_t <strong>nbyte</strong></code></p>
+<li><p><a href="#file_readdir.buf" name="file_readdir.buf"></a><code>void *<strong>buf</strong></code> and <a href="#file_readdir.buf_len" name="file_readdir.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer where directory entries are stored.</p></li>
 <li><p><a href="#file_readdir.cookie" name="file_readdir.cookie"></a><code><a href="#dircookie">cloudabi_dircookie_t</a> <strong>cookie</strong></code></p>
@@ -890,11 +858,11 @@ end of the directory has been reached.</p></li>
 
 <p>The working directory at which the resolution
 of the path of the symbolic starts.</p></li>
-<li><p><a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.pathlen" name="file_readlink.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_readlink.path" name="file_readlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_readlink.path_len" name="file_readlink.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the symbolic link whose contents
 should be read.</p></li>
-<li><p><a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.bufsize" name="file_readlink.bufsize"></a><code>size_t <strong>bufsize</strong></code></p>
+<li><p><a href="#file_readlink.buf" name="file_readlink.buf"></a><code>char *<strong>buf</strong></code> and <a href="#file_readlink.buf_len" name="file_readlink.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer where the contents of the symbolic
 link should be stored.</p></li>
@@ -919,7 +887,7 @@ link should be stored.</p></li>
 
 <p>The working directory at which the resolution
 of the source path starts.</p></li>
-<li><p><a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1len" name="file_rename.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_rename.path1" name="file_rename.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_rename.path1_len" name="file_rename.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The source path of the file that should be
 renamed.</p></li>
@@ -927,7 +895,7 @@ renamed.</p></li>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2len" name="file_rename.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_rename.path2" name="file_rename.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_rename.path2_len" name="file_rename.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path to which the file should
 be renamed.</p></li>
@@ -983,7 +951,7 @@ be adjusted.</p></li>
 <p>The working directory at which the resolution
 of the path whose attributes have to be
 obtained starts.</p></li>
-<li><p><a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.pathlen" name="file_stat_get.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_stat_get.path" name="file_stat_get.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_get.path_len" name="file_stat_get.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file whose attributes have to
 be obtained.</p></li>
@@ -1005,7 +973,7 @@ stored.</p></li>
 <p>The working directory at which the resolution
 of the path whose attributes have to be
 adjusted starts.</p></li>
-<li><p><a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.pathlen" name="file_stat_put.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_stat_put.path" name="file_stat_put.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_stat_put.path_len" name="file_stat_put.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path of the file whose attributes have to
 be adjusted.</p></li>
@@ -1026,14 +994,14 @@ be adjusted.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1len" name="file_symlink.path1len"></a><code>size_t <strong>path1len</strong></code></p>
+<li><p><a href="#file_symlink.path1" name="file_symlink.path1"></a><code>const char *<strong>path1</strong></code> and <a href="#file_symlink.path1_len" name="file_symlink.path1_len"></a><code>size_t <strong>path1_len</strong></code></p>
 
 <p>The contents of the symbolic link.</p></li>
 <li><p><a href="#file_symlink.fd" name="file_symlink.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
 
 <p>The working directory at which the resolution
 of the destination path starts.</p></li>
-<li><p><a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2len" name="file_symlink.path2len"></a><code>size_t <strong>path2len</strong></code></p>
+<li><p><a href="#file_symlink.path2" name="file_symlink.path2"></a><code>const char *<strong>path2</strong></code> and <a href="#file_symlink.path2_len" name="file_symlink.path2_len"></a><code>size_t <strong>path2_len</strong></code></p>
 
 <p>The destination path at which the symbolic
 link should be created.</p></li>
@@ -1050,7 +1018,7 @@ link should be created.</p></li>
 
 <p>The working directory at which the resolution
 of the path starts.</p></li>
-<li><p><a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.pathlen" name="file_unlink.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
+<li><p><a href="#file_unlink.path" name="file_unlink.path"></a><code>const char *<strong>path</strong></code> and <a href="#file_unlink.path_len" name="file_unlink.path_len"></a><code>size_t <strong>path_len</strong></code></p>
 
 <p>The path that needs to be unlinked or removed.</p></li>
 <li><p><a href="#file_unlink.flags" name="file_unlink.flags"></a><code><a href="#ulflags">cloudabi_ulflags_t</a> <strong>flags</strong></code></p>
@@ -1100,27 +1068,13 @@ shared memory.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_advise.addr" name="mem_advise.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_advise.len" name="mem_advise.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_advise.mapping" name="mem_advise.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_advise.mapping_len" name="mem_advise.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages for which to provide memory advisory
 information.</p></li>
 <li><p><a href="#mem_advise.advice" name="mem_advise.advice"></a><code><a href="#advice">cloudabi_advice_t</a> <strong>advice</strong></code></p>
 
 <p>The advice.</p></li>
-</ul>
-
-<h4><a href="#mem_lock" name="mem_lock"></a><code>cloudabi_sys_mem_lock()</code></h4>
-
-<p>Increments the lock count on a region of memory, which
-prevents it from leaving system memory.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#mem_lock.addr" name="mem_lock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_lock.len" name="mem_lock.len"></a><code>size_t <strong>len</strong></code></p>
-
-<p>The pages that need its lock count
-incremented.</p></li>
 </ul>
 
 <h4><a href="#mem_map" name="mem_map"></a><code>cloudabi_sys_mem_map()</code></h4>
@@ -1177,7 +1131,7 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_protect.addr" name="mem_protect.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_protect.len" name="mem_protect.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_protect.mapping" name="mem_protect.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_protect.mapping_len" name="mem_protect.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need their protection changed.</p></li>
 <li><p><a href="#mem_protect.prot" name="mem_protect.prot"></a><code><a href="#mprot">cloudabi_mprot_t</a> <strong>prot</strong></code></p>
@@ -1192,26 +1146,12 @@ starts.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_sync.addr" name="mem_sync.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_sync.len" name="mem_sync.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_sync.mapping" name="mem_sync.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_sync.mapping_len" name="mem_sync.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that need to be synchronized.</p></li>
 <li><p><a href="#mem_sync.flags" name="mem_sync.flags"></a><code><a href="#msflags">cloudabi_msflags_t</a> <strong>flags</strong></code></p>
 
 <p>The method of synchronization.</p></li>
-</ul>
-
-<h4><a href="#mem_unlock" name="mem_unlock"></a><code>cloudabi_sys_mem_unlock()</code></h4>
-
-<p>Decrements the lock count on a region of memory, which
-prevents it from leaving system memory.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code>const void *<strong>addr</strong></code> and <a href="#mem_unlock.len" name="mem_unlock.len"></a><code>size_t <strong>len</strong></code></p>
-
-<p>The pages that need its lock count
-decremented.</p></li>
 </ul>
 
 <h4><a href="#mem_unmap" name="mem_unmap"></a><code>cloudabi_sys_mem_unmap()</code></h4>
@@ -1221,7 +1161,7 @@ decremented.</p></li>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code>void *<strong>addr</strong></code> and <a href="#mem_unmap.len" name="mem_unmap.len"></a><code>size_t <strong>len</strong></code></p>
+<li><p><a href="#mem_unmap.mapping" name="mem_unmap.mapping"></a><code>void *<strong>mapping</strong></code> and <a href="#mem_unmap.mapping_len" name="mem_unmap.mapping_len"></a><code>size_t <strong>mapping_len</strong></code></p>
 
 <p>The pages that needs to be unmapped.</p></li>
 </ul>
@@ -1252,41 +1192,6 @@ decremented.</p></li>
 <p>The number of events stored.</p></li>
 </ul>
 
-<h4><a href="#poll_fd" name="poll_fd"></a><code>cloudabi_sys_poll_fd()</code></h4>
-
-<p>Concurrently polls for the occurrence of a set of events,
-while retaining subscriptions across calls.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#poll_fd.fd" name="poll_fd.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
-
-<p>The polling event queue.</p></li>
-<li><p><a href="#poll_fd.in" name="poll_fd.in"></a><code>const <a href="#subscription">cloudabi_subscription_t</a> *<strong>in</strong></code> and <a href="#poll_fd.nin" name="poll_fd.nin"></a><code>size_t <strong>nin</strong></code></p>
-
-<p>Changes that need to be made to the polling
-event queue.</p></li>
-<li><p><a href="#poll_fd.out" name="poll_fd.out"></a><code><a href="#event">cloudabi_event_t</a> *<strong>out</strong></code> and <a href="#poll_fd.nout" name="poll_fd.nout"></a><code>size_t <strong>nout</strong></code></p>
-
-<p>The events that have occurred.</p></li>
-<li><p><a href="#poll_fd.timeout" name="poll_fd.timeout"></a><code>const <a href="#subscription">cloudabi_subscription_t</a> *<strong>timeout</strong></code></p>
-
-<p>Subscription of type <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a> to
-serve as a timeout for the system call. The
-subscription is local to this invocation of
-this system call and is automatically purged
-upon completion.</p></li>
-</ul>
-
-<p>Outputs:</p>
-
-<ul>
-<li><p><a href="#poll_fd.nevents" name="poll_fd.nevents"></a><code>size_t <strong>nevents</strong></code></p>
-
-<p>The number of events stored.</p></li>
-</ul>
-
 <h4><a href="#proc_exec" name="proc_exec"></a><code>cloudabi_sys_proc_exec()</code></h4>
 
 <p>Replaces the process by a new executable.</p>
@@ -1294,11 +1199,12 @@ upon completion.</p></li>
 <p>Process execution in CloudABI differs from POSIX in two ways:
 handling of arguments and inheritance of file descriptors.</p>
 
-<p>CloudABI does not use string command line arguments. A buffer
-with binary data is copied into the new executable instead.
-The kernel does not enforce any specific structure to this
-data, although CloudABI's C library uses it to store a tree
-structure that is semantically identical to YAML.</p>
+<p>CloudABI does not use string command line arguments. Instead,
+a buffer with binary data is copied into the address space of
+the new executable. The kernel does not enforce any specific
+structure to this data, although CloudABI's C library uses it
+to store a tree structure that is semantically identical to
+YAML.</p>
 
 <p>Due to the strong focus on thread safety, file descriptors
 aren't inherited through close-on-exec flags. An explicit
@@ -1315,11 +1221,11 @@ original process.</p>
 <li><p><a href="#proc_exec.fd" name="proc_exec.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
 
 <p>A file descriptor of the new executable.</p></li>
-<li><p><a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.datalen" name="proc_exec.datalen"></a><code>size_t <strong>datalen</strong></code></p>
+<li><p><a href="#proc_exec.data" name="proc_exec.data"></a><code>const void *<strong>data</strong></code> and <a href="#proc_exec.data_len" name="proc_exec.data_len"></a><code>size_t <strong>data_len</strong></code></p>
 
 <p>Binary argument data that is passed on to the
 new executable.</p></li>
-<li><p><a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>fds</strong></code> and <a href="#proc_exec.fdslen" name="proc_exec.fdslen"></a><code>size_t <strong>fdslen</strong></code></p>
+<li><p><a href="#proc_exec.fds" name="proc_exec.fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>fds</strong></code> and <a href="#proc_exec.fds_len" name="proc_exec.fds_len"></a><code>size_t <strong>fds_len</strong></code></p>
 
 <p>The layout of the file descriptor table after
 execution.</p></li>
@@ -1348,7 +1254,7 @@ through <a href="#event.proc_terminate.exitcode"><code>cloudabi_event_t::proc_te
 <p>After forking, a new process shall be created, having only a
 copy of the calling thread. The parent process will obtain a
 process descriptor. When closed, the child process is
-automatically signalled with <a href="#signal.kill"><code>CLOUDABI_SIGKILL</code></a>.</p>
+automatically signaled with <a href="#signal.kill"><code>CLOUDABI_SIGKILL</code></a>.</p>
 
 <p>Outputs:</p>
 
@@ -1394,90 +1300,10 @@ as the seed for a userspace pseudo-random number generator.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.nbyte" name="random_get.nbyte"></a><code>size_t <strong>nbyte</strong></code></p>
+<li><p><a href="#random_get.buf" name="random_get.buf"></a><code>void *<strong>buf</strong></code> and <a href="#random_get.buf_len" name="random_get.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The buffer that needs to be filled with random
 data.</p></li>
-</ul>
-
-<h4><a href="#sock_accept" name="sock_accept"></a><code>cloudabi_sys_sock_accept()</code></h4>
-
-<p>Accepts an incoming connection on a listening socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_accept.sock" name="sock_accept.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the listening socket.</p></li>
-<li><p><a href="#sock_accept.buf" name="sock_accept.buf"></a><code><a href="#sockstat">cloudabi_sockstat_t</a> *<strong>buf</strong></code></p>
-
-<p>The attributes of the socket associated with
-the incoming connection.</p></li>
-</ul>
-
-<p>Outputs:</p>
-
-<ul>
-<li><p><a href="#sock_accept.conn" name="sock_accept.conn"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>conn</strong></code></p>
-
-<p>The socket associated with the incoming
-connection.</p></li>
-</ul>
-
-<h4><a href="#sock_bind" name="sock_bind"></a><code>cloudabi_sys_sock_bind()</code></h4>
-
-<p>Binds a UNIX socket to a path.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_bind.sock" name="sock_bind.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the socket to be bound.</p></li>
-<li><p><a href="#sock_bind.fd" name="sock_bind.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
-
-<p>The working directory at which the resolution
-of the path to which to bind starts.</p></li>
-<li><p><a href="#sock_bind.path" name="sock_bind.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_bind.pathlen" name="sock_bind.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
-
-<p>The path to which the socket should bind.</p></li>
-</ul>
-
-<h4><a href="#sock_connect" name="sock_connect"></a><code>cloudabi_sys_sock_connect()</code></h4>
-
-<p>Connects a UNIX socket to another UNIX socket bound at a path.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_connect.sock" name="sock_connect.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The file descriptor of the socket to connect.</p></li>
-<li><p><a href="#sock_connect.fd" name="sock_connect.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
-
-<p>The working directory at which the resolution
-of the path to which to connect starts.</p></li>
-<li><p><a href="#sock_connect.path" name="sock_connect.path"></a><code>const char *<strong>path</strong></code> and <a href="#sock_connect.pathlen" name="sock_connect.pathlen"></a><code>size_t <strong>pathlen</strong></code></p>
-
-<p>The path to which the socket should onnect.</p></li>
-</ul>
-
-<h4><a href="#sock_listen" name="sock_listen"></a><code>cloudabi_sys_sock_listen()</code></h4>
-
-<p>Listens for incoming connections on a socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_listen.sock" name="sock_listen.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The socket on which listening should be
-enabled.</p></li>
-<li><p><a href="#sock_listen.backlog" name="sock_listen.backlog"></a><code><a href="#backlog">cloudabi_backlog_t</a> <strong>backlog</strong></code></p>
-
-<p>Number of incoming connections the socket is
-capable of keeping in its backlog.</p></li>
 </ul>
 
 <h4><a href="#sock_recv" name="sock_recv"></a><code>cloudabi_sys_sock_recv()</code></h4>
@@ -1531,27 +1357,6 @@ received.</p></li>
 
 <p>Which channels on the socket need to be shut
 down.</p></li>
-</ul>
-
-<h4><a href="#sock_stat_get" name="sock_stat_get"></a><code>cloudabi_sys_sock_stat_get()</code></h4>
-
-<p>Gets attributes of a socket.</p>
-
-<p>Inputs:</p>
-
-<ul>
-<li><p><a href="#sock_stat_get.sock" name="sock_stat_get.sock"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>sock</strong></code></p>
-
-<p>The socket whose attributes have to be
-obtained.</p></li>
-<li><p><a href="#sock_stat_get.buf" name="sock_stat_get.buf"></a><code><a href="#sockstat">cloudabi_sockstat_t</a> *<strong>buf</strong></code></p>
-
-<p>The buffer where the socket's attributes are
-stored.</p></li>
-<li><p><a href="#sock_stat_get.flags" name="sock_stat_get.flags"></a><code><a href="#ssflags">cloudabi_ssflags_t</a> <strong>flags</strong></code></p>
-
-<p>Flags indicating how the existing socket
-attributes need to be changed.</p></li>
 </ul>
 
 <h4><a href="#thread_create" name="thread_create"></a><code>cloudabi_sys_thread_create()</code></h4>
@@ -1685,6 +1490,17 @@ executable.</p></li>
 <li><p><a href="#auxtype.phnum" name="auxtype.phnum"></a><strong><code>CLOUDABI_AT_PHNUM</code></strong></p>
 
 <p>Number of ELF program headers of the executable.</p></li>
+<li><p><a href="#auxtype.pid" name="auxtype.pid"></a><strong><code>CLOUDABI_AT_PID</code></strong></p>
+
+<p>Identifier of the process.</p>
+
+<p>This environment does not provide any simple numerical
+process identifiers, for the reason that these are not
+useful in distributed contexts. Instead, processes are
+identified by a UUID.</p>
+
+<p>This record should point to sixteen bytes of binary
+data, containing a version 4 UUID (fully random).</p></li>
 <li><p><a href="#auxtype.sysinfo_ehdr" name="auxtype.sysinfo_ehdr"></a><strong><code>CLOUDABI_AT_SYSINFO_EHDR</code></strong></p>
 
 <p>Address of the ELF header of the vDSO.</p>
@@ -1740,7 +1556,7 @@ this environment on all architectures.</p>
 
 <p>A numerical value.</p></li>
 </ul></li>
-<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.base"><code>CLOUDABI_AT_BASE</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>, or <a href="#auxtype.sysinfo_ehdr"><code>CLOUDABI_AT_SYSINFO_EHDR</code></a>:</p>
+<li><p>When <code>a_type</code> is <a href="#auxtype.argdata"><code>CLOUDABI_AT_ARGDATA</code></a>, <a href="#auxtype.base"><code>CLOUDABI_AT_BASE</code></a>, <a href="#auxtype.canary"><code>CLOUDABI_AT_CANARY</code></a>, <a href="#auxtype.phdr"><code>CLOUDABI_AT_PHDR</code></a>, <a href="#auxtype.pid"><code>CLOUDABI_AT_PID</code></a>, or <a href="#auxtype.sysinfo_ehdr"><code>CLOUDABI_AT_SYSINFO_EHDR</code></a>:</p>
 
 <ul>
 <li><p><a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code>void *<strong>a_ptr</strong></code></p>
@@ -1748,13 +1564,6 @@ this environment on all architectures.</p>
 <p>A pointer value.</p></li>
 </ul></li>
 </ul>
-
-<h4><a href="#backlog" name="backlog"></a><code>cloudabi_backlog_t</code> (<code>uint32_t</code>)</h4>
-
-<p>Number of incoming connections a socket is capable of keeping
-in its backlog.</p>
-
-<p>Used by <a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a>.</p>
 
 <h4><a href="#ciovec" name="ciovec"></a><code>cloudabi_ciovec_t</code> (<code>struct</code>)</h4>
 
@@ -1765,7 +1574,7 @@ in its backlog.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#ciovec.iov_base" name="ciovec.iov_base"></a><code>const void *<strong>iov_base</strong></code> and <a href="#ciovec.iov_len" name="ciovec.iov_len"></a><code>size_t <strong>iov_len</strong></code></p>
+<li><p><a href="#ciovec.buf" name="ciovec.buf"></a><code>const void *<strong>buf</strong></code> and <a href="#ciovec.buf_len" name="ciovec.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The address and length of the buffer to be written.</p></li>
 </ul>
@@ -1804,7 +1613,7 @@ zero corresponds with 1970-01-01T00:00:00Z.</p></li>
 
 <p>A userspace condition variable.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>, <a href="#subscription"><code>cloudabi_subscription_t</code></a>, and <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>.</p>
+<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a> and <a href="#condvar_signal"><code>cloudabi_sys_condvar_signal()</code></a>.</p>
 
 <p>Special values:</p>
 
@@ -1872,7 +1681,7 @@ entry.</p></li>
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a> and <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
+<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>.</p>
 
 <p>Possible values:</p>
 
@@ -2111,7 +1920,7 @@ exclusively or merely provided for alignment with POSIX.</p>
 
 <p>An event that occurred.</p>
 
-<p>Used by <a href="#poll"><code>cloudabi_sys_poll()</code></a> and <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a>.</p>
+<p>Used by <a href="#poll"><code>cloudabi_sys_poll()</code></a>.</p>
 
 <p>Members:</p>
 
@@ -2127,30 +1936,6 @@ the subscription request.</p></li>
 <li><p><a href="#event.type" name="event.type"></a><code><a href="#eventtype">cloudabi_eventtype_t</a> <strong>type</strong></code></p>
 
 <p>The type of the event that occurred.</p></li>
-<li><p>When <code>type</code> is <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.clock" name="event.clock"></a><strong><code>clock</code></strong></p>
-
-<ul>
-<li><p><a href="#event.clock.identifier" name="event.clock.identifier"></a><code><a href="#userdata">cloudabi_userdata_t</a> <strong>identifier</strong></code></p>
-
-<p>The user-defined unique
-identifier of the clock.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>type</code> is <a href="#eventtype.condvar"><code>CLOUDABI_EVENTTYPE_CONDVAR</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.condvar" name="event.condvar"></a><strong><code>condvar</code></strong></p>
-
-<ul>
-<li><p><a href="#event.condvar.condvar" name="event.condvar.condvar"></a><code>_Atomic(<a href="#condvar">cloudabi_condvar_t</a>) *<strong>condvar</strong></code></p>
-
-<p>The condition variable that
-got woken up.</p></li>
-</ul></li>
-</ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a> or <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>:</p>
 
 <ul>
@@ -2161,28 +1946,13 @@ got woken up.</p></li>
 
 <p>The number of bytes available
 for reading or writing.</p></li>
-<li><p><a href="#event.fd_readwrite.fd" name="event.fd_readwrite.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
+<li><p><a href="#event.fd_readwrite.unused" name="event.fd_readwrite.unused"></a><code>char <strong>unused</strong>[4]</code></p>
 
-<p>The file descriptor that has
-data available for reading or
-writing.</p></li>
+<p>Obsolete.</p></li>
 <li><p><a href="#event.fd_readwrite.flags" name="event.fd_readwrite.flags"></a><code><a href="#eventrwflags">cloudabi_eventrwflags_t</a> <strong>flags</strong></code></p>
 
 <p>The state of the file
 descriptor.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>type</code> is <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a> or <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>:</p>
-
-<ul>
-<li><p><a href="#event.lock" name="event.lock"></a><strong><code>lock</code></strong></p>
-
-<ul>
-<li><p><a href="#event.lock.lock" name="event.lock.lock"></a><code>_Atomic(<a href="#lock">cloudabi_lock_t</a>) *<strong>lock</strong></code></p>
-
-<p>The lock that has been
-acquired for reading or
-writing.</p></li>
 </ul></li>
 </ul></li>
 <li><p>When <code>type</code> is <a href="#eventtype.proc_terminate"><code>CLOUDABI_EVENTTYPE_PROC_TERMINATE</code></a>:</p>
@@ -2191,10 +1961,9 @@ writing.</p></li>
 <li><p><a href="#event.proc_terminate" name="event.proc_terminate"></a><strong><code>proc_terminate</code></strong></p>
 
 <ul>
-<li><p><a href="#event.proc_terminate.fd" name="event.proc_terminate.fd"></a><code><a href="#fd">cloudabi_fd_t</a> <strong>fd</strong></code></p>
+<li><p><a href="#event.proc_terminate.unused" name="event.proc_terminate.unused"></a><code>char <strong>unused</strong>[4]</code></p>
 
-<p>The process descriptor of the
-process that has terminated.</p></li>
+<p>Obsolete.</p></li>
 <li><p><a href="#event.proc_terminate.signal" name="event.proc_terminate.signal"></a><code><a href="#signal">cloudabi_signal_t</a> <strong>signal</strong></code></p>
 
 <p>If zero, the process has
@@ -2222,13 +1991,12 @@ the process.</p></li>
 <ul>
 <li><p><a href="#eventrwflags.hangup" name="eventrwflags.hangup"></a><strong><code>CLOUDABI_EVENT_FD_READWRITE_HANGUP</code></strong></p>
 
-<p>The peer of this FIFO or socket has closed or
-disconnected.</p></li>
+<p>The peer of this socket has closed or disconnected.</p></li>
 </ul>
 
 <h4><a href="#eventtype" name="eventtype"></a><code>cloudabi_eventtype_t</code> (<code>uint8_t</code>)</h4>
 
-<p>Type of a subscription to an event or its occurence.</p>
+<p>Type of a subscription to an event or its occurrence.</p>
 
 <p>Used by <a href="#event"><code>cloudabi_event_t</code></a> and <a href="#subscription"><code>cloudabi_subscription_t</code></a>.</p>
 
@@ -2243,15 +2011,17 @@ has reached timestamp <a href="#subscription.clock.timeout"><code>cloudabi_subsc
 
 <p>Condition variable <a href="#subscription.condvar.condvar"><code>cloudabi_subscription_t::condvar.condvar</code></a> has
 been woken up and <a href="#subscription.condvar.lock"><code>cloudabi_subscription_t::condvar.lock</code></a> has been
-aqcuired for writing.</p></li>
+acquired for writing.</p></li>
 <li><p><a href="#eventtype.fd_read" name="eventtype.fd_read"></a><strong><code>CLOUDABI_EVENTTYPE_FD_READ</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
-data available for reading.</p></li>
+data available for reading. This event always triggers
+for regular files.</p></li>
 <li><p><a href="#eventtype.fd_write" name="eventtype.fd_write"></a><strong><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></strong></p>
 
 <p>File descriptor <a href="#subscription.fd_readwrite.fd"><code>cloudabi_subscription_t::fd_readwrite.fd</code></a> has
-capacity available for writing.</p></li>
+capacity available for writing. This event always
+triggers for regular files.</p></li>
 <li><p><a href="#eventtype.lock_rdlock" name="eventtype.lock_rdlock"></a><strong><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></strong></p>
 
 <p>Lock <a href="#subscription.lock.lock"><code>cloudabi_subscription_t::lock.lock</code></a> has been acquired for
@@ -2444,13 +2214,6 @@ device inode.</p></li>
 
 <p>The file descriptor or file refers to a directory
 inode.</p></li>
-<li><p><a href="#filetype.fifo" name="filetype.fifo"></a><strong><code>CLOUDABI_FILETYPE_FIFO</code></strong></p>
-
-<p>The file descriptor or file refers to a FIFO inode or
-one of the two endpoints of a pipe.</p></li>
-<li><p><a href="#filetype.poll" name="filetype.poll"></a><strong><code>CLOUDABI_FILETYPE_POLL</code></strong></p>
-
-<p>The file descriptor refers to a polling event queue.</p></li>
 <li><p><a href="#filetype.process" name="filetype.process"></a><strong><code>CLOUDABI_FILETYPE_PROCESS</code></strong></p>
 
 <p>The file descriptor refers to a process handle.</p></li>
@@ -2465,10 +2228,6 @@ inode.</p></li>
 
 <p>The file descriptor or file refers to a datagram
 socket.</p></li>
-<li><p><a href="#filetype.socket_seqpacket" name="filetype.socket_seqpacket"></a><strong><code>CLOUDABI_FILETYPE_SOCKET_SEQPACKET</code></strong></p>
-
-<p>The file descriptor or file refers to a
-sequenced-packet socket.</p></li>
 <li><p><a href="#filetype.socket_stream" name="filetype.socket_stream"></a><strong><code>CLOUDABI_FILETYPE_SOCKET_STREAM</code></strong></p>
 
 <p>The file descriptor or file refers to a byte-stream
@@ -2524,7 +2283,7 @@ time of clock <a href="#clockid.realtime"><code>CLOUDABI_CLOCK_REALTIME</code></
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#iovec.iov_base" name="iovec.iov_base"></a><code>void *<strong>iov_base</strong></code> and <a href="#iovec.iov_len" name="iovec.iov_len"></a><code>size_t <strong>iov_len</strong></code></p>
+<li><p><a href="#iovec.buf" name="iovec.buf"></a><code>void *<strong>buf</strong></code> and <a href="#iovec.buf_len" name="iovec.buf_len"></a><code>size_t <strong>buf_len</strong></code></p>
 
 <p>The address and length of the buffer to be filled.</p></li>
 </ul>
@@ -2540,7 +2299,7 @@ time of clock <a href="#clockid.realtime"><code>CLOUDABI_CLOCK_REALTIME</code></
 <p>A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.</p>
 
-<p>Used by <a href="#event"><code>cloudabi_event_t</code></a>, <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
+<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a>, <a href="#lock_unlock"><code>cloudabi_sys_lock_unlock()</code></a>, and <a href="#thread_exit"><code>cloudabi_sys_thread_exit()</code></a>.</p>
 
 <p>Special values:</p>
 
@@ -2682,39 +2441,6 @@ mapped for execution while also mapped for writing.</p>
 <p>Perform synchronous writes.</p></li>
 </ul>
 
-<h4><a href="#msgflags" name="msgflags"></a><code>cloudabi_msgflags_t</code> (<code>uint16_t</code> bitfield)</h4>
-
-<p>Flags provided to and returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a> and <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>.</p>
-
-<p>Used by <a href="#recv_in"><code>cloudabi_recv_in_t</code></a>, <a href="#recv_out"><code>cloudabi_recv_out_t</code></a>, and <a href="#send_in"><code>cloudabi_send_in_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#msgflags.ctrunc" name="msgflags.ctrunc"></a><strong><code>CLOUDABI_MSG_CTRUNC</code></strong></p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: File descriptors truncated.</p></li>
-<li><p><a href="#msgflags.eor" name="msgflags.eor"></a><strong><code>CLOUDABI_MSG_EOR</code></strong></p>
-
-<p>Provided to <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>: Terminates a record (if
-supported by the protocol).</p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: End-of-record was received
-(if supported by the protocol).</p></li>
-<li><p><a href="#msgflags.peek" name="msgflags.peek"></a><strong><code>CLOUDABI_MSG_PEEK</code></strong></p>
-
-<p>Provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Returns the message without
-removing it from the socket's receive queue.</p></li>
-<li><p><a href="#msgflags.trunc" name="msgflags.trunc"></a><strong><code>CLOUDABI_MSG_TRUNC</code></strong></p>
-
-<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Message data has been
-truncated.</p></li>
-<li><p><a href="#msgflags.waitall" name="msgflags.waitall"></a><strong><code>CLOUDABI_MSG_WAITALL</code></strong></p>
-
-<p>Provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: On byte-stream sockets, block
-until the full amount of data can be returned.</p></li>
-</ul>
-
 <h4><a href="#nthreads" name="nthreads"></a><code>cloudabi_nthreads_t</code> (<code>uint32_t</code>)</h4>
 
 <p>Specifies the number of threads sleeping on a condition
@@ -2762,18 +2488,17 @@ variable that should be woken up.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>ri_data</strong></code> and <a href="#recv_in.ri_datalen" name="recv_in.ri_datalen"></a><code>size_t <strong>ri_datalen</strong></code></p>
+<li><p><a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code>const <a href="#iovec">cloudabi_iovec_t</a> *<strong>ri_data</strong></code> and <a href="#recv_in.ri_data_len" name="recv_in.ri_data_len"></a><code>size_t <strong>ri_data_len</strong></code></p>
 
 <p>List of scatter/gather vectors where message data
 should be stored.</p></li>
-<li><p><a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><a href="#fd">cloudabi_fd_t</a> *<strong>ri_fds</strong></code> and <a href="#recv_in.ri_fdslen" name="recv_in.ri_fdslen"></a><code>size_t <strong>ri_fdslen</strong></code></p>
+<li><p><a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><a href="#fd">cloudabi_fd_t</a> *<strong>ri_fds</strong></code> and <a href="#recv_in.ri_fds_len" name="recv_in.ri_fds_len"></a><code>size_t <strong>ri_fds_len</strong></code></p>
 
 <p>Buffer where numbers of incoming file descriptors
 should be stored.</p></li>
-<li><p><a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>ri_flags</strong></code></p>
+<li><p><a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><a href="#riflags">cloudabi_riflags_t</a> <strong>ri_flags</strong></code></p>
 
-<p>Message flags. Only <a href="#msgflags.peek"><code>CLOUDABI_MSG_PEEK</code></a> and
-<a href="#msgflags.waitall"><code>CLOUDABI_MSG_WAITALL</code></a> are valid.</p></li>
+<p>Message flags.</p></li>
 </ul>
 
 <h4><a href="#recv_out" name="recv_out"></a><code>cloudabi_recv_out_t</code> (<code>struct</code>)</h4>
@@ -2789,16 +2514,31 @@ should be stored.</p></li>
 <li><p><a href="#recv_out.ro_fdslen" name="recv_out.ro_fdslen"></a><code>size_t <strong>ro_fdslen</strong></code></p>
 
 <p>Number of file descriptors stored in <a href="#recv_in.ri_fds"><code>cloudabi_recv_in_t::ri_fds</code></a>.</p></li>
-<li><p><a href="#recv_out.ro_sockname" name="recv_out.ro_sockname"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ro_sockname</strong></code></p>
+<li><p><a href="#recv_out.ro_unused" name="recv_out.ro_unused"></a><code>char <strong>ro_unused</strong>[40]</code></p>
 
-<p>Address on which the message was received.</p></li>
-<li><p><a href="#recv_out.ro_peername" name="recv_out.ro_peername"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ro_peername</strong></code></p>
+<p>Fields that were used by previous implementations.</p></li>
+<li><p><a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><a href="#roflags">cloudabi_roflags_t</a> <strong>ro_flags</strong></code></p>
 
-<p>Address of the peer sending the message.</p></li>
-<li><p><a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>ro_flags</strong></code></p>
+<p>Message flags.</p></li>
+</ul>
 
-<p>Message flags. Only <a href="#msgflags.ctrunc"><code>CLOUDABI_MSG_CTRUNC</code></a>, <a href="#msgflags.eor"><code>CLOUDABI_MSG_EOR</code></a>,
-and <a href="#msgflags.trunc"><code>CLOUDABI_MSG_TRUNC</code></a> are valid.</p></li>
+<h4><a href="#riflags" name="riflags"></a><code>cloudabi_riflags_t</code> (<code>uint16_t</code> bitfield)</h4>
+
+<p>Flags provided to <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>.</p>
+
+<p>Used by <a href="#recv_in"><code>cloudabi_recv_in_t</code></a>.</p>
+
+<p>Possible values:</p>
+
+<ul>
+<li><p><a href="#riflags.peek" name="riflags.peek"></a><strong><code>CLOUDABI_SOCK_RECV_PEEK</code></strong></p>
+
+<p>Returns the message without removing it from the
+socket's receive queue.</p></li>
+<li><p><a href="#riflags.waitall" name="riflags.waitall"></a><strong><code>CLOUDABI_SOCK_RECV_WAITALL</code></strong></p>
+
+<p>On byte-stream sockets, block until the full amount
+of data can be returned.</p></li>
 </ul>
 
 <h4><a href="#rights" name="rights"></a><code>cloudabi_rights_t</code> (<code>uint64_t</code> bitfield)</h4>
@@ -2871,10 +2611,6 @@ invoke <a href="#fd_pwrite"><code>cloudabi_sys_fd_pwrite()</code></a>.</p></li>
 
 <p>If <a href="#rights.file_open"><code>CLOUDABI_RIGHT_FILE_OPEN</code></a> is set, the right to invoke
 <a href="#file_open"><code>cloudabi_sys_file_open()</code></a> with <a href="#oflags.creat"><code>CLOUDABI_O_CREAT</code></a>.</p></li>
-<li><p><a href="#rights.file_create_fifo" name="rights.file_create_fifo"></a><strong><code>CLOUDABI_RIGHT_FILE_CREATE_FIFO</code></strong></p>
-
-<p>The right to invoke <a href="#file_create"><code>cloudabi_sys_file_create()</code></a> with
-<a href="#filetype.fifo"><code>CLOUDABI_FILETYPE_FIFO</code></a>.</p></li>
 <li><p><a href="#rights.file_link_source" name="rights.file_link_source"></a><strong><code>CLOUDABI_RIGHT_FILE_LINK_SOURCE</code></strong></p>
 
 <p>The right to invoke <a href="#file_link"><code>cloudabi_sys_file_link()</code></a> with the file
@@ -2940,80 +2676,39 @@ zero.</p></li>
 <li><p><a href="#rights.poll_fd_readwrite" name="rights.poll_fd_readwrite"></a><strong><code>CLOUDABI_RIGHT_POLL_FD_READWRITE</code></strong></p>
 
 <p>If <a href="#rights.fd_read"><code>CLOUDABI_RIGHT_FD_READ</code></a> is set, includes the right to
-invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> and <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a> to subscribe to
-<a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a>.</p>
+invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> to subscribe to <a href="#eventtype.fd_read"><code>CLOUDABI_EVENTTYPE_FD_READ</code></a>.</p>
 
 <p>If <a href="#rights.fd_write"><code>CLOUDABI_RIGHT_FD_WRITE</code></a> is set, includes the right to
-invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> and <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a> to subscribe to
-<a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>.</p></li>
-<li><p><a href="#rights.poll_modify" name="rights.poll_modify"></a><strong><code>CLOUDABI_RIGHT_POLL_MODIFY</code></strong></p>
-
-<p>The right to modify the events a polling event queue
-is subscribed to.</p></li>
+invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> to subscribe to <a href="#eventtype.fd_write"><code>CLOUDABI_EVENTTYPE_FD_WRITE</code></a>.</p></li>
 <li><p><a href="#rights.poll_proc_terminate" name="rights.poll_proc_terminate"></a><strong><code>CLOUDABI_RIGHT_POLL_PROC_TERMINATE</code></strong></p>
 
-<p>The right to invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> and <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a> to
-subscribe to <a href="#eventtype.proc_terminate"><code>CLOUDABI_EVENTTYPE_PROC_TERMINATE</code></a>.</p></li>
-<li><p><a href="#rights.poll_wait" name="rights.poll_wait"></a><strong><code>CLOUDABI_RIGHT_POLL_WAIT</code></strong></p>
-
-<p>The right to wait for events on a polling event queue
-and extract them.</p></li>
+<p>The right to invoke <a href="#poll"><code>cloudabi_sys_poll()</code></a> to subscribe to
+<a href="#eventtype.proc_terminate"><code>CLOUDABI_EVENTTYPE_PROC_TERMINATE</code></a>.</p></li>
 <li><p><a href="#rights.proc_exec" name="rights.proc_exec"></a><strong><code>CLOUDABI_RIGHT_PROC_EXEC</code></strong></p>
 
 <p>The right to invoke <a href="#proc_exec"><code>cloudabi_sys_proc_exec()</code></a>.</p></li>
-<li><p><a href="#rights.sock_accept" name="rights.sock_accept"></a><strong><code>CLOUDABI_RIGHT_SOCK_ACCEPT</code></strong></p>
-
-<p>The right to invoke <a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a>.</p></li>
-<li><p><a href="#rights.sock_bind_directory" name="rights.sock_bind_directory"></a><strong><code>CLOUDABI_RIGHT_SOCK_BIND_DIRECTORY</code></strong></p>
-
-<p>The right to invoke <a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a> with the file
-descriptor as the directory.</p></li>
-<li><p><a href="#rights.sock_bind_socket" name="rights.sock_bind_socket"></a><strong><code>CLOUDABI_RIGHT_SOCK_BIND_SOCKET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_bind"><code>cloudabi_sys_sock_bind()</code></a> with the file
-descriptor as the socket.</p></li>
-<li><p><a href="#rights.sock_connect_directory" name="rights.sock_connect_directory"></a><strong><code>CLOUDABI_RIGHT_SOCK_CONNECT_DIRECTORY</code></strong></p>
-
-<p>The right to invoke <a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a> with the file
-descriptor as the directory.</p></li>
-<li><p><a href="#rights.sock_connect_socket" name="rights.sock_connect_socket"></a><strong><code>CLOUDABI_RIGHT_SOCK_CONNECT_SOCKET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_connect"><code>cloudabi_sys_sock_connect()</code></a> with the file
-descriptor as the socket.</p></li>
-<li><p><a href="#rights.sock_listen" name="rights.sock_listen"></a><strong><code>CLOUDABI_RIGHT_SOCK_LISTEN</code></strong></p>
-
-<p>The right to invoke <a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a>.</p></li>
 <li><p><a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a><strong><code>CLOUDABI_RIGHT_SOCK_SHUTDOWN</code></strong></p>
 
 <p>The right to invoke <a href="#sock_shutdown"><code>cloudabi_sys_sock_shutdown()</code></a>.</p></li>
-<li><p><a href="#rights.sock_stat_get" name="rights.sock_stat_get"></a><strong><code>CLOUDABI_RIGHT_SOCK_STAT_GET</code></strong></p>
-
-<p>The right to invoke <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p></li>
 </ul>
 
-<h4><a href="#sa_family" name="sa_family"></a><code>cloudabi_sa_family_t</code> (<code>uint8_t</code>)</h4>
+<h4><a href="#roflags" name="roflags"></a><code>cloudabi_roflags_t</code> (<code>uint16_t</code> bitfield)</h4>
 
-<p>Socket address family.</p>
+<p>Flags returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>.</p>
 
-<p>Used by <a href="#sockaddr"><code>cloudabi_sockaddr_t</code></a>.</p>
+<p>Used by <a href="#recv_out"><code>cloudabi_recv_out_t</code></a>.</p>
 
 <p>Possible values:</p>
 
 <ul>
-<li><p><a href="#sa_family.unspec" name="sa_family.unspec"></a><strong><code>CLOUDABI_AF_UNSPEC</code></strong></p>
+<li><p><a href="#roflags.fds_truncated" name="roflags.fds_truncated"></a><strong><code>CLOUDABI_SOCK_RECV_FDS_TRUNCATED</code></strong></p>
 
-<p>The socket address family is unknown or is different
-from any of the other address families specified.</p></li>
-<li><p><a href="#sa_family.inet" name="sa_family.inet"></a><strong><code>CLOUDABI_AF_INET</code></strong></p>
+<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: List of file descriptors
+has been truncated.</p></li>
+<li><p><a href="#roflags.data_truncated" name="roflags.data_truncated"></a><strong><code>CLOUDABI_SOCK_RECV_DATA_TRUNCATED</code></strong></p>
 
-<p>An IPv4 address.</p></li>
-<li><p><a href="#sa_family.inet6" name="sa_family.inet6"></a><strong><code>CLOUDABI_AF_INET6</code></strong></p>
-
-<p>An IPv6 address.</p></li>
-<li><p><a href="#sa_family.unix" name="sa_family.unix"></a><strong><code>CLOUDABI_AF_UNIX</code></strong></p>
-
-<p>The socket is local to the system, and may be bound to
-the file system.</p></li>
+<p>Returned by <a href="#sock_recv"><code>cloudabi_sys_sock_recv()</code></a>: Message data has been
+truncated.</p></li>
 </ul>
 
 <h4><a href="#scope" name="scope"></a><code>cloudabi_scope_t</code> (<code>uint8_t</code>)</h4>
@@ -3058,17 +2753,17 @@ memory.</p>
 <p>Members:</p>
 
 <ul>
-<li><p><a href="#send_in.si_data" name="send_in.si_data"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>si_data</strong></code> and <a href="#send_in.si_datalen" name="send_in.si_datalen"></a><code>size_t <strong>si_datalen</strong></code></p>
+<li><p><a href="#send_in.si_data" name="send_in.si_data"></a><code>const <a href="#ciovec">cloudabi_ciovec_t</a> *<strong>si_data</strong></code> and <a href="#send_in.si_data_len" name="send_in.si_data_len"></a><code>size_t <strong>si_data_len</strong></code></p>
 
 <p>List of scatter/gather vectors where message data
 should be retrieved.</p></li>
-<li><p><a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>si_fds</strong></code> and <a href="#send_in.si_fdslen" name="send_in.si_fdslen"></a><code>size_t <strong>si_fdslen</strong></code></p>
+<li><p><a href="#send_in.si_fds" name="send_in.si_fds"></a><code>const <a href="#fd">cloudabi_fd_t</a> *<strong>si_fds</strong></code> and <a href="#send_in.si_fds_len" name="send_in.si_fds_len"></a><code>size_t <strong>si_fds_len</strong></code></p>
 
 <p>File descriptors that need to be attached to the
 message.</p></li>
-<li><p><a href="#send_in.si_flags" name="send_in.si_flags"></a><code><a href="#msgflags">cloudabi_msgflags_t</a> <strong>si_flags</strong></code></p>
+<li><p><a href="#send_in.si_flags" name="send_in.si_flags"></a><code><a href="#siflags">cloudabi_siflags_t</a> <strong>si_flags</strong></code></p>
 
-<p>Message flags. Only <a href="#msgflags.eor"><code>CLOUDABI_MSG_EOR</code></a> is valid.</p></li>
+<p>Message flags.</p></li>
 </ul>
 
 <h4><a href="#send_out" name="send_out"></a><code>cloudabi_send_out_t</code> (<code>struct</code>)</h4>
@@ -3082,6 +2777,13 @@ message.</p></li>
 
 <p>Number of bytes transmitted.</p></li>
 </ul>
+
+<h4><a href="#siflags" name="siflags"></a><code>cloudabi_siflags_t</code> (<code>uint16_t</code> bitfield)</h4>
+
+<p>Flags provided to <a href="#sock_send"><code>cloudabi_sys_sock_send()</code></a>. As there are currently no flags
+defined, it must be set to zero.</p>
+
+<p>Used by <a href="#send_in"><code>cloudabi_send_in_t</code></a>.</p>
 
 <h4><a href="#signal" name="signal"></a><code>cloudabi_signal_t</code> (<code>uint8_t</code>)</h4>
 
@@ -3134,7 +2836,7 @@ message.</p></li>
 <p>Action: Terminates the process.</p></li>
 <li><p><a href="#signal.int" name="signal.int"></a><strong><code>CLOUDABI_SIGINT</code></strong></p>
 
-<p>Terminale interrupt signal.</p>
+<p>Terminate interrupt signal.</p>
 
 <p>Action: Terminates the process.</p></li>
 <li><p><a href="#signal.kill" name="signal.kill"></a><strong><code>CLOUDABI_SIGKILL</code></strong></p>
@@ -3224,100 +2926,6 @@ message.</p></li>
 <p>Action: Terminates the process.</p></li>
 </ul>
 
-<h4><a href="#sockaddr" name="sockaddr"></a><code>cloudabi_sockaddr_t</code> (<code>struct</code>)</h4>
-
-<p>Network address of a bound socket or its peer.</p>
-
-<p>Used by <a href="#recv_out"><code>cloudabi_recv_out_t</code></a> and <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
-
-<p>Members:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_family" name="sockaddr.sa_family"></a><code><a href="#sa_family">cloudabi_sa_family_t</a> <strong>sa_family</strong></code></p>
-
-<p>Address family.</p></li>
-<li><p>When <code>sa_family</code> is <a href="#sa_family.inet"><code>CLOUDABI_AF_INET</code></a>:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet" name="sockaddr.sa_inet"></a><strong><code>sa_inet</code></strong></p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet.addr" name="sockaddr.sa_inet.addr"></a><code>uint8_t <strong>addr</strong>[4]</code></p>
-
-<p>IPv4 address.</p></li>
-<li><p><a href="#sockaddr.sa_inet.port" name="sockaddr.sa_inet.port"></a><code>uint16_t <strong>port</strong></code></p>
-
-<p>IPv4 port number.</p></li>
-</ul></li>
-</ul></li>
-<li><p>When <code>sa_family</code> is <a href="#sa_family.inet6"><code>CLOUDABI_AF_INET6</code></a>:</p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet6" name="sockaddr.sa_inet6"></a><strong><code>sa_inet6</code></strong></p>
-
-<ul>
-<li><p><a href="#sockaddr.sa_inet6.addr" name="sockaddr.sa_inet6.addr"></a><code>uint8_t <strong>addr</strong>[16]</code></p>
-
-<p>IPv6 address.</p></li>
-<li><p><a href="#sockaddr.sa_inet6.port" name="sockaddr.sa_inet6.port"></a><code>uint16_t <strong>port</strong></code></p>
-
-<p>IPv6 port number.</p></li>
-</ul></li>
-</ul></li>
-</ul>
-
-<h4><a href="#sockstat" name="sockstat"></a><code>cloudabi_sockstat_t</code> (<code>struct</code>)</h4>
-
-<p>Socket attributes.</p>
-
-<p>Used by <a href="#sock_accept"><code>cloudabi_sys_sock_accept()</code></a> and <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
-
-<p>Members:</p>
-
-<ul>
-<li><p><a href="#sockstat.ss_sockname" name="sockstat.ss_sockname"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ss_sockname</strong></code></p>
-
-<p>The address to which this socket is bound.</p></li>
-<li><p><a href="#sockstat.ss_peername" name="sockstat.ss_peername"></a><code><a href="#sockaddr">cloudabi_sockaddr_t</a> <strong>ss_peername</strong></code></p>
-
-<p>The address to which this socket is connected.</p></li>
-<li><p><a href="#sockstat.ss_error" name="sockstat.ss_error"></a><code><a href="#errno">cloudabi_errno_t</a> <strong>ss_error</strong></code></p>
-
-<p>Error code of the last completed asynchronous
-operation performed on this socket.</p></li>
-<li><p><a href="#sockstat.ss_state" name="sockstat.ss_state"></a><code><a href="#sstate">cloudabi_sstate_t</a> <strong>ss_state</strong></code></p>
-
-<p>Flags describing the state of the socket.</p></li>
-</ul>
-
-<h4><a href="#ssflags" name="ssflags"></a><code>cloudabi_ssflags_t</code> (<code>uint8_t</code> bitfield)</h4>
-
-<p>Specifies which socket attributes need to be altered when
-calling <a href="#sock_stat_get"><code>cloudabi_sys_sock_stat_get()</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#ssflags.clear_error" name="ssflags.clear_error"></a><strong><code>CLOUDABI_SOCKSTAT_CLEAR_ERROR</code></strong></p>
-
-<p>Clear <a href="#sockstat.ss_error"><code>cloudabi_sockstat_t::ss_error</code></a>.</p></li>
-</ul>
-
-<h4><a href="#sstate" name="sstate"></a><code>cloudabi_sstate_t</code> (<code>uint32_t</code> bitfield)</h4>
-
-<p>State of the socket.</p>
-
-<p>Used by <a href="#sockstat"><code>cloudabi_sockstat_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#sstate.acceptconn" name="sstate.acceptconn"></a><strong><code>CLOUDABI_SOCKSTATE_ACCEPTCONN</code></strong></p>
-
-<p><a href="#sock_listen"><code>cloudabi_sys_sock_listen()</code></a> has been called on the socket. The
-socket is accepting incoming connections.</p></li>
-</ul>
-
 <h4><a href="#subclockflags" name="subclockflags"></a><code>cloudabi_subclockflags_t</code> (<code>uint16_t</code> bitfield)</h4>
 
 <p>Flags determining how the timestamp provided in
@@ -3339,40 +2947,6 @@ of clock <a href="#subscription.clock.clock_id"><code>cloudabi_subscription_t::c
 time value of clock <a href="#subscription.clock.clock_id"><code>cloudabi_subscription_t::clock.clock_id</code></a>.</p></li>
 </ul>
 
-<h4><a href="#subflags" name="subflags"></a><code>cloudabi_subflags_t</code> (<code>uint16_t</code> bitfield)</h4>
-
-<p>Flags for <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a> to determine how to process a
-subscription request. These flags are ignored by <a href="#poll"><code>cloudabi_sys_poll()</code></a>.</p>
-
-<p>Used by <a href="#subscription"><code>cloudabi_subscription_t</code></a>.</p>
-
-<p>Possible values:</p>
-
-<ul>
-<li><p><a href="#subflags.add" name="subflags.add"></a><strong><code>CLOUDABI_SUBSCRIPTION_ADD</code></strong></p>
-
-<p>Adds and enables the subscription. Implies
-<a href="#subflags.enable"><code>CLOUDABI_SUBSCRIPTION_ENABLE</code></a>, unless <a href="#subflags.disable"><code>CLOUDABI_SUBSCRIPTION_DISABLE</code></a> is
-specified.</p></li>
-<li><p><a href="#subflags.clear" name="subflags.clear"></a><strong><code>CLOUDABI_SUBSCRIPTION_CLEAR</code></strong></p>
-
-<p>Sets the event back to the initial state, so that it
-no longer triggers.</p></li>
-<li><p><a href="#subflags.delete" name="subflags.delete"></a><strong><code>CLOUDABI_SUBSCRIPTION_DELETE</code></strong></p>
-
-<p>Deletes the subscription.</p></li>
-<li><p><a href="#subflags.disable" name="subflags.disable"></a><strong><code>CLOUDABI_SUBSCRIPTION_DISABLE</code></strong></p>
-
-<p>Disables the subscription so that it does not trigger,
-but does not delete it.</p></li>
-<li><p><a href="#subflags.enable" name="subflags.enable"></a><strong><code>CLOUDABI_SUBSCRIPTION_ENABLE</code></strong></p>
-
-<p>Enables the subscription so that it can trigger.</p></li>
-<li><p><a href="#subflags.oneshot" name="subflags.oneshot"></a><strong><code>CLOUDABI_SUBSCRIPTION_ONESHOT</code></strong></p>
-
-<p>Automatically deletes the subscription once triggered.</p></li>
-</ul>
-
 <h4><a href="#subrwflags" name="subrwflags"></a><code>cloudabi_subrwflags_t</code> (<code>uint16_t</code> bitfield)</h4>
 
 <p>Flags influencing the method of polling for read or writing on
@@ -3385,16 +2959,15 @@ a file descriptor.</p>
 <ul>
 <li><p><a href="#subrwflags.poll" name="subrwflags.poll"></a><strong><code>CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL</code></strong></p>
 
-<p>If set, trigger immediately when polling for reading
-on a regular file, just like the POSIX poll function.
-Otherwise, only trigger when not at the end-of-file.</p></li>
+<p>Deprecated. Must be set by callers and ignored by
+implementations.</p></li>
 </ul>
 
 <h4><a href="#subscription" name="subscription"></a><code>cloudabi_subscription_t</code> (<code>struct</code>)</h4>
 
 <p>Subscription to an event.</p>
 
-<p>Used by <a href="#poll"><code>cloudabi_sys_poll()</code></a> and <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a>.</p>
+<p>Used by <a href="#poll"><code>cloudabi_sys_poll()</code></a>.</p>
 
 <p>Members:</p>
 
@@ -3404,20 +2977,19 @@ Otherwise, only trigger when not at the end-of-file.</p></li>
 <p>User-provided value that is attached to the
 subscription in the kernel and returned through
 <a href="#event.userdata"><code>cloudabi_event_t::userdata</code></a>.</p></li>
-<li><p><a href="#subscription.flags" name="subscription.flags"></a><code><a href="#subflags">cloudabi_subflags_t</a> <strong>flags</strong></code></p>
+<li><p><a href="#subscription.unused" name="subscription.unused"></a><code>uint16_t <strong>unused</strong></code></p>
 
-<p>Subscription adjustment flags used by <a href="#poll_fd"><code>cloudabi_sys_poll_fd()</code></a>.
-Ignored by <a href="#poll"><code>cloudabi_sys_poll()</code></a>.</p></li>
+<p>Used by previous implementations. Ignored.</p></li>
 <li><p><a href="#subscription.type" name="subscription.type"></a><code><a href="#eventtype">cloudabi_eventtype_t</a> <strong>type</strong></code></p>
 
 <p>The type of the event to which to subscribe.</p>
 
 <p>Currently, <a href="#eventtype.condvar"><code>CLOUDABI_EVENTTYPE_CONDVAR</code></a>,
 <a href="#eventtype.lock_rdlock"><code>CLOUDABI_EVENTTYPE_LOCK_RDLOCK</code></a>, and <a href="#eventtype.lock_wrlock"><code>CLOUDABI_EVENTTYPE_LOCK_WRLOCK</code></a>
-can only be used with <a href="#poll"><code>cloudabi_sys_poll()</code></a>.  It must be provided as
-the first subscription and may only be followed by up
-to one other subscription, having type
-<a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a> with <a href="#subclockflags.abstime"><code>CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME</code></a>.</p></li>
+must be provided as the first subscription and may
+only be followed by up to one other subscription,
+having type <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a> with
+<a href="#subclockflags.abstime"><code>CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME</code></a>.</p></li>
 <li><p>When <code>type</code> is <a href="#eventtype.clock"><code>CLOUDABI_EVENTTYPE_CLOCK</code></a>:</p>
 
 <ul>
@@ -3568,7 +3140,7 @@ value cannot be interpreted by the application.</p></li>
 <li><p><a href="#threadattr.entry_point" name="threadattr.entry_point"></a><code><a href="#threadentry">cloudabi_threadentry_t</a> *<strong>entry_point</strong></code></p>
 
 <p>Initial program counter value.</p></li>
-<li><p><a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_size" name="threadattr.stack_size"></a><code>size_t <strong>stack_size</strong></code></p>
+<li><p><a href="#threadattr.stack" name="threadattr.stack"></a><code>void *<strong>stack</strong></code> and <a href="#threadattr.stack_len" name="threadattr.stack_len"></a><code>size_t <strong>stack_len</strong></code></p>
 
 <p>Region allocated to serve as stack space.</p></li>
 <li><p><a href="#threadattr.argument" name="threadattr.argument"></a><code>void *<strong>argument</strong></code></p>
@@ -3602,6 +3174,10 @@ only valid during the lifetime of the thread.</p>
 <p>Threads must be aware of their thread identifier, as it is
 written it into locks when acquiring them for writing. It is
 not advised to use these identifiers for any other purpose.</p>
+
+<p>As the thread identifier is also stored in <a href="#lock"><code>cloudabi_lock_t</code></a> when
+<a href="#lock.wrlocked"><code>CLOUDABI_LOCK_WRLOCKED</code></a> is set, the top two bits of the thread
+must always be set to zero.</p>
 
 <p>Used by <a href="#threadentry"><code>cloudabi_threadentry_t</code></a>, <a href="#proc_fork"><code>cloudabi_sys_proc_fork()</code></a>, and <a href="#thread_create"><code>cloudabi_sys_thread_create()</code></a>.</p>
 

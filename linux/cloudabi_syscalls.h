@@ -81,36 +81,37 @@ cloudabi_errno_t cloudabi_sys_file_allocate(cloudabi_fd_t fd,
 
 cloudabi_errno_t cloudabi_sys_file_create(cloudabi_fd_t fd,
                                           const char __user *path,
-                                          size_t pathlen,
+                                          size_t path_len,
                                           cloudabi_filetype_t type);
 
 cloudabi_errno_t cloudabi_sys_file_link(cloudabi_lookup_t fd1,
                                         const char __user *path1,
-                                        size_t path1len, cloudabi_fd_t fd2,
+                                        size_t path1_len, cloudabi_fd_t fd2,
                                         const char __user *path2,
-                                        size_t path2len);
+                                        size_t path2_len);
 
 cloudabi_errno_t cloudabi_sys_file_open(cloudabi_lookup_t dirfd,
-                                        const char __user *path, size_t pathlen,
+                                        const char __user *path,
+                                        size_t path_len,
                                         cloudabi_oflags_t oflags,
                                         const cloudabi_fdstat_t __user *fds,
                                         cloudabi_fd_t *fd);
 
 cloudabi_errno_t cloudabi_sys_file_readdir(cloudabi_fd_t fd, void __user *buf,
-                                           size_t nbyte,
+                                           size_t buf_len,
                                            cloudabi_dircookie_t cookie,
                                            size_t *bufused);
 
 cloudabi_errno_t cloudabi_sys_file_readlink(cloudabi_fd_t fd,
                                             const char __user *path,
-                                            size_t pathlen, char __user *buf,
-                                            size_t bufsize, size_t *bufused);
+                                            size_t path_len, char __user *buf,
+                                            size_t buf_len, size_t *bufused);
 
 cloudabi_errno_t cloudabi_sys_file_rename(cloudabi_fd_t fd1,
                                           const char __user *path1,
-                                          size_t path1len, cloudabi_fd_t fd2,
+                                          size_t path1_len, cloudabi_fd_t fd2,
                                           const char __user *path2,
-                                          size_t path2len);
+                                          size_t path2_len);
 
 cloudabi_errno_t cloudabi_sys_file_stat_fget(cloudabi_fd_t fd,
                                              cloudabi_filestat_t __user *buf);
@@ -121,30 +122,29 @@ cloudabi_errno_t cloudabi_sys_file_stat_fput(
 
 cloudabi_errno_t cloudabi_sys_file_stat_get(cloudabi_lookup_t fd,
                                             const char __user *path,
-                                            size_t pathlen,
+                                            size_t path_len,
                                             cloudabi_filestat_t __user *buf);
 
 cloudabi_errno_t cloudabi_sys_file_stat_put(
-    cloudabi_lookup_t fd, const char __user *path, size_t pathlen,
+    cloudabi_lookup_t fd, const char __user *path, size_t path_len,
     const cloudabi_filestat_t __user *buf, cloudabi_fsflags_t flags);
 
 cloudabi_errno_t cloudabi_sys_file_symlink(const char __user *path1,
-                                           size_t path1len, cloudabi_fd_t fd,
+                                           size_t path1_len, cloudabi_fd_t fd,
                                            const char __user *path2,
-                                           size_t path2len);
+                                           size_t path2_len);
 
 cloudabi_errno_t cloudabi_sys_file_unlink(cloudabi_fd_t fd,
                                           const char __user *path,
-                                          size_t pathlen,
+                                          size_t path_len,
                                           cloudabi_ulflags_t flags);
 
 cloudabi_errno_t cloudabi_sys_lock_unlock(cloudabi_lock_t __user *lock,
                                           cloudabi_scope_t scope);
 
-cloudabi_errno_t cloudabi_sys_mem_advise(void __user *addr, size_t len,
+cloudabi_errno_t cloudabi_sys_mem_advise(void __user *mapping,
+                                         size_t mapping_len,
                                          cloudabi_advice_t advice);
-
-cloudabi_errno_t cloudabi_sys_mem_lock(const void __user *addr, size_t len);
 
 cloudabi_errno_t cloudabi_sys_mem_map(void __user *addr, size_t len,
                                       cloudabi_mprot_t prot,
@@ -152,20 +152,21 @@ cloudabi_errno_t cloudabi_sys_mem_map(void __user *addr, size_t len,
                                       cloudabi_filesize_t off,
                                       void __user **mem);
 
-cloudabi_errno_t cloudabi_sys_mem_protect(void __user *addr, size_t len,
+cloudabi_errno_t cloudabi_sys_mem_protect(void __user *mapping,
+                                          size_t mapping_len,
                                           cloudabi_mprot_t prot);
 
-cloudabi_errno_t cloudabi_sys_mem_sync(void __user *addr, size_t len,
+cloudabi_errno_t cloudabi_sys_mem_sync(void __user *mapping, size_t mapping_len,
                                        cloudabi_msflags_t flags);
 
-cloudabi_errno_t cloudabi_sys_mem_unlock(const void __user *addr, size_t len);
-
-cloudabi_errno_t cloudabi_sys_mem_unmap(void __user *addr, size_t len);
+cloudabi_errno_t cloudabi_sys_mem_unmap(void __user *mapping,
+                                        size_t mapping_len);
 
 cloudabi_errno_t cloudabi_sys_proc_exec(cloudabi_fd_t fd,
-                                        const void __user *data, size_t datalen,
+                                        const void __user *data,
+                                        size_t data_len,
                                         const cloudabi_fd_t __user *fds,
-                                        size_t fdslen);
+                                        size_t fds_len);
 
 void cloudabi_sys_proc_exit(cloudabi_exitcode_t rval);
 
@@ -173,29 +174,10 @@ cloudabi_errno_t cloudabi_sys_proc_fork(cloudabi_fd_t *fd, cloudabi_tid_t *tid);
 
 cloudabi_errno_t cloudabi_sys_proc_raise(cloudabi_signal_t sig);
 
-cloudabi_errno_t cloudabi_sys_random_get(void __user *buf, size_t nbyte);
-
-cloudabi_errno_t cloudabi_sys_sock_accept(cloudabi_fd_t sock,
-                                          cloudabi_sockstat_t __user *buf,
-                                          cloudabi_fd_t *conn);
-
-cloudabi_errno_t cloudabi_sys_sock_bind(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                        const char __user *path,
-                                        size_t pathlen);
-
-cloudabi_errno_t cloudabi_sys_sock_connect(cloudabi_fd_t sock, cloudabi_fd_t fd,
-                                           const char __user *path,
-                                           size_t pathlen);
-
-cloudabi_errno_t cloudabi_sys_sock_listen(cloudabi_fd_t sock,
-                                          cloudabi_backlog_t backlog);
+cloudabi_errno_t cloudabi_sys_random_get(void __user *buf, size_t buf_len);
 
 cloudabi_errno_t cloudabi_sys_sock_shutdown(cloudabi_fd_t sock,
                                             cloudabi_sdflags_t how);
-
-cloudabi_errno_t cloudabi_sys_sock_stat_get(cloudabi_fd_t sock,
-                                            cloudabi_sockstat_t __user *buf,
-                                            cloudabi_ssflags_t flags);
 
 void cloudabi_sys_thread_exit(cloudabi_lock_t __user *lock,
                               cloudabi_scope_t scope);

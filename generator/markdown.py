@@ -1,7 +1,6 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 import re
 
@@ -12,7 +11,6 @@ from .rust import RustNaming
 
 
 class MarkdownNaming:
-
     def link(self, *path, code=True):
         name = self.link_name(*path)
         target = self.link_target(*path)
@@ -26,8 +24,8 @@ class MarkdownNaming:
 
     def link_target(self, *path):
         for p in path:
-            if p.name is None or (isinstance(p, Type) and
-                                  not isinstance(p, UserDefinedType)):
+            if p.name is None or (isinstance(p, Type)
+                                  and not isinstance(p, UserDefinedType)):
                 return None
         return '.'.join(p.name for p in path)
 
@@ -52,7 +50,6 @@ class MarkdownNaming:
 
 
 class MarkdownCNaming(MarkdownNaming, CNaming):
-
     def typename(self, type, link=True, **kwargs):
         if link:
             return self.link(type, code=False)
@@ -92,7 +89,6 @@ class MarkdownRustNaming(MarkdownNaming, RustNaming):
 
 
 class MarkdownGenerator(Generator):
-
     def __init__(self, naming):
         super().__init__(comment_begin='<!--', comment_end='-->')
         self.naming = naming
@@ -115,14 +111,14 @@ class MarkdownGenerator(Generator):
     def generate_type(self, abi, type):
         if isinstance(type, IntLikeType):
             extra = ' ({}{})'.format(
-                self.naming.link(type.int_type),
-                ' bitfield' if isinstance(type, FlagsType) else '')
+                self.naming.link(type.int_type), ' bitfield'
+                if isinstance(type, FlagsType) else '')
         elif isinstance(type, StructType):
             extra = ' (`struct`)'
         elif isinstance(type, FunctionType):
             extra = ' (function type)'
         else:
-            assert(False)
+            assert (False)
         print('#### {}`{}`{}\n'.format(
             self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
@@ -131,8 +127,10 @@ class MarkdownGenerator(Generator):
                 # Documentation string already refers to all uses.
                 pass
             else:
-                by = sorted(type.used_by,
-                    key=lambda x: ('A' if isinstance(x, Type) else 'B') + x.name)
+                by = sorted(
+                    type.used_by,
+                    key=lambda x: ('A' if isinstance(x, Type) else 'B') + x.name
+                )
                 print('Used by {}.\n'.format(
                     _list('and', [self.naming.link(x) for x in by])))
         if isinstance(type, IntLikeType):
@@ -143,8 +141,7 @@ class MarkdownGenerator(Generator):
                     print('Possible values:\n')
                 for v in type.values:
                     print('- {}**`{}`**\n'.format(
-                        self.anchor(type, v),
-                        self.naming.valname(type, v)))
+                        self.anchor(type, v), self.naming.valname(type, v)))
                     self.generate_doc(abi, v, '    ')
         elif isinstance(type, StructType):
             print('Members:\n')
@@ -157,8 +154,7 @@ class MarkdownGenerator(Generator):
                     self.generate_struct_member(abi, m, [type])
             if not isinstance(type.return_type, VoidType):
                 print('Returns:\n')
-                print('- {}\n'.format(
-                    self.naming.link(type.return_type)))
+                print('- {}\n'.format(self.naming.link(type.return_type)))
                 self.generate_doc(abi, type.return_type.doc, '    ')
 
     def generate_struct_member(
@@ -170,8 +166,8 @@ class MarkdownGenerator(Generator):
                 name = self.naming.variantmem(m)
             print('- {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m])),
-                self.naming.vardecl(
-                    m.type, '<strong>{}</strong>'.format(_escape(name)))))
+                self.naming.vardecl(m.type, '<strong>{}</strong>'.format(
+                    _escape(m.name)))))
             self.generate_doc(abi, m, indent + '    ')
             if m.special_values:
                 print('    Possible values:\n')
@@ -181,22 +177,21 @@ class MarkdownGenerator(Generator):
         elif isinstance(m, RangeStructMember):
             print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m.raw_members[0]])),
-                self.naming.vardecl(
-                    m.raw_members[0].type,
-                    '<strong>{}</strong>'.format(
-                        _escape(m.raw_members[0].name))),
+                self.naming.vardecl(m.raw_members[0].type,
+                                    '<strong>{}</strong>'.format(
+                                        _escape(m.raw_members[0].name))),
                 self.anchor(*(parents + [m.raw_members[1]])),
-                self.naming.vardecl(
-                    m.raw_members[1].type,
-                    '<strong>{}</strong>'.format(
-                        _escape(m.raw_members[1].name)))))
+                self.naming.vardecl(m.raw_members[1].type,
+                                    '<strong>{}</strong>'.format(
+                                        _escape(m.raw_members[1].name)))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, VariantStructMember):
             for vm in m.members:
                 print('- When `{}` is {}:\n'.format(
                     m.tag.name,
-                    _list('or', [self.naming.link(m.tag.type, v)
-                                 for v in vm.tag_values])))
+                    _list('or', [
+                        self.naming.link(m.tag.type, v) for v in vm.tag_values
+                    ])))
                 if vm.name is None:
                     assert(len(vm.type.members) == 1)
                     mm = vm.type.members[0]
@@ -207,8 +202,8 @@ class MarkdownGenerator(Generator):
                         self.anchor(*(parents + [vm])),
                         self.naming.variantmem(vm)))
                     for mm in vm.type.members:
-                        self.generate_struct_member(
-                            abi, mm, parents + [vm], indent + '        ')
+                        self.generate_struct_member(abi, mm, parents + [vm],
+                                                    indent + '        ')
 
     def generate_syscalls(self, abi, syscalls):
         print('### System calls\n')
@@ -240,13 +235,14 @@ class MarkdownGenerator(Generator):
                 if line == '':
                     print()
                 else:
+
                     def fix_link(match):
                         path = abi.resolve_path(match.group(1))
                         if path is None:
-                            raise Exception(
-                                'Unable to resolve link: '
-                                '{}'.format(match.group(1)))
+                            raise Exception('Unable to resolve link: '
+                                            '{}'.format(match.group(1)))
                         return self.naming.link(*path)
+
                     line = re.sub(r'\[([\w.]+)\](?!\()', fix_link, line)
                     print('{}{}'.format(indent, line))
             print()
@@ -267,7 +263,7 @@ def _fix_undescores(text):
 
 
 def _list(word, items):
-    assert(len(items) > 0)
+    assert (len(items) > 0)
     if len(items) == 1:
         return items[0]
     elif len(items) == 2:

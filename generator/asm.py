@@ -1,7 +1,6 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 from .abi import *
 from .generator import *
@@ -16,7 +15,6 @@ def roundup(a, b):
 
 
 class AsmVdsoGenerator(Generator):
-
     def __init__(self, function_alignment, type_character):
         super().__init__(comment_prefix='// ')
         self._function_alignment = function_alignment
@@ -52,7 +50,6 @@ class AsmVdsoGenerator(Generator):
 
 
 class AsmVdsoCommonGenerator(AsmVdsoGenerator):
-
     def generate_syscall_body(self, number, args_input, args_output, noreturn):
         # Compute the number of registers/stack slots consumed by all of
         # the input and output arguments. We assume that a pointer
@@ -116,8 +113,8 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
 
                     # Copy the value from one or more registers.
                     for j in range(0, self.register_count(member)):
-                        self.print_store_output(member, regs_returns.pop(0),
-                                                reg, j)
+                        self.print_store_output(member,
+                                                regs_returns.pop(0), reg, j)
 
                 self.print_retval_success()
 
@@ -171,8 +168,10 @@ class AsmVdsoAarch64Generator(AsmVdsoCommonGenerator):
     def print_store_output(member, reg_from, reg_to, index):
         assert index == 0
         size = member.type.layout.size[1]
-        print('  str {}{}, [x{}]'.format({4: 'w', 8: 'x'}[size],
-                                         reg_from, reg_to))
+        print('  str {}{}, [x{}]'.format({
+            4: 'w',
+            8: 'x'
+        }[size], reg_from, reg_to))
 
     @staticmethod
     def print_retval_success():
@@ -235,19 +234,108 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
         size = member.type.layout.size[0]
-        print('  strcc {}{}, [r{}{}]'.format(
-            {4: 'r', 8: 'r'}[size],
-            reg_from,
-            reg_to,
-            ', {}'.format(index * 4) if size > 4 else ''))
+        print('  strcc {}{}, [r{}{}]'.format({
+            4: 'r',
+            8: 'r'
+        }[size], reg_from, reg_to, ', #{}'.format(index * 4)
+                                             if size > 4 else ''))
 
     @staticmethod
     def print_retval_success():
-        print('  movcc r0, $0')
+        print('  movcc r0, #0')
 
     @staticmethod
     def print_return():
         print('  bx lr')
+
+
+class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
+    def __init__(self):
+        super().__init__(function_alignment='2', type_character='%')
+
+    @staticmethod
+    def load_argument(offset):
+        if offset < 16:
+            return 'r{}'.format(offset // 4)
+        print('  ldr r1, [sp, #{}]'.format(offset - 16))
+        return 'r1'
+
+    def generate_syscall_body(self, number, args_input, args_output, noreturn):
+        # When running on 64-bit operating systems, we need to ensure
+        # that the system call arguments are padded to 64 bits words, so
+        # that they are passed in properly to the system call handler.
+        #
+        # Determine the number of 64-bit slots we need to allocate on
+        # the stack to be able to store both the input and output
+        # arguments.
+        #
+        # TODO(ed): Unify this with AsmVdsoI686On64bitGenerator.
+        slots_input_padded = sum(
+            howmany(m.type.layout.size[1], 8) for m in args_input)
+        slots_stack = max(slots_input_padded, 2)
+
+        # Copy original arguments into a properly padded buffer.
+        offset_in = 0
+        offset_out = -8 * slots_stack
+        r0_is_zero = False
+        for member in args_input:
+            offset_in = roundup(offset_in, member.type.layout.size[0])
+            if member.type.layout.size[0] == member.type.layout.size[1]:
+                # Argument whose size doesn't differ between systems.
+                for i in range(0, howmany(member.type.layout.size[0], 4)):
+                    register = self.load_argument(offset_in + i * 4)
+                    print('  str {}, [sp, #{}]'.format(register,
+                                                       offset_out + i * 4))
+            else:
+                # Pointer or size_t. Zero-extend it to 64 bits.
+                assert member.type.layout.size[0] == 4
+                assert member.type.layout.size[1] == 8
+                register = self.load_argument(offset_in)
+                print('  str {}, [sp, #{}]'.format(register, offset_out))
+                if not r0_is_zero:
+                    print('  mov r0, #0')
+                    r0_is_zero = True
+                print('  str r0, [sp, #{}]'.format(offset_out + 4))
+            offset_in += roundup(member.type.layout.size[0], 4)
+            offset_out += roundup(member.type.layout.size[1], 8)
+        assert offset_out <= 0
+
+        # Store addresses of return values on the stack.
+        slots_out = []
+        offset_out = -8 * slots_stack
+        for i in range(0, len(args_output)):
+            reg_from = offset_in // 4 + i
+            if reg_from < 4:
+                # Move the value to a register that is retained.
+                offset_out -= 4
+                print('  str r{}, [sp, #{}]'.format(reg_from, offset_out))
+                slots_out.append(offset_out)
+            else:
+                # Value is stored on the stack. No need to preserve.
+                slots_out.append((reg_from - 4) * 4)
+
+        # Invoke system call.
+        print('  mov r0, #{}'.format(number))
+        print('  sub r2, sp, #{}'.format(slots_stack * 8))
+        print('  swi 0')
+
+        if not noreturn:
+            if args_output:
+                # Extract arguments from the padded buffer.
+                offset_in = -8 * slots_stack
+                for member, slot in zip(args_output, slots_out):
+                    size = member.type.layout.size[0]
+                    assert (size == member.type.layout.size[1]
+                            or (size == 4 and member.type.layout.size[1] == 8))
+                    assert size % 4 == 0
+                    print('  ldrcc r1, [sp, #{}]'.format(slot))
+                    for i in range(0, howmany(size, 4)):
+                        print(
+                            '  ldrcc r2, [sp, #{}]'.format(offset_in + i * 4))
+                        print('  strcc r2, [r1, #{}]'.format(i * 4))
+                    offset_in += roundup(member.type.layout.size[1], 8)
+                    offset_out += 4
+            print('  bx lr')
 
 
 class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
@@ -283,11 +371,10 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
     @staticmethod
     def print_store_output(member, reg_from, reg_to, index):
         size = member.type.layout.size[0]
-        print('  mov {}{}, {}(%e{})'.format(
-            {4: '%e', 8: '%e'}[size],
-            reg_from,
-            index * 4 if size > 4 else '',
-            reg_to))
+        print('  mov {}{}, {}(%e{})'.format({
+            4: '%e',
+            8: '%e'
+        }[size], reg_from, index * 4 if size > 4 else '', reg_to))
 
     @staticmethod
     def print_retval_success():
@@ -300,7 +387,6 @@ class AsmVdsoI686Generator(AsmVdsoCommonGenerator):
 
 
 class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
-
     def __init__(self):
         super().__init__(function_alignment='2, 0x90', type_character='@')
 
@@ -315,8 +401,10 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
         # Determine the number of 64-bit slots we need to allocate on
         # the stack to be able to store both the input and output
         # arguments.
-        slots_input_padded = sum(howmany(m.type.layout.size[1], 8)
-                                 for m in args_input)
+        #
+        # TODO(ed): Unify this with AsmVdsoArmv6On64bitGenerator.
+        slots_input_padded = sum(
+            howmany(m.type.layout.size[1], 8) for m in args_input)
         slots_stack = max(slots_input_padded, 2)
 
         # Copy original arguments into a properly padded buffer.
@@ -337,8 +425,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
                 print('  movl $0, {}(%ebp)'.format(offset_out + 4))
             offset_in += roundup(member.type.layout.size[0], 4)
             offset_out += roundup(member.type.layout.size[1], 8)
-        assert offset_in == 8 + sum(roundup(m.type.layout.size[0], 4)
-                                    for m in args_input)
+        assert offset_in == 8 + sum(
+            roundup(m.type.layout.size[0], 4) for m in args_input)
         assert offset_out <= 0
 
         # Invoke system call, setting %ecx to the padded buffer.
@@ -354,12 +442,12 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
 
                 # Extract arguments from the padded buffer.
                 offset_in = -8 * slots_stack
-                offset_out = 8 + sum(roundup(m.type.layout.size[0], 4)
-                                     for m in args_input)
+                offset_out = 8 + sum(
+                    roundup(m.type.layout.size[0], 4) for m in args_input)
                 for member in args_output:
                     size = member.type.layout.size[0]
-                    assert (size == member.type.layout.size[1] or
-                            (size == 4 and member.type.layout.size[1] == 8))
+                    assert (size == member.type.layout.size[1]
+                            or (size == 4 and member.type.layout.size[1] == 8))
                     assert size % 4 == 0
                     print('  mov {}(%ebp), %ecx'.format(offset_out))
                     for i in range(0, howmany(size, 4)):
@@ -376,8 +464,8 @@ class AsmVdsoI686On64bitGenerator(AsmVdsoGenerator):
 
 class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
 
-    REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'),
-                        ('cx', '10'), ('8', '8'), ('9', '9')]
+    REGISTERS_PARAMS = [('di', 'di'), ('si', 'si'), ('dx', 'dx'), ('cx', '10'),
+                        ('8', '8'), ('9', '9')]
     REGISTERS_RETURNS = ['ax', 'dx']
     REGISTERS_SPARE = ['cx', 'si', 'di', '8', '9', '10', '11']
 
@@ -423,8 +511,10 @@ class AsmVdsoX86_64Generator(AsmVdsoCommonGenerator):
     def print_store_output(member, reg_from, reg_to, index):
         assert index == 0
         size = member.type.layout.size[1]
-        print('  mov {}{}, (%r{})'.format({4: '%e', 8: '%r'}[size],
-                                          reg_from, reg_to))
+        print('  mov {}{}, (%r{})'.format({
+            4: '%e',
+            8: '%r'
+        }[size], reg_from, reg_to))
 
     @staticmethod
     def print_retval_success():

@@ -1,14 +1,12 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 from .itf import read_itf, Node
 from .abi import *
 
 
 class AbiParser:
-
     def parse_abi_file(self, file_name):
         return self.parse_abi(read_itf(file_name))
 
@@ -51,19 +49,23 @@ class AbiParser:
 
         for type in abi.types.values():
             type.used_by = {
-                t for t in abi.types.values() if type in getattr(
-                    t, 'dependencies', set())}
+                t
+                for t in abi.types.values()
+                if type in getattr(t, 'dependencies', set())
+            }
 
             type.used_by.update({
-                s for s in abi.syscalls.values() if type in getattr(
-                    s, 'dependencies', set())})
+                s
+                for s in abi.syscalls.values()
+                if type in getattr(s, 'dependencies', set())
+            })
 
         return abi
 
     def parse_int_like_type(self, abi, decl, children):
         if len(decl) != 3:
-            raise Exception(
-                'Invalid {} declaration: {}'.format(decl[0], ' '.join(decl)))
+            raise Exception('Invalid {} declaration: {}'.format(
+                decl[0], ' '.join(decl)))
 
         name = decl[2]
         if name in abi.types:
@@ -90,13 +92,13 @@ class AbiParser:
             else:
                 raise Exception('Invalid value: {}'.format(child.text))
 
-        return int_like_types[decl[0]](
-            name, int_types[int_type], values, **attr)
+        return int_like_types[decl[0]](name, int_types[int_type], values,
+                                       **attr)
 
     def parse_struct(self, abi, decl, children):
         if len(decl) != 2:
-            raise Exception(
-                'Invalid struct declaration: {}'.format(decl, ' '.join(decl)))
+            raise Exception('Invalid struct declaration: {}'.format(
+                decl, ' '.join(decl)))
 
         name = decl[1]
         if name in abi.types:
@@ -118,9 +120,9 @@ class AbiParser:
                 tag_member = None
                 for m in members:
                     if m.name == tag_member_name:
-                        if (isinstance(m, SimpleStructMember) and
-                            (isinstance(m.type, EnumType) or
-                             isinstance(m.type, AliasType))):
+                        if (isinstance(m, SimpleStructMember)
+                                and (isinstance(m.type, EnumType)
+                                     or isinstance(m.type, AliasType))):
                             tag_member = m
                             break
                         else:
@@ -135,16 +137,12 @@ class AbiParser:
             elif mem_decl[0] in {'range', 'crange'}:
                 doc = self.pop_documentation(node)
                 self.__expect_no_children(node)
-                if len(mem_decl) < 5:
+                if len(mem_decl) < 3:
                     raise Exception('Invalid range: {}'.format(node.text))
-                mem_type = self.parse_type(abi, mem_decl[1:-3])
-                mem_base_name, mem_length_name, mem_name = mem_decl[-3:]
-                mem = RangeStructMember(
-                    mem_base_name,
-                    mem_length_name,
-                    mem_name,
-                    mem_decl[0] == 'crange',
-                    mem_type)
+                mem_type = self.parse_type(abi, mem_decl[1:-1])
+                mem_name = mem_decl[-1]
+                mem = RangeStructMember(mem_name, mem_decl[0] == 'crange',
+                                        mem_type)
                 mem.doc = doc
 
             else:
@@ -176,8 +174,8 @@ class AbiParser:
 
     def parse_function(self, abi, decl, children):
         if len(decl) != 2:
-            raise Exception(
-                'Invalid function declaration: {}'.format(' '.join(decl)))
+            raise Exception('Invalid function declaration: {}'.format(
+                ' '.join(decl)))
 
         name = decl[1]
         if name in abi.types:
@@ -188,8 +186,9 @@ class AbiParser:
 
         if len(children) > 0 and children[0].text == 'in':
             param_spec = children.pop(0)
-            parameters = StructType(
-                None, self.parse_struct_members(abi, param_spec.children))
+            parameters = StructType(None,
+                                    self.parse_struct_members(
+                                        abi, param_spec.children))
 
         if len(children) > 0 and children[0].text == 'out':
             out_spec = children.pop(0)
@@ -198,8 +197,8 @@ class AbiParser:
                 raise Exception('Expected a single return type in '
                                 '`out\' section of function.')
             self.__expect_no_children(out_spec.children[0])
-            return_type = (
-                self.parse_type(abi, out_spec.children[0].text.split()))
+            return_type = (self.parse_type(abi,
+                                           out_spec.children[0].text.split()))
             return_type.doc = doc
 
         return FunctionType(name, parameters, return_type)
@@ -218,14 +217,16 @@ class AbiParser:
 
         if len(children) > 0 and children[0].text == 'in':
             in_spec = children.pop(0)
-            input = StructType(
-                None, self.parse_struct_members(abi, in_spec.children))
+            input = StructType(None,
+                               self.parse_struct_members(
+                                   abi, in_spec.children))
 
         if len(children) > 0:
             if children[0].text == 'out':
                 out_spec = children.pop(0)
-                output = StructType(
-                    None, self.parse_struct_members(abi, out_spec.children))
+                output = StructType(None,
+                                    self.parse_struct_members(
+                                        abi, out_spec.children))
 
             elif children[0].text == 'noreturn':
                 noreturn_spec = children.pop(0)
@@ -265,8 +266,8 @@ class AbiParser:
             else:
                 name = None
                 spec = node
-            type = StructType(None, self.parse_struct_members(
-                abi, spec.children))
+            type = StructType(None,
+                              self.parse_struct_members(abi, spec.children))
             members.append(VariantMember(name, tag_values, type))
 
         return VariantStructMember(tag_member, members)
@@ -293,9 +294,9 @@ class AbiParser:
 
     def pop_documentation(self, node, optional=False):
         doc = ''
-        while len(node.children) > 0 and (
-                node.children[0].text.startswith('| ') or
-                node.children[0].text == '|'):
+        while len(
+                node.children) > 0 and (node.children[0].text.startswith('| ')
+                                        or node.children[0].text == '|'):
             n = node.children.pop(0)
             if n.children != []:
                 raise Exception(
@@ -303,8 +304,8 @@ class AbiParser:
             doc += n.text[2:] + '\n'
         if doc == '' and not optional:
             import sys
-            sys.stderr.write(
-                'Missing documentation for: {}\n'.format(node.text))
+            sys.stderr.write('Missing documentation for: {}\n'.format(
+                node.text))
         return doc
 
     @staticmethod

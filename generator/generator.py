@@ -1,16 +1,12 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 from .abi import *
 
 
 class Generator:
-
-    def __init__(self,
-                 comment_prefix='',
-                 comment_begin=None,
+    def __init__(self, comment_prefix='', comment_begin=None,
                  comment_end=None):
         self.comment_begin = comment_begin
         self.comment_prefix = comment_prefix
@@ -46,8 +42,8 @@ class Generator:
         while generate_now != []:
             for type in generate_now:
 
-                if (not (getattr(type, 'dependencies', set()) <= generated) or
-                        (first_pass and not isinstance(type, IntLikeType))):
+                if (not (getattr(type, 'dependencies', set()) <= generated)
+                        or (first_pass and not isinstance(type, IntLikeType))):
                     generate_later.append(type)
                 else:
                     self.generate_type(abi, type)
@@ -57,7 +53,7 @@ class Generator:
             generate_later = []
             first_pass = False
 
-        assert(generated == set(types.values()))
+        assert (generated == set(types.values()))
 
     def generate_syscalls(self, abi, syscalls):
         for syscall in sorted(syscalls):

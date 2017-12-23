@@ -1,7 +1,6 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 # 'Indented Tree Format': An extremely simple text format to describe a tree
 # using indentation. Every non-empty line represents a node, with the
@@ -75,9 +74,8 @@ def read_itf(file_name):
             else:
                 while indent != previndent:
                     if not previndent.startswith(indent):
-                        raise Exception(
-                            '%s:%d: Invalid indentation' %
-                            (file_name, line_num))
+                        raise Exception('%s:%d: Invalid indentation' %
+                                        (file_name, line_num))
                     pop_stack()
                     previndent = stack[-1][0]
 

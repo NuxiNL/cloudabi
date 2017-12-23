@@ -1,13 +1,12 @@
 # Copyright (c) 2016 Nuxi (https://nuxi.nl/) and contributors.
 #
-# This file is distributed under a 2-clause BSD license.
-# See the LICENSE and CONTRIBUTORS files for details.
+# SPDX-License-Identifier: BSD-2-Clause
 
 | # Nuxi CloudABI
 |
 | CloudABI is what you get if you take POSIX, add capability-based
 | security, and remove everything that's incompatible with that. The
-| result is a minimal ABI consisting of only 58 syscalls.
+| result is a minimal ABI consisting of only 49 syscalls.
 |
 | CloudABI doesn't have its own kernel, but instead is implemented in existing
 | kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
@@ -35,16 +34,17 @@
 | In CloudABI, a process depends on its parent process to launch it with
 | the right set of resources, since the process will not be able to open
 | any new resources. For example, a simple static web server would need
-| to be started with an fd to a listening socket, and an fd to the
-| directory to serve files out of. The web server will then be unable to
-| do anything other than reading files in that directory, and accept
-| connections on the given socket.
+| to be started with a file descriptor to a [TCP
+| listener](https://github.com/NuxiNL/flower), and a file descriptor to
+| the directory for which to serve files. The web server will then be
+| unable to do anything other than reading files in that directory, and
+| process incoming network connections.
 |
 | So, unknown CloudABI binaries can safely be executed without the need
-| for containers, virtual machines, or other sandboxing techonologies.
+| for containers, virtual machines, or other sandboxing technologies.
 |
 | Watch [Ed Schouten's Talk at
-| 32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
+| 32C3](https://www.youtube.com/watch?v=3N29vrPoDv8) for more
 | information about what capability-based security for UNIX means.
 |
 | ## Cloudlibc
@@ -52,7 +52,7 @@
 | [Cloudlibc](https://github.com/NuxiNL/cloudlibc) is an implementation
 | of the C standard library, without all CloudABI-incompatible
 | functions. For example, Cloudlibc does not have `printf`, but does
-| have `fprintf`.
+| have `fprintf`. It does not have `open`, but does have `openat`.
 |
 | ## CloudABI-Ports
 |
@@ -136,6 +136,16 @@ enum uint32 auxtype
 		| executable.
 	4   phnum
 		| Number of ELF program headers of the executable.
+	263 pid
+		| Identifier of the process.
+		|
+		| This environment does not provide any simple numerical
+		| process identifiers, for the reason that these are not
+		| useful in distributed contexts. Instead, processes are
+		| identified by a UUID.
+		|
+		| This record should point to sixteen bytes of binary
+		| data, containing a version 4 UUID (fully random).
 	262 sysinfo_ehdr
 		| Address of the ELF header of the vDSO.
 		|
@@ -159,10 +169,6 @@ enum uint32 auxtype
 		| system calls.
 	261 tid
 		| Thread ID of the initial thread of the process.
-
-alias uint32 backlog
-	| Number of incoming connections a socket is capable of keeping
-	| in its backlog.
 
 enum uint32 clockid
 	| Identifiers for clocks.
@@ -367,24 +373,25 @@ flags uint16 eventrwflags
 	| [eventtype.fd_read] or [eventtype.fd_write].
 	@cprefix EVENT_FD_READWRITE_
 	0x01 hangup
-		| The peer of this FIFO or socket has closed or
-		| disconnected.
+		| The peer of this socket has closed or disconnected.
 
 enum uint8 eventtype
-	| Type of a subscription to an event or its occurence.
+	| Type of a subscription to an event or its occurrence.
 	1 clock
 		| The time value of clock [subscription.clock.clock_id]
 		| has reached timestamp [subscription.clock.timeout].
 	2 condvar
 		| Condition variable [subscription.condvar.condvar] has
 		| been woken up and [subscription.condvar.lock] has been
-		| aqcuired for writing.
+		| acquired for writing.
 	3 fd_read
 		| File descriptor [subscription.fd_readwrite.fd] has
-		| data available for reading.
+		| data available for reading. This event always triggers
+		| for regular files.
 	4 fd_write
 		| File descriptor [subscription.fd_readwrite.fd] has
-		| capacity available for writing.
+		| capacity available for writing. This event always
+		| triggers for regular files.
 	5 lock_rdlock
 		| Lock [subscription.lock.lock] has been acquired for
 		| reading.
@@ -482,11 +489,6 @@ enum uint8 filetype
 	0x20 directory
 		| The file descriptor or file refers to a directory
 		| inode.
-	0x30 fifo
-		| The file descriptor or file refers to a FIFO inode or
-		| one of the two endpoints of a pipe.
-	0x40 poll
-		| The file descriptor refers to a polling event queue.
 	0x50 process
 		| The file descriptor refers to a process handle.
 	0x60 regular_file
@@ -497,9 +499,6 @@ enum uint8 filetype
 	0x80 socket_dgram
 		| The file descriptor or file refers to a datagram
 		| socket.
-	0x81 socket_seqpacket
-		| The file descriptor or file refers to a
-		| sequenced-packet socket.
 	0x82 socket_stream
 		| The file descriptor or file refers to a byte-stream
 		| socket.
@@ -597,27 +596,6 @@ flags uint8 msflags
 	0x04 sync
 		| Perform synchronous writes.
 
-flags uint16 msgflags
-	| Flags provided to and returned by [sock_recv] and [sock_send].
-	@cprefix MSG_
-	0x01 ctrunc
-		| Returned by [sock_recv]: File descriptors truncated.
-	0x02 eor
-		| Provided to [sock_send]: Terminates a record (if
-		| supported by the protocol).
-		|
-		| Returned by [sock_recv]: End-of-record was received
-		| (if supported by the protocol).
-	0x04 peek
-		| Provided to [sock_recv]: Returns the message without
-		| removing it from the socket's receive queue.
-	0x08 trunc
-		| Returned by [sock_recv]: Message data has been
-		| truncated.
-	0x10 waitall
-		| Provided to [sock_recv]: On byte-stream sockets, block
-		| until the full amount of data can be returned.
-
 alias uint32 nthreads
 	| Specifies the number of threads sleeping on a condition
 	| variable that should be woken up.
@@ -687,9 +665,6 @@ flags uint64 rights
 	0x0000000000000400 file_create_file
 		| If [rights.file_open] is set, the right to invoke
 		| [file_open] with [oflags.creat].
-	0x0000000000000800 file_create_fifo
-		| The right to invoke [file_create] with
-		| [filetype.fifo].
 	0x0000000000001000 file_link_source
 		| The right to invoke [file_link] with the file
 		| descriptor as the source directory.
@@ -740,59 +715,17 @@ flags uint64 rights
 		| [mem_map] with [mprot.exec].
 	0x0000000010000000 poll_fd_readwrite
 		| If [rights.fd_read] is set, includes the right to
-		| invoke [poll] and [poll_fd] to subscribe to
-		| [eventtype.fd_read].
+		| invoke [poll] to subscribe to [eventtype.fd_read].
 		|
 		| If [rights.fd_write] is set, includes the right to
-		| invoke [poll] and [poll_fd] to subscribe to
-		| [eventtype.fd_write].
-	0x0000000020000000 poll_modify
-		| The right to modify the events a polling event queue
-		| is subscribed to.
+		| invoke [poll] to subscribe to [eventtype.fd_write].
 	0x0000000040000000 poll_proc_terminate
-		| The right to invoke [poll] and [poll_fd] to
-		| subscribe to [eventtype.proc_terminate].
-	0x0000000080000000 poll_wait
-		| The right to wait for events on a polling event queue
-		| and extract them.
-		# What would it mean to have any of the poll_* rights,
-		# but not poll_wait?
+		| The right to invoke [poll] to subscribe to
+		| [eventtype.proc_terminate].
 	0x0000000100000000 proc_exec
 		| The right to invoke [proc_exec].
-	0x0000000200000000 sock_accept
-		| The right to invoke [sock_accept].
-	0x0000000400000000 sock_bind_directory
-		| The right to invoke [sock_bind] with the file
-		| descriptor as the directory.
-	0x0000000800000000 sock_bind_socket
-		| The right to invoke [sock_bind] with the file
-		| descriptor as the socket.
-	0x0000001000000000 sock_connect_directory
-		| The right to invoke [sock_connect] with the file
-		| descriptor as the directory.
-	0x0000002000000000 sock_connect_socket
-		| The right to invoke [sock_connect] with the file
-		| descriptor as the socket.
-	0x0000004000000000 sock_listen
-		| The right to invoke [sock_listen].
 	0x0000008000000000 sock_shutdown
 		| The right to invoke [sock_shutdown].
-	0x0000010000000000 sock_stat_get
-		| The right to invoke [sock_stat_get].
-
-enum uint8 sa_family
-	| Socket address family.
-	@cprefix AF_
-	0 unspec
-		| The socket address family is unknown or is different
-		| from any of the other address families specified.
-	1 inet
-		| An IPv4 address.
-	2 inet6
-		| An IPv6 address.
-	3 unix
-		| The socket is local to the system, and may be bound to
-		| the file system.
 
 flags uint8 sdflags
 	| Which channels on a socket need to be shut down.
@@ -801,6 +734,10 @@ flags uint8 sdflags
 		| Disables further receive operations.
 	0x02 wr
 		| Disables further send operations.
+
+flags uint16 siflags
+	| Flags provided to [sock_send]. As there are currently no flags
+	| defined, it must be set to zero.
 
 enum uint8 signal
 	| Signal condition.
@@ -838,7 +775,7 @@ enum uint8 signal
 		|
 		| Action: Terminates the process.
 	9  int
-		| Terminale interrupt signal.
+		| Terminate interrupt signal.
 		|
 		| Action: Terminates the process.
 	10 kill
@@ -910,53 +847,6 @@ enum uint8 signal
 		|
 		| Action: Terminates the process.
 
-flags uint8 ssflags
-	| Specifies which socket attributes need to be altered when
-	| calling [sock_stat_get].
-	@cprefix SOCKSTAT_
-	0x01 clear_error
-		| Clear [sockstat.ss_error].
-
-flags uint32 sstate
-	| State of the socket.
-	@cprefix SOCKSTATE_
-	0x01 acceptconn
-		| [sock_listen] has been called on the socket. The
-		| socket is accepting incoming connections.
-
-flags uint16 subflags
-	| Flags for [poll_fd] to determine how to process a
-	| subscription request. These flags are ignored by [poll].
-	@cprefix SUBSCRIPTION_
-	0x01 add
-		| Adds and enables the subscription. Implies
-		| [subflags.enable], unless [subflags.disable] is
-		| specified.
-	0x02 clear
-		| Sets the event back to the initial state, so that it
-		| no longer triggers.
-		# I'm not sure what this means.
-	0x04 delete
-		| Deletes the subscription.
-		# What if you specify a subscription that the fd wasn't
-		# subscribed to? Is that ignored?
-		# When does an existing subscription match one specified
-		# for deletion? Only when all fields are the same? Or
-		# only the intersection of the fields of [subscription]
-		# and [event]?
-	0x08 disable
-		| Disables the subscription so that it does not trigger,
-		| but does not delete it.
-		# What's the advantage of disabling and enabling, over
-		# deleting and adding?
-	0x10 enable
-		| Enables the subscription so that it can trigger.
-	0x20 oneshot
-		| Automatically deletes the subscription once triggered.
-	# This is a 'flags' field, but how do the values combine?
-	# Can I use add|disable? or add|disable|oneshot, such that it
-	# triggers once after i enable it?
-
 flags uint16 subclockflags
 	| Flags determining how the timestamp provided in
 	| [subscription.clock.timeout] should be interpreted.
@@ -975,9 +865,28 @@ flags uint16 subrwflags
 	| a file descriptor.
 	@cprefix SUBSCRIPTION_FD_READWRITE_
 	0x01 poll
-		| If set, trigger immediately when polling for reading
-		| on a regular file, just like the POSIX poll function.
-		| Otherwise, only trigger when not at the end-of-file.
+		| Deprecated. Must be set by callers and ignored by
+		| implementations.
+
+flags uint16 riflags
+	| Flags provided to [sock_recv].
+	@cprefix SOCK_RECV_
+	0x04 peek
+		| Returns the message without removing it from the
+		| socket's receive queue.
+	0x10 waitall
+		| On byte-stream sockets, block until the full amount
+		| of data can be returned.
+
+flags uint16 roflags
+	| Flags returned by [sock_recv].
+	@cprefix SOCK_RECV_
+	0x01 fds_truncated
+		| Returned by [sock_recv]: List of file descriptors
+		| has been truncated.
+	0x08 data_truncated
+		| Returned by [sock_recv]: Message data has been
+		| truncated.
 
 opaque uint32 tid
 	| Unique system-local identifier of a thread. This identifier is
@@ -986,6 +895,10 @@ opaque uint32 tid
 	| Threads must be aware of their thread identifier, as it is
 	| written it into locks when acquiring them for writing. It is
 	| not advised to use these identifiers for any other purpose.
+	|
+	| As the thread identifier is also stored in [lock] when
+	| [lock.wrlocked] is set, the top two bits of the thread
+	| must always be set to zero.
 
 alias uint64 timestamp
 	| Timestamp in nanoseconds.
@@ -1038,7 +951,7 @@ struct auxv
 		argdatalen canarylen ncpus pagesz phnum tid
 			size a_val
 				| A numerical value.
-		argdata base canary phdr sysinfo_ehdr
+		argdata base canary phdr pid sysinfo_ehdr
 			ptr void a_ptr
 				| A pointer value.
 
@@ -1050,7 +963,7 @@ function processentry
 
 struct ciovec
 	| A region of memory for scatter/gather writes.
-	crange void iov_base iov_len iov_data
+	crange void buf
 		| The address and length of the buffer to be written.
 
 struct dirent
@@ -1078,46 +991,27 @@ struct event
 	eventtype type
 		| The type of the event that occurred.
 	variant type
-		clock
-			struct clock
-				userdata identifier
-					| The user-defined unique
-					| identifier of the clock.
-		condvar
-			struct condvar
-				ptr atomic condvar condvar
-					| The condition variable that
-					| got woken up.
 		fd_read fd_write
 			struct fd_readwrite
 				filesize     nbytes
 					| The number of bytes available
 					| for reading or writing.
-				fd           fd
-					| The file descriptor that has
-					| data available for reading or
-					| writing.
+				array 4 char unused
+					| Obsolete.
 				eventrwflags flags
 					| The state of the file
 					| descriptor.
-		lock_rdlock lock_wrlock
-			struct lock
-				ptr atomic lock lock
-					| The lock that has been
-					| acquired for reading or
-					| writing.
 		proc_terminate
 			struct proc_terminate
-				fd       fd
-					| The process descriptor of the
-					| process that has terminated.
-				signal   signal
+				array 4 char unused
+					| Obsolete.
+				signal       signal
 					| If zero, the process has
 					| exited.
 					| Otherwise, the signal
 					| condition causing it to
 					| terminated.
-				exitcode exitcode
+				exitcode     exitcode
 					| If exited, the exit code of
 					| the process.
 
@@ -1157,7 +1051,7 @@ struct filestat
 
 struct iovec
 	| A region of memory for scatter/gather reads.
-	range void iov_base iov_len iov_data
+	range void buf
 		| The address and length of the buffer to be filled.
 
 struct lookup
@@ -1171,49 +1065,30 @@ struct lookup
 
 struct recv_in
 	| Arguments of [sock_recv].
-	crange iovec ri_data ri_datalen ri_data
+	crange iovec ri_data
 		| List of scatter/gather vectors where message data
 		| should be stored.
-	range fd     ri_fds  ri_fdslen  ri_fds
+	range fd     ri_fds
 		| Buffer where numbers of incoming file descriptors
 		| should be stored.
-	msgflags     ri_flags
-		| Message flags. Only [msgflags.peek] and
-		| [msgflags.waitall] are valid.
+	riflags      ri_flags
+		| Message flags.
 
 struct send_in
 	| Arguments of [sock_send].
-	crange ciovec si_data si_datalen si_data
+	crange ciovec si_data
 		| List of scatter/gather vectors where message data
 		| should be retrieved.
-	crange fd     si_fds  si_fdslen  si_fds
+	crange fd     si_fds
 		| File descriptors that need to be attached to the
 		| message.
-	msgflags      si_flags
-		| Message flags. Only [msgflags.eor] is valid.
+	siflags       si_flags
+		| Message flags.
 
 struct send_out
 	| Results of [sock_send].
 	size so_datalen
 		| Number of bytes transmitted.
-
-struct sockaddr
-	| Network address of a bound socket or its peer.
-	sa_family sa_family
-		| Address family.
-	variant sa_family
-		inet
-			struct sa_inet
-				array 4 uint8 addr
-					| IPv4 address.
-				uint16        port
-					| IPv4 port number.
-		inet6
-			struct sa_inet6
-				array 16 uint8 addr
-					| IPv6 address.
-				uint16         port
-					| IPv6 port number.
 
 struct recv_out
 	| Results of [sock_recv].
@@ -1221,25 +1096,10 @@ struct recv_out
 		| Number of bytes stored in [recv_in.ri_data].
 	size     ro_fdslen
 		| Number of file descriptors stored in [recv_in.ri_fds].
-	sockaddr ro_sockname
-		| Address on which the message was received.
-	sockaddr ro_peername
-		| Address of the peer sending the message.
-	msgflags ro_flags
-		| Message flags. Only [msgflags.ctrunc], [msgflags.eor],
-		| and [msgflags.trunc] are valid.
-
-struct sockstat
-	| Socket attributes.
-	sockaddr ss_sockname
-		| The address to which this socket is bound.
-	sockaddr ss_peername
-		| The address to which this socket is connected.
-	errno    ss_error
-		| Error code of the last completed asynchronous
-		| operation performed on this socket.
-	sstate   ss_state
-		| Flags describing the state of the socket.
+	array 40 char ro_unused
+		| Fields that were used by previous implementations.
+	roflags  ro_flags
+		| Message flags.
 
 struct subscription
 	| Subscription to an event.
@@ -1247,18 +1107,17 @@ struct subscription
 		| User-provided value that is attached to the
 		| subscription in the kernel and returned through
 		| [event.userdata].
-	subflags  flags
-		| Subscription adjustment flags used by [poll_fd].
-		| Ignored by [poll].
+	uint16    unused
+		| Used by previous implementations. Ignored.
 	eventtype type
 		| The type of the event to which to subscribe.
 		|
 		| Currently, [eventtype.condvar],
 		| [eventtype.lock_rdlock], and [eventtype.lock_wrlock]
-		| can only be used with [poll].  It must be provided as
-		| the first subscription and may only be followed by up
-		| to one other subscription, having type
-		| [eventtype.clock] with [subclockflags.abstime].
+		| must be provided as the first subscription and may
+		| only be followed by up to one other subscription,
+		| having type [eventtype.clock] with
+		| [subclockflags.abstime].
 	variant type
 		clock
 			struct clock
@@ -1269,7 +1128,7 @@ struct subscription
 					| The clock against which the
 					| timestamp should be compared.
 		# What happens when waiting for thread_cputime_id?
-		# UB? Wait forever? Actually uses monotonic intstead?
+		# UB? Wait forever? Actually uses monotonic instead?
 		# And how about realtime? Can I wait for a specific
 		# date/time?
 				timestamp timeout
@@ -1354,7 +1213,7 @@ struct threadattr
 	| Attributes for thread creation.
 	ptr threadentry entry_point
 		| Initial program counter value.
-	range void      stack stack_size stack
+	range void      stack
 		| Region allocated to serve as stack space.
 	ptr void        argument
 		| Argument to be forwarded to the entry point function.
@@ -1413,18 +1272,9 @@ syscall fd_create1
 	| Creates a file descriptor.
 	in
 		filetype type
-			poll
-				| Creates a polling event queue.
 			shared_memory
 				| Creates an anonymous shared memory
 				| object.
-			socket_dgram
-				| Creates a UNIX datagram socket.
-			socket_seqpacket
-				| Creates a UNIX sequenced-packet
-				| socket.
-			socket_stream
-				| Creates a UNIX byte-stream socket.
 	out
 		fd       fd
 			| The file descriptor that has been created.
@@ -1433,23 +1283,16 @@ syscall fd_create2
 	| Creates a pair of file descriptors.
 	in
 		filetype type
-			fifo
-				| Creates a pipe.
 			socket_dgram
 				| Creates a UNIX datagram socket pair.
-			socket_seqpacket
-				| Creates a UNIX sequenced-packet socket
-				| pair.
 			socket_stream
 				| Creates a UNIX byte-stream socket
 				| pair.
 	out
 		fd       fd1
-			| The first file descriptor of the pair. For
-			| pipes, this corresponds to the read end.
+			| The first file descriptor of the pair.
 		fd       fd2
-			| The second file descriptor of the pair. For
-			| pipes, this corresponds to the write end.
+			| The second file descriptor of the pair.
 
 syscall fd_datasync
 	| Synchronizes the data of a file to disk.
@@ -1475,7 +1318,7 @@ syscall fd_pread
 		fd           fd
 			| The file descriptor from which data should be
 			| read.
-		crange iovec iov iovcnt iovs
+		crange iovec iovs
 			| List of scatter/gather vectors where data
 			| should be stored.
 		filesize     offset
@@ -1492,7 +1335,7 @@ syscall fd_pwrite
 		fd            fd
 			| The file descriptor to which data should be
 			| written.
-		crange ciovec iov iovcnt iovs
+		crange ciovec iovs
 			| List of scatter/gather vectors where data
 			| should be retrieved.
 		filesize      offset
@@ -1508,7 +1351,7 @@ syscall fd_read
 		fd           fd
 			| The file descriptor from which data should be
 			| read.
-		crange iovec iov iovcnt iovs
+		crange iovec iovs
 			| List of scatter/gather vectors where data
 			| should be stored.
 	out
@@ -1587,7 +1430,7 @@ syscall fd_write
 		fd            fd
 			| The file descriptor to which data should be
 			| written.
-		crange ciovec iov iovcnt iovs
+		crange ciovec iovs
 			| List of scatter/gather vectors where data
 			| should be retrieved.
 	out
@@ -1627,13 +1470,11 @@ syscall file_create
 		fd          fd
 			| The working directory at which the resolution
 			| of the file to be created starts.
-		crange char path pathlen path
+		crange char path
 			| The path at which the file should be created.
 		filetype    type
 			directory
 				| Creates a directory.
-			fifo
-				| Creates a FIFO.
 
 syscall file_link
 	| Creates a hard link.
@@ -1641,13 +1482,13 @@ syscall file_link
 		lookup      fd1
 			| The working directory at which the resolution
 			| of the source path starts.
-		crange char path1 path1len path1
+		crange char path1
 			| The source path of the file that should be
 			| hard linked.
 		fd          fd2
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path at which the hard link
 			| should be created.
 
@@ -1657,7 +1498,7 @@ syscall file_open
 		lookup      dirfd
 			| The working directory at which the resolution
 			| of the file to be opened starts.
-		crange char path pathlen path
+		crange char path
 			| The path of the file that should be opened.
 		oflags      oflags
 			| The method at which the file should be opened.
@@ -1696,7 +1537,7 @@ syscall file_readdir
 		fd         fd
 			| The directory from which to read the directory
 			| entries.
-		range void buf nbyte buf
+		range void buf
 			| The buffer where directory entries are stored.
 		dircookie  cookie
 			| The location within the directory to start
@@ -1713,10 +1554,10 @@ syscall file_readlink
 		fd          fd
 			| The working directory at which the resolution
 			| of the path of the symbolic starts.
-		crange char path pathlen path
+		crange char path
 			| The path of the symbolic link whose contents
 			| should be read.
-		range char  buf bufsize  buf
+		range char  buf
 			| The buffer where the contents of the symbolic
 			| link should be stored.
 	out
@@ -1729,13 +1570,13 @@ syscall file_rename
 		fd          fd1
 			| The working directory at which the resolution
 			| of the source path starts.
-		crange char path1 path1len path1
+		crange char path1
 			| The source path of the file that should be
 			| renamed.
 		fd          fd2
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path to which the file should
 			| be renamed.
 
@@ -1769,7 +1610,7 @@ syscall file_stat_get
 			| The working directory at which the resolution
 			| of the path whose attributes have to be
 			| obtained starts.
-		crange char  path pathlen path
+		crange char  path
 			| The path of the file whose attributes have to
 			| be obtained.
 		ptr filestat buf
@@ -1783,7 +1624,7 @@ syscall file_stat_put
 			| The working directory at which the resolution
 			| of the path whose attributes have to be
 			| adjusted starts.
-		crange char   path pathlen path
+		crange char   path
 			| The path of the file whose attributes have to
 			| be adjusted.
 		cptr filestat buf
@@ -1796,12 +1637,12 @@ syscall file_stat_put
 syscall file_symlink
 	| Creates a symbolic link.
 	in
-		crange char path1 path1len path1
+		crange char path1
 			| The contents of the symbolic link.
 		fd          fd
 			| The working directory at which the resolution
 			| of the destination path starts.
-		crange char path2 path2len path2
+		crange char path2
 			| The destination path at which the symbolic
 			| link should be created.
 
@@ -1811,7 +1652,7 @@ syscall file_unlink
 		fd          fd
 			| The working directory at which the resolution
 			| of the path starts.
-		crange char path pathlen path
+		crange char path
 			| The path that needs to be unlinked or removed.
 		ulflags     flags
 			removedir
@@ -1842,19 +1683,11 @@ syscall lock_unlock
 syscall mem_advise
 	| Provides memory advisory information on a region of memory.
 	in
-		range void addr len mem
+		range void mapping
 			| The pages for which to provide memory advisory
 			| information.
 		advice     advice
 			| The advice.
-
-syscall mem_lock
-	| Increments the lock count on a region of memory, which
-	| prevents it from leaving system memory.
-	in
-		crange void addr len mem
-			| The pages that need its lock count
-			| incremented.
 
 syscall mem_map
 	| Creates a memory mapping, making the contents of a file
@@ -1890,7 +1723,7 @@ syscall mem_map
 syscall mem_protect
 	| Change the protection of a memory mapping.
 	in
-		range void addr len mem
+		range void mapping
 			| The pages that need their protection changed.
 		mprot      prot
 			| New protection options.
@@ -1898,23 +1731,15 @@ syscall mem_protect
 syscall mem_sync
 	| Synchronize a region of memory with its physical storage.
 	in
-		range void addr len mem
+		range void mapping
 			| The pages that need to be synchronized.
 		msflags    flags
 			| The method of synchronization.
 
-syscall mem_unlock
-	| Decrements the lock count on a region of memory, which
-	| prevents it from leaving system memory.
-	in
-		crange void addr len mem
-			| The pages that need its lock count
-			| decremented.
-
 syscall mem_unmap
 	| Unmaps a region of memory.
 	in
-		range void addr len mem
+		range void mapping
 			| The pages that needs to be unmapped.
 
 syscall poll
@@ -1930,38 +1755,18 @@ syscall poll
 		size nevents
 			| The number of events stored.
 
-syscall poll_fd
-	| Concurrently polls for the occurrence of a set of events,
-	| while retaining subscriptions across calls.
-	in
-		fd                  fd
-			| The polling event queue.
-		crange subscription in nin in
-			| Changes that need to be made to the polling
-			| event queue.
-		range event         out nout out
-			| The events that have occurred.
-		cptr subscription   timeout
-			| Subscription of type [eventtype.clock] to
-			| serve as a timeout for the system call. The
-			| subscription is local to this invocation of
-			| this system call and is automatically purged
-			| upon completion.
-	out
-		size nevents
-			| The number of events stored.
-
 syscall proc_exec
 	| Replaces the process by a new executable.
 	|
 	| Process execution in CloudABI differs from POSIX in two ways:
 	| handling of arguments and inheritance of file descriptors.
 	|
-	| CloudABI does not use string command line arguments. A buffer
-	| with binary data is copied into the new executable instead.
-	| The kernel does not enforce any specific structure to this
-	| data, although CloudABI's C library uses it to store a tree
-	| structure that is semantically identical to YAML.
+	| CloudABI does not use string command line arguments. Instead,
+	| a buffer with binary data is copied into the address space of
+	| the new executable. The kernel does not enforce any specific
+	| structure to this data, although CloudABI's C library uses it
+	| to store a tree structure that is semantically identical to
+	| YAML.
 	|
 	| Due to the strong focus on thread safety, file descriptors
 	| aren't inherited through close-on-exec flags. An explicit
@@ -1974,10 +1779,10 @@ syscall proc_exec
 	in
 		fd          fd
 			| A file descriptor of the new executable.
-		crange void data datalen data
+		crange void data
 			| Binary argument data that is passed on to the
 			| new executable.
-		crange fd   fds fdslen fds
+		crange fd   fds
 			| The layout of the file descriptor table after
 			| execution.
 
@@ -1996,7 +1801,7 @@ syscall proc_fork
 	| After forking, a new process shall be created, having only a
 	| copy of the calling thread. The parent process will obtain a
 	| process descriptor. When closed, the child process is
-	| automatically signalled with [signal.kill].
+	| automatically signaled with [signal.kill].
 	out
 		fd  fd
 			| In the parent process: the file descriptor
@@ -2026,54 +1831,9 @@ syscall random_get
 	| that the random data obtained through this system call is used
 	| as the seed for a userspace pseudo-random number generator.
 	in
-		range void buf nbyte buf
+		range void buf
 			| The buffer that needs to be filled with random
 			| data.
-
-syscall sock_accept
-	| Accepts an incoming connection on a listening socket.
-	in
-		fd           sock
-			| The file descriptor of the listening socket.
-		ptr sockstat buf
-			| The attributes of the socket associated with
-			| the incoming connection.
-	out
-		fd conn
-			| The socket associated with the incoming
-			| connection.
-
-syscall sock_bind
-	| Binds a UNIX socket to a path.
-	in
-		fd          sock
-			| The file descriptor of the socket to be bound.
-		fd          fd
-			| The working directory at which the resolution
-			| of the path to which to bind starts.
-		crange char path pathlen path
-			| The path to which the socket should bind.
-
-syscall sock_connect
-	| Connects a UNIX socket to another UNIX socket bound at a path.
-	in
-		fd          sock
-			| The file descriptor of the socket to connect.
-		fd          fd
-			| The working directory at which the resolution
-			| of the path to which to connect starts.
-		crange char path pathlen path
-			| The path to which the socket should onnect.
-
-syscall sock_listen
-	| Listens for incoming connections on a socket.
-	in
-		fd      sock
-			| The socket on which listening should be
-			| enabled.
-		backlog backlog
-			| Number of incoming connections the socket is
-			| capable of keeping in its backlog.
 
 syscall sock_recv
 	| Receives a message on a socket.
@@ -2104,19 +1864,6 @@ syscall sock_shutdown
 		sdflags how
 			| Which channels on the socket need to be shut
 			| down.
-
-syscall sock_stat_get
-	| Gets attributes of a socket.
-	in
-		fd           sock
-			| The socket whose attributes have to be
-			| obtained.
-		ptr sockstat buf
-			| The buffer where the socket's attributes are
-			| stored.
-		ssflags      flags
-			| Flags indicating how the existing socket
-			| attributes need to be changed.
 
 syscall thread_create
 	| Creates a new thread within the current process.
