@@ -87,9 +87,6 @@ class RustGenerator(Generator):
                                               p.name))
         return params
 
-
-class RustSyscalldefsGenerator(RustGenerator):
-
     def generate_head(self, abi):
         super().generate_head(abi)
         print('//! **PLEASE NOTE: This entire crate including this')
@@ -188,7 +185,7 @@ class RustSyscalldefsGenerator(RustGenerator):
                 print('///')
                 print('/// **{}**:'.format(param.name))
                 self.print_doc(param)
-            print('pub type {} = extern "C" fn('.format(self.naming.typename(type)))
+            print('pub type {} = unsafe extern "C" fn('.format(self.naming.typename(type)))
             for param in type.parameters.raw_members:
                 print('  {}: {},'.format(param.name,
                     self.naming.typename(param.type)))
@@ -262,3 +259,95 @@ class RustSyscalldefsGenerator(RustGenerator):
 
         print()
 
+    def generate_syscalls(self, abi, syscalls):
+        print('/// The table with pointers to all syscall implementations.')
+        print('#[repr(C)]')
+        print('#[derive(Clone)]')
+        print('pub struct syscalls {')
+        for s in sorted(abi.syscalls):
+            self.generate_syscall_entry(abi, abi.syscalls[s])
+        print('}')
+        print()
+        print('#[allow(improper_ctypes)]')
+        print('extern "C" { static cloudabi_syscalls: syscalls; }')
+        for s in sorted(abi.syscalls):
+            print()
+            self.generate_syscall_wrapper(abi, abi.syscalls[s])
+
+    def generate_syscall_entry(self, abi, syscall):
+        if syscall.noreturn:
+            return_type = '!';
+        else:
+            return_type = self.naming.typename(abi.types['errno'])
+        params = []
+        for p in syscall.input.raw_members:
+            params.append('_: ' + self.naming.typename(p.type))
+        for p in syscall.output.raw_members:
+            params.append('_: ' +
+                    self.naming.typename(OutputPointerType(p.type)))
+        print('  pub {}: unsafe extern "C" fn({}) -> {},'.format(
+            syscall.name, ', '.join(params), return_type))
+
+    def generate_syscall_wrapper(self, abi, syscall):
+        self.print_doc(syscall)
+
+        if syscall.input.members:
+            print('///')
+            print('/// ## Inputs')
+            for p in syscall.input.members:
+                print('///')
+                print('/// **{}**:'.format(p.name))
+                self.print_doc(p)
+        if syscall.output.members:
+            print('///')
+            print('/// ## Outputs')
+            for p in syscall.output.members:
+                print('///')
+                print('/// **{}**:'.format(p.name))
+                self.print_doc(p)
+
+        if syscall.noreturn:
+            return_type = '!';
+        else:
+            return_type = self.naming.typename(abi.types['errno'])
+
+        params = []
+        for p in syscall.input.members:
+            params.append(self.syscall_param(p))
+        for p in syscall.output.members:
+            params.append(self.syscall_param(p, True))
+
+        print('#[inline]')
+        print('pub unsafe fn {}({}) -> {} {{'.format(
+            syscall.name, ', '.join(params), return_type))
+
+        args = []
+        for p in syscall.input.members:
+            n = p.name + '_'
+            if isinstance(p, RangeStructMember):
+                cast = ''
+                if isinstance(p.target_type, VoidType):
+                    cast = ' as *const ()' if p.const else ' as *mut ()'
+                args.append(n + ('.as_ptr()' if p.const else '.as_mut_ptr()') + cast)
+                args.append(n + '.len()')
+            else:
+                args.append(n)
+        for p in syscall.output.members:
+            assert not isinstance(p, RangeStructMember)
+            args.append(p.name + '_')
+
+        print('  (cloudabi_syscalls.{})({})'.format(syscall.name, ', '.join(args)))
+        print('}')
+
+    def syscall_param(self, p, output = False):
+        name = p.name + '_'
+        if isinstance(p, RangeStructMember):
+            return '{}: {}&{}[{}]'.format(
+                name,
+                '&mut ' if output else '',
+                '' if p.const else 'mut ',
+                'u8' if isinstance(p.target_type, VoidType) else
+                    self.naming.typename(p.target_type))
+        else:
+            return '{}: {}{}'.format(
+                name, '&mut ' if output else '', self.naming.typename(p.type))

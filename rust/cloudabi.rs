@@ -1196,7 +1196,7 @@ pub struct lookup {
 ///
 /// **auxv**:
 /// The auxiliary vector. See `auxv`.
-pub type processentry = extern "C" fn(
+pub type processentry = unsafe extern "C" fn(
   auxv: *const auxv,
 ) -> ();
 
@@ -1387,7 +1387,7 @@ pub struct tcb {
 /// **aux**:
 /// Copy of the value stored in
 /// `threadattr.argument`.
-pub type threadentry = extern "C" fn(
+pub type threadentry = unsafe extern "C" fn(
   tid: tid,
   aux: *mut (),
 ) -> ();
@@ -1404,3 +1404,1062 @@ pub struct threadattr {
   pub argument: *mut (),
 }
 
+/// The table with pointers to all syscall implementations.
+#[repr(C)]
+#[derive(Clone)]
+pub struct syscalls {
+  pub clock_res_get: unsafe extern "C" fn(_: clockid, _: *mut timestamp) -> errno,
+  pub clock_time_get: unsafe extern "C" fn(_: clockid, _: timestamp, _: *mut timestamp) -> errno,
+  pub condvar_signal: unsafe extern "C" fn(_: *mut condvar, _: scope, _: nthreads) -> errno,
+  pub fd_close: unsafe extern "C" fn(_: fd) -> errno,
+  pub fd_create1: unsafe extern "C" fn(_: filetype, _: *mut fd) -> errno,
+  pub fd_create2: unsafe extern "C" fn(_: filetype, _: *mut fd, _: *mut fd) -> errno,
+  pub fd_datasync: unsafe extern "C" fn(_: fd) -> errno,
+  pub fd_dup: unsafe extern "C" fn(_: fd, _: *mut fd) -> errno,
+  pub fd_pread: unsafe extern "C" fn(_: fd, _: *const iovec, _: usize, _: filesize, _: *mut usize) -> errno,
+  pub fd_pwrite: unsafe extern "C" fn(_: fd, _: *const ciovec, _: usize, _: filesize, _: *mut usize) -> errno,
+  pub fd_read: unsafe extern "C" fn(_: fd, _: *const iovec, _: usize, _: *mut usize) -> errno,
+  pub fd_replace: unsafe extern "C" fn(_: fd, _: fd) -> errno,
+  pub fd_seek: unsafe extern "C" fn(_: fd, _: filedelta, _: whence, _: *mut filesize) -> errno,
+  pub fd_stat_get: unsafe extern "C" fn(_: fd, _: *mut fdstat) -> errno,
+  pub fd_stat_put: unsafe extern "C" fn(_: fd, _: *const fdstat, _: fdsflags) -> errno,
+  pub fd_sync: unsafe extern "C" fn(_: fd) -> errno,
+  pub fd_write: unsafe extern "C" fn(_: fd, _: *const ciovec, _: usize, _: *mut usize) -> errno,
+  pub file_advise: unsafe extern "C" fn(_: fd, _: filesize, _: filesize, _: advice) -> errno,
+  pub file_allocate: unsafe extern "C" fn(_: fd, _: filesize, _: filesize) -> errno,
+  pub file_create: unsafe extern "C" fn(_: fd, _: *const u8, _: usize, _: filetype) -> errno,
+  pub file_link: unsafe extern "C" fn(_: lookup, _: *const u8, _: usize, _: fd, _: *const u8, _: usize) -> errno,
+  pub file_open: unsafe extern "C" fn(_: lookup, _: *const u8, _: usize, _: oflags, _: *const fdstat, _: *mut fd) -> errno,
+  pub file_readdir: unsafe extern "C" fn(_: fd, _: *mut (), _: usize, _: dircookie, _: *mut usize) -> errno,
+  pub file_readlink: unsafe extern "C" fn(_: fd, _: *const u8, _: usize, _: *mut u8, _: usize, _: *mut usize) -> errno,
+  pub file_rename: unsafe extern "C" fn(_: fd, _: *const u8, _: usize, _: fd, _: *const u8, _: usize) -> errno,
+  pub file_stat_fget: unsafe extern "C" fn(_: fd, _: *mut filestat) -> errno,
+  pub file_stat_fput: unsafe extern "C" fn(_: fd, _: *const filestat, _: fsflags) -> errno,
+  pub file_stat_get: unsafe extern "C" fn(_: lookup, _: *const u8, _: usize, _: *mut filestat) -> errno,
+  pub file_stat_put: unsafe extern "C" fn(_: lookup, _: *const u8, _: usize, _: *const filestat, _: fsflags) -> errno,
+  pub file_symlink: unsafe extern "C" fn(_: *const u8, _: usize, _: fd, _: *const u8, _: usize) -> errno,
+  pub file_unlink: unsafe extern "C" fn(_: fd, _: *const u8, _: usize, _: ulflags) -> errno,
+  pub lock_unlock: unsafe extern "C" fn(_: *mut lock, _: scope) -> errno,
+  pub mem_advise: unsafe extern "C" fn(_: *mut (), _: usize, _: advice) -> errno,
+  pub mem_map: unsafe extern "C" fn(_: *mut (), _: usize, _: mprot, _: mflags, _: fd, _: filesize, _: *mut *mut ()) -> errno,
+  pub mem_protect: unsafe extern "C" fn(_: *mut (), _: usize, _: mprot) -> errno,
+  pub mem_sync: unsafe extern "C" fn(_: *mut (), _: usize, _: msflags) -> errno,
+  pub mem_unmap: unsafe extern "C" fn(_: *mut (), _: usize) -> errno,
+  pub poll: unsafe extern "C" fn(_: *const subscription, _: *mut event, _: usize, _: *mut usize) -> errno,
+  pub proc_exec: unsafe extern "C" fn(_: fd, _: *const (), _: usize, _: *const fd, _: usize) -> errno,
+  pub proc_exit: unsafe extern "C" fn(_: exitcode) -> !,
+  pub proc_fork: unsafe extern "C" fn(_: *mut fd, _: *mut tid) -> errno,
+  pub proc_raise: unsafe extern "C" fn(_: signal) -> errno,
+  pub random_get: unsafe extern "C" fn(_: *mut (), _: usize) -> errno,
+  pub sock_recv: unsafe extern "C" fn(_: fd, _: *const recv_in, _: *mut recv_out) -> errno,
+  pub sock_send: unsafe extern "C" fn(_: fd, _: *const send_in, _: *mut send_out) -> errno,
+  pub sock_shutdown: unsafe extern "C" fn(_: fd, _: sdflags) -> errno,
+  pub thread_create: unsafe extern "C" fn(_: *mut threadattr, _: *mut tid) -> errno,
+  pub thread_exit: unsafe extern "C" fn(_: *mut lock, _: scope) -> !,
+  pub thread_yield: unsafe extern "C" fn() -> errno,
+}
+
+#[allow(improper_ctypes)]
+extern "C" { static cloudabi_syscalls: syscalls; }
+
+/// Obtains the resolution of a clock.
+///
+/// ## Inputs
+///
+/// **clock_id**:
+/// The clock for which the resolution needs to be
+/// returned.
+///
+/// ## Outputs
+///
+/// **resolution**:
+/// The resolution of the clock.
+#[inline]
+pub unsafe fn clock_res_get(clock_id_: clockid, resolution_: &mut timestamp) -> errno {
+  (cloudabi_syscalls.clock_res_get)(clock_id_, resolution_)
+}
+
+/// Obtains the time value of a clock.
+///
+/// ## Inputs
+///
+/// **clock_id**:
+/// The clock for which the time needs to be
+/// returned.
+///
+/// **precision**:
+/// The maximum lag (exclusive) that the returned
+/// time value may have, compared to its actual
+/// value.
+///
+/// ## Outputs
+///
+/// **time**:
+/// The time value of the clock.
+#[inline]
+pub unsafe fn clock_time_get(clock_id_: clockid, precision_: timestamp, time_: &mut timestamp) -> errno {
+  (cloudabi_syscalls.clock_time_get)(clock_id_, precision_, time_)
+}
+
+/// Wakes up threads waiting on a userspace condition variable.
+///
+/// If an invocation of this system call causes all waiting
+/// threads to be woken up, the value of the condition variable
+/// is set to `condvar.has_no_waiters`. As long as the condition
+/// variable is set to this value, it is not needed to invoke this
+/// system call.
+///
+/// ## Inputs
+///
+/// **condvar**:
+/// The userspace condition variable that has
+/// waiting threads.
+///
+/// **scope**:
+/// Whether the condition variable is stored in
+/// private or shared memory.
+///
+/// **nwaiters**:
+/// The number of threads that need to be woken
+/// up. If it exceeds the number of waiting
+/// threads, all threads are woken up.
+#[inline]
+pub unsafe fn condvar_signal(condvar_: *mut condvar, scope_: scope, nwaiters_: nthreads) -> errno {
+  (cloudabi_syscalls.condvar_signal)(condvar_, scope_, nwaiters_)
+}
+
+/// Closes a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor that needs to be closed.
+#[inline]
+pub unsafe fn fd_close(fd_: fd) -> errno {
+  (cloudabi_syscalls.fd_close)(fd_)
+}
+
+/// Creates a file descriptor.
+///
+/// ## Inputs
+///
+/// **type**:
+///
+/// ## Outputs
+///
+/// **fd**:
+/// The file descriptor that has been created.
+#[inline]
+pub unsafe fn fd_create1(type_: filetype, fd_: &mut fd) -> errno {
+  (cloudabi_syscalls.fd_create1)(type_, fd_)
+}
+
+/// Creates a pair of file descriptors.
+///
+/// ## Inputs
+///
+/// **type**:
+///
+/// ## Outputs
+///
+/// **fd1**:
+/// The first file descriptor of the pair.
+///
+/// **fd2**:
+/// The second file descriptor of the pair.
+#[inline]
+pub unsafe fn fd_create2(type_: filetype, fd1_: &mut fd, fd2_: &mut fd) -> errno {
+  (cloudabi_syscalls.fd_create2)(type_, fd1_, fd2_)
+}
+
+/// Synchronizes the data of a file to disk.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor of the file whose data
+/// needs to be synchronized to disk.
+#[inline]
+pub unsafe fn fd_datasync(fd_: fd) -> errno {
+  (cloudabi_syscalls.fd_datasync)(fd_)
+}
+
+/// Duplicates a file descriptor.
+///
+/// ## Inputs
+///
+/// **from**:
+/// The file descriptor that needs to be
+/// duplicated.
+///
+/// ## Outputs
+///
+/// **fd**:
+/// The new file descriptor.
+#[inline]
+pub unsafe fn fd_dup(from_: fd, fd_: &mut fd) -> errno {
+  (cloudabi_syscalls.fd_dup)(from_, fd_)
+}
+
+/// Reads from a file descriptor, without using and updating the
+/// file descriptor's offset.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor from which data should be
+/// read.
+///
+/// **iovs**:
+/// List of scatter/gather vectors where data
+/// should be stored.
+///
+/// **offset**:
+/// The offset within the file at which reading
+/// should start.
+///
+/// ## Outputs
+///
+/// **nread**:
+/// The number of bytes read.
+#[inline]
+pub unsafe fn fd_pread(fd_: fd, iovs_: &[iovec], offset_: filesize, nread_: &mut usize) -> errno {
+  (cloudabi_syscalls.fd_pread)(fd_, iovs_.as_ptr(), iovs_.len(), offset_, nread_)
+}
+
+/// Writes to a file descriptor, without using and updating the
+/// file descriptor's offset.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor to which data should be
+/// written.
+///
+/// **iovs**:
+/// List of scatter/gather vectors where data
+/// should be retrieved.
+///
+/// **offset**:
+/// The offset within the file at which writing
+/// should start.
+///
+/// ## Outputs
+///
+/// **nwritten**:
+/// The number of bytes written.
+#[inline]
+pub unsafe fn fd_pwrite(fd_: fd, iovs_: &[ciovec], offset_: filesize, nwritten_: &mut usize) -> errno {
+  (cloudabi_syscalls.fd_pwrite)(fd_, iovs_.as_ptr(), iovs_.len(), offset_, nwritten_)
+}
+
+/// Reads from a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor from which data should be
+/// read.
+///
+/// **iovs**:
+/// List of scatter/gather vectors where data
+/// should be stored.
+///
+/// ## Outputs
+///
+/// **nread**:
+/// The number of bytes read.
+#[inline]
+pub unsafe fn fd_read(fd_: fd, iovs_: &[iovec], nread_: &mut usize) -> errno {
+  (cloudabi_syscalls.fd_read)(fd_, iovs_.as_ptr(), iovs_.len(), nread_)
+}
+
+/// Atomically replaces a file descriptor by a copy of another
+/// file descriptor.
+///
+/// Due to the strong focus on thread safety, this environment
+/// does not provide a mechanism to duplicate a file descriptor to
+/// an arbitrary number, like dup2(). This would be prone to race
+/// conditions, as an actual file descriptor with the same number
+/// could be allocated by a different thread at the same time.
+///
+/// This system call provides a way to atomically replace file
+/// descriptors, which would disappear if dup2() were to be
+/// removed entirely.
+///
+/// ## Inputs
+///
+/// **from**:
+/// The file descriptor that needs to be copied.
+///
+/// **to**:
+/// The file descriptor that needs to be
+/// overwritten.
+#[inline]
+pub unsafe fn fd_replace(from_: fd, to_: fd) -> errno {
+  (cloudabi_syscalls.fd_replace)(from_, to_)
+}
+
+/// Moves the offset of the file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor whose offset has to be
+/// moved.
+///
+/// **offset**:
+/// The number of bytes to move.
+///
+/// **whence**:
+/// Relative to which position the move should
+/// take place.
+///
+/// ## Outputs
+///
+/// **newoffset**:
+/// The new offset of the file descriptor,
+/// relative to the start of the file.
+#[inline]
+pub unsafe fn fd_seek(fd_: fd, offset_: filedelta, whence_: whence, newoffset_: &mut filesize) -> errno {
+  (cloudabi_syscalls.fd_seek)(fd_, offset_, whence_, newoffset_)
+}
+
+/// Gets attributes of a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor whose attributes have to
+/// be obtained.
+///
+/// **buf**:
+/// The buffer where the file descriptor's
+/// attributes are stored.
+#[inline]
+pub unsafe fn fd_stat_get(fd_: fd, buf_: *mut fdstat) -> errno {
+  (cloudabi_syscalls.fd_stat_get)(fd_, buf_)
+}
+
+/// Adjusts attributes of a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor whose attributes have to
+/// be adjusted.
+///
+/// **buf**:
+/// The desired values of the file descriptor
+/// attributes that are adjusted.
+///
+/// **flags**:
+/// A bitmask indicating which attributes have to
+/// be adjusted.
+#[inline]
+pub unsafe fn fd_stat_put(fd_: fd, buf_: *const fdstat, flags_: fdsflags) -> errno {
+  (cloudabi_syscalls.fd_stat_put)(fd_, buf_, flags_)
+}
+
+/// Synchronizes the data and metadata of a file to disk.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor of the file whose data
+/// and metadata needs to be synchronized to disk.
+#[inline]
+pub unsafe fn fd_sync(fd_: fd) -> errno {
+  (cloudabi_syscalls.fd_sync)(fd_)
+}
+
+/// Writes to a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor to which data should be
+/// written.
+///
+/// **iovs**:
+/// List of scatter/gather vectors where data
+/// should be retrieved.
+///
+/// ## Outputs
+///
+/// **nwritten**:
+/// The number of bytes written.
+#[inline]
+pub unsafe fn fd_write(fd_: fd, iovs_: &[ciovec], nwritten_: &mut usize) -> errno {
+  (cloudabi_syscalls.fd_write)(fd_, iovs_.as_ptr(), iovs_.len(), nwritten_)
+}
+
+/// Provides file advisory information on a file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor for which to provide file
+/// advisory information.
+///
+/// **offset**:
+/// The offset within the file to which the
+/// advisory applies.
+///
+/// **len**:
+/// The length of the region to which the advisory
+/// applies.
+///
+/// **advice**:
+/// The advice.
+#[inline]
+pub unsafe fn file_advise(fd_: fd, offset_: filesize, len_: filesize, advice_: advice) -> errno {
+  (cloudabi_syscalls.file_advise)(fd_, offset_, len_, advice_)
+}
+
+/// Forces the allocation of space in a file.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file in which the space should be
+/// allocated.
+///
+/// **offset**:
+/// The offset at which the allocation should
+/// start.
+///
+/// **len**:
+/// The length of the area that is allocated.
+#[inline]
+pub unsafe fn file_allocate(fd_: fd, offset_: filesize, len_: filesize) -> errno {
+  (cloudabi_syscalls.file_allocate)(fd_, offset_, len_)
+}
+
+/// Creates a file of a specified type.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the file to be created starts.
+///
+/// **path**:
+/// The path at which the file should be created.
+///
+/// **type**:
+#[inline]
+pub unsafe fn file_create(fd_: fd, path_: &[u8], type_: filetype) -> errno {
+  (cloudabi_syscalls.file_create)(fd_, path_.as_ptr(), path_.len(), type_)
+}
+
+/// Creates a hard link.
+///
+/// ## Inputs
+///
+/// **fd1**:
+/// The working directory at which the resolution
+/// of the source path starts.
+///
+/// **path1**:
+/// The source path of the file that should be
+/// hard linked.
+///
+/// **fd2**:
+/// The working directory at which the resolution
+/// of the destination path starts.
+///
+/// **path2**:
+/// The destination path at which the hard link
+/// should be created.
+#[inline]
+pub unsafe fn file_link(fd1_: lookup, path1_: &[u8], fd2_: fd, path2_: &[u8]) -> errno {
+  (cloudabi_syscalls.file_link)(fd1_, path1_.as_ptr(), path1_.len(), fd2_, path2_.as_ptr(), path2_.len())
+}
+
+/// Opens a file.
+///
+/// ## Inputs
+///
+/// **dirfd**:
+/// The working directory at which the resolution
+/// of the file to be opened starts.
+///
+/// **path**:
+/// The path of the file that should be opened.
+///
+/// **oflags**:
+/// The method at which the file should be opened.
+///
+/// **fds**:
+/// `fdstat.fs_rights_base` and
+/// `fdstat.fs_rights_inheriting` specify the
+/// initial rights of the newly created file
+/// descriptor. The operating system is allowed to
+/// return a file descriptor with fewer rights
+/// than specified, if and only if those rights do
+/// not apply to the type of file being opened.
+///
+/// `fdstat.fs_flags` specifies the initial flags
+/// of the file descriptor.
+///
+/// `fdstat.fs_filetype` is ignored.
+///
+/// ## Outputs
+///
+/// **fd**:
+/// The file descriptor of the file that has been
+/// opened.
+#[inline]
+pub unsafe fn file_open(dirfd_: lookup, path_: &[u8], oflags_: oflags, fds_: *const fdstat, fd_: &mut fd) -> errno {
+  (cloudabi_syscalls.file_open)(dirfd_, path_.as_ptr(), path_.len(), oflags_, fds_, fd_)
+}
+
+/// Reads directory entries from a directory.
+///
+/// When successful, the contents of the output buffer consist of
+/// a sequence of directory entries. Each directory entry consists
+/// of a `dirent` object, followed by `dirent.d_namlen` bytes
+/// holding the name of the directory entry.
+///
+/// This system call fills the output buffer as much as possible,
+/// potentially truncating the last directory entry. This allows
+/// the caller to grow its read buffer size in case it's too small
+/// to fit a single large directory entry, or skip the oversized
+/// directory entry.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The directory from which to read the directory
+/// entries.
+///
+/// **buf**:
+/// The buffer where directory entries are stored.
+///
+/// **cookie**:
+/// The location within the directory to start
+/// reading.
+///
+/// ## Outputs
+///
+/// **bufused**:
+/// The number of bytes stored in the read buffer.
+/// If less than the size of the read buffer, the
+/// end of the directory has been reached.
+#[inline]
+pub unsafe fn file_readdir(fd_: fd, buf_: &mut [u8], cookie_: dircookie, bufused_: &mut usize) -> errno {
+  (cloudabi_syscalls.file_readdir)(fd_, buf_.as_mut_ptr() as *mut (), buf_.len(), cookie_, bufused_)
+}
+
+/// Reads the contents of a symbolic link.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the path of the symbolic starts.
+///
+/// **path**:
+/// The path of the symbolic link whose contents
+/// should be read.
+///
+/// **buf**:
+/// The buffer where the contents of the symbolic
+/// link should be stored.
+///
+/// ## Outputs
+///
+/// **bufused**:
+/// The number of bytes placed in the buffer.
+#[inline]
+pub unsafe fn file_readlink(fd_: fd, path_: &[u8], buf_: &mut [u8], bufused_: &mut usize) -> errno {
+  (cloudabi_syscalls.file_readlink)(fd_, path_.as_ptr(), path_.len(), buf_.as_mut_ptr(), buf_.len(), bufused_)
+}
+
+/// Renames a file.
+///
+/// ## Inputs
+///
+/// **fd1**:
+/// The working directory at which the resolution
+/// of the source path starts.
+///
+/// **path1**:
+/// The source path of the file that should be
+/// renamed.
+///
+/// **fd2**:
+/// The working directory at which the resolution
+/// of the destination path starts.
+///
+/// **path2**:
+/// The destination path to which the file should
+/// be renamed.
+#[inline]
+pub unsafe fn file_rename(fd1_: fd, path1_: &[u8], fd2_: fd, path2_: &[u8]) -> errno {
+  (cloudabi_syscalls.file_rename)(fd1_, path1_.as_ptr(), path1_.len(), fd2_, path2_.as_ptr(), path2_.len())
+}
+
+/// Gets attributes of a file by file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor whose attributes have to
+/// be obtained.
+///
+/// **buf**:
+/// The buffer where the file's attributes are
+/// stored.
+#[inline]
+pub unsafe fn file_stat_fget(fd_: fd, buf_: *mut filestat) -> errno {
+  (cloudabi_syscalls.file_stat_fget)(fd_, buf_)
+}
+
+/// Adjusts attributes of a file by file descriptor.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The file descriptor whose attributes have to
+/// be adjusted.
+///
+/// **buf**:
+/// The desired values of the file attributes that
+/// are adjusted.
+///
+/// **flags**:
+/// A bitmask indicating which attributes have to
+/// be adjusted.
+#[inline]
+pub unsafe fn file_stat_fput(fd_: fd, buf_: *const filestat, flags_: fsflags) -> errno {
+  (cloudabi_syscalls.file_stat_fput)(fd_, buf_, flags_)
+}
+
+/// Gets attributes of a file by path.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the path whose attributes have to be
+/// obtained starts.
+///
+/// **path**:
+/// The path of the file whose attributes have to
+/// be obtained.
+///
+/// **buf**:
+/// The buffer where the file's attributes are
+/// stored.
+#[inline]
+pub unsafe fn file_stat_get(fd_: lookup, path_: &[u8], buf_: *mut filestat) -> errno {
+  (cloudabi_syscalls.file_stat_get)(fd_, path_.as_ptr(), path_.len(), buf_)
+}
+
+/// Adjusts attributes of a file by path.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the path whose attributes have to be
+/// adjusted starts.
+///
+/// **path**:
+/// The path of the file whose attributes have to
+/// be adjusted.
+///
+/// **buf**:
+/// The desired values of the file attributes that
+/// are adjusted.
+///
+/// **flags**:
+/// A bitmask indicating which attributes have to
+/// be adjusted.
+#[inline]
+pub unsafe fn file_stat_put(fd_: lookup, path_: &[u8], buf_: *const filestat, flags_: fsflags) -> errno {
+  (cloudabi_syscalls.file_stat_put)(fd_, path_.as_ptr(), path_.len(), buf_, flags_)
+}
+
+/// Creates a symbolic link.
+///
+/// ## Inputs
+///
+/// **path1**:
+/// The contents of the symbolic link.
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the destination path starts.
+///
+/// **path2**:
+/// The destination path at which the symbolic
+/// link should be created.
+#[inline]
+pub unsafe fn file_symlink(path1_: &[u8], fd_: fd, path2_: &[u8]) -> errno {
+  (cloudabi_syscalls.file_symlink)(path1_.as_ptr(), path1_.len(), fd_, path2_.as_ptr(), path2_.len())
+}
+
+/// Unlinks a file, or removes a directory.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// The working directory at which the resolution
+/// of the path starts.
+///
+/// **path**:
+/// The path that needs to be unlinked or removed.
+///
+/// **flags**:
+#[inline]
+pub unsafe fn file_unlink(fd_: fd, path_: &[u8], flags_: ulflags) -> errno {
+  (cloudabi_syscalls.file_unlink)(fd_, path_.as_ptr(), path_.len(), flags_)
+}
+
+/// Unlocks a write-locked userspace lock.
+///
+/// If a userspace lock is unlocked while having its
+/// `lock.kernel_managed` flag set, the lock cannot be unlocked in
+/// userspace directly. This system call needs to be performed
+/// instead, so that any waiting threads can be woken up.
+///
+/// To prevent spurious invocations of this system call, the lock
+/// must be locked for writing. This prevents other threads from
+/// acquiring additional read locks while the system call is in
+/// progress. If the lock is acquired for reading, it must first
+/// be upgraded to a write lock.
+///
+/// ## Inputs
+///
+/// **lock**:
+/// The userspace lock that is locked for writing
+/// by the calling thread.
+///
+/// **scope**:
+/// Whether the lock is stored in private or
+/// shared memory.
+#[inline]
+pub unsafe fn lock_unlock(lock_: *mut lock, scope_: scope) -> errno {
+  (cloudabi_syscalls.lock_unlock)(lock_, scope_)
+}
+
+/// Provides memory advisory information on a region of memory.
+///
+/// ## Inputs
+///
+/// **mapping**:
+/// The pages for which to provide memory advisory
+/// information.
+///
+/// **advice**:
+/// The advice.
+#[inline]
+pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
+  (cloudabi_syscalls.mem_advise)(mapping_.as_mut_ptr() as *mut (), mapping_.len(), advice_)
+}
+
+/// Creates a memory mapping, making the contents of a file
+/// accessible through memory.
+///
+/// ## Inputs
+///
+/// **addr**:
+/// If `mflags.fixed` is set, specifies to which
+/// address the file region is mapped. Otherwise,
+/// the mapping is performed at an unused
+/// location.
+///
+/// **len**:
+/// The length of the memory mapping to be
+/// created.
+///
+/// **prot**:
+/// Initial memory protection options for the
+/// memory mapping.
+///
+/// **flags**:
+/// Memory mapping flags.
+///
+/// **fd**:
+/// If `mflags.anon` is set, this argument must be
+/// `fd.map_anon_fd`. Otherwise, this argument
+/// specifies the file whose contents need to be
+/// mapped.
+///
+/// **off**:
+/// If `mflags.anon` is set, this argument must be
+/// zero. Otherwise, this argument specifies the
+/// offset within the file at which the mapping
+/// starts.
+///
+/// ## Outputs
+///
+/// **mem**:
+/// The starting address of the memory mapping.
+#[inline]
+pub unsafe fn mem_map(addr_: *mut (), len_: usize, prot_: mprot, flags_: mflags, fd_: fd, off_: filesize, mem_: &mut *mut ()) -> errno {
+  (cloudabi_syscalls.mem_map)(addr_, len_, prot_, flags_, fd_, off_, mem_)
+}
+
+/// Change the protection of a memory mapping.
+///
+/// ## Inputs
+///
+/// **mapping**:
+/// The pages that need their protection changed.
+///
+/// **prot**:
+/// New protection options.
+#[inline]
+pub unsafe fn mem_protect(mapping_: &mut [u8], prot_: mprot) -> errno {
+  (cloudabi_syscalls.mem_protect)(mapping_.as_mut_ptr() as *mut (), mapping_.len(), prot_)
+}
+
+/// Synchronize a region of memory with its physical storage.
+///
+/// ## Inputs
+///
+/// **mapping**:
+/// The pages that need to be synchronized.
+///
+/// **flags**:
+/// The method of synchronization.
+#[inline]
+pub unsafe fn mem_sync(mapping_: &mut [u8], flags_: msflags) -> errno {
+  (cloudabi_syscalls.mem_sync)(mapping_.as_mut_ptr() as *mut (), mapping_.len(), flags_)
+}
+
+/// Unmaps a region of memory.
+///
+/// ## Inputs
+///
+/// **mapping**:
+/// The pages that needs to be unmapped.
+#[inline]
+pub unsafe fn mem_unmap(mapping_: &mut [u8]) -> errno {
+  (cloudabi_syscalls.mem_unmap)(mapping_.as_mut_ptr() as *mut (), mapping_.len())
+}
+
+/// Concurrently polls for the occurrence of a set of events.
+///
+/// ## Inputs
+///
+/// **in**:
+/// The events to which to subscribe.
+///
+/// **out**:
+/// The events that have occurred.
+///
+/// **nsubscriptions**:
+/// Both the number of subscriptions and events.
+///
+/// ## Outputs
+///
+/// **nevents**:
+/// The number of events stored.
+#[inline]
+pub unsafe fn poll(in_: *const subscription, out_: *mut event, nsubscriptions_: usize, nevents_: &mut usize) -> errno {
+  (cloudabi_syscalls.poll)(in_, out_, nsubscriptions_, nevents_)
+}
+
+/// Replaces the process by a new executable.
+///
+/// Process execution in CloudABI differs from POSIX in two ways:
+/// handling of arguments and inheritance of file descriptors.
+///
+/// CloudABI does not use string command line arguments. Instead,
+/// a buffer with binary data is copied into the address space of
+/// the new executable. The kernel does not enforce any specific
+/// structure to this data, although CloudABI's C library uses it
+/// to store a tree structure that is semantically identical to
+/// YAML.
+///
+/// Due to the strong focus on thread safety, file descriptors
+/// aren't inherited through close-on-exec flags. An explicit
+/// list of file descriptors that need to be retained needs to be
+/// provided. After execution, file descriptors are placed in the
+/// order in which they are stored in the array. This not only
+/// makes the execution process deterministic. It also prevents
+/// potential information disclosures about the layout of the
+/// original process.
+///
+/// ## Inputs
+///
+/// **fd**:
+/// A file descriptor of the new executable.
+///
+/// **data**:
+/// Binary argument data that is passed on to the
+/// new executable.
+///
+/// **fds**:
+/// The layout of the file descriptor table after
+/// execution.
+#[inline]
+pub unsafe fn proc_exec(fd_: fd, data_: &[u8], fds_: &[fd]) -> errno {
+  (cloudabi_syscalls.proc_exec)(fd_, data_.as_ptr() as *const (), data_.len(), fds_.as_ptr(), fds_.len())
+}
+
+/// Terminates the process normally.
+///
+/// ## Inputs
+///
+/// **rval**:
+/// The exit code returned by the process. The
+/// exit code can be obtained by other processes
+/// through `event.proc_terminate.exitcode`.
+#[inline]
+pub unsafe fn proc_exit(rval_: exitcode) -> ! {
+  (cloudabi_syscalls.proc_exit)(rval_)
+}
+
+/// Forks the process of the calling thread.
+///
+/// After forking, a new process shall be created, having only a
+/// copy of the calling thread. The parent process will obtain a
+/// process descriptor. When closed, the child process is
+/// automatically signaled with `signal.kill`.
+///
+/// ## Outputs
+///
+/// **fd**:
+/// In the parent process: the file descriptor
+/// number of the process descriptor.
+///
+/// In the child process: `fd.process_child`.
+///
+/// **tid**:
+/// In the parent process: undefined.
+///
+/// In the child process: the thread ID of the
+/// initial thread of the child process.
+#[inline]
+pub unsafe fn proc_fork(fd_: &mut fd, tid_: &mut tid) -> errno {
+  (cloudabi_syscalls.proc_fork)(fd_, tid_)
+}
+
+/// Sends a signal to the process of the calling thread.
+///
+/// ## Inputs
+///
+/// **sig**:
+/// The signal condition that should be triggered.
+/// If the signal causes the process to terminate,
+/// its condition can be obtained by other
+/// processes through
+/// `event.proc_terminate.signal`.
+#[inline]
+pub unsafe fn proc_raise(sig_: signal) -> errno {
+  (cloudabi_syscalls.proc_raise)(sig_)
+}
+
+/// Obtains random data from the kernel random number generator.
+///
+/// As this interface is not guaranteed to be fast, it is advised
+/// that the random data obtained through this system call is used
+/// as the seed for a userspace pseudo-random number generator.
+///
+/// ## Inputs
+///
+/// **buf**:
+/// The buffer that needs to be filled with random
+/// data.
+#[inline]
+pub unsafe fn random_get(buf_: &mut [u8]) -> errno {
+  (cloudabi_syscalls.random_get)(buf_.as_mut_ptr() as *mut (), buf_.len())
+}
+
+/// Receives a message on a socket.
+///
+/// ## Inputs
+///
+/// **sock**:
+/// The socket on which a message should be
+/// received.
+///
+/// **in**:
+/// Input parameters.
+///
+/// **out**:
+/// Output parameters.
+#[inline]
+pub unsafe fn sock_recv(sock_: fd, in_: *const recv_in, out_: *mut recv_out) -> errno {
+  (cloudabi_syscalls.sock_recv)(sock_, in_, out_)
+}
+
+/// Sends a message on a socket.
+///
+/// ## Inputs
+///
+/// **sock**:
+/// The socket on which a message should be sent.
+///
+/// **in**:
+/// Input parameters.
+///
+/// **out**:
+/// Output parameters.
+#[inline]
+pub unsafe fn sock_send(sock_: fd, in_: *const send_in, out_: *mut send_out) -> errno {
+  (cloudabi_syscalls.sock_send)(sock_, in_, out_)
+}
+
+/// Shuts down socket send and receive channels.
+///
+/// ## Inputs
+///
+/// **sock**:
+/// The socket that needs its channels shut down.
+///
+/// **how**:
+/// Which channels on the socket need to be shut
+/// down.
+#[inline]
+pub unsafe fn sock_shutdown(sock_: fd, how_: sdflags) -> errno {
+  (cloudabi_syscalls.sock_shutdown)(sock_, how_)
+}
+
+/// Creates a new thread within the current process.
+///
+/// ## Inputs
+///
+/// **attr**:
+/// The desired attributes of the new thread.
+///
+/// ## Outputs
+///
+/// **tid**:
+/// The thread ID of the new thread.
+#[inline]
+pub unsafe fn thread_create(attr_: *mut threadattr, tid_: &mut tid) -> errno {
+  (cloudabi_syscalls.thread_create)(attr_, tid_)
+}
+
+/// Terminates the calling thread.
+///
+/// This system call can also unlock a single userspace lock
+/// after termination, which can be used to implement thread
+/// joining.
+///
+/// ## Inputs
+///
+/// **lock**:
+/// Userspace lock that is locked for writing by
+/// the calling thread.
+///
+/// **scope**:
+/// Whether the lock is stored in private or
+/// shared memory.
+#[inline]
+pub unsafe fn thread_exit(lock_: *mut lock, scope_: scope) -> ! {
+  (cloudabi_syscalls.thread_exit)(lock_, scope_)
+}
+
+/// Temporarily yields execution of the calling thread.
+#[inline]
+pub unsafe fn thread_yield() -> errno {
+  (cloudabi_syscalls.thread_yield)()
+}

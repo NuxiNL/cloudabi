@@ -106,7 +106,7 @@ with open('headers/cloudabi_syscalls_info.h', 'w') as f:
 
 with open('rust/cloudabi.rs', 'w') as f:
     with redirect_stdout(f):
-        RustSyscalldefsGenerator(naming=RustNaming()).generate_abi(abi)
+        RustGenerator(naming=RustNaming()).generate_abi(abi)
 
 with open('vdsos/cloudabi_vdso_aarch64.S', 'w') as f:
     with redirect_stdout(f):
