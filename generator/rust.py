@@ -97,6 +97,7 @@ class RustSyscalldefsGenerator(RustGenerator):
         print('//! **PLEASE NOTE: This entire crate including this')
         print('//! documentation is automatically generated from')
         print('//! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**')
+        print('//!')
         self.print_doc(abi, '', '//!')
         print()
         print('#![allow(dead_code)]')

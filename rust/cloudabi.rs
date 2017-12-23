@@ -28,6 +28,7 @@
 //! **PLEASE NOTE: This entire crate including this
 //! documentation is automatically generated from
 //! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**
+//!
 //! # Nuxi CloudABI
 //!
 //! CloudABI is what you get if you take POSIX, add capability-based
