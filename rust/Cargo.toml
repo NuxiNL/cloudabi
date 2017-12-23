@@ -1,0 +1,10 @@
+[package]
+name = "cloudabi"
+version = "0.1.0"
+authors = ["Maurice Bos <m-ou.se@m-ou.se>"]
+
+[lib]
+path = "cloudabi.rs"
+
+[dependencies]
+bitflags = "1.0"

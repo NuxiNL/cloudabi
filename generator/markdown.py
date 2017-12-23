@@ -65,6 +65,18 @@ class MarkdownCNaming(MarkdownNaming, CNaming):
     def syscallname(self, syscall):
         return CNaming.syscallname(self, syscall) + '()'
 
+    def kinddesc(self, type):
+        if isinstance(type, IntLikeType):
+            return '{}{}'.format(
+                self.link(type.int_type),
+                ' bitfield' if isinstance(type, FlagsType) else '')
+        elif isinstance(type, StructType):
+            return '`struct`'
+        elif isinstance(type, FunctionType):
+            return 'function type'
+        else:
+            assert (False)
+
 
 class MarkdownRustNaming(MarkdownNaming, RustNaming):
 
@@ -77,16 +89,31 @@ class MarkdownRustNaming(MarkdownNaming, RustNaming):
     def memname(self, *path):
         name = self.typename(path[0], link=False) + '.'
         name += '.'.join(
-                self.variantmem(m) if isinstance(m, VariantMember) else m.name
+                self.variantmem(m) if isinstance(m, VariantMember) else self.fieldname(m.name)
                 for m in path[1:])
         return name
 
     def variantmem(self, member):
-        return member.name + '()'
+        return 'union.' + self.fieldname(member.name)
 
     def syscallname(self, syscall):
         return RustNaming.syscallname(self, syscall) + '()'
 
+    def kinddesc(self, type):
+        if isinstance(type, EnumType):
+            return '{} `enum`'.format(self.link(type.int_type))
+        elif isinstance(type, AliasType):
+            return '= {}'.format(self.link(type.int_type))
+        elif isinstance(type, OpaqueType):
+            return '`struct({})`'.format(self.typename(type.int_type))
+        elif isinstance(type, FlagsType):
+            return '{} bitfield'.format(self.link(type.int_type))
+        elif isinstance(type, StructType):
+            return '`struct`'
+        elif isinstance(type, FunctionType):
+            return 'function pointer'
+        else:
+            assert (False)
 
 class MarkdownGenerator(Generator):
     def __init__(self, naming):
@@ -109,17 +136,8 @@ class MarkdownGenerator(Generator):
             self.generate_type(abi, types[type])
 
     def generate_type(self, abi, type):
-        if isinstance(type, IntLikeType):
-            extra = ' ({}{})'.format(
-                self.naming.link(type.int_type), ' bitfield'
-                if isinstance(type, FlagsType) else '')
-        elif isinstance(type, StructType):
-            extra = ' (`struct`)'
-        elif isinstance(type, FunctionType):
-            extra = ' (function type)'
-        else:
-            assert (False)
-        print('#### {}`{}`{}\n'.format(
+        extra = self.naming.kinddesc(type)
+        print('#### {}`{}` ({})\n'.format(
             self.anchor(type), self.naming.typename(type, link=False), extra))
         self.generate_doc(abi, type)
         if len(type.used_by) > 0 and len(type.used_by) < 10:
@@ -161,13 +179,14 @@ class MarkdownGenerator(Generator):
             self, abi, m, parents, indent='', is_variant_member = False):
         print(indent, end='')
         if isinstance(m, SimpleStructMember):
-            name = m.name
             if is_variant_member:
                 name = self.naming.variantmem(m)
+            else:
+                name = self.naming.fieldname(m.name)
             print('- {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m])),
                 self.naming.vardecl(m.type, '<strong>{}</strong>'.format(
-                    _escape(m.name)))))
+                    _escape(name)))))
             self.generate_doc(abi, m, indent + '    ')
             if m.special_values:
                 print('    Possible values:\n')

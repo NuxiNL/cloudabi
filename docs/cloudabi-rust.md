@@ -31,7 +31,7 @@ Source: https://github.com/NuxiNL/cloudabi
 
 CloudABI is what you get if you take POSIX, add capability-based
 security, and remove everything that's incompatible with that. The
-result is a minimal ABI consisting of only 58 syscalls.
+result is a minimal ABI consisting of only 49 syscalls.
 
 CloudABI doesn't have its own kernel, but instead is implemented in existing
 kernels: FreeBSD has CloudABI support for x86-64 and arm64, and [a patch-set
@@ -59,16 +59,17 @@ specific purposes.
 In CloudABI, a process depends on its parent process to launch it with
 the right set of resources, since the process will not be able to open
 any new resources. For example, a simple static web server would need
-to be started with an fd to a listening socket, and an fd to the
-directory to serve files out of. The web server will then be unable to
-do anything other than reading files in that directory, and accept
-connections on the given socket.
+to be started with a file descriptor to a [TCP
+listener](https://github.com/NuxiNL/flower), and a file descriptor to
+the directory for which to serve files. The web server will then be
+unable to do anything other than reading files in that directory, and
+process incoming network connections.
 
 So, unknown CloudABI binaries can safely be executed without the need
-for containers, virtual machines, or other sandboxing techonologies.
+for containers, virtual machines, or other sandboxing technologies.
 
 Watch [Ed Schouten's Talk at
-32C3](https://www.youtube.com/watch?v=62cYMmSY2Dc) for more
+32C3](https://www.youtube.com/watch?v=3N29vrPoDv8) for more
 information about what capability-based security for UNIX means.
 
 ## Cloudlibc
@@ -76,7 +77,7 @@ information about what capability-based security for UNIX means.
 [Cloudlibc](https://github.com/NuxiNL/cloudlibc) is an implementation
 of the C standard library, without all CloudABI-incompatible
 functions. For example, Cloudlibc does not have `printf`, but does
-have `fprintf`.
+have `fprintf`. It does not have `open`, but does have `openat`.
 
 ## CloudABI-Ports
 
@@ -141,27 +142,19 @@ and documentation (including the one you're reading now) is generated.
 - [`file_unlink()`](#file_unlink)
 - [`lock_unlock()`](#lock_unlock)
 - [`mem_advise()`](#mem_advise)
-- [`mem_lock()`](#mem_lock)
 - [`mem_map()`](#mem_map)
 - [`mem_protect()`](#mem_protect)
 - [`mem_sync()`](#mem_sync)
-- [`mem_unlock()`](#mem_unlock)
 - [`mem_unmap()`](#mem_unmap)
 - [`poll()`](#poll)
-- [`poll_fd()`](#poll_fd)
 - [`proc_exec()`](#proc_exec)
 - [`proc_exit()`](#proc_exit)
 - [`proc_fork()`](#proc_fork)
 - [`proc_raise()`](#proc_raise)
 - [`random_get()`](#random_get)
-- [`sock_accept()`](#sock_accept)
-- [`sock_bind()`](#sock_bind)
-- [`sock_connect()`](#sock_connect)
-- [`sock_listen()`](#sock_listen)
 - [`sock_recv()`](#sock_recv)
 - [`sock_send()`](#sock_send)
 - [`sock_shutdown()`](#sock_shutdown)
-- [`sock_stat_get()`](#sock_stat_get)
 - [`thread_create()`](#thread_create)
 - [`thread_exit()`](#thread_exit)
 - [`thread_yield()`](#thread_yield)
@@ -172,14 +165,14 @@ Obtains the resolution of a clock.
 
 Inputs:
 
-- <a href="#clock_res_get.clock_id" name="clock_res_get.clock_id"></a><code><strong>clock\_id</strong>: [clockid\_t](#clockid)</code>
+- <a href="#clock_res_get.clock_id" name="clock_res_get.clock_id"></a><code><strong>clock\_id</strong>: [clockid](#clockid)</code>
 
     The clock for which the resolution needs to be
     returned.
 
 Outputs:
 
-- <a href="#clock_res_get.resolution" name="clock_res_get.resolution"></a><code><strong>resolution</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#clock_res_get.resolution" name="clock_res_get.resolution"></a><code><strong>resolution</strong>: [timestamp](#timestamp)</code>
 
     The resolution of the clock.
 
@@ -189,12 +182,12 @@ Obtains the time value of a clock.
 
 Inputs:
 
-- <a href="#clock_time_get.clock_id" name="clock_time_get.clock_id"></a><code><strong>clock\_id</strong>: [clockid\_t](#clockid)</code>
+- <a href="#clock_time_get.clock_id" name="clock_time_get.clock_id"></a><code><strong>clock\_id</strong>: [clockid](#clockid)</code>
 
     The clock for which the time needs to be
     returned.
 
-- <a href="#clock_time_get.precision" name="clock_time_get.precision"></a><code><strong>precision</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#clock_time_get.precision" name="clock_time_get.precision"></a><code><strong>precision</strong>: [timestamp](#timestamp)</code>
 
     The maximum lag (exclusive) that the returned
     time value may have, compared to its actual
@@ -202,7 +195,7 @@ Inputs:
 
 Outputs:
 
-- <a href="#clock_time_get.time" name="clock_time_get.time"></a><code><strong>time</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#clock_time_get.time" name="clock_time_get.time"></a><code><strong>time</strong>: [timestamp](#timestamp)</code>
 
     The time value of the clock.
 
@@ -218,17 +211,17 @@ system call.
 
 Inputs:
 
-- <a href="#condvar_signal.condvar" name="condvar_signal.condvar"></a><code><strong>condvar</strong>: *mut [condvar\_t](#condvar)</code>
+- <a href="#condvar_signal.condvar" name="condvar_signal.condvar"></a><code><strong>condvar</strong>: *mut [condvar](#condvar)</code>
 
     The userspace condition variable that has
     waiting threads.
 
-- <a href="#condvar_signal.scope" name="condvar_signal.scope"></a><code><strong>scope</strong>: [scope\_t](#scope)</code>
+- <a href="#condvar_signal.scope" name="condvar_signal.scope"></a><code><strong>scope</strong>: [scope](#scope)</code>
 
     Whether the condition variable is stored in
     private or shared memory.
 
-- <a href="#condvar_signal.nwaiters" name="condvar_signal.nwaiters"></a><code><strong>nwaiters</strong>: [nthreads\_t](#nthreads)</code>
+- <a href="#condvar_signal.nwaiters" name="condvar_signal.nwaiters"></a><code><strong>nwaiters</strong>: [nthreads](#nthreads)</code>
 
     The number of threads that need to be woken
     up. If it exceeds the number of waiting
@@ -240,7 +233,7 @@ Closes a file descriptor.
 
 Inputs:
 
-- <a href="#fd_close.fd" name="fd_close.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_close.fd" name="fd_close.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor that needs to be closed.
 
@@ -250,35 +243,18 @@ Creates a file descriptor.
 
 Inputs:
 
-- <a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>type</strong>: [filetype\_t](#filetype)</code>
+- <a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
-    - [`FILETYPE_POLL`](#filetype.poll)
-
-        Creates a polling event queue.
-
-    - [`FILETYPE_SHARED_MEMORY`](#filetype.shared_memory)
+    - [`SHARED_MEMORY`](#filetype.shared_memory)
 
         Creates an anonymous shared memory
         object.
 
-    - [`FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
-
-        Creates a UNIX datagram socket.
-
-    - [`FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket)
-
-        Creates a UNIX sequenced-packet
-        socket.
-
-    - [`FILETYPE_SOCKET_STREAM`](#filetype.socket_stream)
-
-        Creates a UNIX byte-stream socket.
-
 Outputs:
 
-- <a href="#fd_create1.fd" name="fd_create1.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_create1.fd" name="fd_create1.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor that has been created.
 
@@ -288,39 +264,28 @@ Creates a pair of file descriptors.
 
 Inputs:
 
-- <a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>type</strong>: [filetype\_t](#filetype)</code>
+- <a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
-    - [`FILETYPE_FIFO`](#filetype.fifo)
-
-        Creates a pipe.
-
-    - [`FILETYPE_SOCKET_DGRAM`](#filetype.socket_dgram)
+    - [`SOCKET_DGRAM`](#filetype.socket_dgram)
 
         Creates a UNIX datagram socket pair.
 
-    - [`FILETYPE_SOCKET_SEQPACKET`](#filetype.socket_seqpacket)
-
-        Creates a UNIX sequenced-packet socket
-        pair.
-
-    - [`FILETYPE_SOCKET_STREAM`](#filetype.socket_stream)
+    - [`SOCKET_STREAM`](#filetype.socket_stream)
 
         Creates a UNIX byte-stream socket
         pair.
 
 Outputs:
 
-- <a href="#fd_create2.fd1" name="fd_create2.fd1"></a><code><strong>fd1</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_create2.fd1" name="fd_create2.fd1"></a><code><strong>fd1</strong>: [fd](#fd)</code>
 
-    The first file descriptor of the pair. For
-    pipes, this corresponds to the read end.
+    The first file descriptor of the pair.
 
-- <a href="#fd_create2.fd2" name="fd_create2.fd2"></a><code><strong>fd2</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_create2.fd2" name="fd_create2.fd2"></a><code><strong>fd2</strong>: [fd](#fd)</code>
 
-    The second file descriptor of the pair. For
-    pipes, this corresponds to the write end.
+    The second file descriptor of the pair.
 
 #### <a href="#fd_datasync" name="fd_datasync"></a>`fd_datasync()`
 
@@ -328,7 +293,7 @@ Synchronizes the data of a file to disk.
 
 Inputs:
 
-- <a href="#fd_datasync.fd" name="fd_datasync.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_datasync.fd" name="fd_datasync.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor of the file whose data
     needs to be synchronized to disk.
@@ -339,14 +304,14 @@ Duplicates a file descriptor.
 
 Inputs:
 
-- <a href="#fd_dup.from" name="fd_dup.from"></a><code><strong>from</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_dup.from" name="fd_dup.from"></a><code><strong>from</strong>: [fd](#fd)</code>
 
     The file descriptor that needs to be
     duplicated.
 
 Outputs:
 
-- <a href="#fd_dup.fd" name="fd_dup.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_dup.fd" name="fd_dup.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The new file descriptor.
 
@@ -357,17 +322,17 @@ file descriptor's offset.
 
 Inputs:
 
-- <a href="#fd_pread.fd" name="fd_pread.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_pread.fd" name="fd_pread.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor from which data should be
     read.
 
-- <a href="#fd_pread.iov" name="fd_pread.iov"></a><code><strong>iov</strong>: * [iovec\_t](#iovec)</code> and <a href="#fd_pread.iovcnt" name="fd_pread.iovcnt"></a><code><strong>iovcnt</strong>: usize</code>
+- <a href="#fd_pread.iovs" name="fd_pread.iovs"></a><code><strong>iovs</strong>: *const [iovec](#iovec)</code> and <a href="#fd_pread.iovs_len" name="fd_pread.iovs_len"></a><code><strong>iovs\_len</strong>: usize</code>
 
     List of scatter/gather vectors where data
     should be stored.
 
-- <a href="#fd_pread.offset" name="fd_pread.offset"></a><code><strong>offset</strong>: [filesize\_t](#filesize)</code>
+- <a href="#fd_pread.offset" name="fd_pread.offset"></a><code><strong>offset</strong>: [filesize](#filesize)</code>
 
     The offset within the file at which reading
     should start.
@@ -385,17 +350,17 @@ file descriptor's offset.
 
 Inputs:
 
-- <a href="#fd_pwrite.fd" name="fd_pwrite.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_pwrite.fd" name="fd_pwrite.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor to which data should be
     written.
 
-- <a href="#fd_pwrite.iov" name="fd_pwrite.iov"></a><code><strong>iov</strong>: * [ciovec\_t](#ciovec)</code> and <a href="#fd_pwrite.iovcnt" name="fd_pwrite.iovcnt"></a><code><strong>iovcnt</strong>: usize</code>
+- <a href="#fd_pwrite.iovs" name="fd_pwrite.iovs"></a><code><strong>iovs</strong>: *const [ciovec](#ciovec)</code> and <a href="#fd_pwrite.iovs_len" name="fd_pwrite.iovs_len"></a><code><strong>iovs\_len</strong>: usize</code>
 
     List of scatter/gather vectors where data
     should be retrieved.
 
-- <a href="#fd_pwrite.offset" name="fd_pwrite.offset"></a><code><strong>offset</strong>: [filesize\_t](#filesize)</code>
+- <a href="#fd_pwrite.offset" name="fd_pwrite.offset"></a><code><strong>offset</strong>: [filesize](#filesize)</code>
 
     The offset within the file at which writing
     should start.
@@ -412,12 +377,12 @@ Reads from a file descriptor.
 
 Inputs:
 
-- <a href="#fd_read.fd" name="fd_read.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_read.fd" name="fd_read.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor from which data should be
     read.
 
-- <a href="#fd_read.iov" name="fd_read.iov"></a><code><strong>iov</strong>: * [iovec\_t](#iovec)</code> and <a href="#fd_read.iovcnt" name="fd_read.iovcnt"></a><code><strong>iovcnt</strong>: usize</code>
+- <a href="#fd_read.iovs" name="fd_read.iovs"></a><code><strong>iovs</strong>: *const [iovec](#iovec)</code> and <a href="#fd_read.iovs_len" name="fd_read.iovs_len"></a><code><strong>iovs\_len</strong>: usize</code>
 
     List of scatter/gather vectors where data
     should be stored.
@@ -445,11 +410,11 @@ removed entirely.
 
 Inputs:
 
-- <a href="#fd_replace.from" name="fd_replace.from"></a><code><strong>from</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_replace.from" name="fd_replace.from"></a><code><strong>from</strong>: [fd](#fd)</code>
 
     The file descriptor that needs to be copied.
 
-- <a href="#fd_replace.to" name="fd_replace.to"></a><code><strong>to</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_replace.to" name="fd_replace.to"></a><code><strong>to</strong>: [fd](#fd)</code>
 
     The file descriptor that needs to be
     overwritten.
@@ -460,23 +425,23 @@ Moves the offset of the file descriptor.
 
 Inputs:
 
-- <a href="#fd_seek.fd" name="fd_seek.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_seek.fd" name="fd_seek.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor whose offset has to be
     moved.
 
-- <a href="#fd_seek.offset" name="fd_seek.offset"></a><code><strong>offset</strong>: [filedelta\_t](#filedelta)</code>
+- <a href="#fd_seek.offset" name="fd_seek.offset"></a><code><strong>offset</strong>: [filedelta](#filedelta)</code>
 
     The number of bytes to move.
 
-- <a href="#fd_seek.whence" name="fd_seek.whence"></a><code><strong>whence</strong>: [whence\_t](#whence)</code>
+- <a href="#fd_seek.whence" name="fd_seek.whence"></a><code><strong>whence</strong>: [whence](#whence)</code>
 
     Relative to which position the move should
     take place.
 
 Outputs:
 
-- <a href="#fd_seek.newoffset" name="fd_seek.newoffset"></a><code><strong>newoffset</strong>: [filesize\_t](#filesize)</code>
+- <a href="#fd_seek.newoffset" name="fd_seek.newoffset"></a><code><strong>newoffset</strong>: [filesize](#filesize)</code>
 
     The new offset of the file descriptor,
     relative to the start of the file.
@@ -487,12 +452,12 @@ Gets attributes of a file descriptor.
 
 Inputs:
 
-- <a href="#fd_stat_get.fd" name="fd_stat_get.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_stat_get.fd" name="fd_stat_get.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor whose attributes have to
     be obtained.
 
-- <a href="#fd_stat_get.buf" name="fd_stat_get.buf"></a><code><strong>buf</strong>: *mut [fdstat\_t](#fdstat)</code>
+- <a href="#fd_stat_get.buf" name="fd_stat_get.buf"></a><code><strong>buf</strong>: *mut [fdstat](#fdstat)</code>
 
     The buffer where the file descriptor's
     attributes are stored.
@@ -503,17 +468,17 @@ Adjusts attributes of a file descriptor.
 
 Inputs:
 
-- <a href="#fd_stat_put.fd" name="fd_stat_put.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_stat_put.fd" name="fd_stat_put.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor whose attributes have to
     be adjusted.
 
-- <a href="#fd_stat_put.buf" name="fd_stat_put.buf"></a><code><strong>buf</strong>: * [fdstat\_t](#fdstat)</code>
+- <a href="#fd_stat_put.buf" name="fd_stat_put.buf"></a><code><strong>buf</strong>: *const [fdstat](#fdstat)</code>
 
     The desired values of the file descriptor
     attributes that are adjusted.
 
-- <a href="#fd_stat_put.flags" name="fd_stat_put.flags"></a><code><strong>flags</strong>: [fdsflags\_t](#fdsflags)</code>
+- <a href="#fd_stat_put.flags" name="fd_stat_put.flags"></a><code><strong>flags</strong>: [fdsflags](#fdsflags)</code>
 
     A bitmask indicating which attributes have to
     be adjusted.
@@ -524,7 +489,7 @@ Synchronizes the data and metadata of a file to disk.
 
 Inputs:
 
-- <a href="#fd_sync.fd" name="fd_sync.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_sync.fd" name="fd_sync.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor of the file whose data
     and metadata needs to be synchronized to disk.
@@ -535,12 +500,12 @@ Writes to a file descriptor.
 
 Inputs:
 
-- <a href="#fd_write.fd" name="fd_write.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#fd_write.fd" name="fd_write.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor to which data should be
     written.
 
-- <a href="#fd_write.iov" name="fd_write.iov"></a><code><strong>iov</strong>: * [ciovec\_t](#ciovec)</code> and <a href="#fd_write.iovcnt" name="fd_write.iovcnt"></a><code><strong>iovcnt</strong>: usize</code>
+- <a href="#fd_write.iovs" name="fd_write.iovs"></a><code><strong>iovs</strong>: *const [ciovec](#ciovec)</code> and <a href="#fd_write.iovs_len" name="fd_write.iovs_len"></a><code><strong>iovs\_len</strong>: usize</code>
 
     List of scatter/gather vectors where data
     should be retrieved.
@@ -557,22 +522,22 @@ Provides file advisory information on a file descriptor.
 
 Inputs:
 
-- <a href="#file_advise.fd" name="file_advise.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_advise.fd" name="file_advise.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor for which to provide file
     advisory information.
 
-- <a href="#file_advise.offset" name="file_advise.offset"></a><code><strong>offset</strong>: [filesize\_t](#filesize)</code>
+- <a href="#file_advise.offset" name="file_advise.offset"></a><code><strong>offset</strong>: [filesize](#filesize)</code>
 
     The offset within the file to which the
     advisory applies.
 
-- <a href="#file_advise.len" name="file_advise.len"></a><code><strong>len</strong>: [filesize\_t](#filesize)</code>
+- <a href="#file_advise.len" name="file_advise.len"></a><code><strong>len</strong>: [filesize](#filesize)</code>
 
     The length of the region to which the advisory
     applies.
 
-- <a href="#file_advise.advice" name="file_advise.advice"></a><code><strong>advice</strong>: [advice\_t](#advice)</code>
+- <a href="#file_advise.advice" name="file_advise.advice"></a><code><strong>advice</strong>: [advice](#advice)</code>
 
     The advice.
 
@@ -582,17 +547,17 @@ Forces the allocation of space in a file.
 
 Inputs:
 
-- <a href="#file_allocate.fd" name="file_allocate.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_allocate.fd" name="file_allocate.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file in which the space should be
     allocated.
 
-- <a href="#file_allocate.offset" name="file_allocate.offset"></a><code><strong>offset</strong>: [filesize\_t](#filesize)</code>
+- <a href="#file_allocate.offset" name="file_allocate.offset"></a><code><strong>offset</strong>: [filesize](#filesize)</code>
 
     The offset at which the allocation should
     start.
 
-- <a href="#file_allocate.len" name="file_allocate.len"></a><code><strong>len</strong>: [filesize\_t](#filesize)</code>
+- <a href="#file_allocate.len" name="file_allocate.len"></a><code><strong>len</strong>: [filesize](#filesize)</code>
 
     The length of the area that is allocated.
 
@@ -602,26 +567,22 @@ Creates a file of a specified type.
 
 Inputs:
 
-- <a href="#file_create.fd" name="file_create.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_create.fd" name="file_create.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the file to be created starts.
 
-- <a href="#file_create.path" name="file_create.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_create.pathlen" name="file_create.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_create.path" name="file_create.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_create.path_len" name="file_create.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path at which the file should be created.
 
-- <a href="#file_create.type" name="file_create.type"></a><code><strong>type</strong>: [filetype\_t](#filetype)</code>
+- <a href="#file_create.type" name="file_create.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
-    - [`FILETYPE_DIRECTORY`](#filetype.directory)
+    - [`DIRECTORY`](#filetype.directory)
 
         Creates a directory.
-
-    - [`FILETYPE_FIFO`](#filetype.fifo)
-
-        Creates a FIFO.
 
 #### <a href="#file_link" name="file_link"></a>`file_link()`
 
@@ -629,22 +590,22 @@ Creates a hard link.
 
 Inputs:
 
-- <a href="#file_link.fd1" name="file_link.fd1"></a><code><strong>fd1</strong>: [lookup\_t](#lookup)</code>
+- <a href="#file_link.fd1" name="file_link.fd1"></a><code><strong>fd1</strong>: [lookup](#lookup)</code>
 
     The working directory at which the resolution
     of the source path starts.
 
-- <a href="#file_link.path1" name="file_link.path1"></a><code><strong>path1</strong>: * u8</code> and <a href="#file_link.path1len" name="file_link.path1len"></a><code><strong>path1len</strong>: usize</code>
+- <a href="#file_link.path1" name="file_link.path1"></a><code><strong>path1</strong>: *const u8</code> and <a href="#file_link.path1_len" name="file_link.path1_len"></a><code><strong>path1\_len</strong>: usize</code>
 
     The source path of the file that should be
     hard linked.
 
-- <a href="#file_link.fd2" name="file_link.fd2"></a><code><strong>fd2</strong>: [fd\_t](#fd)</code>
+- <a href="#file_link.fd2" name="file_link.fd2"></a><code><strong>fd2</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_link.path2" name="file_link.path2"></a><code><strong>path2</strong>: * u8</code> and <a href="#file_link.path2len" name="file_link.path2len"></a><code><strong>path2len</strong>: usize</code>
+- <a href="#file_link.path2" name="file_link.path2"></a><code><strong>path2</strong>: *const u8</code> and <a href="#file_link.path2_len" name="file_link.path2_len"></a><code><strong>path2\_len</strong>: usize</code>
 
     The destination path at which the hard link
     should be created.
@@ -655,37 +616,37 @@ Opens a file.
 
 Inputs:
 
-- <a href="#file_open.dirfd" name="file_open.dirfd"></a><code><strong>dirfd</strong>: [lookup\_t](#lookup)</code>
+- <a href="#file_open.dirfd" name="file_open.dirfd"></a><code><strong>dirfd</strong>: [lookup](#lookup)</code>
 
     The working directory at which the resolution
     of the file to be opened starts.
 
-- <a href="#file_open.path" name="file_open.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_open.pathlen" name="file_open.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_open.path" name="file_open.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_open.path_len" name="file_open.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path of the file that should be opened.
 
-- <a href="#file_open.oflags" name="file_open.oflags"></a><code><strong>oflags</strong>: [oflags\_t](#oflags)</code>
+- <a href="#file_open.oflags" name="file_open.oflags"></a><code><strong>oflags</strong>: [oflags](#oflags)</code>
 
     The method at which the file should be opened.
 
-- <a href="#file_open.fds" name="file_open.fds"></a><code><strong>fds</strong>: * [fdstat\_t](#fdstat)</code>
+- <a href="#file_open.fds" name="file_open.fds"></a><code><strong>fds</strong>: *const [fdstat](#fdstat)</code>
 
-    [`fdstat_t.fs_rights_base`](#fdstat.fs_rights_base) and
-    [`fdstat_t.fs_rights_inheriting`](#fdstat.fs_rights_inheriting) specify the
+    [`fdstat.fs_rights_base`](#fdstat.fs_rights_base) and
+    [`fdstat.fs_rights_inheriting`](#fdstat.fs_rights_inheriting) specify the
     initial rights of the newly created file
     descriptor. The operating system is allowed to
     return a file descriptor with fewer rights
     than specified, if and only if those rights do
     not apply to the type of file being opened.
 
-    [`fdstat_t.fs_flags`](#fdstat.fs_flags) specifies the initial flags
+    [`fdstat.fs_flags`](#fdstat.fs_flags) specifies the initial flags
     of the file descriptor.
 
-    [`fdstat_t.fs_filetype`](#fdstat.fs_filetype) is ignored.
+    [`fdstat.fs_filetype`](#fdstat.fs_filetype) is ignored.
 
 Outputs:
 
-- <a href="#file_open.fd" name="file_open.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_open.fd" name="file_open.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor of the file that has been
     opened.
@@ -696,7 +657,7 @@ Reads directory entries from a directory.
 
 When successful, the contents of the output buffer consist of
 a sequence of directory entries. Each directory entry consists
-of a [`dirent_t`](#dirent) object, followed by [`dirent_t.d_namlen`](#dirent.d_namlen) bytes
+of a [`dirent`](#dirent) object, followed by [`dirent.d_namlen`](#dirent.d_namlen) bytes
 holding the name of the directory entry.
 
 This system call fills the output buffer as much as possible,
@@ -707,16 +668,16 @@ directory entry.
 
 Inputs:
 
-- <a href="#file_readdir.fd" name="file_readdir.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_readdir.fd" name="file_readdir.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The directory from which to read the directory
     entries.
 
-- <a href="#file_readdir.buf" name="file_readdir.buf"></a><code><strong>buf</strong>: *mut c\_void</code> and <a href="#file_readdir.nbyte" name="file_readdir.nbyte"></a><code><strong>nbyte</strong>: usize</code>
+- <a href="#file_readdir.buf" name="file_readdir.buf"></a><code><strong>buf</strong>: *mut ()</code> and <a href="#file_readdir.buf_len" name="file_readdir.buf_len"></a><code><strong>buf\_len</strong>: usize</code>
 
     The buffer where directory entries are stored.
 
-- <a href="#file_readdir.cookie" name="file_readdir.cookie"></a><code><strong>cookie</strong>: [dircookie\_t](#dircookie)</code>
+- <a href="#file_readdir.cookie" name="file_readdir.cookie"></a><code><strong>cookie</strong>: [dircookie](#dircookie)</code>
 
     The location within the directory to start
     reading.
@@ -735,17 +696,17 @@ Reads the contents of a symbolic link.
 
 Inputs:
 
-- <a href="#file_readlink.fd" name="file_readlink.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_readlink.fd" name="file_readlink.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the path of the symbolic starts.
 
-- <a href="#file_readlink.path" name="file_readlink.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_readlink.pathlen" name="file_readlink.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_readlink.path" name="file_readlink.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_readlink.path_len" name="file_readlink.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path of the symbolic link whose contents
     should be read.
 
-- <a href="#file_readlink.buf" name="file_readlink.buf"></a><code><strong>buf</strong>: *mut u8</code> and <a href="#file_readlink.bufsize" name="file_readlink.bufsize"></a><code><strong>bufsize</strong>: usize</code>
+- <a href="#file_readlink.buf" name="file_readlink.buf"></a><code><strong>buf</strong>: *mut u8</code> and <a href="#file_readlink.buf_len" name="file_readlink.buf_len"></a><code><strong>buf\_len</strong>: usize</code>
 
     The buffer where the contents of the symbolic
     link should be stored.
@@ -762,22 +723,22 @@ Renames a file.
 
 Inputs:
 
-- <a href="#file_rename.fd1" name="file_rename.fd1"></a><code><strong>fd1</strong>: [fd\_t](#fd)</code>
+- <a href="#file_rename.fd1" name="file_rename.fd1"></a><code><strong>fd1</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the source path starts.
 
-- <a href="#file_rename.path1" name="file_rename.path1"></a><code><strong>path1</strong>: * u8</code> and <a href="#file_rename.path1len" name="file_rename.path1len"></a><code><strong>path1len</strong>: usize</code>
+- <a href="#file_rename.path1" name="file_rename.path1"></a><code><strong>path1</strong>: *const u8</code> and <a href="#file_rename.path1_len" name="file_rename.path1_len"></a><code><strong>path1\_len</strong>: usize</code>
 
     The source path of the file that should be
     renamed.
 
-- <a href="#file_rename.fd2" name="file_rename.fd2"></a><code><strong>fd2</strong>: [fd\_t](#fd)</code>
+- <a href="#file_rename.fd2" name="file_rename.fd2"></a><code><strong>fd2</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_rename.path2" name="file_rename.path2"></a><code><strong>path2</strong>: * u8</code> and <a href="#file_rename.path2len" name="file_rename.path2len"></a><code><strong>path2len</strong>: usize</code>
+- <a href="#file_rename.path2" name="file_rename.path2"></a><code><strong>path2</strong>: *const u8</code> and <a href="#file_rename.path2_len" name="file_rename.path2_len"></a><code><strong>path2\_len</strong>: usize</code>
 
     The destination path to which the file should
     be renamed.
@@ -788,12 +749,12 @@ Gets attributes of a file by file descriptor.
 
 Inputs:
 
-- <a href="#file_stat_fget.fd" name="file_stat_fget.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_stat_fget.fd" name="file_stat_fget.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor whose attributes have to
     be obtained.
 
-- <a href="#file_stat_fget.buf" name="file_stat_fget.buf"></a><code><strong>buf</strong>: *mut [filestat\_t](#filestat)</code>
+- <a href="#file_stat_fget.buf" name="file_stat_fget.buf"></a><code><strong>buf</strong>: *mut [filestat](#filestat)</code>
 
     The buffer where the file's attributes are
     stored.
@@ -804,17 +765,17 @@ Adjusts attributes of a file by file descriptor.
 
 Inputs:
 
-- <a href="#file_stat_fput.fd" name="file_stat_fput.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_stat_fput.fd" name="file_stat_fput.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The file descriptor whose attributes have to
     be adjusted.
 
-- <a href="#file_stat_fput.buf" name="file_stat_fput.buf"></a><code><strong>buf</strong>: * [filestat\_t](#filestat)</code>
+- <a href="#file_stat_fput.buf" name="file_stat_fput.buf"></a><code><strong>buf</strong>: *const [filestat](#filestat)</code>
 
     The desired values of the file attributes that
     are adjusted.
 
-- <a href="#file_stat_fput.flags" name="file_stat_fput.flags"></a><code><strong>flags</strong>: [fsflags\_t](#fsflags)</code>
+- <a href="#file_stat_fput.flags" name="file_stat_fput.flags"></a><code><strong>flags</strong>: [fsflags](#fsflags)</code>
 
     A bitmask indicating which attributes have to
     be adjusted.
@@ -825,18 +786,18 @@ Gets attributes of a file by path.
 
 Inputs:
 
-- <a href="#file_stat_get.fd" name="file_stat_get.fd"></a><code><strong>fd</strong>: [lookup\_t](#lookup)</code>
+- <a href="#file_stat_get.fd" name="file_stat_get.fd"></a><code><strong>fd</strong>: [lookup](#lookup)</code>
 
     The working directory at which the resolution
     of the path whose attributes have to be
     obtained starts.
 
-- <a href="#file_stat_get.path" name="file_stat_get.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_stat_get.pathlen" name="file_stat_get.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_stat_get.path" name="file_stat_get.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_stat_get.path_len" name="file_stat_get.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path of the file whose attributes have to
     be obtained.
 
-- <a href="#file_stat_get.buf" name="file_stat_get.buf"></a><code><strong>buf</strong>: *mut [filestat\_t](#filestat)</code>
+- <a href="#file_stat_get.buf" name="file_stat_get.buf"></a><code><strong>buf</strong>: *mut [filestat](#filestat)</code>
 
     The buffer where the file's attributes are
     stored.
@@ -847,23 +808,23 @@ Adjusts attributes of a file by path.
 
 Inputs:
 
-- <a href="#file_stat_put.fd" name="file_stat_put.fd"></a><code><strong>fd</strong>: [lookup\_t](#lookup)</code>
+- <a href="#file_stat_put.fd" name="file_stat_put.fd"></a><code><strong>fd</strong>: [lookup](#lookup)</code>
 
     The working directory at which the resolution
     of the path whose attributes have to be
     adjusted starts.
 
-- <a href="#file_stat_put.path" name="file_stat_put.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_stat_put.pathlen" name="file_stat_put.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_stat_put.path" name="file_stat_put.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_stat_put.path_len" name="file_stat_put.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path of the file whose attributes have to
     be adjusted.
 
-- <a href="#file_stat_put.buf" name="file_stat_put.buf"></a><code><strong>buf</strong>: * [filestat\_t](#filestat)</code>
+- <a href="#file_stat_put.buf" name="file_stat_put.buf"></a><code><strong>buf</strong>: *const [filestat](#filestat)</code>
 
     The desired values of the file attributes that
     are adjusted.
 
-- <a href="#file_stat_put.flags" name="file_stat_put.flags"></a><code><strong>flags</strong>: [fsflags\_t](#fsflags)</code>
+- <a href="#file_stat_put.flags" name="file_stat_put.flags"></a><code><strong>flags</strong>: [fsflags](#fsflags)</code>
 
     A bitmask indicating which attributes have to
     be adjusted.
@@ -874,16 +835,16 @@ Creates a symbolic link.
 
 Inputs:
 
-- <a href="#file_symlink.path1" name="file_symlink.path1"></a><code><strong>path1</strong>: * u8</code> and <a href="#file_symlink.path1len" name="file_symlink.path1len"></a><code><strong>path1len</strong>: usize</code>
+- <a href="#file_symlink.path1" name="file_symlink.path1"></a><code><strong>path1</strong>: *const u8</code> and <a href="#file_symlink.path1_len" name="file_symlink.path1_len"></a><code><strong>path1\_len</strong>: usize</code>
 
     The contents of the symbolic link.
 
-- <a href="#file_symlink.fd" name="file_symlink.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_symlink.fd" name="file_symlink.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the destination path starts.
 
-- <a href="#file_symlink.path2" name="file_symlink.path2"></a><code><strong>path2</strong>: * u8</code> and <a href="#file_symlink.path2len" name="file_symlink.path2len"></a><code><strong>path2len</strong>: usize</code>
+- <a href="#file_symlink.path2" name="file_symlink.path2"></a><code><strong>path2</strong>: *const u8</code> and <a href="#file_symlink.path2_len" name="file_symlink.path2_len"></a><code><strong>path2\_len</strong>: usize</code>
 
     The destination path at which the symbolic
     link should be created.
@@ -894,20 +855,20 @@ Unlinks a file, or removes a directory.
 
 Inputs:
 
-- <a href="#file_unlink.fd" name="file_unlink.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#file_unlink.fd" name="file_unlink.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution
     of the path starts.
 
-- <a href="#file_unlink.path" name="file_unlink.path"></a><code><strong>path</strong>: * u8</code> and <a href="#file_unlink.pathlen" name="file_unlink.pathlen"></a><code><strong>pathlen</strong>: usize</code>
+- <a href="#file_unlink.path" name="file_unlink.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_unlink.path_len" name="file_unlink.path_len"></a><code><strong>path\_len</strong>: usize</code>
 
     The path that needs to be unlinked or removed.
 
-- <a href="#file_unlink.flags" name="file_unlink.flags"></a><code><strong>flags</strong>: [ulflags\_t](#ulflags)</code>
+- <a href="#file_unlink.flags" name="file_unlink.flags"></a><code><strong>flags</strong>: [ulflags](#ulflags)</code>
 
     Possible values:
 
-    - [`UNLINK_REMOVEDIR`](#ulflags.removedir)
+    - [`REMOVEDIR`](#ulflags.removedir)
 
         If set, attempt to remove a directory.
         Otherwise, unlink a file.
@@ -929,12 +890,12 @@ be upgraded to a write lock.
 
 Inputs:
 
-- <a href="#lock_unlock.lock" name="lock_unlock.lock"></a><code><strong>lock</strong>: *mut [lock\_t](#lock)</code>
+- <a href="#lock_unlock.lock" name="lock_unlock.lock"></a><code><strong>lock</strong>: *mut [lock](#lock)</code>
 
     The userspace lock that is locked for writing
     by the calling thread.
 
-- <a href="#lock_unlock.scope" name="lock_unlock.scope"></a><code><strong>scope</strong>: [scope\_t](#scope)</code>
+- <a href="#lock_unlock.scope" name="lock_unlock.scope"></a><code><strong>scope</strong>: [scope](#scope)</code>
 
     Whether the lock is stored in private or
     shared memory.
@@ -945,26 +906,14 @@ Provides memory advisory information on a region of memory.
 
 Inputs:
 
-- <a href="#mem_advise.addr" name="mem_advise.addr"></a><code><strong>addr</strong>: *mut c\_void</code> and <a href="#mem_advise.len" name="mem_advise.len"></a><code><strong>len</strong>: usize</code>
+- <a href="#mem_advise.mapping" name="mem_advise.mapping"></a><code><strong>mapping</strong>: *mut ()</code> and <a href="#mem_advise.mapping_len" name="mem_advise.mapping_len"></a><code><strong>mapping\_len</strong>: usize</code>
 
     The pages for which to provide memory advisory
     information.
 
-- <a href="#mem_advise.advice" name="mem_advise.advice"></a><code><strong>advice</strong>: [advice\_t](#advice)</code>
+- <a href="#mem_advise.advice" name="mem_advise.advice"></a><code><strong>advice</strong>: [advice](#advice)</code>
 
     The advice.
-
-#### <a href="#mem_lock" name="mem_lock"></a>`mem_lock()`
-
-Increments the lock count on a region of memory, which
-prevents it from leaving system memory.
-
-Inputs:
-
-- <a href="#mem_lock.addr" name="mem_lock.addr"></a><code><strong>addr</strong>: * c\_void</code> and <a href="#mem_lock.len" name="mem_lock.len"></a><code><strong>len</strong>: usize</code>
-
-    The pages that need its lock count
-    incremented.
 
 #### <a href="#mem_map" name="mem_map"></a>`mem_map()`
 
@@ -973,9 +922,9 @@ accessible through memory.
 
 Inputs:
 
-- <a href="#mem_map.addr" name="mem_map.addr"></a><code><strong>addr</strong>: *mut c\_void</code>
+- <a href="#mem_map.addr" name="mem_map.addr"></a><code><strong>addr</strong>: *mut ()</code>
 
-    If [`MAP_FIXED`](#mflags.fixed) is set, specifies to which
+    If [`FIXED`](#mflags.fixed) is set, specifies to which
     address the file region is mapped. Otherwise,
     the mapping is performed at an unused
     location.
@@ -985,32 +934,32 @@ Inputs:
     The length of the memory mapping to be
     created.
 
-- <a href="#mem_map.prot" name="mem_map.prot"></a><code><strong>prot</strong>: [mprot\_t](#mprot)</code>
+- <a href="#mem_map.prot" name="mem_map.prot"></a><code><strong>prot</strong>: [mprot](#mprot)</code>
 
     Initial memory protection options for the
     memory mapping.
 
-- <a href="#mem_map.flags" name="mem_map.flags"></a><code><strong>flags</strong>: [mflags\_t](#mflags)</code>
+- <a href="#mem_map.flags" name="mem_map.flags"></a><code><strong>flags</strong>: [mflags](#mflags)</code>
 
     Memory mapping flags.
 
-- <a href="#mem_map.fd" name="mem_map.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#mem_map.fd" name="mem_map.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
-    If [`MAP_ANON`](#mflags.anon) is set, this argument must be
+    If [`ANON`](#mflags.anon) is set, this argument must be
     [`MAP_ANON_FD`](#fd.map_anon_fd). Otherwise, this argument
     specifies the file whose contents need to be
     mapped.
 
-- <a href="#mem_map.off" name="mem_map.off"></a><code><strong>off</strong>: [filesize\_t](#filesize)</code>
+- <a href="#mem_map.off" name="mem_map.off"></a><code><strong>off</strong>: [filesize](#filesize)</code>
 
-    If [`MAP_ANON`](#mflags.anon) is set, this argument must be
+    If [`ANON`](#mflags.anon) is set, this argument must be
     zero. Otherwise, this argument specifies the
     offset within the file at which the mapping
     starts.
 
 Outputs:
 
-- <a href="#mem_map.mem" name="mem_map.mem"></a><code><strong>mem</strong>: *mut c\_void</code>
+- <a href="#mem_map.mem" name="mem_map.mem"></a><code><strong>mem</strong>: *mut ()</code>
 
     The starting address of the memory mapping.
 
@@ -1020,11 +969,11 @@ Change the protection of a memory mapping.
 
 Inputs:
 
-- <a href="#mem_protect.addr" name="mem_protect.addr"></a><code><strong>addr</strong>: *mut c\_void</code> and <a href="#mem_protect.len" name="mem_protect.len"></a><code><strong>len</strong>: usize</code>
+- <a href="#mem_protect.mapping" name="mem_protect.mapping"></a><code><strong>mapping</strong>: *mut ()</code> and <a href="#mem_protect.mapping_len" name="mem_protect.mapping_len"></a><code><strong>mapping\_len</strong>: usize</code>
 
     The pages that need their protection changed.
 
-- <a href="#mem_protect.prot" name="mem_protect.prot"></a><code><strong>prot</strong>: [mprot\_t](#mprot)</code>
+- <a href="#mem_protect.prot" name="mem_protect.prot"></a><code><strong>prot</strong>: [mprot](#mprot)</code>
 
     New protection options.
 
@@ -1034,25 +983,13 @@ Synchronize a region of memory with its physical storage.
 
 Inputs:
 
-- <a href="#mem_sync.addr" name="mem_sync.addr"></a><code><strong>addr</strong>: *mut c\_void</code> and <a href="#mem_sync.len" name="mem_sync.len"></a><code><strong>len</strong>: usize</code>
+- <a href="#mem_sync.mapping" name="mem_sync.mapping"></a><code><strong>mapping</strong>: *mut ()</code> and <a href="#mem_sync.mapping_len" name="mem_sync.mapping_len"></a><code><strong>mapping\_len</strong>: usize</code>
 
     The pages that need to be synchronized.
 
-- <a href="#mem_sync.flags" name="mem_sync.flags"></a><code><strong>flags</strong>: [msflags\_t](#msflags)</code>
+- <a href="#mem_sync.flags" name="mem_sync.flags"></a><code><strong>flags</strong>: [msflags](#msflags)</code>
 
     The method of synchronization.
-
-#### <a href="#mem_unlock" name="mem_unlock"></a>`mem_unlock()`
-
-Decrements the lock count on a region of memory, which
-prevents it from leaving system memory.
-
-Inputs:
-
-- <a href="#mem_unlock.addr" name="mem_unlock.addr"></a><code><strong>addr</strong>: * c\_void</code> and <a href="#mem_unlock.len" name="mem_unlock.len"></a><code><strong>len</strong>: usize</code>
-
-    The pages that need its lock count
-    decremented.
 
 #### <a href="#mem_unmap" name="mem_unmap"></a>`mem_unmap()`
 
@@ -1060,7 +997,7 @@ Unmaps a region of memory.
 
 Inputs:
 
-- <a href="#mem_unmap.addr" name="mem_unmap.addr"></a><code><strong>addr</strong>: *mut c\_void</code> and <a href="#mem_unmap.len" name="mem_unmap.len"></a><code><strong>len</strong>: usize</code>
+- <a href="#mem_unmap.mapping" name="mem_unmap.mapping"></a><code><strong>mapping</strong>: *mut ()</code> and <a href="#mem_unmap.mapping_len" name="mem_unmap.mapping_len"></a><code><strong>mapping\_len</strong>: usize</code>
 
     The pages that needs to be unmapped.
 
@@ -1070,11 +1007,11 @@ Concurrently polls for the occurrence of a set of events.
 
 Inputs:
 
-- <a href="#poll.in" name="poll.in"></a><code><strong>in</strong>: * [subscription\_t](#subscription)</code>
+- <a href="#poll.in" name="poll.in"></a><code><strong>in</strong>: *const [subscription](#subscription)</code>
 
     The events to which to subscribe.
 
-- <a href="#poll.out" name="poll.out"></a><code><strong>out</strong>: *mut [event\_t](#event)</code>
+- <a href="#poll.out" name="poll.out"></a><code><strong>out</strong>: *mut [event](#event)</code>
 
     The events that have occurred.
 
@@ -1088,40 +1025,6 @@ Outputs:
 
     The number of events stored.
 
-#### <a href="#poll_fd" name="poll_fd"></a>`poll_fd()`
-
-Concurrently polls for the occurrence of a set of events,
-while retaining subscriptions across calls.
-
-Inputs:
-
-- <a href="#poll_fd.fd" name="poll_fd.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
-
-    The polling event queue.
-
-- <a href="#poll_fd.in" name="poll_fd.in"></a><code><strong>in</strong>: * [subscription\_t](#subscription)</code> and <a href="#poll_fd.nin" name="poll_fd.nin"></a><code><strong>nin</strong>: usize</code>
-
-    Changes that need to be made to the polling
-    event queue.
-
-- <a href="#poll_fd.out" name="poll_fd.out"></a><code><strong>out</strong>: *mut [event\_t](#event)</code> and <a href="#poll_fd.nout" name="poll_fd.nout"></a><code><strong>nout</strong>: usize</code>
-
-    The events that have occurred.
-
-- <a href="#poll_fd.timeout" name="poll_fd.timeout"></a><code><strong>timeout</strong>: * [subscription\_t](#subscription)</code>
-
-    Subscription of type [`EVENTTYPE_CLOCK`](#eventtype.clock) to
-    serve as a timeout for the system call. The
-    subscription is local to this invocation of
-    this system call and is automatically purged
-    upon completion.
-
-Outputs:
-
-- <a href="#poll_fd.nevents" name="poll_fd.nevents"></a><code><strong>nevents</strong>: usize</code>
-
-    The number of events stored.
-
 #### <a href="#proc_exec" name="proc_exec"></a>`proc_exec()`
 
 Replaces the process by a new executable.
@@ -1129,11 +1032,12 @@ Replaces the process by a new executable.
 Process execution in CloudABI differs from POSIX in two ways:
 handling of arguments and inheritance of file descriptors.
 
-CloudABI does not use string command line arguments. A buffer
-with binary data is copied into the new executable instead.
-The kernel does not enforce any specific structure to this
-data, although CloudABI's C library uses it to store a tree
-structure that is semantically identical to YAML.
+CloudABI does not use string command line arguments. Instead,
+a buffer with binary data is copied into the address space of
+the new executable. The kernel does not enforce any specific
+structure to this data, although CloudABI's C library uses it
+to store a tree structure that is semantically identical to
+YAML.
 
 Due to the strong focus on thread safety, file descriptors
 aren't inherited through close-on-exec flags. An explicit
@@ -1146,16 +1050,16 @@ original process.
 
 Inputs:
 
-- <a href="#proc_exec.fd" name="proc_exec.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#proc_exec.fd" name="proc_exec.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     A file descriptor of the new executable.
 
-- <a href="#proc_exec.data" name="proc_exec.data"></a><code><strong>data</strong>: * c\_void</code> and <a href="#proc_exec.datalen" name="proc_exec.datalen"></a><code><strong>datalen</strong>: usize</code>
+- <a href="#proc_exec.data" name="proc_exec.data"></a><code><strong>data</strong>: *const ()</code> and <a href="#proc_exec.data_len" name="proc_exec.data_len"></a><code><strong>data\_len</strong>: usize</code>
 
     Binary argument data that is passed on to the
     new executable.
 
-- <a href="#proc_exec.fds" name="proc_exec.fds"></a><code><strong>fds</strong>: * [fd\_t](#fd)</code> and <a href="#proc_exec.fdslen" name="proc_exec.fdslen"></a><code><strong>fdslen</strong>: usize</code>
+- <a href="#proc_exec.fds" name="proc_exec.fds"></a><code><strong>fds</strong>: *const [fd](#fd)</code> and <a href="#proc_exec.fds_len" name="proc_exec.fds_len"></a><code><strong>fds\_len</strong>: usize</code>
 
     The layout of the file descriptor table after
     execution.
@@ -1166,11 +1070,11 @@ Terminates the process normally.
 
 Inputs:
 
-- <a href="#proc_exit.rval" name="proc_exit.rval"></a><code><strong>rval</strong>: [exitcode\_t](#exitcode)</code>
+- <a href="#proc_exit.rval" name="proc_exit.rval"></a><code><strong>rval</strong>: [exitcode](#exitcode)</code>
 
     The exit code returned by the process. The
     exit code can be obtained by other processes
-    through [`event_t.proc_terminate().exitcode`](#event.proc_terminate.exitcode).
+    through [`event.union.proc_terminate.exitcode`](#event.proc_terminate.exitcode).
 
 Does not return.
 
@@ -1181,18 +1085,18 @@ Forks the process of the calling thread.
 After forking, a new process shall be created, having only a
 copy of the calling thread. The parent process will obtain a
 process descriptor. When closed, the child process is
-automatically signalled with [`SIGKILL`](#signal.kill).
+automatically signaled with [`KILL`](#signal.kill).
 
 Outputs:
 
-- <a href="#proc_fork.fd" name="proc_fork.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#proc_fork.fd" name="proc_fork.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     In the parent process: the file descriptor
     number of the process descriptor.
 
     In the child process: [`PROCESS_CHILD`](#fd.process_child).
 
-- <a href="#proc_fork.tid" name="proc_fork.tid"></a><code><strong>tid</strong>: [tid\_t](#tid)</code>
+- <a href="#proc_fork.tid" name="proc_fork.tid"></a><code><strong>tid</strong>: [tid](#tid)</code>
 
     In the parent process: undefined.
 
@@ -1205,13 +1109,13 @@ Sends a signal to the process of the calling thread.
 
 Inputs:
 
-- <a href="#proc_raise.sig" name="proc_raise.sig"></a><code><strong>sig</strong>: [signal\_t](#signal)</code>
+- <a href="#proc_raise.sig" name="proc_raise.sig"></a><code><strong>sig</strong>: [signal](#signal)</code>
 
     The signal condition that should be triggered.
     If the signal causes the process to terminate,
     its condition can be obtained by other
     processes through
-    [`event_t.proc_terminate().signal`](#event.proc_terminate.signal).
+    [`event.union.proc_terminate.signal`](#event.proc_terminate.signal).
 
 #### <a href="#random_get" name="random_get"></a>`random_get()`
 
@@ -1223,86 +1127,10 @@ as the seed for a userspace pseudo-random number generator.
 
 Inputs:
 
-- <a href="#random_get.buf" name="random_get.buf"></a><code><strong>buf</strong>: *mut c\_void</code> and <a href="#random_get.nbyte" name="random_get.nbyte"></a><code><strong>nbyte</strong>: usize</code>
+- <a href="#random_get.buf" name="random_get.buf"></a><code><strong>buf</strong>: *mut ()</code> and <a href="#random_get.buf_len" name="random_get.buf_len"></a><code><strong>buf\_len</strong>: usize</code>
 
     The buffer that needs to be filled with random
     data.
-
-#### <a href="#sock_accept" name="sock_accept"></a>`sock_accept()`
-
-Accepts an incoming connection on a listening socket.
-
-Inputs:
-
-- <a href="#sock_accept.sock" name="sock_accept.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
-
-    The file descriptor of the listening socket.
-
-- <a href="#sock_accept.buf" name="sock_accept.buf"></a><code><strong>buf</strong>: *mut [sockstat\_t](#sockstat)</code>
-
-    The attributes of the socket associated with
-    the incoming connection.
-
-Outputs:
-
-- <a href="#sock_accept.conn" name="sock_accept.conn"></a><code><strong>conn</strong>: [fd\_t](#fd)</code>
-
-    The socket associated with the incoming
-    connection.
-
-#### <a href="#sock_bind" name="sock_bind"></a>`sock_bind()`
-
-Binds a UNIX socket to a path.
-
-Inputs:
-
-- <a href="#sock_bind.sock" name="sock_bind.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
-
-    The file descriptor of the socket to be bound.
-
-- <a href="#sock_bind.fd" name="sock_bind.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
-
-    The working directory at which the resolution
-    of the path to which to bind starts.
-
-- <a href="#sock_bind.path" name="sock_bind.path"></a><code><strong>path</strong>: * u8</code> and <a href="#sock_bind.pathlen" name="sock_bind.pathlen"></a><code><strong>pathlen</strong>: usize</code>
-
-    The path to which the socket should bind.
-
-#### <a href="#sock_connect" name="sock_connect"></a>`sock_connect()`
-
-Connects a UNIX socket to another UNIX socket bound at a path.
-
-Inputs:
-
-- <a href="#sock_connect.sock" name="sock_connect.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
-
-    The file descriptor of the socket to connect.
-
-- <a href="#sock_connect.fd" name="sock_connect.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
-
-    The working directory at which the resolution
-    of the path to which to connect starts.
-
-- <a href="#sock_connect.path" name="sock_connect.path"></a><code><strong>path</strong>: * u8</code> and <a href="#sock_connect.pathlen" name="sock_connect.pathlen"></a><code><strong>pathlen</strong>: usize</code>
-
-    The path to which the socket should onnect.
-
-#### <a href="#sock_listen" name="sock_listen"></a>`sock_listen()`
-
-Listens for incoming connections on a socket.
-
-Inputs:
-
-- <a href="#sock_listen.sock" name="sock_listen.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
-
-    The socket on which listening should be
-    enabled.
-
-- <a href="#sock_listen.backlog" name="sock_listen.backlog"></a><code><strong>backlog</strong>: [backlog\_t](#backlog)</code>
-
-    Number of incoming connections the socket is
-    capable of keeping in its backlog.
 
 #### <a href="#sock_recv" name="sock_recv"></a>`sock_recv()`
 
@@ -1310,16 +1138,16 @@ Receives a message on a socket.
 
 Inputs:
 
-- <a href="#sock_recv.sock" name="sock_recv.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
+- <a href="#sock_recv.sock" name="sock_recv.sock"></a><code><strong>sock</strong>: [fd](#fd)</code>
 
     The socket on which a message should be
     received.
 
-- <a href="#sock_recv.in" name="sock_recv.in"></a><code><strong>in</strong>: * [recv\_in\_t](#recv\_in)</code>
+- <a href="#sock_recv.in" name="sock_recv.in"></a><code><strong>in</strong>: *const [recv\_in](#recv\_in)</code>
 
     Input parameters.
 
-- <a href="#sock_recv.out" name="sock_recv.out"></a><code><strong>out</strong>: *mut [recv\_out\_t](#recv\_out)</code>
+- <a href="#sock_recv.out" name="sock_recv.out"></a><code><strong>out</strong>: *mut [recv\_out](#recv\_out)</code>
 
     Output parameters.
 
@@ -1329,15 +1157,15 @@ Sends a message on a socket.
 
 Inputs:
 
-- <a href="#sock_send.sock" name="sock_send.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
+- <a href="#sock_send.sock" name="sock_send.sock"></a><code><strong>sock</strong>: [fd](#fd)</code>
 
     The socket on which a message should be sent.
 
-- <a href="#sock_send.in" name="sock_send.in"></a><code><strong>in</strong>: * [send\_in\_t](#send\_in)</code>
+- <a href="#sock_send.in" name="sock_send.in"></a><code><strong>in</strong>: *const [send\_in](#send\_in)</code>
 
     Input parameters.
 
-- <a href="#sock_send.out" name="sock_send.out"></a><code><strong>out</strong>: *mut [send\_out\_t](#send\_out)</code>
+- <a href="#sock_send.out" name="sock_send.out"></a><code><strong>out</strong>: *mut [send\_out](#send\_out)</code>
 
     Output parameters.
 
@@ -1347,35 +1175,14 @@ Shuts down socket send and receive channels.
 
 Inputs:
 
-- <a href="#sock_shutdown.sock" name="sock_shutdown.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
+- <a href="#sock_shutdown.sock" name="sock_shutdown.sock"></a><code><strong>sock</strong>: [fd](#fd)</code>
 
     The socket that needs its channels shut down.
 
-- <a href="#sock_shutdown.how" name="sock_shutdown.how"></a><code><strong>how</strong>: [sdflags\_t](#sdflags)</code>
+- <a href="#sock_shutdown.how" name="sock_shutdown.how"></a><code><strong>how</strong>: [sdflags](#sdflags)</code>
 
     Which channels on the socket need to be shut
     down.
-
-#### <a href="#sock_stat_get" name="sock_stat_get"></a>`sock_stat_get()`
-
-Gets attributes of a socket.
-
-Inputs:
-
-- <a href="#sock_stat_get.sock" name="sock_stat_get.sock"></a><code><strong>sock</strong>: [fd\_t](#fd)</code>
-
-    The socket whose attributes have to be
-    obtained.
-
-- <a href="#sock_stat_get.buf" name="sock_stat_get.buf"></a><code><strong>buf</strong>: *mut [sockstat\_t](#sockstat)</code>
-
-    The buffer where the socket's attributes are
-    stored.
-
-- <a href="#sock_stat_get.flags" name="sock_stat_get.flags"></a><code><strong>flags</strong>: [ssflags\_t](#ssflags)</code>
-
-    Flags indicating how the existing socket
-    attributes need to be changed.
 
 #### <a href="#thread_create" name="thread_create"></a>`thread_create()`
 
@@ -1383,13 +1190,13 @@ Creates a new thread within the current process.
 
 Inputs:
 
-- <a href="#thread_create.attr" name="thread_create.attr"></a><code><strong>attr</strong>: *mut [threadattr\_t](#threadattr)</code>
+- <a href="#thread_create.attr" name="thread_create.attr"></a><code><strong>attr</strong>: *mut [threadattr](#threadattr)</code>
 
     The desired attributes of the new thread.
 
 Outputs:
 
-- <a href="#thread_create.tid" name="thread_create.tid"></a><code><strong>tid</strong>: [tid\_t](#tid)</code>
+- <a href="#thread_create.tid" name="thread_create.tid"></a><code><strong>tid</strong>: [tid](#tid)</code>
 
     The thread ID of the new thread.
 
@@ -1403,12 +1210,12 @@ joining.
 
 Inputs:
 
-- <a href="#thread_exit.lock" name="thread_exit.lock"></a><code><strong>lock</strong>: *mut [lock\_t](#lock)</code>
+- <a href="#thread_exit.lock" name="thread_exit.lock"></a><code><strong>lock</strong>: *mut [lock](#lock)</code>
 
     Userspace lock that is locked for writing by
     the calling thread.
 
-- <a href="#thread_exit.scope" name="thread_exit.scope"></a><code><strong>scope</strong>: [scope\_t](#scope)</code>
+- <a href="#thread_exit.scope" name="thread_exit.scope"></a><code><strong>scope</strong>: [scope](#scope)</code>
 
     Whether the lock is stored in private or
     shared memory.
@@ -1421,7 +1228,7 @@ Temporarily yields execution of the calling thread.
 
 ### Types
 
-#### <a href="#advice" name="advice"></a>`advice_t` (`u8`)
+#### <a href="#advice" name="advice"></a>`advice` (`u8` `enum`)
 
 File or memory access pattern advisory information.
 
@@ -1429,93 +1236,105 @@ Used by [`file_advise()`](#file_advise) and [`mem_advise()`](#mem_advise).
 
 Possible values:
 
-- <a href="#advice.dontneed" name="advice.dontneed"></a>**`ADVICE_DONTNEED`**
+- <a href="#advice.dontneed" name="advice.dontneed"></a>**`DONTNEED`**
 
     The application expects that it will not access the
     specified data in the near future.
 
-- <a href="#advice.noreuse" name="advice.noreuse"></a>**`ADVICE_NOREUSE`**
+- <a href="#advice.noreuse" name="advice.noreuse"></a>**`NOREUSE`**
 
     The application expects to access the specified data
     once and then not reuse it thereafter.
 
-- <a href="#advice.normal" name="advice.normal"></a>**`ADVICE_NORMAL`**
+- <a href="#advice.normal" name="advice.normal"></a>**`NORMAL`**
 
     The application has no advice to give on its behavior
     with respect to the specified data.
 
-- <a href="#advice.random" name="advice.random"></a>**`ADVICE_RANDOM`**
+- <a href="#advice.random" name="advice.random"></a>**`RANDOM`**
 
     The application expects to access the specified data
     in a random order.
 
-- <a href="#advice.sequential" name="advice.sequential"></a>**`ADVICE_SEQUENTIAL`**
+- <a href="#advice.sequential" name="advice.sequential"></a>**`SEQUENTIAL`**
 
     The application expects to access the specified data
     sequentially from lower offsets to higher offsets.
 
-- <a href="#advice.willneed" name="advice.willneed"></a>**`ADVICE_WILLNEED`**
+- <a href="#advice.willneed" name="advice.willneed"></a>**`WILLNEED`**
 
     The application expects to access the specified data
     in the near future.
 
-#### <a href="#auxtype" name="auxtype"></a>`auxtype_t` (`u32`)
+#### <a href="#auxtype" name="auxtype"></a>`auxtype` (`u32` `enum`)
 
-Enumeration describing the kind of value stored in [`auxv_t`](#auxv).
+Enumeration describing the kind of value stored in [`auxv`](#auxv).
 
 Possible values:
 
-- <a href="#auxtype.argdata" name="auxtype.argdata"></a>**`AT_ARGDATA`**
+- <a href="#auxtype.argdata" name="auxtype.argdata"></a>**`ARGDATA`**
 
     Base address of the binary argument data provided to
     [`proc_exec()`](#proc_exec).
 
-- <a href="#auxtype.argdatalen" name="auxtype.argdatalen"></a>**`AT_ARGDATALEN`**
+- <a href="#auxtype.argdatalen" name="auxtype.argdatalen"></a>**`ARGDATALEN`**
 
     Length of the binary argument data provided to
     [`proc_exec()`](#proc_exec).
 
-- <a href="#auxtype.base" name="auxtype.base"></a>**`AT_BASE`**
+- <a href="#auxtype.base" name="auxtype.base"></a>**`BASE`**
 
     Base address at which the executable is placed in
     memory.
 
-- <a href="#auxtype.canary" name="auxtype.canary"></a>**`AT_CANARY`**
+- <a href="#auxtype.canary" name="auxtype.canary"></a>**`CANARY`**
 
     Base address of a buffer of random data that may be
     used for non-cryptographic purposes, for example as a
     canary for stack smashing protection.
 
-- <a href="#auxtype.canarylen" name="auxtype.canarylen"></a>**`AT_CANARYLEN`**
+- <a href="#auxtype.canarylen" name="auxtype.canarylen"></a>**`CANARYLEN`**
 
     Length of a buffer of random data that may be used
     for non-cryptographic purposes, for example as a
     canary for stack smashing protection.
 
-- <a href="#auxtype.ncpus" name="auxtype.ncpus"></a>**`AT_NCPUS`**
+- <a href="#auxtype.ncpus" name="auxtype.ncpus"></a>**`NCPUS`**
 
     Number of CPUs that the system this process is running
     on has.
 
-- <a href="#auxtype.null" name="auxtype.null"></a>**`AT_NULL`**
+- <a href="#auxtype.null" name="auxtype.null"></a>**`NULL`**
 
     Terminator of the auxiliary vector.
 
-- <a href="#auxtype.pagesz" name="auxtype.pagesz"></a>**`AT_PAGESZ`**
+- <a href="#auxtype.pagesz" name="auxtype.pagesz"></a>**`PAGESZ`**
 
     Smallest memory object size for which individual
     memory protection controls can be configured.
 
-- <a href="#auxtype.phdr" name="auxtype.phdr"></a>**`AT_PHDR`**
+- <a href="#auxtype.phdr" name="auxtype.phdr"></a>**`PHDR`**
 
     Address of the first ELF program header of the
     executable.
 
-- <a href="#auxtype.phnum" name="auxtype.phnum"></a>**`AT_PHNUM`**
+- <a href="#auxtype.phnum" name="auxtype.phnum"></a>**`PHNUM`**
 
     Number of ELF program headers of the executable.
 
-- <a href="#auxtype.sysinfo_ehdr" name="auxtype.sysinfo_ehdr"></a>**`AT_SYSINFO_EHDR`**
+- <a href="#auxtype.pid" name="auxtype.pid"></a>**`PID`**
+
+    Identifier of the process.
+
+    This environment does not provide any simple numerical
+    process identifiers, for the reason that these are not
+    useful in distributed contexts. Instead, processes are
+    identified by a UUID.
+
+    This record should point to sixteen bytes of binary
+    data, containing a version 4 UUID (fully random).
+
+- <a href="#auxtype.sysinfo_ehdr" name="auxtype.sysinfo_ehdr"></a>**`SYSINFO_EHDR`**
 
     Address of the ELF header of the vDSO.
 
@@ -1538,11 +1357,11 @@ Possible values:
     a more dynamic way of adding, removing or replacing
     system calls.
 
-- <a href="#auxtype.tid" name="auxtype.tid"></a>**`AT_TID`**
+- <a href="#auxtype.tid" name="auxtype.tid"></a>**`TID`**
 
     Thread ID of the initial thread of the process.
 
-#### <a href="#auxv" name="auxv"></a>`auxv_t` (`struct`)
+#### <a href="#auxv" name="auxv"></a>`auxv` (`struct`)
 
 Auxiliary vector entry.
 
@@ -1550,59 +1369,52 @@ The auxiliary vector is a list of key-value pairs that is
 provided to the process on startup. Unlike structures, it is
 extensible, as it is possible to add new records later on.
 The auxiliary vector is always terminated by an entry having
-type [`AT_NULL`](#auxtype.null).
+type [`NULL`](#auxtype.null).
 
 The auxiliary vector is part of the x86-64 ABI, but is used by
 this environment on all architectures.
 
-Used by [`processentry_t`](#processentry).
+Used by [`processentry`](#processentry).
 
 Members:
 
-- <a href="#auxv.a_type" name="auxv.a_type"></a><code><strong>a\_type</strong>: [auxtype\_t](#auxtype)</code>
+- <a href="#auxv.a_type" name="auxv.a_type"></a><code><strong>a\_type</strong>: [auxtype](#auxtype)</code>
 
     The type of the auxiliary vector entry.
 
-- When `a_type` is [`AT_ARGDATALEN`](#auxtype.argdatalen), [`AT_CANARYLEN`](#auxtype.canarylen), [`AT_NCPUS`](#auxtype.ncpus), [`AT_PAGESZ`](#auxtype.pagesz), [`AT_PHNUM`](#auxtype.phnum), or [`AT_TID`](#auxtype.tid):
+- When `a_type` is [`ARGDATALEN`](#auxtype.argdatalen), [`CANARYLEN`](#auxtype.canarylen), [`NCPUS`](#auxtype.ncpus), [`PAGESZ`](#auxtype.pagesz), [`PHNUM`](#auxtype.phnum), or [`TID`](#auxtype.tid):
 
-    - <a href="#auxv.a_val" name="auxv.a_val"></a><code><strong>a\_val()</strong>: usize</code>
+    - <a href="#auxv.a_val" name="auxv.a_val"></a><code><strong>union.a\_val</strong>: usize</code>
 
         A numerical value.
 
-- When `a_type` is [`AT_ARGDATA`](#auxtype.argdata), [`AT_BASE`](#auxtype.base), [`AT_CANARY`](#auxtype.canary), [`AT_PHDR`](#auxtype.phdr), or [`AT_SYSINFO_EHDR`](#auxtype.sysinfo_ehdr):
+- When `a_type` is [`ARGDATA`](#auxtype.argdata), [`BASE`](#auxtype.base), [`CANARY`](#auxtype.canary), [`PHDR`](#auxtype.phdr), [`PID`](#auxtype.pid), or [`SYSINFO_EHDR`](#auxtype.sysinfo_ehdr):
 
-    - <a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code><strong>a\_ptr()</strong>: *mut c\_void</code>
+    - <a href="#auxv.a_ptr" name="auxv.a_ptr"></a><code><strong>union.a\_ptr</strong>: *mut ()</code>
 
         A pointer value.
 
-#### <a href="#backlog" name="backlog"></a>`backlog_t` (`u32`)
-
-Number of incoming connections a socket is capable of keeping
-in its backlog.
-
-Used by [`sock_listen()`](#sock_listen).
-
-#### <a href="#ciovec" name="ciovec"></a>`ciovec_t` (`struct`)
+#### <a href="#ciovec" name="ciovec"></a>`ciovec` (`struct`)
 
 A region of memory for scatter/gather writes.
 
-Used by [`send_in_t`](#send_in), [`fd_pwrite()`](#fd_pwrite), and [`fd_write()`](#fd_write).
+Used by [`send_in`](#send_in), [`fd_pwrite()`](#fd_pwrite), and [`fd_write()`](#fd_write).
 
 Members:
 
-- <a href="#ciovec.iov_base" name="ciovec.iov_base"></a><code><strong>iov\_base</strong>: * c\_void</code> and <a href="#ciovec.iov_len" name="ciovec.iov_len"></a><code><strong>iov\_len</strong>: usize</code>
+- <a href="#ciovec.buf" name="ciovec.buf"></a><code><strong>buf</strong>: *const ()</code> and <a href="#ciovec.buf_len" name="ciovec.buf_len"></a><code><strong>buf\_len</strong>: usize</code>
 
     The address and length of the buffer to be written.
 
-#### <a href="#clockid" name="clockid"></a>`clockid_t` (`u32`)
+#### <a href="#clockid" name="clockid"></a>`clockid` (`u32` `enum`)
 
 Identifiers for clocks.
 
-Used by [`subscription_t`](#subscription), [`clock_res_get()`](#clock_res_get), and [`clock_time_get()`](#clock_time_get).
+Used by [`subscription`](#subscription), [`clock_res_get()`](#clock_res_get), and [`clock_time_get()`](#clock_time_get).
 
 Possible values:
 
-- <a href="#clockid.monotonic" name="clockid.monotonic"></a>**`CLOCK_MONOTONIC`**
+- <a href="#clockid.monotonic" name="clockid.monotonic"></a>**`MONOTONIC`**
 
     The system-wide monotonic clock, which is defined as a
     clock measuring real time, whose value cannot be
@@ -1611,25 +1423,25 @@ Possible values:
     The epoch of this clock is undefined. The absolute
     time value of this clock therefore has no meaning.
 
-- <a href="#clockid.process_cputime_id" name="clockid.process_cputime_id"></a>**`CLOCK_PROCESS_CPUTIME_ID`**
+- <a href="#clockid.process_cputime_id" name="clockid.process_cputime_id"></a>**`PROCESS_CPUTIME_ID`**
 
     The CPU-time clock associated with the current
     process.
 
-- <a href="#clockid.realtime" name="clockid.realtime"></a>**`CLOCK_REALTIME`**
+- <a href="#clockid.realtime" name="clockid.realtime"></a>**`REALTIME`**
 
     The system-wide clock measuring real time. Time value
     zero corresponds with 1970-01-01T00:00:00Z.
 
-- <a href="#clockid.thread_cputime_id" name="clockid.thread_cputime_id"></a>**`CLOCK_THREAD_CPUTIME_ID`**
+- <a href="#clockid.thread_cputime_id" name="clockid.thread_cputime_id"></a>**`THREAD_CPUTIME_ID`**
 
     The CPU-time clock associated with the current thread.
 
-#### <a href="#condvar" name="condvar"></a>`condvar_t` (`u32`)
+#### <a href="#condvar" name="condvar"></a>`condvar` (`struct(u32)`)
 
 A userspace condition variable.
 
-Used by [`event_t`](#event), [`subscription_t`](#subscription), and [`condvar_signal()`](#condvar_signal).
+Used by [`subscription`](#subscription) and [`condvar_signal()`](#condvar_signal).
 
 Special values:
 
@@ -1640,19 +1452,19 @@ Special values:
     condition variable has any other value, the kernel
     must be called to wake up any sleeping threads.
 
-#### <a href="#device" name="device"></a>`device_t` (`u64`)
+#### <a href="#device" name="device"></a>`device` (`struct(u64)`)
 
 Identifier for a device containing a file system. Can be used
-in combination with [`inode_t`](#inode) to uniquely identify a file on the
+in combination with [`inode`](#inode) to uniquely identify a file on the
 local system.
 
-Used by [`filestat_t`](#filestat).
+Used by [`filestat`](#filestat).
 
-#### <a href="#dircookie" name="dircookie"></a>`dircookie_t` (`u64`)
+#### <a href="#dircookie" name="dircookie"></a>`dircookie` (`struct(u64)`)
 
 A reference to the offset of a directory entry.
 
-Used by [`dirent_t`](#dirent) and [`file_readdir()`](#file_readdir).
+Used by [`dirent`](#dirent) and [`file_readdir()`](#file_readdir).
 
 Special values:
 
@@ -1661,18 +1473,18 @@ Special values:
     Permanent reference to the first directory entry
     within a directory.
 
-#### <a href="#dirent" name="dirent"></a>`dirent_t` (`struct`)
+#### <a href="#dirent" name="dirent"></a>`dirent` (`struct`)
 
 A directory entry.
 
 Members:
 
-- <a href="#dirent.d_next" name="dirent.d_next"></a><code><strong>d\_next</strong>: [dircookie\_t](#dircookie)</code>
+- <a href="#dirent.d_next" name="dirent.d_next"></a><code><strong>d\_next</strong>: [dircookie](#dircookie)</code>
 
     The offset of the next directory entry stored in this
     directory.
 
-- <a href="#dirent.d_ino" name="dirent.d_ino"></a><code><strong>d\_ino</strong>: [inode\_t](#inode)</code>
+- <a href="#dirent.d_ino" name="dirent.d_ino"></a><code><strong>d\_ino</strong>: [inode](#inode)</code>
 
     The serial number of the file referred to by this
     directory entry.
@@ -1681,12 +1493,12 @@ Members:
 
     The length of the name of the directory entry.
 
-- <a href="#dirent.d_type" name="dirent.d_type"></a><code><strong>d\_type</strong>: [filetype\_t](#filetype)</code>
+- <a href="#dirent.d_type" name="dirent.d_type"></a><code><strong>d\_type</strong>: [filetype](#filetype)</code>
 
     The type of the file referred to by this directory
     entry.
 
-#### <a href="#errno" name="errno"></a>`errno_t` (`u16`)
+#### <a href="#errno" name="errno"></a>`errno` (`u16` `enum`)
 
 Error codes returned by system calls.
 
@@ -1694,394 +1506,363 @@ Not all of these error codes are returned by the system calls
 provided by this environment, but are either used in userspace
 exclusively or merely provided for alignment with POSIX.
 
-Used by [`event_t`](#event) and [`sockstat_t`](#sockstat).
+Used by [`event`](#event).
 
 Possible values:
 
-- <a href="#errno.2big" name="errno.2big"></a>**`E2BIG`**
+- <a href="#errno.2big" name="errno.2big"></a>**`TOOBIG`**
 
     Argument list too long.
 
-- <a href="#errno.acces" name="errno.acces"></a>**`EACCES`**
+- <a href="#errno.acces" name="errno.acces"></a>**`ACCES`**
 
     Permission denied.
 
-- <a href="#errno.addrinuse" name="errno.addrinuse"></a>**`EADDRINUSE`**
+- <a href="#errno.addrinuse" name="errno.addrinuse"></a>**`ADDRINUSE`**
 
     Address in use.
 
-- <a href="#errno.addrnotavail" name="errno.addrnotavail"></a>**`EADDRNOTAVAIL`**
+- <a href="#errno.addrnotavail" name="errno.addrnotavail"></a>**`ADDRNOTAVAIL`**
 
     Address not available.
 
-- <a href="#errno.afnosupport" name="errno.afnosupport"></a>**`EAFNOSUPPORT`**
+- <a href="#errno.afnosupport" name="errno.afnosupport"></a>**`AFNOSUPPORT`**
 
     Address family not supported.
 
-- <a href="#errno.again" name="errno.again"></a>**`EAGAIN`**
+- <a href="#errno.again" name="errno.again"></a>**`AGAIN`**
 
     Resource unavailable, or operation would block.
 
-- <a href="#errno.already" name="errno.already"></a>**`EALREADY`**
+- <a href="#errno.already" name="errno.already"></a>**`ALREADY`**
 
     Connection already in progress.
 
-- <a href="#errno.badf" name="errno.badf"></a>**`EBADF`**
+- <a href="#errno.badf" name="errno.badf"></a>**`BADF`**
 
     Bad file descriptor.
 
-- <a href="#errno.badmsg" name="errno.badmsg"></a>**`EBADMSG`**
+- <a href="#errno.badmsg" name="errno.badmsg"></a>**`BADMSG`**
 
     Bad message.
 
-- <a href="#errno.busy" name="errno.busy"></a>**`EBUSY`**
+- <a href="#errno.busy" name="errno.busy"></a>**`BUSY`**
 
     Device or resource busy.
 
-- <a href="#errno.canceled" name="errno.canceled"></a>**`ECANCELED`**
+- <a href="#errno.canceled" name="errno.canceled"></a>**`CANCELED`**
 
     Operation canceled.
 
-- <a href="#errno.child" name="errno.child"></a>**`ECHILD`**
+- <a href="#errno.child" name="errno.child"></a>**`CHILD`**
 
     No child processes.
 
-- <a href="#errno.connaborted" name="errno.connaborted"></a>**`ECONNABORTED`**
+- <a href="#errno.connaborted" name="errno.connaborted"></a>**`CONNABORTED`**
 
     Connection aborted.
 
-- <a href="#errno.connrefused" name="errno.connrefused"></a>**`ECONNREFUSED`**
+- <a href="#errno.connrefused" name="errno.connrefused"></a>**`CONNREFUSED`**
 
     Connection refused.
 
-- <a href="#errno.connreset" name="errno.connreset"></a>**`ECONNRESET`**
+- <a href="#errno.connreset" name="errno.connreset"></a>**`CONNRESET`**
 
     Connection reset.
 
-- <a href="#errno.deadlk" name="errno.deadlk"></a>**`EDEADLK`**
+- <a href="#errno.deadlk" name="errno.deadlk"></a>**`DEADLK`**
 
     Resource deadlock would occur.
 
-- <a href="#errno.destaddrreq" name="errno.destaddrreq"></a>**`EDESTADDRREQ`**
+- <a href="#errno.destaddrreq" name="errno.destaddrreq"></a>**`DESTADDRREQ`**
 
     Destination address required.
 
-- <a href="#errno.dom" name="errno.dom"></a>**`EDOM`**
+- <a href="#errno.dom" name="errno.dom"></a>**`DOM`**
 
     Mathematics argument out of domain of function.
 
-- <a href="#errno.dquot" name="errno.dquot"></a>**`EDQUOT`**
+- <a href="#errno.dquot" name="errno.dquot"></a>**`DQUOT`**
 
     Reserved.
 
-- <a href="#errno.exist" name="errno.exist"></a>**`EEXIST`**
+- <a href="#errno.exist" name="errno.exist"></a>**`EXIST`**
 
     File exists.
 
-- <a href="#errno.fault" name="errno.fault"></a>**`EFAULT`**
+- <a href="#errno.fault" name="errno.fault"></a>**`FAULT`**
 
     Bad address.
 
-- <a href="#errno.fbig" name="errno.fbig"></a>**`EFBIG`**
+- <a href="#errno.fbig" name="errno.fbig"></a>**`FBIG`**
 
     File too large.
 
-- <a href="#errno.hostunreach" name="errno.hostunreach"></a>**`EHOSTUNREACH`**
+- <a href="#errno.hostunreach" name="errno.hostunreach"></a>**`HOSTUNREACH`**
 
     Host is unreachable.
 
-- <a href="#errno.idrm" name="errno.idrm"></a>**`EIDRM`**
+- <a href="#errno.idrm" name="errno.idrm"></a>**`IDRM`**
 
     Identifier removed.
 
-- <a href="#errno.ilseq" name="errno.ilseq"></a>**`EILSEQ`**
+- <a href="#errno.ilseq" name="errno.ilseq"></a>**`ILSEQ`**
 
     Illegal byte sequence.
 
-- <a href="#errno.inprogress" name="errno.inprogress"></a>**`EINPROGRESS`**
+- <a href="#errno.inprogress" name="errno.inprogress"></a>**`INPROGRESS`**
 
     Operation in progress.
 
-- <a href="#errno.intr" name="errno.intr"></a>**`EINTR`**
+- <a href="#errno.intr" name="errno.intr"></a>**`INTR`**
 
     Interrupted function.
 
-- <a href="#errno.inval" name="errno.inval"></a>**`EINVAL`**
+- <a href="#errno.inval" name="errno.inval"></a>**`INVAL`**
 
     Invalid argument.
 
-- <a href="#errno.io" name="errno.io"></a>**`EIO`**
+- <a href="#errno.io" name="errno.io"></a>**`IO`**
 
     I/O error.
 
-- <a href="#errno.isconn" name="errno.isconn"></a>**`EISCONN`**
+- <a href="#errno.isconn" name="errno.isconn"></a>**`ISCONN`**
 
     Socket is connected.
 
-- <a href="#errno.isdir" name="errno.isdir"></a>**`EISDIR`**
+- <a href="#errno.isdir" name="errno.isdir"></a>**`ISDIR`**
 
     Is a directory.
 
-- <a href="#errno.loop" name="errno.loop"></a>**`ELOOP`**
+- <a href="#errno.loop" name="errno.loop"></a>**`LOOP`**
 
     Too many levels of symbolic links.
 
-- <a href="#errno.mfile" name="errno.mfile"></a>**`EMFILE`**
+- <a href="#errno.mfile" name="errno.mfile"></a>**`MFILE`**
 
     File descriptor value too large.
 
-- <a href="#errno.mlink" name="errno.mlink"></a>**`EMLINK`**
+- <a href="#errno.mlink" name="errno.mlink"></a>**`MLINK`**
 
     Too many links.
 
-- <a href="#errno.msgsize" name="errno.msgsize"></a>**`EMSGSIZE`**
+- <a href="#errno.msgsize" name="errno.msgsize"></a>**`MSGSIZE`**
 
     Message too large.
 
-- <a href="#errno.multihop" name="errno.multihop"></a>**`EMULTIHOP`**
+- <a href="#errno.multihop" name="errno.multihop"></a>**`MULTIHOP`**
 
     Reserved.
 
-- <a href="#errno.nametoolong" name="errno.nametoolong"></a>**`ENAMETOOLONG`**
+- <a href="#errno.nametoolong" name="errno.nametoolong"></a>**`NAMETOOLONG`**
 
     Filename too long.
 
-- <a href="#errno.netdown" name="errno.netdown"></a>**`ENETDOWN`**
+- <a href="#errno.netdown" name="errno.netdown"></a>**`NETDOWN`**
 
     Network is down.
 
-- <a href="#errno.netreset" name="errno.netreset"></a>**`ENETRESET`**
+- <a href="#errno.netreset" name="errno.netreset"></a>**`NETRESET`**
 
     Connection aborted by network.
 
-- <a href="#errno.netunreach" name="errno.netunreach"></a>**`ENETUNREACH`**
+- <a href="#errno.netunreach" name="errno.netunreach"></a>**`NETUNREACH`**
 
     Network unreachable.
 
-- <a href="#errno.nfile" name="errno.nfile"></a>**`ENFILE`**
+- <a href="#errno.nfile" name="errno.nfile"></a>**`NFILE`**
 
     Too many files open in system.
 
-- <a href="#errno.nobufs" name="errno.nobufs"></a>**`ENOBUFS`**
+- <a href="#errno.nobufs" name="errno.nobufs"></a>**`NOBUFS`**
 
     No buffer space available.
 
-- <a href="#errno.nodev" name="errno.nodev"></a>**`ENODEV`**
+- <a href="#errno.nodev" name="errno.nodev"></a>**`NODEV`**
 
     No such device.
 
-- <a href="#errno.noent" name="errno.noent"></a>**`ENOENT`**
+- <a href="#errno.noent" name="errno.noent"></a>**`NOENT`**
 
     No such file or directory.
 
-- <a href="#errno.noexec" name="errno.noexec"></a>**`ENOEXEC`**
+- <a href="#errno.noexec" name="errno.noexec"></a>**`NOEXEC`**
 
     Executable file format error.
 
-- <a href="#errno.nolck" name="errno.nolck"></a>**`ENOLCK`**
+- <a href="#errno.nolck" name="errno.nolck"></a>**`NOLCK`**
 
     No locks available.
 
-- <a href="#errno.nolink" name="errno.nolink"></a>**`ENOLINK`**
+- <a href="#errno.nolink" name="errno.nolink"></a>**`NOLINK`**
 
     Reserved.
 
-- <a href="#errno.nomem" name="errno.nomem"></a>**`ENOMEM`**
+- <a href="#errno.nomem" name="errno.nomem"></a>**`NOMEM`**
 
     Not enough space.
 
-- <a href="#errno.nomsg" name="errno.nomsg"></a>**`ENOMSG`**
+- <a href="#errno.nomsg" name="errno.nomsg"></a>**`NOMSG`**
 
     No message of the desired type.
 
-- <a href="#errno.noprotoopt" name="errno.noprotoopt"></a>**`ENOPROTOOPT`**
+- <a href="#errno.noprotoopt" name="errno.noprotoopt"></a>**`NOPROTOOPT`**
 
     Protocol not available.
 
-- <a href="#errno.nospc" name="errno.nospc"></a>**`ENOSPC`**
+- <a href="#errno.nospc" name="errno.nospc"></a>**`NOSPC`**
 
     No space left on device.
 
-- <a href="#errno.nosys" name="errno.nosys"></a>**`ENOSYS`**
+- <a href="#errno.nosys" name="errno.nosys"></a>**`NOSYS`**
 
     Function not supported.
 
-- <a href="#errno.notconn" name="errno.notconn"></a>**`ENOTCONN`**
+- <a href="#errno.notconn" name="errno.notconn"></a>**`NOTCONN`**
 
     The socket is not connected.
 
-- <a href="#errno.notdir" name="errno.notdir"></a>**`ENOTDIR`**
+- <a href="#errno.notdir" name="errno.notdir"></a>**`NOTDIR`**
 
     Not a directory or a symbolic link to a directory.
 
-- <a href="#errno.notempty" name="errno.notempty"></a>**`ENOTEMPTY`**
+- <a href="#errno.notempty" name="errno.notempty"></a>**`NOTEMPTY`**
 
     Directory not empty.
 
-- <a href="#errno.notrecoverable" name="errno.notrecoverable"></a>**`ENOTRECOVERABLE`**
+- <a href="#errno.notrecoverable" name="errno.notrecoverable"></a>**`NOTRECOVERABLE`**
 
     State not recoverable.
 
-- <a href="#errno.notsock" name="errno.notsock"></a>**`ENOTSOCK`**
+- <a href="#errno.notsock" name="errno.notsock"></a>**`NOTSOCK`**
 
     Not a socket.
 
-- <a href="#errno.notsup" name="errno.notsup"></a>**`ENOTSUP`**
+- <a href="#errno.notsup" name="errno.notsup"></a>**`NOTSUP`**
 
     Not supported, or operation not supported on socket.
 
-- <a href="#errno.notty" name="errno.notty"></a>**`ENOTTY`**
+- <a href="#errno.notty" name="errno.notty"></a>**`NOTTY`**
 
     Inappropriate I/O control operation.
 
-- <a href="#errno.nxio" name="errno.nxio"></a>**`ENXIO`**
+- <a href="#errno.nxio" name="errno.nxio"></a>**`NXIO`**
 
     No such device or address.
 
-- <a href="#errno.overflow" name="errno.overflow"></a>**`EOVERFLOW`**
+- <a href="#errno.overflow" name="errno.overflow"></a>**`OVERFLOW`**
 
     Value too large to be stored in data type.
 
-- <a href="#errno.ownerdead" name="errno.ownerdead"></a>**`EOWNERDEAD`**
+- <a href="#errno.ownerdead" name="errno.ownerdead"></a>**`OWNERDEAD`**
 
     Previous owner died.
 
-- <a href="#errno.perm" name="errno.perm"></a>**`EPERM`**
+- <a href="#errno.perm" name="errno.perm"></a>**`PERM`**
 
     Operation not permitted.
 
-- <a href="#errno.pipe" name="errno.pipe"></a>**`EPIPE`**
+- <a href="#errno.pipe" name="errno.pipe"></a>**`PIPE`**
 
     Broken pipe.
 
-- <a href="#errno.proto" name="errno.proto"></a>**`EPROTO`**
+- <a href="#errno.proto" name="errno.proto"></a>**`PROTO`**
 
     Protocol error.
 
-- <a href="#errno.protonosupport" name="errno.protonosupport"></a>**`EPROTONOSUPPORT`**
+- <a href="#errno.protonosupport" name="errno.protonosupport"></a>**`PROTONOSUPPORT`**
 
     Protocol not supported.
 
-- <a href="#errno.prototype" name="errno.prototype"></a>**`EPROTOTYPE`**
+- <a href="#errno.prototype" name="errno.prototype"></a>**`PROTOTYPE`**
 
     Protocol wrong type for socket.
 
-- <a href="#errno.range" name="errno.range"></a>**`ERANGE`**
+- <a href="#errno.range" name="errno.range"></a>**`RANGE`**
 
     Result too large.
 
-- <a href="#errno.rofs" name="errno.rofs"></a>**`EROFS`**
+- <a href="#errno.rofs" name="errno.rofs"></a>**`ROFS`**
 
     Read-only file system.
 
-- <a href="#errno.spipe" name="errno.spipe"></a>**`ESPIPE`**
+- <a href="#errno.spipe" name="errno.spipe"></a>**`SPIPE`**
 
     Invalid seek.
 
-- <a href="#errno.srch" name="errno.srch"></a>**`ESRCH`**
+- <a href="#errno.srch" name="errno.srch"></a>**`SRCH`**
 
     No such process.
 
-- <a href="#errno.stale" name="errno.stale"></a>**`ESTALE`**
+- <a href="#errno.stale" name="errno.stale"></a>**`STALE`**
 
     Reserved.
 
-- <a href="#errno.timedout" name="errno.timedout"></a>**`ETIMEDOUT`**
+- <a href="#errno.timedout" name="errno.timedout"></a>**`TIMEDOUT`**
 
     Connection timed out.
 
-- <a href="#errno.txtbsy" name="errno.txtbsy"></a>**`ETXTBSY`**
+- <a href="#errno.txtbsy" name="errno.txtbsy"></a>**`TXTBSY`**
 
     Text file busy.
 
-- <a href="#errno.xdev" name="errno.xdev"></a>**`EXDEV`**
+- <a href="#errno.xdev" name="errno.xdev"></a>**`XDEV`**
 
     Cross-device link.
 
-- <a href="#errno.notcapable" name="errno.notcapable"></a>**`ENOTCAPABLE`**
+- <a href="#errno.notcapable" name="errno.notcapable"></a>**`NOTCAPABLE`**
 
     Extension: Capabilities insufficient.
 
-#### <a href="#event" name="event"></a>`event_t` (`struct`)
+#### <a href="#event" name="event"></a>`event` (`struct`)
 
 An event that occurred.
 
-Used by [`poll()`](#poll) and [`poll_fd()`](#poll_fd).
+Used by [`poll()`](#poll).
 
 Members:
 
-- <a href="#event.userdata" name="event.userdata"></a><code><strong>userdata</strong>: [userdata\_t](#userdata)</code>
+- <a href="#event.userdata" name="event.userdata"></a><code><strong>userdata</strong>: [userdata](#userdata)</code>
 
     User-provided value that got attached to
-    [`subscription_t.userdata`](#subscription.userdata).
+    [`subscription.userdata`](#subscription.userdata).
 
-- <a href="#event.error" name="event.error"></a><code><strong>error</strong>: [errno\_t](#errno)</code>
+- <a href="#event.error" name="event.error"></a><code><strong>error</strong>: [errno](#errno)</code>
 
     If non-zero, an error that occurred while processing
     the subscription request.
 
-- <a href="#event.type" name="event.type"></a><code><strong>type</strong>: [eventtype\_t](#eventtype)</code>
+- <a href="#event.type" name="event.type"></a><code><strong>type\_</strong>: [eventtype](#eventtype)</code>
 
     The type of the event that occurred.
 
-- When `type` is [`EVENTTYPE_CLOCK`](#eventtype.clock):
+- When `type` is [`FD_READ`](#eventtype.fd_read) or [`FD_WRITE`](#eventtype.fd_write):
 
-    - <a href="#event.clock" name="event.clock"></a>**`clock()`**
+    - <a href="#event.fd_readwrite" name="event.fd_readwrite"></a>**`union.fd_readwrite`**
 
-        - <a href="#event.clock.identifier" name="event.clock.identifier"></a><code><strong>identifier</strong>: [userdata\_t](#userdata)</code>
-
-            The user-defined unique
-            identifier of the clock.
-
-- When `type` is [`EVENTTYPE_CONDVAR`](#eventtype.condvar):
-
-    - <a href="#event.condvar" name="event.condvar"></a>**`condvar()`**
-
-        - <a href="#event.condvar.condvar" name="event.condvar.condvar"></a><code><strong>condvar</strong>: *mut [condvar\_t](#condvar)</code>
-
-            The condition variable that
-            got woken up.
-
-- When `type` is [`EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
-
-    - <a href="#event.fd_readwrite" name="event.fd_readwrite"></a>**`fd_readwrite()`**
-
-        - <a href="#event.fd_readwrite.nbytes" name="event.fd_readwrite.nbytes"></a><code><strong>nbytes</strong>: [filesize\_t](#filesize)</code>
+        - <a href="#event.fd_readwrite.nbytes" name="event.fd_readwrite.nbytes"></a><code><strong>nbytes</strong>: [filesize](#filesize)</code>
 
             The number of bytes available
             for reading or writing.
 
-        - <a href="#event.fd_readwrite.fd" name="event.fd_readwrite.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+        - <a href="#event.fd_readwrite.unused" name="event.fd_readwrite.unused"></a><code><strong>unused</strong>: [u8; 4]</code>
 
-            The file descriptor that has
-            data available for reading or
-            writing.
+            Obsolete.
 
-        - <a href="#event.fd_readwrite.flags" name="event.fd_readwrite.flags"></a><code><strong>flags</strong>: [eventrwflags\_t](#eventrwflags)</code>
+        - <a href="#event.fd_readwrite.flags" name="event.fd_readwrite.flags"></a><code><strong>flags</strong>: [eventrwflags](#eventrwflags)</code>
 
             The state of the file
             descriptor.
 
-- When `type` is [`EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
+- When `type` is [`PROC_TERMINATE`](#eventtype.proc_terminate):
 
-    - <a href="#event.lock" name="event.lock"></a>**`lock()`**
+    - <a href="#event.proc_terminate" name="event.proc_terminate"></a>**`union.proc_terminate`**
 
-        - <a href="#event.lock.lock" name="event.lock.lock"></a><code><strong>lock</strong>: *mut [lock\_t](#lock)</code>
+        - <a href="#event.proc_terminate.unused" name="event.proc_terminate.unused"></a><code><strong>unused</strong>: [u8; 4]</code>
 
-            The lock that has been
-            acquired for reading or
-            writing.
+            Obsolete.
 
-- When `type` is [`EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
-
-    - <a href="#event.proc_terminate" name="event.proc_terminate"></a>**`proc_terminate()`**
-
-        - <a href="#event.proc_terminate.fd" name="event.proc_terminate.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
-
-            The process descriptor of the
-            process that has terminated.
-
-        - <a href="#event.proc_terminate.signal" name="event.proc_terminate.signal"></a><code><strong>signal</strong>: [signal\_t](#signal)</code>
+        - <a href="#event.proc_terminate.signal" name="event.proc_terminate.signal"></a><code><strong>signal</strong>: [signal](#signal)</code>
 
             If zero, the process has
             exited.
@@ -2089,76 +1870,77 @@ Members:
             condition causing it to
             terminated.
 
-        - <a href="#event.proc_terminate.exitcode" name="event.proc_terminate.exitcode"></a><code><strong>exitcode</strong>: [exitcode\_t](#exitcode)</code>
+        - <a href="#event.proc_terminate.exitcode" name="event.proc_terminate.exitcode"></a><code><strong>exitcode</strong>: [exitcode](#exitcode)</code>
 
             If exited, the exit code of
             the process.
 
-#### <a href="#eventrwflags" name="eventrwflags"></a>`eventrwflags_t` (`u16` bitfield)
+#### <a href="#eventrwflags" name="eventrwflags"></a>`eventrwflags` (`u16` bitfield)
 
 The state of the file descriptor subscribed to with
-[`EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
+[`FD_READ`](#eventtype.fd_read) or [`FD_WRITE`](#eventtype.fd_write).
 
-Used by [`event_t`](#event).
-
-Possible values:
-
-- <a href="#eventrwflags.hangup" name="eventrwflags.hangup"></a>**`EVENT_FD_READWRITE_HANGUP`**
-
-    The peer of this FIFO or socket has closed or
-    disconnected.
-
-#### <a href="#eventtype" name="eventtype"></a>`eventtype_t` (`u8`)
-
-Type of a subscription to an event or its occurence.
-
-Used by [`event_t`](#event) and [`subscription_t`](#subscription).
+Used by [`event`](#event).
 
 Possible values:
 
-- <a href="#eventtype.clock" name="eventtype.clock"></a>**`EVENTTYPE_CLOCK`**
+- <a href="#eventrwflags.hangup" name="eventrwflags.hangup"></a>**`HANGUP`**
 
-    The time value of clock [`subscription_t.clock().clock_id`](#subscription.clock.clock_id)
-    has reached timestamp [`subscription_t.clock().timeout`](#subscription.clock.timeout).
+    The peer of this socket has closed or disconnected.
 
-- <a href="#eventtype.condvar" name="eventtype.condvar"></a>**`EVENTTYPE_CONDVAR`**
+#### <a href="#eventtype" name="eventtype"></a>`eventtype` (`u8` `enum`)
 
-    Condition variable [`subscription_t.condvar().condvar`](#subscription.condvar.condvar) has
-    been woken up and [`subscription_t.condvar().lock`](#subscription.condvar.lock) has been
-    aqcuired for writing.
+Type of a subscription to an event or its occurrence.
 
-- <a href="#eventtype.fd_read" name="eventtype.fd_read"></a>**`EVENTTYPE_FD_READ`**
+Used by [`event`](#event) and [`subscription`](#subscription).
 
-    File descriptor [`subscription_t.fd_readwrite().fd`](#subscription.fd_readwrite.fd) has
-    data available for reading.
+Possible values:
 
-- <a href="#eventtype.fd_write" name="eventtype.fd_write"></a>**`EVENTTYPE_FD_WRITE`**
+- <a href="#eventtype.clock" name="eventtype.clock"></a>**`CLOCK`**
 
-    File descriptor [`subscription_t.fd_readwrite().fd`](#subscription.fd_readwrite.fd) has
-    capacity available for writing.
+    The time value of clock [`subscription.union.clock.clock_id`](#subscription.clock.clock_id)
+    has reached timestamp [`subscription.union.clock.timeout`](#subscription.clock.timeout).
 
-- <a href="#eventtype.lock_rdlock" name="eventtype.lock_rdlock"></a>**`EVENTTYPE_LOCK_RDLOCK`**
+- <a href="#eventtype.condvar" name="eventtype.condvar"></a>**`CONDVAR`**
 
-    Lock [`subscription_t.lock().lock`](#subscription.lock.lock) has been acquired for
+    Condition variable [`subscription.union.condvar.condvar`](#subscription.condvar.condvar) has
+    been woken up and [`subscription.union.condvar.lock`](#subscription.condvar.lock) has been
+    acquired for writing.
+
+- <a href="#eventtype.fd_read" name="eventtype.fd_read"></a>**`FD_READ`**
+
+    File descriptor [`subscription.union.fd_readwrite.fd`](#subscription.fd_readwrite.fd) has
+    data available for reading. This event always triggers
+    for regular files.
+
+- <a href="#eventtype.fd_write" name="eventtype.fd_write"></a>**`FD_WRITE`**
+
+    File descriptor [`subscription.union.fd_readwrite.fd`](#subscription.fd_readwrite.fd) has
+    capacity available for writing. This event always
+    triggers for regular files.
+
+- <a href="#eventtype.lock_rdlock" name="eventtype.lock_rdlock"></a>**`LOCK_RDLOCK`**
+
+    Lock [`subscription.union.lock.lock`](#subscription.lock.lock) has been acquired for
     reading.
 
-- <a href="#eventtype.lock_wrlock" name="eventtype.lock_wrlock"></a>**`EVENTTYPE_LOCK_WRLOCK`**
+- <a href="#eventtype.lock_wrlock" name="eventtype.lock_wrlock"></a>**`LOCK_WRLOCK`**
 
-    Lock [`subscription_t.lock().lock`](#subscription.lock.lock) has been acquired for
+    Lock [`subscription.union.lock.lock`](#subscription.lock.lock) has been acquired for
     writing.
 
-- <a href="#eventtype.proc_terminate" name="eventtype.proc_terminate"></a>**`EVENTTYPE_PROC_TERMINATE`**
+- <a href="#eventtype.proc_terminate" name="eventtype.proc_terminate"></a>**`PROC_TERMINATE`**
 
     The process associated with process descriptor
-    [`subscription_t.proc_terminate().fd`](#subscription.proc_terminate.fd) has terminated.
+    [`subscription.union.proc_terminate.fd`](#subscription.proc_terminate.fd) has terminated.
 
-#### <a href="#exitcode" name="exitcode"></a>`exitcode_t` (`u32`)
+#### <a href="#exitcode" name="exitcode"></a>`exitcode` (= `u32`)
 
 Exit code generated by a process when exiting.
 
-Used by [`event_t`](#event) and [`proc_exit()`](#proc_exit).
+Used by [`event`](#event) and [`proc_exit()`](#proc_exit).
 
-#### <a href="#fd" name="fd"></a>`fd_t` (`u32`)
+#### <a href="#fd" name="fd"></a>`fd` (`struct(u32)`)
 
 A file descriptor number.
 
@@ -2178,41 +1960,41 @@ Special values:
     Passed to [`mem_map()`](#mem_map) when creating a mapping to
     anonymous memory.
 
-#### <a href="#fdflags" name="fdflags"></a>`fdflags_t` (`u16` bitfield)
+#### <a href="#fdflags" name="fdflags"></a>`fdflags` (`u16` bitfield)
 
 File descriptor flags.
 
-Used by [`fdstat_t`](#fdstat).
+Used by [`fdstat`](#fdstat).
 
 Possible values:
 
-- <a href="#fdflags.append" name="fdflags.append"></a>**`FDFLAG_APPEND`**
+- <a href="#fdflags.append" name="fdflags.append"></a>**`APPEND`**
 
     Append mode: Data written to the file is always
     appended to the file's end.
 
-- <a href="#fdflags.dsync" name="fdflags.dsync"></a>**`FDFLAG_DSYNC`**
+- <a href="#fdflags.dsync" name="fdflags.dsync"></a>**`DSYNC`**
 
     Write according to synchronized I/O data integrity
     completion. Only the data stored in the file is
     synchronized.
 
-- <a href="#fdflags.nonblock" name="fdflags.nonblock"></a>**`FDFLAG_NONBLOCK`**
+- <a href="#fdflags.nonblock" name="fdflags.nonblock"></a>**`NONBLOCK`**
 
     Non-blocking mode.
 
-- <a href="#fdflags.rsync" name="fdflags.rsync"></a>**`FDFLAG_RSYNC`**
+- <a href="#fdflags.rsync" name="fdflags.rsync"></a>**`RSYNC`**
 
     Synchronized read I/O operations.
 
-- <a href="#fdflags.sync" name="fdflags.sync"></a>**`FDFLAG_SYNC`**
+- <a href="#fdflags.sync" name="fdflags.sync"></a>**`SYNC`**
 
     Write according to synchronized I/O file integrity
     completion. In addition to synchronizing the data
     stored in the file, the system may also synchronously
     update the file's metadata.
 
-#### <a href="#fdsflags" name="fdsflags"></a>`fdsflags_t` (`u16` bitfield)
+#### <a href="#fdsflags" name="fdsflags"></a>`fdsflags` (`u16` bitfield)
 
 Which file descriptor attributes to adjust.
 
@@ -2220,18 +2002,18 @@ Used by [`fd_stat_put()`](#fd_stat_put).
 
 Possible values:
 
-- <a href="#fdsflags.flags" name="fdsflags.flags"></a>**`FDSTAT_FLAGS`**
+- <a href="#fdsflags.flags" name="fdsflags.flags"></a>**`FLAGS`**
 
     Adjust the file descriptor flags stored in
-    [`fdstat_t.fs_flags`](#fdstat.fs_flags).
+    [`fdstat.fs_flags`](#fdstat.fs_flags).
 
-- <a href="#fdsflags.rights" name="fdsflags.rights"></a>**`FDSTAT_RIGHTS`**
+- <a href="#fdsflags.rights" name="fdsflags.rights"></a>**`RIGHTS`**
 
     Restrict the rights of the file descriptor to the
-    rights stored in [`fdstat_t.fs_rights_base`](#fdstat.fs_rights_base) and
-    [`fdstat_t.fs_rights_inheriting`](#fdstat.fs_rights_inheriting).
+    rights stored in [`fdstat.fs_rights_base`](#fdstat.fs_rights_base) and
+    [`fdstat.fs_rights_inheriting`](#fdstat.fs_rights_inheriting).
 
-#### <a href="#fdstat" name="fdstat"></a>`fdstat_t` (`struct`)
+#### <a href="#fdstat" name="fdstat"></a>`fdstat` (`struct`)
 
 File descriptor attributes.
 
@@ -2239,37 +2021,37 @@ Used by [`fd_stat_get()`](#fd_stat_get), [`fd_stat_put()`](#fd_stat_put), and [`
 
 Members:
 
-- <a href="#fdstat.fs_filetype" name="fdstat.fs_filetype"></a><code><strong>fs\_filetype</strong>: [filetype\_t](#filetype)</code>
+- <a href="#fdstat.fs_filetype" name="fdstat.fs_filetype"></a><code><strong>fs\_filetype</strong>: [filetype](#filetype)</code>
 
     File type.
 
-- <a href="#fdstat.fs_flags" name="fdstat.fs_flags"></a><code><strong>fs\_flags</strong>: [fdflags\_t](#fdflags)</code>
+- <a href="#fdstat.fs_flags" name="fdstat.fs_flags"></a><code><strong>fs\_flags</strong>: [fdflags](#fdflags)</code>
 
     File descriptor flags.
 
-- <a href="#fdstat.fs_rights_base" name="fdstat.fs_rights_base"></a><code><strong>fs\_rights\_base</strong>: [rights\_t](#rights)</code>
+- <a href="#fdstat.fs_rights_base" name="fdstat.fs_rights_base"></a><code><strong>fs\_rights\_base</strong>: [rights](#rights)</code>
 
     Rights that apply to this file descriptor.
 
-- <a href="#fdstat.fs_rights_inheriting" name="fdstat.fs_rights_inheriting"></a><code><strong>fs\_rights\_inheriting</strong>: [rights\_t](#rights)</code>
+- <a href="#fdstat.fs_rights_inheriting" name="fdstat.fs_rights_inheriting"></a><code><strong>fs\_rights\_inheriting</strong>: [rights](#rights)</code>
 
     Maximum set of rights that can be installed on new
     file descriptors that are created through this file
     descriptor, e.g., through [`file_open()`](#file_open).
 
-#### <a href="#filedelta" name="filedelta"></a>`filedelta_t` (`i64`)
+#### <a href="#filedelta" name="filedelta"></a>`filedelta` (= `i64`)
 
 Relative offset within a file.
 
 Used by [`fd_seek()`](#fd_seek).
 
-#### <a href="#filesize" name="filesize"></a>`filesize_t` (`u64`)
+#### <a href="#filesize" name="filesize"></a>`filesize` (= `u64`)
 
 Non-negative file size or length of a region within a file.
 
-Used by [`event_t`](#event), [`filestat_t`](#filestat), [`fd_pread()`](#fd_pread), [`fd_pwrite()`](#fd_pwrite), [`fd_seek()`](#fd_seek), [`file_advise()`](#file_advise), [`file_allocate()`](#file_allocate), and [`mem_map()`](#mem_map).
+Used by [`event`](#event), [`filestat`](#filestat), [`fd_pread()`](#fd_pread), [`fd_pwrite()`](#fd_pwrite), [`fd_seek()`](#fd_seek), [`file_advise()`](#file_advise), [`file_allocate()`](#file_allocate), and [`mem_map()`](#mem_map).
 
-#### <a href="#filestat" name="filestat"></a>`filestat_t` (`struct`)
+#### <a href="#filestat" name="filestat"></a>`filestat` (`struct`)
 
 File attributes.
 
@@ -2277,110 +2059,96 @@ Used by [`file_stat_fget()`](#file_stat_fget), [`file_stat_fput()`](#file_stat_f
 
 Members:
 
-- <a href="#filestat.st_dev" name="filestat.st_dev"></a><code><strong>st\_dev</strong>: [device\_t](#device)</code>
+- <a href="#filestat.st_dev" name="filestat.st_dev"></a><code><strong>st\_dev</strong>: [device](#device)</code>
 
     Device ID of device containing the file.
 
-- <a href="#filestat.st_ino" name="filestat.st_ino"></a><code><strong>st\_ino</strong>: [inode\_t](#inode)</code>
+- <a href="#filestat.st_ino" name="filestat.st_ino"></a><code><strong>st\_ino</strong>: [inode](#inode)</code>
 
     File serial number.
 
-- <a href="#filestat.st_filetype" name="filestat.st_filetype"></a><code><strong>st\_filetype</strong>: [filetype\_t](#filetype)</code>
+- <a href="#filestat.st_filetype" name="filestat.st_filetype"></a><code><strong>st\_filetype</strong>: [filetype](#filetype)</code>
 
     File type.
 
-- <a href="#filestat.st_nlink" name="filestat.st_nlink"></a><code><strong>st\_nlink</strong>: [linkcount\_t](#linkcount)</code>
+- <a href="#filestat.st_nlink" name="filestat.st_nlink"></a><code><strong>st\_nlink</strong>: [linkcount](#linkcount)</code>
 
     Number of hard links to the file.
 
-- <a href="#filestat.st_size" name="filestat.st_size"></a><code><strong>st\_size</strong>: [filesize\_t](#filesize)</code>
+- <a href="#filestat.st_size" name="filestat.st_size"></a><code><strong>st\_size</strong>: [filesize](#filesize)</code>
 
     For regular files, the file size in bytes. For
     symbolic links, the length in bytes of the pathname
     contained in the symbolic link.
 
-- <a href="#filestat.st_atim" name="filestat.st_atim"></a><code><strong>st\_atim</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#filestat.st_atim" name="filestat.st_atim"></a><code><strong>st\_atim</strong>: [timestamp](#timestamp)</code>
 
     Last data access timestamp.
 
-- <a href="#filestat.st_mtim" name="filestat.st_mtim"></a><code><strong>st\_mtim</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#filestat.st_mtim" name="filestat.st_mtim"></a><code><strong>st\_mtim</strong>: [timestamp](#timestamp)</code>
 
     Last data modification timestamp.
 
-- <a href="#filestat.st_ctim" name="filestat.st_ctim"></a><code><strong>st\_ctim</strong>: [timestamp\_t](#timestamp)</code>
+- <a href="#filestat.st_ctim" name="filestat.st_ctim"></a><code><strong>st\_ctim</strong>: [timestamp](#timestamp)</code>
 
     Last file status change timestamp.
 
-#### <a href="#filetype" name="filetype"></a>`filetype_t` (`u8`)
+#### <a href="#filetype" name="filetype"></a>`filetype` (`u8` `enum`)
 
 The type of a file descriptor or file.
 
-Used by [`dirent_t`](#dirent), [`fdstat_t`](#fdstat), [`filestat_t`](#filestat), [`fd_create1()`](#fd_create1), [`fd_create2()`](#fd_create2), and [`file_create()`](#file_create).
+Used by [`dirent`](#dirent), [`fdstat`](#fdstat), [`filestat`](#filestat), [`fd_create1()`](#fd_create1), [`fd_create2()`](#fd_create2), and [`file_create()`](#file_create).
 
 Possible values:
 
-- <a href="#filetype.unknown" name="filetype.unknown"></a>**`FILETYPE_UNKNOWN`**
+- <a href="#filetype.unknown" name="filetype.unknown"></a>**`UNKNOWN`**
 
     The type of the file descriptor or file is unknown or
     is different from any of the other types specified.
 
-- <a href="#filetype.block_device" name="filetype.block_device"></a>**`FILETYPE_BLOCK_DEVICE`**
+- <a href="#filetype.block_device" name="filetype.block_device"></a>**`BLOCK_DEVICE`**
 
     The file descriptor or file refers to a block device
     inode.
 
-- <a href="#filetype.character_device" name="filetype.character_device"></a>**`FILETYPE_CHARACTER_DEVICE`**
+- <a href="#filetype.character_device" name="filetype.character_device"></a>**`CHARACTER_DEVICE`**
 
     The file descriptor or file refers to a character
     device inode.
 
-- <a href="#filetype.directory" name="filetype.directory"></a>**`FILETYPE_DIRECTORY`**
+- <a href="#filetype.directory" name="filetype.directory"></a>**`DIRECTORY`**
 
     The file descriptor or file refers to a directory
     inode.
 
-- <a href="#filetype.fifo" name="filetype.fifo"></a>**`FILETYPE_FIFO`**
-
-    The file descriptor or file refers to a FIFO inode or
-    one of the two endpoints of a pipe.
-
-- <a href="#filetype.poll" name="filetype.poll"></a>**`FILETYPE_POLL`**
-
-    The file descriptor refers to a polling event queue.
-
-- <a href="#filetype.process" name="filetype.process"></a>**`FILETYPE_PROCESS`**
+- <a href="#filetype.process" name="filetype.process"></a>**`PROCESS`**
 
     The file descriptor refers to a process handle.
 
-- <a href="#filetype.regular_file" name="filetype.regular_file"></a>**`FILETYPE_REGULAR_FILE`**
+- <a href="#filetype.regular_file" name="filetype.regular_file"></a>**`REGULAR_FILE`**
 
     The file descriptor or file refers to a regular file
     inode.
 
-- <a href="#filetype.shared_memory" name="filetype.shared_memory"></a>**`FILETYPE_SHARED_MEMORY`**
+- <a href="#filetype.shared_memory" name="filetype.shared_memory"></a>**`SHARED_MEMORY`**
 
     The file descriptor refers to a shared memory object.
 
-- <a href="#filetype.socket_dgram" name="filetype.socket_dgram"></a>**`FILETYPE_SOCKET_DGRAM`**
+- <a href="#filetype.socket_dgram" name="filetype.socket_dgram"></a>**`SOCKET_DGRAM`**
 
     The file descriptor or file refers to a datagram
     socket.
 
-- <a href="#filetype.socket_seqpacket" name="filetype.socket_seqpacket"></a>**`FILETYPE_SOCKET_SEQPACKET`**
-
-    The file descriptor or file refers to a
-    sequenced-packet socket.
-
-- <a href="#filetype.socket_stream" name="filetype.socket_stream"></a>**`FILETYPE_SOCKET_STREAM`**
+- <a href="#filetype.socket_stream" name="filetype.socket_stream"></a>**`SOCKET_STREAM`**
 
     The file descriptor or file refers to a byte-stream
     socket.
 
-- <a href="#filetype.symbolic_link" name="filetype.symbolic_link"></a>**`FILETYPE_SYMBOLIC_LINK`**
+- <a href="#filetype.symbolic_link" name="filetype.symbolic_link"></a>**`SYMBOLIC_LINK`**
 
     The file refers to a symbolic link inode.
 
-#### <a href="#fsflags" name="fsflags"></a>`fsflags_t` (`u16` bitfield)
+#### <a href="#fsflags" name="fsflags"></a>`fsflags` (`u16` bitfield)
 
 Which file attributes to adjust.
 
@@ -2388,61 +2156,61 @@ Used by [`file_stat_fput()`](#file_stat_fput) and [`file_stat_put()`](#file_stat
 
 Possible values:
 
-- <a href="#fsflags.atim" name="fsflags.atim"></a>**`FILESTAT_ATIM`**
+- <a href="#fsflags.atim" name="fsflags.atim"></a>**`ATIM`**
 
     Adjust the last data access timestamp to the value
-    stored in [`filestat_t.st_atim`](#filestat.st_atim).
+    stored in [`filestat.st_atim`](#filestat.st_atim).
 
-- <a href="#fsflags.atim_now" name="fsflags.atim_now"></a>**`FILESTAT_ATIM_NOW`**
+- <a href="#fsflags.atim_now" name="fsflags.atim_now"></a>**`ATIM_NOW`**
 
     Adjust the last data access timestamp to the time
-    of clock [`CLOCK_REALTIME`](#clockid.realtime).
+    of clock [`REALTIME`](#clockid.realtime).
 
-- <a href="#fsflags.mtim" name="fsflags.mtim"></a>**`FILESTAT_MTIM`**
-
-    Adjust the last data modification timestamp to the
-    value stored in [`filestat_t.st_mtim`](#filestat.st_mtim).
-
-- <a href="#fsflags.mtim_now" name="fsflags.mtim_now"></a>**`FILESTAT_MTIM_NOW`**
+- <a href="#fsflags.mtim" name="fsflags.mtim"></a>**`MTIM`**
 
     Adjust the last data modification timestamp to the
-    time of clock [`CLOCK_REALTIME`](#clockid.realtime).
+    value stored in [`filestat.st_mtim`](#filestat.st_mtim).
 
-- <a href="#fsflags.size" name="fsflags.size"></a>**`FILESTAT_SIZE`**
+- <a href="#fsflags.mtim_now" name="fsflags.mtim_now"></a>**`MTIM_NOW`**
+
+    Adjust the last data modification timestamp to the
+    time of clock [`REALTIME`](#clockid.realtime).
+
+- <a href="#fsflags.size" name="fsflags.size"></a>**`SIZE`**
 
     Truncate or extend the file to the size stored in
-    [`filestat_t.st_size`](#filestat.st_size).
+    [`filestat.st_size`](#filestat.st_size).
 
-#### <a href="#inode" name="inode"></a>`inode_t` (`u64`)
+#### <a href="#inode" name="inode"></a>`inode` (`struct(u64)`)
 
 File serial number that is unique within its file system.
 
-Used by [`dirent_t`](#dirent) and [`filestat_t`](#filestat).
+Used by [`dirent`](#dirent) and [`filestat`](#filestat).
 
-#### <a href="#iovec" name="iovec"></a>`iovec_t` (`struct`)
+#### <a href="#iovec" name="iovec"></a>`iovec` (`struct`)
 
 A region of memory for scatter/gather reads.
 
-Used by [`recv_in_t`](#recv_in), [`fd_pread()`](#fd_pread), and [`fd_read()`](#fd_read).
+Used by [`recv_in`](#recv_in), [`fd_pread()`](#fd_pread), and [`fd_read()`](#fd_read).
 
 Members:
 
-- <a href="#iovec.iov_base" name="iovec.iov_base"></a><code><strong>iov\_base</strong>: *mut c\_void</code> and <a href="#iovec.iov_len" name="iovec.iov_len"></a><code><strong>iov\_len</strong>: usize</code>
+- <a href="#iovec.buf" name="iovec.buf"></a><code><strong>buf</strong>: *mut ()</code> and <a href="#iovec.buf_len" name="iovec.buf_len"></a><code><strong>buf\_len</strong>: usize</code>
 
     The address and length of the buffer to be filled.
 
-#### <a href="#linkcount" name="linkcount"></a>`linkcount_t` (`u32`)
+#### <a href="#linkcount" name="linkcount"></a>`linkcount` (= `u32`)
 
 Number of hard links to an inode.
 
-Used by [`filestat_t`](#filestat).
+Used by [`filestat`](#filestat).
 
-#### <a href="#lock" name="lock"></a>`lock_t` (`u32`)
+#### <a href="#lock" name="lock"></a>`lock` (`struct(u32)`)
 
 A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.
 
-Used by [`event_t`](#event), [`subscription_t`](#subscription), [`lock_unlock()`](#lock_unlock), and [`thread_exit()`](#thread_exit).
+Used by [`subscription`](#subscription), [`lock_unlock()`](#lock_unlock), and [`thread_exit()`](#thread_exit).
 
 Special values:
 
@@ -2481,7 +2249,7 @@ Special values:
     state. A lock cannot be in its initial unlocked state,
     while also managed by the kernel.
 
-#### <a href="#lookup" name="lookup"></a>`lookup_t` (`struct`)
+#### <a href="#lookup" name="lookup"></a>`lookup` (`struct`)
 
 Path lookup properties.
 
@@ -2489,30 +2257,30 @@ Used by [`file_link()`](#file_link), [`file_open()`](#file_open), [`file_stat_ge
 
 Members:
 
-- <a href="#lookup.fd" name="lookup.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+- <a href="#lookup.fd" name="lookup.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
     The working directory at which the resolution of the
     path starts.
 
-- <a href="#lookup.flags" name="lookup.flags"></a><code><strong>flags</strong>: [lookupflags\_t](#lookupflags)</code>
+- <a href="#lookup.flags" name="lookup.flags"></a><code><strong>flags</strong>: [lookupflags](#lookupflags)</code>
 
     Flags determining the method of how the path is
     resolved.
 
-#### <a href="#lookupflags" name="lookupflags"></a>`lookupflags_t` (`u32` bitfield)
+#### <a href="#lookupflags" name="lookupflags"></a>`lookupflags` (`u32` bitfield)
 
 Flags determining the method of how paths are resolved.
 
-Used by [`lookup_t`](#lookup).
+Used by [`lookup`](#lookup).
 
 Possible values:
 
-- <a href="#lookupflags.symlink_follow" name="lookupflags.symlink_follow"></a>**`LOOKUP_SYMLINK_FOLLOW`**
+- <a href="#lookupflags.symlink_follow" name="lookupflags.symlink_follow"></a>**`SYMLINK_FOLLOW`**
 
     As long as the resolved path corresponds to a symbolic
     link, it is expanded.
 
-#### <a href="#mflags" name="mflags"></a>`mflags_t` (`u8` bitfield)
+#### <a href="#mflags" name="mflags"></a>`mflags` (`u8` bitfield)
 
 Memory mapping flags.
 
@@ -2520,27 +2288,27 @@ Used by [`mem_map()`](#mem_map).
 
 Possible values:
 
-- <a href="#mflags.anon" name="mflags.anon"></a>**`MAP_ANON`**
+- <a href="#mflags.anon" name="mflags.anon"></a>**`ANON`**
 
     Instead of mapping the contents of the file provided,
     create a mapping to anonymous memory. The file
     descriptor argument must be set to [`MAP_ANON_FD`](#fd.map_anon_fd),
     and the offset must be set to zero.
 
-- <a href="#mflags.fixed" name="mflags.fixed"></a>**`MAP_FIXED`**
+- <a href="#mflags.fixed" name="mflags.fixed"></a>**`FIXED`**
 
     Require that the mapping is performed at the base
     address provided.
 
-- <a href="#mflags.private" name="mflags.private"></a>**`MAP_PRIVATE`**
+- <a href="#mflags.private" name="mflags.private"></a>**`PRIVATE`**
 
     Changes are private.
 
-- <a href="#mflags.shared" name="mflags.shared"></a>**`MAP_SHARED`**
+- <a href="#mflags.shared" name="mflags.shared"></a>**`SHARED`**
 
     Changes are shared.
 
-#### <a href="#mprot" name="mprot"></a>`mprot_t` (`u8` bitfield)
+#### <a href="#mprot" name="mprot"></a>`mprot` (`u8` bitfield)
 
 Memory page protection options.
 
@@ -2551,19 +2319,19 @@ Used by [`mem_map()`](#mem_map) and [`mem_protect()`](#mem_protect).
 
 Possible values:
 
-- <a href="#mprot.exec" name="mprot.exec"></a>**`PROT_EXEC`**
+- <a href="#mprot.exec" name="mprot.exec"></a>**`EXEC`**
 
     Page can be executed.
 
-- <a href="#mprot.write" name="mprot.write"></a>**`PROT_WRITE`**
+- <a href="#mprot.write" name="mprot.write"></a>**`WRITE`**
 
     Page can be written.
 
-- <a href="#mprot.read" name="mprot.read"></a>**`PROT_READ`**
+- <a href="#mprot.read" name="mprot.read"></a>**`READ`**
 
     Page can be read.
 
-#### <a href="#msflags" name="msflags"></a>`msflags_t` (`u8` bitfield)
+#### <a href="#msflags" name="msflags"></a>`msflags` (`u8` bitfield)
 
 Methods of synchronizing memory with physical storage.
 
@@ -2571,114 +2339,78 @@ Used by [`mem_sync()`](#mem_sync).
 
 Possible values:
 
-- <a href="#msflags.async" name="msflags.async"></a>**`MS_ASYNC`**
+- <a href="#msflags.async" name="msflags.async"></a>**`ASYNC`**
 
     Perform asynchronous writes.
 
-- <a href="#msflags.invalidate" name="msflags.invalidate"></a>**`MS_INVALIDATE`**
+- <a href="#msflags.invalidate" name="msflags.invalidate"></a>**`INVALIDATE`**
 
     Invalidate cached data.
 
-- <a href="#msflags.sync" name="msflags.sync"></a>**`MS_SYNC`**
+- <a href="#msflags.sync" name="msflags.sync"></a>**`SYNC`**
 
     Perform synchronous writes.
 
-#### <a href="#msgflags" name="msgflags"></a>`msgflags_t` (`u16` bitfield)
-
-Flags provided to and returned by [`sock_recv()`](#sock_recv) and [`sock_send()`](#sock_send).
-
-Used by [`recv_in_t`](#recv_in), [`recv_out_t`](#recv_out), and [`send_in_t`](#send_in).
-
-Possible values:
-
-- <a href="#msgflags.ctrunc" name="msgflags.ctrunc"></a>**`MSG_CTRUNC`**
-
-    Returned by [`sock_recv()`](#sock_recv): File descriptors truncated.
-
-- <a href="#msgflags.eor" name="msgflags.eor"></a>**`MSG_EOR`**
-
-    Provided to [`sock_send()`](#sock_send): Terminates a record (if
-    supported by the protocol).
-
-    Returned by [`sock_recv()`](#sock_recv): End-of-record was received
-    (if supported by the protocol).
-
-- <a href="#msgflags.peek" name="msgflags.peek"></a>**`MSG_PEEK`**
-
-    Provided to [`sock_recv()`](#sock_recv): Returns the message without
-    removing it from the socket's receive queue.
-
-- <a href="#msgflags.trunc" name="msgflags.trunc"></a>**`MSG_TRUNC`**
-
-    Returned by [`sock_recv()`](#sock_recv): Message data has been
-    truncated.
-
-- <a href="#msgflags.waitall" name="msgflags.waitall"></a>**`MSG_WAITALL`**
-
-    Provided to [`sock_recv()`](#sock_recv): On byte-stream sockets, block
-    until the full amount of data can be returned.
-
-#### <a href="#nthreads" name="nthreads"></a>`nthreads_t` (`u32`)
+#### <a href="#nthreads" name="nthreads"></a>`nthreads` (= `u32`)
 
 Specifies the number of threads sleeping on a condition
 variable that should be woken up.
 
 Used by [`condvar_signal()`](#condvar_signal).
 
-#### <a href="#oflags" name="oflags"></a>`oflags_t` (`u16` bitfield)
+#### <a href="#oflags" name="oflags"></a>`oflags` (`u16` bitfield)
 
 Open flags used by [`file_open()`](#file_open).
 
 Possible values:
 
-- <a href="#oflags.creat" name="oflags.creat"></a>**`O_CREAT`**
+- <a href="#oflags.creat" name="oflags.creat"></a>**`CREAT`**
 
     Create file if it does not exist.
 
-- <a href="#oflags.directory" name="oflags.directory"></a>**`O_DIRECTORY`**
+- <a href="#oflags.directory" name="oflags.directory"></a>**`DIRECTORY`**
 
     Fail if not a directory.
 
-- <a href="#oflags.excl" name="oflags.excl"></a>**`O_EXCL`**
+- <a href="#oflags.excl" name="oflags.excl"></a>**`EXCL`**
 
     Fail if file already exists.
 
-- <a href="#oflags.trunc" name="oflags.trunc"></a>**`O_TRUNC`**
+- <a href="#oflags.trunc" name="oflags.trunc"></a>**`TRUNC`**
 
     Truncate file to size 0.
 
-#### <a href="#processentry" name="processentry"></a>`processentry_t` (function type)
+#### <a href="#processentry" name="processentry"></a>`processentry` (function pointer)
 
 Entry point for a process (`_start`).
 
 Parameters:
 
-- <a href="#processentry.auxv" name="processentry.auxv"></a><code><strong>auxv</strong>: * [auxv\_t](#auxv)</code>
+- <a href="#processentry.auxv" name="processentry.auxv"></a><code><strong>auxv</strong>: *const [auxv](#auxv)</code>
 
-    The auxiliary vector. See [`auxv_t`](#auxv).
+    The auxiliary vector. See [`auxv`](#auxv).
 
-#### <a href="#recv_in" name="recv_in"></a>`recv_in_t` (`struct`)
+#### <a href="#recv_in" name="recv_in"></a>`recv_in` (`struct`)
 
 Arguments of [`sock_recv()`](#sock_recv).
 
 Members:
 
-- <a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code><strong>ri\_data</strong>: * [iovec\_t](#iovec)</code> and <a href="#recv_in.ri_datalen" name="recv_in.ri_datalen"></a><code><strong>ri\_datalen</strong>: usize</code>
+- <a href="#recv_in.ri_data" name="recv_in.ri_data"></a><code><strong>ri\_data</strong>: *const [iovec](#iovec)</code> and <a href="#recv_in.ri_data_len" name="recv_in.ri_data_len"></a><code><strong>ri\_data\_len</strong>: usize</code>
 
     List of scatter/gather vectors where message data
     should be stored.
 
-- <a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><strong>ri\_fds</strong>: *mut [fd\_t](#fd)</code> and <a href="#recv_in.ri_fdslen" name="recv_in.ri_fdslen"></a><code><strong>ri\_fdslen</strong>: usize</code>
+- <a href="#recv_in.ri_fds" name="recv_in.ri_fds"></a><code><strong>ri\_fds</strong>: *mut [fd](#fd)</code> and <a href="#recv_in.ri_fds_len" name="recv_in.ri_fds_len"></a><code><strong>ri\_fds\_len</strong>: usize</code>
 
     Buffer where numbers of incoming file descriptors
     should be stored.
 
-- <a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><strong>ri\_flags</strong>: [msgflags\_t](#msgflags)</code>
+- <a href="#recv_in.ri_flags" name="recv_in.ri_flags"></a><code><strong>ri\_flags</strong>: [riflags](#riflags)</code>
 
-    Message flags. Only [`MSG_PEEK`](#msgflags.peek) and
-    [`MSG_WAITALL`](#msgflags.waitall) are valid.
+    Message flags.
 
-#### <a href="#recv_out" name="recv_out"></a>`recv_out_t` (`struct`)
+#### <a href="#recv_out" name="recv_out"></a>`recv_out` (`struct`)
 
 Results of [`sock_recv()`](#sock_recv).
 
@@ -2686,297 +2418,253 @@ Members:
 
 - <a href="#recv_out.ro_datalen" name="recv_out.ro_datalen"></a><code><strong>ro\_datalen</strong>: usize</code>
 
-    Number of bytes stored in [`recv_in_t.ri_data`](#recv_in.ri_data).
+    Number of bytes stored in [`recv_in.ri_data`](#recv_in.ri_data).
 
 - <a href="#recv_out.ro_fdslen" name="recv_out.ro_fdslen"></a><code><strong>ro\_fdslen</strong>: usize</code>
 
-    Number of file descriptors stored in [`recv_in_t.ri_fds`](#recv_in.ri_fds).
+    Number of file descriptors stored in [`recv_in.ri_fds`](#recv_in.ri_fds).
 
-- <a href="#recv_out.ro_sockname" name="recv_out.ro_sockname"></a><code><strong>ro\_sockname</strong>: [sockaddr\_t](#sockaddr)</code>
+- <a href="#recv_out.ro_unused" name="recv_out.ro_unused"></a><code><strong>ro\_unused</strong>: [u8; 40]</code>
 
-    Address on which the message was received.
+    Fields that were used by previous implementations.
 
-- <a href="#recv_out.ro_peername" name="recv_out.ro_peername"></a><code><strong>ro\_peername</strong>: [sockaddr\_t](#sockaddr)</code>
+- <a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><strong>ro\_flags</strong>: [roflags](#roflags)</code>
 
-    Address of the peer sending the message.
+    Message flags.
 
-- <a href="#recv_out.ro_flags" name="recv_out.ro_flags"></a><code><strong>ro\_flags</strong>: [msgflags\_t](#msgflags)</code>
+#### <a href="#riflags" name="riflags"></a>`riflags` (`u16` bitfield)
 
-    Message flags. Only [`MSG_CTRUNC`](#msgflags.ctrunc), [`MSG_EOR`](#msgflags.eor),
-    and [`MSG_TRUNC`](#msgflags.trunc) are valid.
+Flags provided to [`sock_recv()`](#sock_recv).
 
-#### <a href="#rights" name="rights"></a>`rights_t` (`u64` bitfield)
+Used by [`recv_in`](#recv_in).
+
+Possible values:
+
+- <a href="#riflags.peek" name="riflags.peek"></a>**`PEEK`**
+
+    Returns the message without removing it from the
+    socket's receive queue.
+
+- <a href="#riflags.waitall" name="riflags.waitall"></a>**`WAITALL`**
+
+    On byte-stream sockets, block until the full amount
+    of data can be returned.
+
+#### <a href="#rights" name="rights"></a>`rights` (`u64` bitfield)
 
 File descriptor rights, determining which actions may be
 performed.
 
-Used by [`fdstat_t`](#fdstat).
+Used by [`fdstat`](#fdstat).
 
 Possible values:
 
-- <a href="#rights.fd_datasync" name="rights.fd_datasync"></a>**`RIGHT_FD_DATASYNC`**
+- <a href="#rights.fd_datasync" name="rights.fd_datasync"></a>**`FD_DATASYNC`**
 
     The right to invoke [`fd_datasync()`](#fd_datasync).
 
-    If [`RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`file_open()`](#file_open) with [`FDFLAG_DSYNC`](#fdflags.dsync).
+    If [`FILE_OPEN`](#rights.file_open) is set, includes the right to
+    invoke [`file_open()`](#file_open) with [`DSYNC`](#fdflags.dsync).
 
-- <a href="#rights.fd_read" name="rights.fd_read"></a>**`RIGHT_FD_READ`**
+- <a href="#rights.fd_read" name="rights.fd_read"></a>**`FD_READ`**
 
     The right to invoke [`fd_read()`](#fd_read) and [`sock_recv()`](#sock_recv).
 
-    If [`RIGHT_MEM_MAP`](#rights.mem_map) is set, includes the right to
+    If [`MEM_MAP`](#rights.mem_map) is set, includes the right to
     invoke [`mem_map()`](#mem_map) with memory protection option
-    [`PROT_READ`](#mprot.read).
+    [`READ`](#mprot.read).
 
-    If [`RIGHT_FD_SEEK`](#rights.fd_seek) is set, includes the right to invoke
+    If [`FD_SEEK`](#rights.fd_seek) is set, includes the right to invoke
     [`fd_pread()`](#fd_pread).
 
-- <a href="#rights.fd_seek" name="rights.fd_seek"></a>**`RIGHT_FD_SEEK`**
+- <a href="#rights.fd_seek" name="rights.fd_seek"></a>**`FD_SEEK`**
 
     The right to invoke [`fd_seek()`](#fd_seek). This flag implies
-    [`RIGHT_FD_TELL`](#rights.fd_tell).
+    [`FD_TELL`](#rights.fd_tell).
 
-- <a href="#rights.fd_stat_put_flags" name="rights.fd_stat_put_flags"></a>**`RIGHT_FD_STAT_PUT_FLAGS`**
+- <a href="#rights.fd_stat_put_flags" name="rights.fd_stat_put_flags"></a>**`FD_STAT_PUT_FLAGS`**
 
     The right to invoke [`fd_stat_put()`](#fd_stat_put) with
-    [`FDSTAT_FLAGS`](#fdsflags.flags).
+    [`FLAGS`](#fdsflags.flags).
 
-- <a href="#rights.fd_sync" name="rights.fd_sync"></a>**`RIGHT_FD_SYNC`**
+- <a href="#rights.fd_sync" name="rights.fd_sync"></a>**`FD_SYNC`**
 
     The right to invoke [`fd_sync()`](#fd_sync).
 
-    If [`RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`file_open()`](#file_open) with [`FDFLAG_RSYNC`](#fdflags.rsync) and
-    [`FDFLAG_DSYNC`](#fdflags.dsync).
+    If [`FILE_OPEN`](#rights.file_open) is set, includes the right to
+    invoke [`file_open()`](#file_open) with [`RSYNC`](#fdflags.rsync) and
+    [`DSYNC`](#fdflags.dsync).
 
-- <a href="#rights.fd_tell" name="rights.fd_tell"></a>**`RIGHT_FD_TELL`**
+- <a href="#rights.fd_tell" name="rights.fd_tell"></a>**`FD_TELL`**
 
     The right to invoke [`fd_seek()`](#fd_seek) in such a way that the
-    file offset remains unaltered (i.e., [`WHENCE_CUR`](#whence.cur) with
+    file offset remains unaltered (i.e., [`CUR`](#whence.cur) with
     offset zero).
 
-- <a href="#rights.fd_write" name="rights.fd_write"></a>**`RIGHT_FD_WRITE`**
+- <a href="#rights.fd_write" name="rights.fd_write"></a>**`FD_WRITE`**
 
     The right to invoke [`fd_write()`](#fd_write) and [`sock_send()`](#sock_send).
 
-    If [`RIGHT_MEM_MAP`](#rights.mem_map) is set, includes the right to
+    If [`MEM_MAP`](#rights.mem_map) is set, includes the right to
     invoke [`mem_map()`](#mem_map) with memory protection option
-    [`PROT_WRITE`](#mprot.write).
+    [`WRITE`](#mprot.write).
 
-    If [`RIGHT_FD_SEEK`](#rights.fd_seek) is set, includes the right to
+    If [`FD_SEEK`](#rights.fd_seek) is set, includes the right to
     invoke [`fd_pwrite()`](#fd_pwrite).
 
-- <a href="#rights.file_advise" name="rights.file_advise"></a>**`RIGHT_FILE_ADVISE`**
+- <a href="#rights.file_advise" name="rights.file_advise"></a>**`FILE_ADVISE`**
 
     The right to invoke [`file_advise()`](#file_advise).
 
-- <a href="#rights.file_allocate" name="rights.file_allocate"></a>**`RIGHT_FILE_ALLOCATE`**
+- <a href="#rights.file_allocate" name="rights.file_allocate"></a>**`FILE_ALLOCATE`**
 
     The right to invoke [`file_allocate()`](#file_allocate).
 
-- <a href="#rights.file_create_directory" name="rights.file_create_directory"></a>**`RIGHT_FILE_CREATE_DIRECTORY`**
+- <a href="#rights.file_create_directory" name="rights.file_create_directory"></a>**`FILE_CREATE_DIRECTORY`**
 
     The right to invoke [`file_create()`](#file_create) with
-    [`FILETYPE_DIRECTORY`](#filetype.directory).
+    [`DIRECTORY`](#filetype.directory).
 
-- <a href="#rights.file_create_file" name="rights.file_create_file"></a>**`RIGHT_FILE_CREATE_FILE`**
+- <a href="#rights.file_create_file" name="rights.file_create_file"></a>**`FILE_CREATE_FILE`**
 
-    If [`RIGHT_FILE_OPEN`](#rights.file_open) is set, the right to invoke
-    [`file_open()`](#file_open) with [`O_CREAT`](#oflags.creat).
+    If [`FILE_OPEN`](#rights.file_open) is set, the right to invoke
+    [`file_open()`](#file_open) with [`CREAT`](#oflags.creat).
 
-- <a href="#rights.file_create_fifo" name="rights.file_create_fifo"></a>**`RIGHT_FILE_CREATE_FIFO`**
-
-    The right to invoke [`file_create()`](#file_create) with
-    [`FILETYPE_FIFO`](#filetype.fifo).
-
-- <a href="#rights.file_link_source" name="rights.file_link_source"></a>**`RIGHT_FILE_LINK_SOURCE`**
+- <a href="#rights.file_link_source" name="rights.file_link_source"></a>**`FILE_LINK_SOURCE`**
 
     The right to invoke [`file_link()`](#file_link) with the file
     descriptor as the source directory.
 
-- <a href="#rights.file_link_target" name="rights.file_link_target"></a>**`RIGHT_FILE_LINK_TARGET`**
+- <a href="#rights.file_link_target" name="rights.file_link_target"></a>**`FILE_LINK_TARGET`**
 
     The right to invoke [`file_link()`](#file_link) with the file
     descriptor as the target directory.
 
-- <a href="#rights.file_open" name="rights.file_open"></a>**`RIGHT_FILE_OPEN`**
+- <a href="#rights.file_open" name="rights.file_open"></a>**`FILE_OPEN`**
 
     The right to invoke [`file_open()`](#file_open).
 
-- <a href="#rights.file_readdir" name="rights.file_readdir"></a>**`RIGHT_FILE_READDIR`**
+- <a href="#rights.file_readdir" name="rights.file_readdir"></a>**`FILE_READDIR`**
 
     The right to invoke [`file_readdir()`](#file_readdir).
 
-- <a href="#rights.file_readlink" name="rights.file_readlink"></a>**`RIGHT_FILE_READLINK`**
+- <a href="#rights.file_readlink" name="rights.file_readlink"></a>**`FILE_READLINK`**
 
     The right to invoke [`file_readlink()`](#file_readlink).
 
-- <a href="#rights.file_rename_source" name="rights.file_rename_source"></a>**`RIGHT_FILE_RENAME_SOURCE`**
+- <a href="#rights.file_rename_source" name="rights.file_rename_source"></a>**`FILE_RENAME_SOURCE`**
 
     The right to invoke [`file_rename()`](#file_rename) with the file
     descriptor as the source directory.
 
-- <a href="#rights.file_rename_target" name="rights.file_rename_target"></a>**`RIGHT_FILE_RENAME_TARGET`**
+- <a href="#rights.file_rename_target" name="rights.file_rename_target"></a>**`FILE_RENAME_TARGET`**
 
     The right to invoke [`file_rename()`](#file_rename) with the file
     descriptor as the target directory.
 
-- <a href="#rights.file_stat_fget" name="rights.file_stat_fget"></a>**`RIGHT_FILE_STAT_FGET`**
+- <a href="#rights.file_stat_fget" name="rights.file_stat_fget"></a>**`FILE_STAT_FGET`**
 
     The right to invoke [`file_stat_fget()`](#file_stat_fget).
 
-- <a href="#rights.file_stat_fput_size" name="rights.file_stat_fput_size"></a>**`RIGHT_FILE_STAT_FPUT_SIZE`**
+- <a href="#rights.file_stat_fput_size" name="rights.file_stat_fput_size"></a>**`FILE_STAT_FPUT_SIZE`**
 
     The right to invoke [`file_stat_fput()`](#file_stat_fput) with
-    [`FILESTAT_SIZE`](#fsflags.size).
+    [`SIZE`](#fsflags.size).
 
-    If [`RIGHT_FILE_OPEN`](#rights.file_open) is set, includes the right to
-    invoke [`file_open()`](#file_open) with [`O_TRUNC`](#oflags.trunc).
+    If [`FILE_OPEN`](#rights.file_open) is set, includes the right to
+    invoke [`file_open()`](#file_open) with [`TRUNC`](#oflags.trunc).
 
-- <a href="#rights.file_stat_fput_times" name="rights.file_stat_fput_times"></a>**`RIGHT_FILE_STAT_FPUT_TIMES`**
+- <a href="#rights.file_stat_fput_times" name="rights.file_stat_fput_times"></a>**`FILE_STAT_FPUT_TIMES`**
 
     The right to invoke [`file_stat_fput()`](#file_stat_fput) with
-    [`FILESTAT_ATIM`](#fsflags.atim), [`FILESTAT_ATIM_NOW`](#fsflags.atim_now), [`FILESTAT_MTIM`](#fsflags.mtim),
-    and [`FILESTAT_MTIM_NOW`](#fsflags.mtim_now).
+    [`ATIM`](#fsflags.atim), [`ATIM_NOW`](#fsflags.atim_now), [`MTIM`](#fsflags.mtim),
+    and [`MTIM_NOW`](#fsflags.mtim_now).
 
-- <a href="#rights.file_stat_get" name="rights.file_stat_get"></a>**`RIGHT_FILE_STAT_GET`**
+- <a href="#rights.file_stat_get" name="rights.file_stat_get"></a>**`FILE_STAT_GET`**
 
     The right to invoke [`file_stat_get()`](#file_stat_get).
 
-- <a href="#rights.file_stat_put_times" name="rights.file_stat_put_times"></a>**`RIGHT_FILE_STAT_PUT_TIMES`**
+- <a href="#rights.file_stat_put_times" name="rights.file_stat_put_times"></a>**`FILE_STAT_PUT_TIMES`**
 
     The right to invoke [`file_stat_put()`](#file_stat_put) with
-    [`FILESTAT_ATIM`](#fsflags.atim), [`FILESTAT_ATIM_NOW`](#fsflags.atim_now), [`FILESTAT_MTIM`](#fsflags.mtim),
-    and [`FILESTAT_MTIM_NOW`](#fsflags.mtim_now).
+    [`ATIM`](#fsflags.atim), [`ATIM_NOW`](#fsflags.atim_now), [`MTIM`](#fsflags.mtim),
+    and [`MTIM_NOW`](#fsflags.mtim_now).
 
-- <a href="#rights.file_symlink" name="rights.file_symlink"></a>**`RIGHT_FILE_SYMLINK`**
+- <a href="#rights.file_symlink" name="rights.file_symlink"></a>**`FILE_SYMLINK`**
 
     The right to invoke [`file_symlink()`](#file_symlink).
 
-- <a href="#rights.file_unlink" name="rights.file_unlink"></a>**`RIGHT_FILE_UNLINK`**
+- <a href="#rights.file_unlink" name="rights.file_unlink"></a>**`FILE_UNLINK`**
 
     The right to invoke [`file_unlink()`](#file_unlink).
 
-- <a href="#rights.mem_map" name="rights.mem_map"></a>**`RIGHT_MEM_MAP`**
+- <a href="#rights.mem_map" name="rights.mem_map"></a>**`MEM_MAP`**
 
-    The right to invoke [`mem_map()`](#mem_map) with [`mprot_t`](#mprot) set to
+    The right to invoke [`mem_map()`](#mem_map) with [`mprot`](#mprot) set to
     zero.
 
-- <a href="#rights.mem_map_exec" name="rights.mem_map_exec"></a>**`RIGHT_MEM_MAP_EXEC`**
+- <a href="#rights.mem_map_exec" name="rights.mem_map_exec"></a>**`MEM_MAP_EXEC`**
 
-    If [`RIGHT_MEM_MAP`](#rights.mem_map) is set, the right to invoke
-    [`mem_map()`](#mem_map) with [`PROT_EXEC`](#mprot.exec).
+    If [`MEM_MAP`](#rights.mem_map) is set, the right to invoke
+    [`mem_map()`](#mem_map) with [`EXEC`](#mprot.exec).
 
-- <a href="#rights.poll_fd_readwrite" name="rights.poll_fd_readwrite"></a>**`RIGHT_POLL_FD_READWRITE`**
+- <a href="#rights.poll_fd_readwrite" name="rights.poll_fd_readwrite"></a>**`POLL_FD_READWRITE`**
 
-    If [`RIGHT_FD_READ`](#rights.fd_read) is set, includes the right to
-    invoke [`poll()`](#poll) and [`poll_fd()`](#poll_fd) to subscribe to
-    [`EVENTTYPE_FD_READ`](#eventtype.fd_read).
+    If [`FD_READ`](#rights.fd_read) is set, includes the right to
+    invoke [`poll()`](#poll) to subscribe to [`FD_READ`](#eventtype.fd_read).
 
-    If [`RIGHT_FD_WRITE`](#rights.fd_write) is set, includes the right to
-    invoke [`poll()`](#poll) and [`poll_fd()`](#poll_fd) to subscribe to
-    [`EVENTTYPE_FD_WRITE`](#eventtype.fd_write).
+    If [`FD_WRITE`](#rights.fd_write) is set, includes the right to
+    invoke [`poll()`](#poll) to subscribe to [`FD_WRITE`](#eventtype.fd_write).
 
-- <a href="#rights.poll_modify" name="rights.poll_modify"></a>**`RIGHT_POLL_MODIFY`**
+- <a href="#rights.poll_proc_terminate" name="rights.poll_proc_terminate"></a>**`POLL_PROC_TERMINATE`**
 
-    The right to modify the events a polling event queue
-    is subscribed to.
+    The right to invoke [`poll()`](#poll) to subscribe to
+    [`PROC_TERMINATE`](#eventtype.proc_terminate).
 
-- <a href="#rights.poll_proc_terminate" name="rights.poll_proc_terminate"></a>**`RIGHT_POLL_PROC_TERMINATE`**
-
-    The right to invoke [`poll()`](#poll) and [`poll_fd()`](#poll_fd) to
-    subscribe to [`EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate).
-
-- <a href="#rights.poll_wait" name="rights.poll_wait"></a>**`RIGHT_POLL_WAIT`**
-
-    The right to wait for events on a polling event queue
-    and extract them.
-
-- <a href="#rights.proc_exec" name="rights.proc_exec"></a>**`RIGHT_PROC_EXEC`**
+- <a href="#rights.proc_exec" name="rights.proc_exec"></a>**`PROC_EXEC`**
 
     The right to invoke [`proc_exec()`](#proc_exec).
 
-- <a href="#rights.sock_accept" name="rights.sock_accept"></a>**`RIGHT_SOCK_ACCEPT`**
-
-    The right to invoke [`sock_accept()`](#sock_accept).
-
-- <a href="#rights.sock_bind_directory" name="rights.sock_bind_directory"></a>**`RIGHT_SOCK_BIND_DIRECTORY`**
-
-    The right to invoke [`sock_bind()`](#sock_bind) with the file
-    descriptor as the directory.
-
-- <a href="#rights.sock_bind_socket" name="rights.sock_bind_socket"></a>**`RIGHT_SOCK_BIND_SOCKET`**
-
-    The right to invoke [`sock_bind()`](#sock_bind) with the file
-    descriptor as the socket.
-
-- <a href="#rights.sock_connect_directory" name="rights.sock_connect_directory"></a>**`RIGHT_SOCK_CONNECT_DIRECTORY`**
-
-    The right to invoke [`sock_connect()`](#sock_connect) with the file
-    descriptor as the directory.
-
-- <a href="#rights.sock_connect_socket" name="rights.sock_connect_socket"></a>**`RIGHT_SOCK_CONNECT_SOCKET`**
-
-    The right to invoke [`sock_connect()`](#sock_connect) with the file
-    descriptor as the socket.
-
-- <a href="#rights.sock_listen" name="rights.sock_listen"></a>**`RIGHT_SOCK_LISTEN`**
-
-    The right to invoke [`sock_listen()`](#sock_listen).
-
-- <a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a>**`RIGHT_SOCK_SHUTDOWN`**
+- <a href="#rights.sock_shutdown" name="rights.sock_shutdown"></a>**`SOCK_SHUTDOWN`**
 
     The right to invoke [`sock_shutdown()`](#sock_shutdown).
 
-- <a href="#rights.sock_stat_get" name="rights.sock_stat_get"></a>**`RIGHT_SOCK_STAT_GET`**
+#### <a href="#roflags" name="roflags"></a>`roflags` (`u16` bitfield)
 
-    The right to invoke [`sock_stat_get()`](#sock_stat_get).
+Flags returned by [`sock_recv()`](#sock_recv).
 
-#### <a href="#sa_family" name="sa_family"></a>`sa_family_t` (`u8`)
-
-Socket address family.
-
-Used by [`sockaddr_t`](#sockaddr).
+Used by [`recv_out`](#recv_out).
 
 Possible values:
 
-- <a href="#sa_family.unspec" name="sa_family.unspec"></a>**`AF_UNSPEC`**
+- <a href="#roflags.fds_truncated" name="roflags.fds_truncated"></a>**`FDS_TRUNCATED`**
 
-    The socket address family is unknown or is different
-    from any of the other address families specified.
+    Returned by [`sock_recv()`](#sock_recv): List of file descriptors
+    has been truncated.
 
-- <a href="#sa_family.inet" name="sa_family.inet"></a>**`AF_INET`**
+- <a href="#roflags.data_truncated" name="roflags.data_truncated"></a>**`DATA_TRUNCATED`**
 
-    An IPv4 address.
+    Returned by [`sock_recv()`](#sock_recv): Message data has been
+    truncated.
 
-- <a href="#sa_family.inet6" name="sa_family.inet6"></a>**`AF_INET6`**
-
-    An IPv6 address.
-
-- <a href="#sa_family.unix" name="sa_family.unix"></a>**`AF_UNIX`**
-
-    The socket is local to the system, and may be bound to
-    the file system.
-
-#### <a href="#scope" name="scope"></a>`scope_t` (`u8`)
+#### <a href="#scope" name="scope"></a>`scope` (`u8` `enum`)
 
 Indicates whether an object is stored in private or shared
 memory.
 
-Used by [`subscription_t`](#subscription), [`condvar_signal()`](#condvar_signal), [`lock_unlock()`](#lock_unlock), and [`thread_exit()`](#thread_exit).
+Used by [`subscription`](#subscription), [`condvar_signal()`](#condvar_signal), [`lock_unlock()`](#lock_unlock), and [`thread_exit()`](#thread_exit).
 
 Possible values:
 
-- <a href="#scope.private" name="scope.private"></a>**`SCOPE_PRIVATE`**
+- <a href="#scope.private" name="scope.private"></a>**`PRIVATE`**
 
     The object is stored in private memory.
 
-- <a href="#scope.shared" name="scope.shared"></a>**`SCOPE_SHARED`**
+- <a href="#scope.shared" name="scope.shared"></a>**`SHARED`**
 
     The object is stored in shared memory.
 
-#### <a href="#sdflags" name="sdflags"></a>`sdflags_t` (`u8` bitfield)
+#### <a href="#sdflags" name="sdflags"></a>`sdflags` (`u8` bitfield)
 
 Which channels on a socket need to be shut down.
 
@@ -2984,35 +2672,35 @@ Used by [`sock_shutdown()`](#sock_shutdown).
 
 Possible values:
 
-- <a href="#sdflags.rd" name="sdflags.rd"></a>**`SHUT_RD`**
+- <a href="#sdflags.rd" name="sdflags.rd"></a>**`RD`**
 
     Disables further receive operations.
 
-- <a href="#sdflags.wr" name="sdflags.wr"></a>**`SHUT_WR`**
+- <a href="#sdflags.wr" name="sdflags.wr"></a>**`WR`**
 
     Disables further send operations.
 
-#### <a href="#send_in" name="send_in"></a>`send_in_t` (`struct`)
+#### <a href="#send_in" name="send_in"></a>`send_in` (`struct`)
 
 Arguments of [`sock_send()`](#sock_send).
 
 Members:
 
-- <a href="#send_in.si_data" name="send_in.si_data"></a><code><strong>si\_data</strong>: * [ciovec\_t](#ciovec)</code> and <a href="#send_in.si_datalen" name="send_in.si_datalen"></a><code><strong>si\_datalen</strong>: usize</code>
+- <a href="#send_in.si_data" name="send_in.si_data"></a><code><strong>si\_data</strong>: *const [ciovec](#ciovec)</code> and <a href="#send_in.si_data_len" name="send_in.si_data_len"></a><code><strong>si\_data\_len</strong>: usize</code>
 
     List of scatter/gather vectors where message data
     should be retrieved.
 
-- <a href="#send_in.si_fds" name="send_in.si_fds"></a><code><strong>si\_fds</strong>: * [fd\_t](#fd)</code> and <a href="#send_in.si_fdslen" name="send_in.si_fdslen"></a><code><strong>si\_fdslen</strong>: usize</code>
+- <a href="#send_in.si_fds" name="send_in.si_fds"></a><code><strong>si\_fds</strong>: *const [fd](#fd)</code> and <a href="#send_in.si_fds_len" name="send_in.si_fds_len"></a><code><strong>si\_fds\_len</strong>: usize</code>
 
     File descriptors that need to be attached to the
     message.
 
-- <a href="#send_in.si_flags" name="send_in.si_flags"></a><code><strong>si\_flags</strong>: [msgflags\_t](#msgflags)</code>
+- <a href="#send_in.si_flags" name="send_in.si_flags"></a><code><strong>si\_flags</strong>: [siflags](#siflags)</code>
 
-    Message flags. Only [`MSG_EOR`](#msgflags.eor) is valid.
+    Message flags.
 
-#### <a href="#send_out" name="send_out"></a>`send_out_t` (`struct`)
+#### <a href="#send_out" name="send_out"></a>`send_out` (`struct`)
 
 Results of [`sock_send()`](#sock_send).
 
@@ -3022,397 +2710,280 @@ Members:
 
     Number of bytes transmitted.
 
-#### <a href="#signal" name="signal"></a>`signal_t` (`u8`)
+#### <a href="#siflags" name="siflags"></a>`siflags` (`u16` bitfield)
+
+Flags provided to [`sock_send()`](#sock_send). As there are currently no flags
+defined, it must be set to zero.
+
+Used by [`send_in`](#send_in).
+
+#### <a href="#signal" name="signal"></a>`signal` (`u8` `enum`)
 
 Signal condition.
 
-Used by [`event_t`](#event) and [`proc_raise()`](#proc_raise).
+Used by [`event`](#event) and [`proc_raise()`](#proc_raise).
 
 Possible values:
 
-- <a href="#signal.abrt" name="signal.abrt"></a>**`SIGABRT`**
+- <a href="#signal.abrt" name="signal.abrt"></a>**`ABRT`**
 
     Process abort signal.
 
     Action: Terminates the process.
 
-- <a href="#signal.alrm" name="signal.alrm"></a>**`SIGALRM`**
+- <a href="#signal.alrm" name="signal.alrm"></a>**`ALRM`**
 
     Alarm clock.
 
     Action: Terminates the process.
 
-- <a href="#signal.bus" name="signal.bus"></a>**`SIGBUS`**
+- <a href="#signal.bus" name="signal.bus"></a>**`BUS`**
 
     Access to an undefined portion of a memory object.
 
     Action: Terminates the process.
 
-- <a href="#signal.chld" name="signal.chld"></a>**`SIGCHLD`**
+- <a href="#signal.chld" name="signal.chld"></a>**`CHLD`**
 
     Child process terminated, stopped, or continued.
 
     Action: Ignored.
 
-- <a href="#signal.cont" name="signal.cont"></a>**`SIGCONT`**
+- <a href="#signal.cont" name="signal.cont"></a>**`CONT`**
 
     Continue executing, if stopped.
 
     Action: Continues executing, if stopped.
 
-- <a href="#signal.fpe" name="signal.fpe"></a>**`SIGFPE`**
+- <a href="#signal.fpe" name="signal.fpe"></a>**`FPE`**
 
     Erroneous arithmetic operation.
 
     Action: Terminates the process.
 
-- <a href="#signal.hup" name="signal.hup"></a>**`SIGHUP`**
+- <a href="#signal.hup" name="signal.hup"></a>**`HUP`**
 
     Hangup.
 
     Action: Terminates the process.
 
-- <a href="#signal.ill" name="signal.ill"></a>**`SIGILL`**
+- <a href="#signal.ill" name="signal.ill"></a>**`ILL`**
 
     Illegal instruction.
 
     Action: Terminates the process.
 
-- <a href="#signal.int" name="signal.int"></a>**`SIGINT`**
+- <a href="#signal.int" name="signal.int"></a>**`INT`**
 
-    Terminale interrupt signal.
+    Terminate interrupt signal.
 
     Action: Terminates the process.
 
-- <a href="#signal.kill" name="signal.kill"></a>**`SIGKILL`**
+- <a href="#signal.kill" name="signal.kill"></a>**`KILL`**
 
     Kill.
 
     Action: Terminates the process.
 
-- <a href="#signal.pipe" name="signal.pipe"></a>**`SIGPIPE`**
+- <a href="#signal.pipe" name="signal.pipe"></a>**`PIPE`**
 
     Write on a pipe with no one to read it.
 
     Action: Ignored.
 
-- <a href="#signal.quit" name="signal.quit"></a>**`SIGQUIT`**
+- <a href="#signal.quit" name="signal.quit"></a>**`QUIT`**
 
     Terminal quit signal.
 
     Action: Terminates the process.
 
-- <a href="#signal.segv" name="signal.segv"></a>**`SIGSEGV`**
+- <a href="#signal.segv" name="signal.segv"></a>**`SEGV`**
 
     Invalid memory reference.
 
     Action: Terminates the process.
 
-- <a href="#signal.stop" name="signal.stop"></a>**`SIGSTOP`**
+- <a href="#signal.stop" name="signal.stop"></a>**`STOP`**
 
     Stop executing.
 
     Action: Stops executing.
 
-- <a href="#signal.sys" name="signal.sys"></a>**`SIGSYS`**
+- <a href="#signal.sys" name="signal.sys"></a>**`SYS`**
 
     Bad system call.
 
     Action: Terminates the process.
 
-- <a href="#signal.term" name="signal.term"></a>**`SIGTERM`**
+- <a href="#signal.term" name="signal.term"></a>**`TERM`**
 
     Termination signal.
 
     Action: Terminates the process.
 
-- <a href="#signal.trap" name="signal.trap"></a>**`SIGTRAP`**
+- <a href="#signal.trap" name="signal.trap"></a>**`TRAP`**
 
     Trace/breakpoint trap.
 
     Action: Terminates the process.
 
-- <a href="#signal.tstp" name="signal.tstp"></a>**`SIGTSTP`**
+- <a href="#signal.tstp" name="signal.tstp"></a>**`TSTP`**
 
     Terminal stop signal.
 
     Action: Stops executing.
 
-- <a href="#signal.ttin" name="signal.ttin"></a>**`SIGTTIN`**
+- <a href="#signal.ttin" name="signal.ttin"></a>**`TTIN`**
 
     Background process attempting read.
 
     Action: Stops executing.
 
-- <a href="#signal.ttou" name="signal.ttou"></a>**`SIGTTOU`**
+- <a href="#signal.ttou" name="signal.ttou"></a>**`TTOU`**
 
     Background process attempting write.
 
     Action: Stops executing.
 
-- <a href="#signal.urg" name="signal.urg"></a>**`SIGURG`**
+- <a href="#signal.urg" name="signal.urg"></a>**`URG`**
 
     High bandwidth data is available at a socket.
 
     Action: Ignored.
 
-- <a href="#signal.usr1" name="signal.usr1"></a>**`SIGUSR1`**
+- <a href="#signal.usr1" name="signal.usr1"></a>**`USR1`**
 
     User-defined signal 1.
 
     Action: Terminates the process.
 
-- <a href="#signal.usr2" name="signal.usr2"></a>**`SIGUSR2`**
+- <a href="#signal.usr2" name="signal.usr2"></a>**`USR2`**
 
     User-defined signal 2.
 
     Action: Terminates the process.
 
-- <a href="#signal.vtalrm" name="signal.vtalrm"></a>**`SIGVTALRM`**
+- <a href="#signal.vtalrm" name="signal.vtalrm"></a>**`VTALRM`**
 
     Virtual timer expired.
 
     Action: Terminates the process.
 
-- <a href="#signal.xcpu" name="signal.xcpu"></a>**`SIGXCPU`**
+- <a href="#signal.xcpu" name="signal.xcpu"></a>**`XCPU`**
 
     CPU time limit exceeded.
 
     Action: Terminates the process.
 
-- <a href="#signal.xfsz" name="signal.xfsz"></a>**`SIGXFSZ`**
+- <a href="#signal.xfsz" name="signal.xfsz"></a>**`XFSZ`**
 
     File size limit exceeded.
 
     Action: Terminates the process.
 
-#### <a href="#sockaddr" name="sockaddr"></a>`sockaddr_t` (`struct`)
-
-Network address of a bound socket or its peer.
-
-Used by [`recv_out_t`](#recv_out) and [`sockstat_t`](#sockstat).
-
-Members:
-
-- <a href="#sockaddr.sa_family" name="sockaddr.sa_family"></a><code><strong>sa\_family</strong>: [sa\_family\_t](#sa_family)</code>
-
-    Address family.
-
-- When `sa_family` is [`AF_INET`](#sa_family.inet):
-
-    - <a href="#sockaddr.sa_inet" name="sockaddr.sa_inet"></a>**`sa_inet()`**
-
-        - <a href="#sockaddr.sa_inet.addr" name="sockaddr.sa_inet.addr"></a><code><strong>addr</strong>: [u8; 4]</code>
-
-            IPv4 address.
-
-        - <a href="#sockaddr.sa_inet.port" name="sockaddr.sa_inet.port"></a><code><strong>port</strong>: u16</code>
-
-            IPv4 port number.
-
-- When `sa_family` is [`AF_INET6`](#sa_family.inet6):
-
-    - <a href="#sockaddr.sa_inet6" name="sockaddr.sa_inet6"></a>**`sa_inet6()`**
-
-        - <a href="#sockaddr.sa_inet6.addr" name="sockaddr.sa_inet6.addr"></a><code><strong>addr</strong>: [u8; 16]</code>
-
-            IPv6 address.
-
-        - <a href="#sockaddr.sa_inet6.port" name="sockaddr.sa_inet6.port"></a><code><strong>port</strong>: u16</code>
-
-            IPv6 port number.
-
-#### <a href="#sockstat" name="sockstat"></a>`sockstat_t` (`struct`)
-
-Socket attributes.
-
-Used by [`sock_accept()`](#sock_accept) and [`sock_stat_get()`](#sock_stat_get).
-
-Members:
-
-- <a href="#sockstat.ss_sockname" name="sockstat.ss_sockname"></a><code><strong>ss\_sockname</strong>: [sockaddr\_t](#sockaddr)</code>
-
-    The address to which this socket is bound.
-
-- <a href="#sockstat.ss_peername" name="sockstat.ss_peername"></a><code><strong>ss\_peername</strong>: [sockaddr\_t](#sockaddr)</code>
-
-    The address to which this socket is connected.
-
-- <a href="#sockstat.ss_error" name="sockstat.ss_error"></a><code><strong>ss\_error</strong>: [errno\_t](#errno)</code>
-
-    Error code of the last completed asynchronous
-    operation performed on this socket.
-
-- <a href="#sockstat.ss_state" name="sockstat.ss_state"></a><code><strong>ss\_state</strong>: [sstate\_t](#sstate)</code>
-
-    Flags describing the state of the socket.
-
-#### <a href="#ssflags" name="ssflags"></a>`ssflags_t` (`u8` bitfield)
-
-Specifies which socket attributes need to be altered when
-calling [`sock_stat_get()`](#sock_stat_get).
-
-Possible values:
-
-- <a href="#ssflags.clear_error" name="ssflags.clear_error"></a>**`SOCKSTAT_CLEAR_ERROR`**
-
-    Clear [`sockstat_t.ss_error`](#sockstat.ss_error).
-
-#### <a href="#sstate" name="sstate"></a>`sstate_t` (`u32` bitfield)
-
-State of the socket.
-
-Used by [`sockstat_t`](#sockstat).
-
-Possible values:
-
-- <a href="#sstate.acceptconn" name="sstate.acceptconn"></a>**`SOCKSTATE_ACCEPTCONN`**
-
-    [`sock_listen()`](#sock_listen) has been called on the socket. The
-    socket is accepting incoming connections.
-
-#### <a href="#subclockflags" name="subclockflags"></a>`subclockflags_t` (`u16` bitfield)
+#### <a href="#subclockflags" name="subclockflags"></a>`subclockflags` (`u16` bitfield)
 
 Flags determining how the timestamp provided in
-[`subscription_t.clock().timeout`](#subscription.clock.timeout) should be interpreted.
+[`subscription.union.clock.timeout`](#subscription.clock.timeout) should be interpreted.
 
-Used by [`subscription_t`](#subscription).
+Used by [`subscription`](#subscription).
 
 Possible values:
 
-- <a href="#subclockflags.abstime" name="subclockflags.abstime"></a>**`SUBSCRIPTION_CLOCK_ABSTIME`**
+- <a href="#subclockflags.abstime" name="subclockflags.abstime"></a>**`ABSTIME`**
 
     If set, treat the timestamp provided in
-    [`subscription_t.clock().timeout`](#subscription.clock.timeout) as an absolute timestamp
-    of clock [`subscription_t.clock().clock_id`](#subscription.clock.clock_id).
+    [`subscription.union.clock.timeout`](#subscription.clock.timeout) as an absolute timestamp
+    of clock [`subscription.union.clock.clock_id`](#subscription.clock.clock_id).
 
     If clear, treat the timestamp provided in
-    [`subscription_t.clock().timeout`](#subscription.clock.timeout) relative to the current
-    time value of clock [`subscription_t.clock().clock_id`](#subscription.clock.clock_id).
+    [`subscription.union.clock.timeout`](#subscription.clock.timeout) relative to the current
+    time value of clock [`subscription.union.clock.clock_id`](#subscription.clock.clock_id).
 
-#### <a href="#subflags" name="subflags"></a>`subflags_t` (`u16` bitfield)
-
-Flags for [`poll_fd()`](#poll_fd) to determine how to process a
-subscription request. These flags are ignored by [`poll()`](#poll).
-
-Used by [`subscription_t`](#subscription).
-
-Possible values:
-
-- <a href="#subflags.add" name="subflags.add"></a>**`SUBSCRIPTION_ADD`**
-
-    Adds and enables the subscription. Implies
-    [`SUBSCRIPTION_ENABLE`](#subflags.enable), unless [`SUBSCRIPTION_DISABLE`](#subflags.disable) is
-    specified.
-
-- <a href="#subflags.clear" name="subflags.clear"></a>**`SUBSCRIPTION_CLEAR`**
-
-    Sets the event back to the initial state, so that it
-    no longer triggers.
-
-- <a href="#subflags.delete" name="subflags.delete"></a>**`SUBSCRIPTION_DELETE`**
-
-    Deletes the subscription.
-
-- <a href="#subflags.disable" name="subflags.disable"></a>**`SUBSCRIPTION_DISABLE`**
-
-    Disables the subscription so that it does not trigger,
-    but does not delete it.
-
-- <a href="#subflags.enable" name="subflags.enable"></a>**`SUBSCRIPTION_ENABLE`**
-
-    Enables the subscription so that it can trigger.
-
-- <a href="#subflags.oneshot" name="subflags.oneshot"></a>**`SUBSCRIPTION_ONESHOT`**
-
-    Automatically deletes the subscription once triggered.
-
-#### <a href="#subrwflags" name="subrwflags"></a>`subrwflags_t` (`u16` bitfield)
+#### <a href="#subrwflags" name="subrwflags"></a>`subrwflags` (`u16` bitfield)
 
 Flags influencing the method of polling for read or writing on
 a file descriptor.
 
-Used by [`subscription_t`](#subscription).
+Used by [`subscription`](#subscription).
 
 Possible values:
 
-- <a href="#subrwflags.poll" name="subrwflags.poll"></a>**`SUBSCRIPTION_FD_READWRITE_POLL`**
+- <a href="#subrwflags.poll" name="subrwflags.poll"></a>**`POLL`**
 
-    If set, trigger immediately when polling for reading
-    on a regular file, just like the POSIX poll function.
-    Otherwise, only trigger when not at the end-of-file.
+    Deprecated. Must be set by callers and ignored by
+    implementations.
 
-#### <a href="#subscription" name="subscription"></a>`subscription_t` (`struct`)
+#### <a href="#subscription" name="subscription"></a>`subscription` (`struct`)
 
 Subscription to an event.
 
-Used by [`poll()`](#poll) and [`poll_fd()`](#poll_fd).
+Used by [`poll()`](#poll).
 
 Members:
 
-- <a href="#subscription.userdata" name="subscription.userdata"></a><code><strong>userdata</strong>: [userdata\_t](#userdata)</code>
+- <a href="#subscription.userdata" name="subscription.userdata"></a><code><strong>userdata</strong>: [userdata](#userdata)</code>
 
     User-provided value that is attached to the
     subscription in the kernel and returned through
-    [`event_t.userdata`](#event.userdata).
+    [`event.userdata`](#event.userdata).
 
-- <a href="#subscription.flags" name="subscription.flags"></a><code><strong>flags</strong>: [subflags\_t](#subflags)</code>
+- <a href="#subscription.unused" name="subscription.unused"></a><code><strong>unused</strong>: u16</code>
 
-    Subscription adjustment flags used by [`poll_fd()`](#poll_fd).
-    Ignored by [`poll()`](#poll).
+    Used by previous implementations. Ignored.
 
-- <a href="#subscription.type" name="subscription.type"></a><code><strong>type</strong>: [eventtype\_t](#eventtype)</code>
+- <a href="#subscription.type" name="subscription.type"></a><code><strong>type\_</strong>: [eventtype](#eventtype)</code>
 
     The type of the event to which to subscribe.
 
-    Currently, [`EVENTTYPE_CONDVAR`](#eventtype.condvar),
-    [`EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock)
-    can only be used with [`poll()`](#poll).  It must be provided as
-    the first subscription and may only be followed by up
-    to one other subscription, having type
-    [`EVENTTYPE_CLOCK`](#eventtype.clock) with [`SUBSCRIPTION_CLOCK_ABSTIME`](#subclockflags.abstime).
+    Currently, [`CONDVAR`](#eventtype.condvar),
+    [`LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`LOCK_WRLOCK`](#eventtype.lock_wrlock)
+    must be provided as the first subscription and may
+    only be followed by up to one other subscription,
+    having type [`CLOCK`](#eventtype.clock) with
+    [`ABSTIME`](#subclockflags.abstime).
 
-- When `type` is [`EVENTTYPE_CLOCK`](#eventtype.clock):
+- When `type` is [`CLOCK`](#eventtype.clock):
 
-    - <a href="#subscription.clock" name="subscription.clock"></a>**`clock()`**
+    - <a href="#subscription.clock" name="subscription.clock"></a>**`union.clock`**
 
-        - <a href="#subscription.clock.identifier" name="subscription.clock.identifier"></a><code><strong>identifier</strong>: [userdata\_t](#userdata)</code>
+        - <a href="#subscription.clock.identifier" name="subscription.clock.identifier"></a><code><strong>identifier</strong>: [userdata](#userdata)</code>
 
             The user-defined unique
             identifier of the clock.
 
-        - <a href="#subscription.clock.clock_id" name="subscription.clock.clock_id"></a><code><strong>clock\_id</strong>: [clockid\_t](#clockid)</code>
+        - <a href="#subscription.clock.clock_id" name="subscription.clock.clock_id"></a><code><strong>clock\_id</strong>: [clockid](#clockid)</code>
 
             The clock against which the
             timestamp should be compared.
 
-        - <a href="#subscription.clock.timeout" name="subscription.clock.timeout"></a><code><strong>timeout</strong>: [timestamp\_t](#timestamp)</code>
+        - <a href="#subscription.clock.timeout" name="subscription.clock.timeout"></a><code><strong>timeout</strong>: [timestamp](#timestamp)</code>
 
             The absolute or relative
             timestamp.
 
-        - <a href="#subscription.clock.precision" name="subscription.clock.precision"></a><code><strong>precision</strong>: [timestamp\_t](#timestamp)</code>
+        - <a href="#subscription.clock.precision" name="subscription.clock.precision"></a><code><strong>precision</strong>: [timestamp](#timestamp)</code>
 
             The amount of time that the
             kernel may wait additionally
             to coalesce with other events.
 
-        - <a href="#subscription.clock.flags" name="subscription.clock.flags"></a><code><strong>flags</strong>: [subclockflags\_t](#subclockflags)</code>
+        - <a href="#subscription.clock.flags" name="subscription.clock.flags"></a><code><strong>flags</strong>: [subclockflags](#subclockflags)</code>
 
             Flags specifying whether the
             timeout is absolute or
             relative.
 
-- When `type` is [`EVENTTYPE_CONDVAR`](#eventtype.condvar):
+- When `type` is [`CONDVAR`](#eventtype.condvar):
 
-    - <a href="#subscription.condvar" name="subscription.condvar"></a>**`condvar()`**
+    - <a href="#subscription.condvar" name="subscription.condvar"></a>**`union.condvar`**
 
-        - <a href="#subscription.condvar.condvar" name="subscription.condvar.condvar"></a><code><strong>condvar</strong>: *mut [condvar\_t](#condvar)</code>
+        - <a href="#subscription.condvar.condvar" name="subscription.condvar.condvar"></a><code><strong>condvar</strong>: *mut [condvar](#condvar)</code>
 
             The condition variable on
             which to wait to be woken up.
 
-        - <a href="#subscription.condvar.lock" name="subscription.condvar.lock"></a><code><strong>lock</strong>: *mut [lock\_t](#lock)</code>
+        - <a href="#subscription.condvar.lock" name="subscription.condvar.lock"></a><code><strong>lock</strong>: *mut [lock](#lock)</code>
 
             The lock that will be
             released while waiting.
@@ -3421,57 +2992,57 @@ Members:
             for writing when the condition
             variable triggers.
 
-        - <a href="#subscription.condvar.condvar_scope" name="subscription.condvar.condvar_scope"></a><code><strong>condvar\_scope</strong>: [scope\_t](#scope)</code>
+        - <a href="#subscription.condvar.condvar_scope" name="subscription.condvar.condvar_scope"></a><code><strong>condvar\_scope</strong>: [scope](#scope)</code>
 
             Whether the condition variable
             is stored in private or shared
             memory.
 
-        - <a href="#subscription.condvar.lock_scope" name="subscription.condvar.lock_scope"></a><code><strong>lock\_scope</strong>: [scope\_t](#scope)</code>
+        - <a href="#subscription.condvar.lock_scope" name="subscription.condvar.lock_scope"></a><code><strong>lock\_scope</strong>: [scope](#scope)</code>
 
             Whether the lock is stored in
             private or shared memory.
 
-- When `type` is [`EVENTTYPE_FD_READ`](#eventtype.fd_read) or [`EVENTTYPE_FD_WRITE`](#eventtype.fd_write):
+- When `type` is [`FD_READ`](#eventtype.fd_read) or [`FD_WRITE`](#eventtype.fd_write):
 
-    - <a href="#subscription.fd_readwrite" name="subscription.fd_readwrite"></a>**`fd_readwrite()`**
+    - <a href="#subscription.fd_readwrite" name="subscription.fd_readwrite"></a>**`union.fd_readwrite`**
 
-        - <a href="#subscription.fd_readwrite.fd" name="subscription.fd_readwrite.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+        - <a href="#subscription.fd_readwrite.fd" name="subscription.fd_readwrite.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
             The file descriptor on which
             to wait for it to become ready
             for reading or writing.
 
-        - <a href="#subscription.fd_readwrite.flags" name="subscription.fd_readwrite.flags"></a><code><strong>flags</strong>: [subrwflags\_t](#subrwflags)</code>
+        - <a href="#subscription.fd_readwrite.flags" name="subscription.fd_readwrite.flags"></a><code><strong>flags</strong>: [subrwflags](#subrwflags)</code>
 
             Under which conditions to
             trigger.
 
-- When `type` is [`EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock):
+- When `type` is [`LOCK_RDLOCK`](#eventtype.lock_rdlock) or [`LOCK_WRLOCK`](#eventtype.lock_wrlock):
 
-    - <a href="#subscription.lock" name="subscription.lock"></a>**`lock()`**
+    - <a href="#subscription.lock" name="subscription.lock"></a>**`union.lock`**
 
-        - <a href="#subscription.lock.lock" name="subscription.lock.lock"></a><code><strong>lock</strong>: *mut [lock\_t](#lock)</code>
+        - <a href="#subscription.lock.lock" name="subscription.lock.lock"></a><code><strong>lock</strong>: *mut [lock](#lock)</code>
 
             The lock that will be acquired
             for reading or writing.
 
-        - <a href="#subscription.lock.lock_scope" name="subscription.lock.lock_scope"></a><code><strong>lock\_scope</strong>: [scope\_t](#scope)</code>
+        - <a href="#subscription.lock.lock_scope" name="subscription.lock.lock_scope"></a><code><strong>lock\_scope</strong>: [scope](#scope)</code>
 
             Whether the lock is stored in
             private or shared memory.
 
-- When `type` is [`EVENTTYPE_PROC_TERMINATE`](#eventtype.proc_terminate):
+- When `type` is [`PROC_TERMINATE`](#eventtype.proc_terminate):
 
-    - <a href="#subscription.proc_terminate" name="subscription.proc_terminate"></a>**`proc_terminate()`**
+    - <a href="#subscription.proc_terminate" name="subscription.proc_terminate"></a>**`union.proc_terminate`**
 
-        - <a href="#subscription.proc_terminate.fd" name="subscription.proc_terminate.fd"></a><code><strong>fd</strong>: [fd\_t](#fd)</code>
+        - <a href="#subscription.proc_terminate.fd" name="subscription.proc_terminate.fd"></a><code><strong>fd</strong>: [fd](#fd)</code>
 
             The process descriptor on
             which to wait for process
             termination.
 
-#### <a href="#tcb" name="tcb"></a>`tcb_t` (`struct`)
+#### <a href="#tcb" name="tcb"></a>`tcb` (`struct`)
 
 The Thread Control Block (TCB).
 
@@ -3495,12 +3066,12 @@ can be restored if needed.
 
 Members:
 
-- <a href="#tcb.parent" name="tcb.parent"></a><code><strong>parent</strong>: *mut c\_void</code>
+- <a href="#tcb.parent" name="tcb.parent"></a><code><strong>parent</strong>: *mut ()</code>
 
     Pointer that may be freely assigned by the system. Its
     value cannot be interpreted by the application.
 
-#### <a href="#threadattr" name="threadattr"></a>`threadattr_t` (`struct`)
+#### <a href="#threadattr" name="threadattr"></a>`threadattr` (`struct`)
 
 Attributes for thread creation.
 
@@ -3508,36 +3079,36 @@ Used by [`thread_create()`](#thread_create).
 
 Members:
 
-- <a href="#threadattr.entry_point" name="threadattr.entry_point"></a><code><strong>entry\_point</strong>: * [threadentry\_t](#threadentry)</code>
+- <a href="#threadattr.entry_point" name="threadattr.entry_point"></a><code><strong>entry\_point</strong>: [threadentry](#threadentry)</code>
 
     Initial program counter value.
 
-- <a href="#threadattr.stack" name="threadattr.stack"></a><code><strong>stack</strong>: *mut c\_void</code> and <a href="#threadattr.stack_size" name="threadattr.stack_size"></a><code><strong>stack\_size</strong>: usize</code>
+- <a href="#threadattr.stack" name="threadattr.stack"></a><code><strong>stack</strong>: *mut ()</code> and <a href="#threadattr.stack_len" name="threadattr.stack_len"></a><code><strong>stack\_len</strong>: usize</code>
 
     Region allocated to serve as stack space.
 
-- <a href="#threadattr.argument" name="threadattr.argument"></a><code><strong>argument</strong>: *mut c\_void</code>
+- <a href="#threadattr.argument" name="threadattr.argument"></a><code><strong>argument</strong>: *mut ()</code>
 
     Argument to be forwarded to the entry point function.
 
-#### <a href="#threadentry" name="threadentry"></a>`threadentry_t` (function type)
+#### <a href="#threadentry" name="threadentry"></a>`threadentry` (function pointer)
 
 Entry point for additionally created threads.
 
-Used by [`threadattr_t`](#threadattr).
+Used by [`threadattr`](#threadattr).
 
 Parameters:
 
-- <a href="#threadentry.tid" name="threadentry.tid"></a><code><strong>tid</strong>: [tid\_t](#tid)</code>
+- <a href="#threadentry.tid" name="threadentry.tid"></a><code><strong>tid</strong>: [tid](#tid)</code>
 
     Thread ID of the current thread.
 
-- <a href="#threadentry.aux" name="threadentry.aux"></a><code><strong>aux</strong>: *mut c\_void</code>
+- <a href="#threadentry.aux" name="threadentry.aux"></a><code><strong>aux</strong>: *mut ()</code>
 
     Copy of the value stored in
-    [`threadattr_t.argument`](#threadattr.argument).
+    [`threadattr.argument`](#threadattr.argument).
 
-#### <a href="#tid" name="tid"></a>`tid_t` (`u32`)
+#### <a href="#tid" name="tid"></a>`tid` (`struct(u32)`)
 
 Unique system-local identifier of a thread. This identifier is
 only valid during the lifetime of the thread.
@@ -3546,15 +3117,19 @@ Threads must be aware of their thread identifier, as it is
 written it into locks when acquiring them for writing. It is
 not advised to use these identifiers for any other purpose.
 
-Used by [`threadentry_t`](#threadentry), [`proc_fork()`](#proc_fork), and [`thread_create()`](#thread_create).
+As the thread identifier is also stored in [`lock`](#lock) when
+[`LOCK_WRLOCKED`](#lock.wrlocked) is set, the top two bits of the thread
+must always be set to zero.
 
-#### <a href="#timestamp" name="timestamp"></a>`timestamp_t` (`u64`)
+Used by [`threadentry`](#threadentry), [`proc_fork()`](#proc_fork), and [`thread_create()`](#thread_create).
+
+#### <a href="#timestamp" name="timestamp"></a>`timestamp` (= `u64`)
 
 Timestamp in nanoseconds.
 
-Used by [`filestat_t`](#filestat), [`subscription_t`](#subscription), [`clock_res_get()`](#clock_res_get), and [`clock_time_get()`](#clock_time_get).
+Used by [`filestat`](#filestat), [`subscription`](#subscription), [`clock_res_get()`](#clock_res_get), and [`clock_time_get()`](#clock_time_get).
 
-#### <a href="#ulflags" name="ulflags"></a>`ulflags_t` (`u8` bitfield)
+#### <a href="#ulflags" name="ulflags"></a>`ulflags` (`u8` bitfield)
 
 Specifies whether files are unlinked or directories are
 removed.
@@ -3563,19 +3138,19 @@ Used by [`file_unlink()`](#file_unlink).
 
 Possible values:
 
-- <a href="#ulflags.removedir" name="ulflags.removedir"></a>**`UNLINK_REMOVEDIR`**
+- <a href="#ulflags.removedir" name="ulflags.removedir"></a>**`REMOVEDIR`**
 
     If set, removes a directory. Otherwise, unlinks any
     non-directory file.
 
-#### <a href="#userdata" name="userdata"></a>`userdata_t` (`u64`)
+#### <a href="#userdata" name="userdata"></a>`userdata` (= `u64`)
 
 User-provided value that can be attached to objects that is
 retained when extracted from the kernel.
 
-Used by [`event_t`](#event) and [`subscription_t`](#subscription).
+Used by [`event`](#event) and [`subscription`](#subscription).
 
-#### <a href="#whence" name="whence"></a>`whence_t` (`u8`)
+#### <a href="#whence" name="whence"></a>`whence` (`u8` `enum`)
 
 Relative to which position the offset of the file descriptor
 should be set.
@@ -3584,15 +3159,15 @@ Used by [`fd_seek()`](#fd_seek).
 
 Possible values:
 
-- <a href="#whence.cur" name="whence.cur"></a>**`WHENCE_CUR`**
+- <a href="#whence.cur" name="whence.cur"></a>**`CUR`**
 
     Seek relative to current position.
 
-- <a href="#whence.end" name="whence.end"></a>**`WHENCE_END`**
+- <a href="#whence.end" name="whence.end"></a>**`END`**
 
     Seek relative to end-of-file.
 
-- <a href="#whence.set" name="whence.set"></a>**`WHENCE_SET`**
+- <a href="#whence.set" name="whence.set"></a>**`SET`**
 
     Seek relative to start-of-file.
 

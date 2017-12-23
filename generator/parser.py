@@ -144,6 +144,7 @@ class AbiParser:
                 mem = RangeStructMember(mem_name, mem_decl[0] == 'crange',
                                         mem_type)
                 mem.doc = doc
+                mem.raw_members[0].doc = doc
 
             else:
                 mem_name = mem_decl[-1]

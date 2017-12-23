@@ -77,6 +77,9 @@ class CNaming:
         else:
             return '{} {}'.format(self.typename(type), name)
 
+    def fieldname(self, name):
+        return name
+
 
 class CGenerator(Generator):
     def __init__(self,
