@@ -244,17 +244,6 @@ class RustGenerator(Generator):
 
                 unions = []
 
-            for name, struct in structs:
-                print('#[repr(C)]')
-                print('#[derive(Copy, Clone)]')
-                print('pub struct {}_{} {{'.format(
-                    self.naming.typename(type), name))
-                for m in struct.raw_members:
-                    assert(isinstance(m, SimpleStructMember))
-                    print('  pub {}: {},'.format(
-                        self.naming.fieldname(m.name), self.naming.typename(m.type)))
-                print('}')
-
         else:
             raise Exception('Unknown class of type: {}'.format(type))
 
