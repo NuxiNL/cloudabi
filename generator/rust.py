@@ -94,15 +94,16 @@ class RustSyscalldefsGenerator(RustGenerator):
 
     def generate_head(self, abi):
         super().generate_head(abi)
-        print('//! **PLEASE NOTE: This entire crate including this '
-              'documentation is automatically generated from '
-              '[`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**')
+        print('//! **PLEASE NOTE: This entire crate including this')
+        print('//! documentation is automatically generated from')
+        print('//! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**')
         self.print_doc(abi, '', '//!')
         print()
         print('#![allow(dead_code)]')
         print('#![allow(non_camel_case_types)]')
         print('#[macro_use]')
         print('extern crate bitflags;')
+        print()
 
     def generate_type(self, abi, type):
 

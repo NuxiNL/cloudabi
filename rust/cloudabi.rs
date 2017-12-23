@@ -25,7 +25,9 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
-//! **PLEASE NOTE: This entire crate including this documentation is automatically generated from [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**
+//! **PLEASE NOTE: This entire crate including this
+//! documentation is automatically generated from
+//! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**
 //! # Nuxi CloudABI
 //!
 //! CloudABI is what you get if you take POSIX, add capability-based
@@ -110,6 +112,7 @@
 #![allow(non_camel_case_types)]
 #[macro_use]
 extern crate bitflags;
+
 /// File or memory access pattern advisory information.
 #[repr(u8)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
