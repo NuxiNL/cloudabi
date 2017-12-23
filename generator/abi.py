@@ -132,7 +132,6 @@ class SimpleStructMember(StructMember):
 class RangeStructMember(StructMember):
     def __init__(self, name, const, target_type):
         super().__init__(name, layout=None)
-        self.type = type
         self.const = const
         self.target_type = target_type
         self.raw_members = [
