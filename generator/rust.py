@@ -42,8 +42,6 @@ class RustNaming:
             return '[{}; {}]'.format(
                 self.typename(type.element_type),
                 type.count)
-        elif isinstance(type.target_type, VoidType):
-            return '()'
         else:
             raise Exception('Unable to generate Rust declaration '
                             'for type: {}'.format(type))
