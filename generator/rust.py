@@ -100,7 +100,6 @@ class RustSyscalldefsGenerator(RustGenerator):
         print('//!')
         self.print_doc(abi, '', '//!')
         print()
-        print('#![allow(dead_code)]')
         print('#![allow(non_camel_case_types)]')
         print('#[macro_use]')
         print('extern crate bitflags;')

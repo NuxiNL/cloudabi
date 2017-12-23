@@ -109,7 +109,6 @@
 //! [headers](https://github.com/NuxiNL/cloudabi/tree/master/headers)
 //! and documentation (including the one you're reading now) is generated.
 
-#![allow(dead_code)]
 #![allow(non_camel_case_types)]
 #[macro_use]
 extern crate bitflags;
