@@ -5,8 +5,9 @@
 import re
 
 from .abi import *
-from .generator import *
 from .c import CNaming
+from .format import format_list
+from .generator import *
 from .rust import RustNaming
 
 
@@ -150,7 +151,7 @@ class MarkdownGenerator(Generator):
                     key=lambda x: ('A' if isinstance(x, Type) else 'B') + x.name
                 )
                 print('Used by {}.\n'.format(
-                    _list('and', [self.naming.link(x) for x in by])))
+                    format_list('and', [self.naming.link(x) for x in by])))
         if isinstance(type, IntLikeType):
             if type.values != []:
                 if isinstance(type, OpaqueType) or isinstance(type, AliasType):
@@ -208,7 +209,7 @@ class MarkdownGenerator(Generator):
             for vm in m.members:
                 print('- When `{}` is {}:\n'.format(
                     m.tag.name,
-                    _list('or', [
+                    format_list('or', [
                         self.naming.link(m.tag.type, v) for v in vm.tag_values
                     ])))
                 if vm.name is None:
@@ -279,13 +280,3 @@ def _escape(text):
 
 def _fix_undescores(text):
     return _escape(text.replace('\\_', '_'))
-
-
-def _list(word, items):
-    assert (len(items) > 0)
-    if len(items) == 1:
-        return items[0]
-    elif len(items) == 2:
-        return '{} {} {}'.format(items[0], word, items[1])
-    else:
-        return '{}, {} {}'.format(', '.join(items[:-1]), word, items[-1])

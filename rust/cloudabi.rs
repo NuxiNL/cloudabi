@@ -1053,10 +1053,15 @@ pub struct auxv {
   pub a_type: auxtype,
   pub union: auxv_union
 }
+/// A union inside `auxv`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union auxv_union {
+/// Used when `a_type` is `ARGDATALEN`, `CANARYLEN`, `NCPUS`, `PAGESZ`, `PHNUM`, or `TID`.
+/// A numerical value.
   pub a_val: usize,
+/// Used when `a_type` is `ARGDATA`, `BASE`, `CANARY`, `PHDR`, `PID`, or `SYSINFO_EHDR`.
+/// A pointer value.
   pub a_ptr: *mut (),
 }
 #[test]
@@ -1162,10 +1167,13 @@ pub struct event {
   pub type_: eventtype,
   pub union: event_union
 }
+/// A union inside `event`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union event_union {
+/// Used when `type_` is `FD_READ` or `FD_WRITE`.
   pub fd_readwrite: event_fd_readwrite,
+/// Used when `type_` is `PROC_TERMINATE`.
   pub proc_terminate: event_proc_terminate,
 }
 #[repr(C)]
@@ -1528,13 +1536,19 @@ pub struct subscription {
   pub type_: eventtype,
   pub union: subscription_union
 }
+/// A union inside `subscription`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union subscription_union {
+/// Used when `type_` is `CLOCK`.
   pub clock: subscription_clock,
+/// Used when `type_` is `CONDVAR`.
   pub condvar: subscription_condvar,
+/// Used when `type_` is `FD_READ` or `FD_WRITE`.
   pub fd_readwrite: subscription_fd_readwrite,
+/// Used when `type_` is `LOCK_RDLOCK` or `LOCK_WRLOCK`.
   pub lock: subscription_lock,
+/// Used when `type_` is `PROC_TERMINATE`.
   pub proc_terminate: subscription_proc_terminate,
 }
 #[repr(C)]

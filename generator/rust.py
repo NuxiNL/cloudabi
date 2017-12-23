@@ -6,6 +6,7 @@
 import re
 
 from .abi import *
+from .format import format_list
 from .generator import *
 
 
@@ -226,13 +227,20 @@ class RustGenerator(Generator):
                 assert(len(unions) <= 1)
 
                 for name, union in unions:
+                    print('/// A union inside `{}`.'.format(self.naming.typename(type)))
                     print('#[repr(C)]')
                     print('#[derive(Copy, Clone)]')
                     print('pub union {} {{'.format(name))
-                    for x in m.members:
+                    for x in union.members:
+                        print('/// Used when `{}` is {}.'.format(
+                            self.naming.fieldname(union.tag.name),
+                            format_list('or',
+                                ['`{}`'.format(self.naming.valname(union.tag.type, v))
+                                    for v in x.tag_values])))
                         if x.name is None:
                             assert(len(x.type.members) == 1)
                             m = x.type.members[0]
+                            self.print_doc(m)
                             print('  pub {}: {},'.format(
                                 self.naming.fieldname(m.name), self.naming.typename(m.type)))
                         else:
