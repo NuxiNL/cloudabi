@@ -8,71 +8,19 @@ import re
 from .abi import *
 from .format import format_list
 from .generator import *
-
-
-class RustNaming:
-
-    def __init__(self):
-        pass
-
-    def typename(self, type):
-        if isinstance(type, VoidType):
-            return '()'
-        elif isinstance(type, IntType):
-            if type.name == 'char':
-                return 'u8'
-            elif type.name == 'size':
-                return 'usize'
-            elif type.name[0:3] == 'int':
-                return 'i' + type.name[3:]
-            elif type.name[0:4] == 'uint':
-                return 'u' + type.name[4:]
-            else:
-                raise Exception('Unknown int type: {}'.format(type.name))
-        elif isinstance(type, UserDefinedType):
-            return type.name
-        elif isinstance(type, AtomicType):
-            # TODO: Update once rust has generic atomic types
-            return self.typename(type.target_type)
-        elif isinstance(type, PointerType):
-            if isinstance(type.target_type, FunctionType):
-                return self.typename(type.target_type)
-            mut = 'const' if type.const else 'mut'
-            return '*{} {}'.format(mut, self.typename(type.target_type))
-        elif isinstance(type, ArrayType):
-            return '[{}; {}]'.format(
-                self.typename(type.element_type),
-                type.count)
-        else:
-            raise Exception('Unable to generate Rust declaration '
-                            'for type: {}'.format(type))
-
-    def valname(self, type, value):
-        if isinstance(type, FlagsType) or isinstance(type, EnumType):
-            if value.name == '2big':
-                return 'TOOBIG'
-            return value.name.upper()
-        else:
-            return '{}{}'.format(type.cprefix, value.name).upper()
-
-    def syscallname(self, syscall):
-        return syscall.name
-
-    def vardecl(self, type, name, array_need_parens=False):
-        return '{}: {}'.format(name, self.typename(type))
-
-    def fieldname(self, name):
-        if name == 'type':
-            return 'type_'
-        return name
+from .rust_naming import *
 
 
 class RustGenerator(Generator):
 
-    def print_doc(self, thing, indent = '', prefix = '///'):
+    def print_doc(self, abi, thing, indent = '', prefix = '///'):
+        def make_link(match):
+            path = abi.resolve_path(match.group(1))
+            assert path is not None
+            return '`{}`'.format(MarkdownRustNaming().link_name(*path))
         if hasattr(thing, 'doc'):
             for line in thing.doc.splitlines():
-                line = re.sub(r'\[([\w.]+)\](?!\()', r'`\1`', line)
+                line = re.sub(r'\[([\w.]+)\](?!\()', make_link, line)
                 print(indent + prefix + (' ' + line if line != '' else ''))
 
     def __init__(self, naming):
@@ -94,7 +42,7 @@ class RustGenerator(Generator):
         print('//! documentation is automatically generated from')
         print('//! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**')
         print('//!')
-        self.print_doc(abi, '', '//!')
+        self.print_doc(abi, abi, '', '//!')
         print()
         print('#![no_std]')
         print('#![allow(non_camel_case_types)]')
@@ -106,14 +54,14 @@ class RustGenerator(Generator):
 
         if isinstance(type, FlagsType):
             print('bitflags! {')
-            self.print_doc(type, '  ')
+            self.print_doc(abi, type, '  ')
             print('  pub struct {}: {} {{'.format(self.naming.typename(type), self.naming.typename(type.int_type)))
             if len(type.values) > 0:
                 width = max(
                     len(self.naming.valname(type, v)) for v in type.values)
                 val_format = '#0{}x'.format(type.layout.size[0] * 2 + 2)
                 for v in type.values:
-                    self.print_doc(v, '    ')
+                    self.print_doc(abi, v, '    ')
                     print('    const {name:{width}} = {val:{val_format}};'.format(
                               name=self.naming.valname(type, v),
                               width=width,
@@ -125,7 +73,7 @@ class RustGenerator(Generator):
             print('}')
 
         elif isinstance(type, EnumType):
-            self.print_doc(type)
+            self.print_doc(abi, type)
             print('#[repr({})]'.format(self.naming.typename(type.int_type)))
             print('#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]')
             print('pub enum {} {{'.format(self.naming.typename(type)))
@@ -134,7 +82,7 @@ class RustGenerator(Generator):
                     len(self.naming.valname(type, v)) for v in type.values)
                 val_format = '{}d'.format(max(len(str(v.value)) for v in type.values))
                 for v in type.values:
-                    self.print_doc(v, '  ')
+                    self.print_doc(abi, v, '  ')
                     print('  {name:{width}} = {val:{val_format}},'.format(
                               name=self.naming.valname(type, v),
                               width=width,
@@ -146,7 +94,7 @@ class RustGenerator(Generator):
             print('}')
 
         elif isinstance(type, OpaqueType) or isinstance(type, AliasType):
-            self.print_doc(type)
+            self.print_doc(abi, type)
             if isinstance(type, OpaqueType):
                 print('#[repr(C)]')
                 print('#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]')
@@ -173,7 +121,7 @@ class RustGenerator(Generator):
                     val_width = max(len(str(v.value)) for v in type.values)
                     val_format = '{}d'.format(val_width)
                 for v in type.values:
-                    self.print_doc(v)
+                    self.print_doc(abi, v)
                     print(const_format.format(
                               name=self.naming.valname(type, v),
                               width=width,
@@ -182,11 +130,11 @@ class RustGenerator(Generator):
                               val_format=val_format))
 
         elif isinstance(type, FunctionType):
-            self.print_doc(type)
+            self.print_doc(abi, type)
             for param in type.parameters.raw_members:
                 print('///')
                 print('/// **{}**:'.format(param.name))
-                self.print_doc(param)
+                self.print_doc(abi, param)
             print('pub type {} = unsafe extern "C" fn('.format(self.naming.typename(type)))
             for param in type.parameters.raw_members:
                 print('  {}: {},'.format(param.name,
@@ -199,12 +147,12 @@ class RustGenerator(Generator):
 
             while len(structs) > 0 or len(unions) > 0:
                 for name, struct in structs:
-                    self.print_doc(struct)
+                    self.print_doc(abi, struct)
                     print('#[repr(C)]')
                     print('#[derive(Copy, Clone)]')
                     print('pub struct {} {{'.format(name))
                     for m in struct.members:
-                        self.print_doc(m, '  ')
+                        self.print_doc(abi, m, '  ')
                         if isinstance(m, SimpleStructMember):
                             print('  pub {}: {},'.format(
                                 self.naming.fieldname(m.name), self.naming.typename(m.type)))
@@ -240,7 +188,7 @@ class RustGenerator(Generator):
                         if x.name is None:
                             assert(len(x.type.members) == 1)
                             m = x.type.members[0]
-                            self.print_doc(m)
+                            self.print_doc(abi, m)
                             print('  pub {}: {},'.format(
                                 self.naming.fieldname(m.name), self.naming.typename(m.type)))
                         else:
@@ -331,7 +279,7 @@ class RustGenerator(Generator):
             syscall.name, ', '.join(params), return_type))
 
     def generate_syscall_wrapper(self, abi, syscall):
-        self.print_doc(syscall)
+        self.print_doc(abi, syscall)
 
         if syscall.input.members:
             print('///')
@@ -339,14 +287,14 @@ class RustGenerator(Generator):
             for p in syscall.input.members:
                 print('///')
                 print('/// **{}**:'.format(p.name))
-                self.print_doc(p)
+                self.print_doc(abi, p)
         if syscall.output.members:
             print('///')
             print('/// ## Outputs')
             for p in syscall.output.members:
                 print('///')
                 print('/// **{}**:'.format(p.name))
-                self.print_doc(p)
+                self.print_doc(abi, p)
 
         if syscall.noreturn:
             return_type = '!';

@@ -5,116 +5,11 @@
 import re
 
 from .abi import *
-from .c import CNaming
+from .c_naming import *
 from .format import format_list
 from .generator import *
-from .rust import RustNaming
-
-
-class MarkdownNaming:
-    def link(self, *path, code=True):
-        name = self.link_name(*path)
-        target = self.link_target(*path)
-        if code:
-            name = '`{}`'.format(name)
-        else:
-            name = _fix_undescores(name)
-        if target is None:
-            return name
-        return '[{}](#{})'.format(name, target)
-
-    def link_target(self, *path):
-        for p in path:
-            if p.name is None or (isinstance(p, Type)
-                                  and not isinstance(p, UserDefinedType)):
-                return None
-        return '.'.join(p.name for p in path)
-
-    def link_name(self, *path):
-        if len(path) == 2 and isinstance(path[1], SpecialValue):
-            return self.valname(path[0], path[1])
-
-        elif len(path) == 1 and isinstance(path[0], Syscall):
-            return self.syscallname(path[0])
-
-        elif len(path) == 1 and isinstance(path[0], Type):
-            return self.typename(path[0], link=False)
-
-        elif len(path) > 1 and isinstance(path[0], StructType):
-            return self.memname(*path)
-
-        else:
-            return None
-
-    def variantmem(self, member):
-        return member.name
-
-
-class MarkdownCNaming(MarkdownNaming, CNaming):
-    def typename(self, type, link=True, **kwargs):
-        if link:
-            return self.link(type, code=False)
-        else:
-            return super().typename(type, **kwargs)
-
-    def memname(self, *path):
-        name = self.typename(path[0], link=False)
-        name += '::'
-        name += '.'.join(m.name for m in path[1:])
-        return name
-
-    def syscallname(self, syscall):
-        return CNaming.syscallname(self, syscall) + '()'
-
-    def kinddesc(self, type):
-        if isinstance(type, IntLikeType):
-            return '{}{}'.format(
-                self.link(type.int_type),
-                ' bitfield' if isinstance(type, FlagsType) else '')
-        elif isinstance(type, StructType):
-            return '`struct`'
-        elif isinstance(type, FunctionType):
-            return 'function type'
-        else:
-            assert (False)
-
-
-class MarkdownRustNaming(MarkdownNaming, RustNaming):
-
-    def typename(self, type, link=True, **kwargs):
-        if link:
-            return self.link(type, code=False)
-        else:
-            return super().typename(type, **kwargs)
-
-    def memname(self, *path):
-        name = self.typename(path[0], link=False) + '.'
-        name += '.'.join(
-                self.variantmem(m) if isinstance(m, VariantMember) else self.fieldname(m.name)
-                for m in path[1:])
-        return name
-
-    def variantmem(self, member):
-        return 'union.' + self.fieldname(member.name)
-
-    def syscallname(self, syscall):
-        return RustNaming.syscallname(self, syscall) + '()'
-
-    def kinddesc(self, type):
-        if isinstance(type, EnumType):
-            return '{} `enum`'.format(self.link(type.int_type))
-        elif isinstance(type, AliasType):
-            return '= {}'.format(self.link(type.int_type))
-        elif isinstance(type, OpaqueType):
-            return '`struct({})`'.format(self.typename(type.int_type))
-        elif isinstance(type, FlagsType):
-            return '{} bitfield'.format(self.link(type.int_type))
-        elif isinstance(type, StructType):
-            return '`struct`'
-        elif isinstance(type, FunctionType):
-            return 'function pointer'
-        else:
-            assert (False)
+from .markdown_naming import *
+from .rust_naming import *
 
 class MarkdownGenerator(Generator):
     def __init__(self, naming):
@@ -276,7 +171,3 @@ class MarkdownGenerator(Generator):
 
 def _escape(text):
     return text.replace('_', '\\_')
-
-
-def _fix_undescores(text):
-    return _escape(text.replace('\\_', '_'))

@@ -144,10 +144,10 @@ pub enum advice {
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum auxtype {
   /// Base address of the binary argument data provided to
-  /// `proc_exec`.
+  /// `proc_exec()`.
   ARGDATA      = 256,
   /// Length of the binary argument data provided to
-  /// `proc_exec`.
+  /// `proc_exec()`.
   ARGDATALEN   = 257,
   /// Base address at which the executable is placed in
   /// memory.
@@ -200,7 +200,7 @@ pub enum auxtype {
   /// system provides native support for CloudABI executables,
   /// it may still implement partial userspace
   /// implementations of these system calls to improve
-  /// performance (e.g., `clock_time_get`). It also provides
+  /// performance (e.g., `clock_time_get()`). It also provides
   /// a more dynamic way of adding, removing or replacing
   /// system calls.
   SYSINFO_EHDR = 262,
@@ -421,7 +421,7 @@ pub enum errno {
 
 bitflags! {
   /// The state of the file descriptor subscribed to with
-  /// `eventtype.fd_read` or `eventtype.fd_write`.
+  /// `FD_READ` or `FD_WRITE`.
   pub struct eventrwflags: u16 {
     /// The peer of this socket has closed or disconnected.
     const HANGUP = 0x0001;
@@ -432,29 +432,29 @@ bitflags! {
 #[repr(u8)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum eventtype {
-  /// The time value of clock `subscription.clock.clock_id`
-  /// has reached timestamp `subscription.clock.timeout`.
+  /// The time value of clock `subscription.union.clock.clock_id`
+  /// has reached timestamp `subscription.union.clock.timeout`.
   CLOCK          = 1,
-  /// Condition variable `subscription.condvar.condvar` has
-  /// been woken up and `subscription.condvar.lock` has been
+  /// Condition variable `subscription.union.condvar.condvar` has
+  /// been woken up and `subscription.union.condvar.lock` has been
   /// acquired for writing.
   CONDVAR        = 2,
-  /// File descriptor `subscription.fd_readwrite.fd` has
+  /// File descriptor `subscription.union.fd_readwrite.fd` has
   /// data available for reading. This event always triggers
   /// for regular files.
   FD_READ        = 3,
-  /// File descriptor `subscription.fd_readwrite.fd` has
+  /// File descriptor `subscription.union.fd_readwrite.fd` has
   /// capacity available for writing. This event always
   /// triggers for regular files.
   FD_WRITE       = 4,
-  /// Lock `subscription.lock.lock` has been acquired for
+  /// Lock `subscription.union.lock.lock` has been acquired for
   /// reading.
   LOCK_RDLOCK    = 5,
-  /// Lock `subscription.lock.lock` has been acquired for
+  /// Lock `subscription.union.lock.lock` has been acquired for
   /// writing.
   LOCK_WRLOCK    = 6,
   /// The process associated with process descriptor
-  /// `subscription.proc_terminate.fd` has terminated.
+  /// `subscription.union.proc_terminate.fd` has terminated.
   PROC_TERMINATE = 7,
   #[doc(hidden)] _NonExhaustive = -1 as isize as u8,
 }
@@ -471,9 +471,9 @@ pub type exitcode = u32;
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub struct fd(pub u32);
-/// Returned to the child process by `proc_fork`.
+/// Returned to the child process by `proc_fork()`.
 pub const PROCESS_CHILD: fd = fd(0xffffffff);
-/// Passed to `mem_map` when creating a mapping to
+/// Passed to `mem_map()` when creating a mapping to
 /// anonymous memory.
 pub const MAP_ANON_FD  : fd = fd(0xffffffff);
 
@@ -559,13 +559,13 @@ bitflags! {
     /// stored in `filestat.st_atim`.
     const ATIM     = 0x0001;
     /// Adjust the last data access timestamp to the time
-    /// of clock `clockid.realtime`.
+    /// of clock `REALTIME`.
     const ATIM_NOW = 0x0002;
     /// Adjust the last data modification timestamp to the
     /// value stored in `filestat.st_mtim`.
     const MTIM     = 0x0004;
     /// Adjust the last data modification timestamp to the
-    /// time of clock `clockid.realtime`.
+    /// time of clock `REALTIME`.
     const MTIM_NOW = 0x0008;
     /// Truncate or extend the file to the size stored in
     /// `filestat.st_size`.
@@ -628,7 +628,7 @@ bitflags! {
   pub struct mflags: u8 {
     /// Instead of mapping the contents of the file provided,
     /// create a mapping to anonymous memory. The file
-    /// descriptor argument must be set to `fd.map_anon_fd`,
+    /// descriptor argument must be set to `MAP_ANON_FD`,
     /// and the offset must be set to zero.
     const ANON    = 0x01;
     /// Require that the mapping is performed at the base
@@ -673,7 +673,7 @@ bitflags! {
 pub type nthreads = u32;
 
 bitflags! {
-  /// Open flags used by `file_open`.
+  /// Open flags used by `file_open()`.
   pub struct oflags: u16 {
     /// Create file if it does not exist.
     const CREAT     = 0x0001;
@@ -687,7 +687,7 @@ bitflags! {
 }
 
 bitflags! {
-  /// Flags provided to `sock_recv`.
+  /// Flags provided to `sock_recv()`.
   pub struct riflags: u16 {
     /// Returns the message without removing it from the
     /// socket's receive queue.
@@ -702,124 +702,124 @@ bitflags! {
   /// File descriptor rights, determining which actions may be
   /// performed.
   pub struct rights: u64 {
-    /// The right to invoke `fd_datasync`.
+    /// The right to invoke `fd_datasync()`.
     ///
-    /// If `rights.file_open` is set, includes the right to
-    /// invoke `file_open` with `fdflags.dsync`.
+    /// If `FILE_OPEN` is set, includes the right to
+    /// invoke `file_open()` with `DSYNC`.
     const FD_DATASYNC           = 0x0000000000000001;
-    /// The right to invoke `fd_read` and `sock_recv`.
+    /// The right to invoke `fd_read()` and `sock_recv()`.
     ///
-    /// If `rights.mem_map` is set, includes the right to
-    /// invoke `mem_map` with memory protection option
-    /// `mprot.read`.
+    /// If `MEM_MAP` is set, includes the right to
+    /// invoke `mem_map()` with memory protection option
+    /// `READ`.
     ///
-    /// If `rights.fd_seek` is set, includes the right to invoke
-    /// `fd_pread`.
+    /// If `FD_SEEK` is set, includes the right to invoke
+    /// `fd_pread()`.
     const FD_READ               = 0x0000000000000002;
-    /// The right to invoke `fd_seek`. This flag implies
-    /// `rights.fd_tell`.
+    /// The right to invoke `fd_seek()`. This flag implies
+    /// `FD_TELL`.
     const FD_SEEK               = 0x0000000000000004;
-    /// The right to invoke `fd_stat_put` with
-    /// `fdsflags.flags`.
+    /// The right to invoke `fd_stat_put()` with
+    /// `FLAGS`.
     const FD_STAT_PUT_FLAGS     = 0x0000000000000008;
-    /// The right to invoke `fd_sync`.
+    /// The right to invoke `fd_sync()`.
     ///
-    /// If `rights.file_open` is set, includes the right to
-    /// invoke `file_open` with `fdflags.rsync` and
-    /// `fdflags.dsync`.
+    /// If `FILE_OPEN` is set, includes the right to
+    /// invoke `file_open()` with `RSYNC` and
+    /// `DSYNC`.
     const FD_SYNC               = 0x0000000000000010;
-    /// The right to invoke `fd_seek` in such a way that the
-    /// file offset remains unaltered (i.e., `whence.cur` with
+    /// The right to invoke `fd_seek()` in such a way that the
+    /// file offset remains unaltered (i.e., `CUR` with
     /// offset zero).
     const FD_TELL               = 0x0000000000000020;
-    /// The right to invoke `fd_write` and `sock_send`.
+    /// The right to invoke `fd_write()` and `sock_send()`.
     ///
-    /// If `rights.mem_map` is set, includes the right to
-    /// invoke `mem_map` with memory protection option
-    /// `mprot.write`.
+    /// If `MEM_MAP` is set, includes the right to
+    /// invoke `mem_map()` with memory protection option
+    /// `WRITE`.
     ///
-    /// If `rights.fd_seek` is set, includes the right to
-    /// invoke `fd_pwrite`.
+    /// If `FD_SEEK` is set, includes the right to
+    /// invoke `fd_pwrite()`.
     const FD_WRITE              = 0x0000000000000040;
-    /// The right to invoke `file_advise`.
+    /// The right to invoke `file_advise()`.
     const FILE_ADVISE           = 0x0000000000000080;
-    /// The right to invoke `file_allocate`.
+    /// The right to invoke `file_allocate()`.
     const FILE_ALLOCATE         = 0x0000000000000100;
-    /// The right to invoke `file_create` with
-    /// `filetype.directory`.
+    /// The right to invoke `file_create()` with
+    /// `DIRECTORY`.
     const FILE_CREATE_DIRECTORY = 0x0000000000000200;
-    /// If `rights.file_open` is set, the right to invoke
-    /// `file_open` with `oflags.creat`.
+    /// If `FILE_OPEN` is set, the right to invoke
+    /// `file_open()` with `CREAT`.
     const FILE_CREATE_FILE      = 0x0000000000000400;
-    /// The right to invoke `file_link` with the file
+    /// The right to invoke `file_link()` with the file
     /// descriptor as the source directory.
     const FILE_LINK_SOURCE      = 0x0000000000001000;
-    /// The right to invoke `file_link` with the file
+    /// The right to invoke `file_link()` with the file
     /// descriptor as the target directory.
     const FILE_LINK_TARGET      = 0x0000000000002000;
-    /// The right to invoke `file_open`.
+    /// The right to invoke `file_open()`.
     const FILE_OPEN             = 0x0000000000004000;
-    /// The right to invoke `file_readdir`.
+    /// The right to invoke `file_readdir()`.
     const FILE_READDIR          = 0x0000000000008000;
-    /// The right to invoke `file_readlink`.
+    /// The right to invoke `file_readlink()`.
     const FILE_READLINK         = 0x0000000000010000;
-    /// The right to invoke `file_rename` with the file
+    /// The right to invoke `file_rename()` with the file
     /// descriptor as the source directory.
     const FILE_RENAME_SOURCE    = 0x0000000000020000;
-    /// The right to invoke `file_rename` with the file
+    /// The right to invoke `file_rename()` with the file
     /// descriptor as the target directory.
     const FILE_RENAME_TARGET    = 0x0000000000040000;
-    /// The right to invoke `file_stat_fget`.
+    /// The right to invoke `file_stat_fget()`.
     const FILE_STAT_FGET        = 0x0000000000080000;
-    /// The right to invoke `file_stat_fput` with
-    /// `fsflags.size`.
+    /// The right to invoke `file_stat_fput()` with
+    /// `SIZE`.
     ///
-    /// If `rights.file_open` is set, includes the right to
-    /// invoke `file_open` with `oflags.trunc`.
+    /// If `FILE_OPEN` is set, includes the right to
+    /// invoke `file_open()` with `TRUNC`.
     const FILE_STAT_FPUT_SIZE   = 0x0000000000100000;
-    /// The right to invoke `file_stat_fput` with
-    /// `fsflags.atim`, `fsflags.atim_now`, `fsflags.mtim`,
-    /// and `fsflags.mtim_now`.
+    /// The right to invoke `file_stat_fput()` with
+    /// `ATIM`, `ATIM_NOW`, `MTIM`,
+    /// and `MTIM_NOW`.
     const FILE_STAT_FPUT_TIMES  = 0x0000000000200000;
-    /// The right to invoke `file_stat_get`.
+    /// The right to invoke `file_stat_get()`.
     const FILE_STAT_GET         = 0x0000000000400000;
-    /// The right to invoke `file_stat_put` with
-    /// `fsflags.atim`, `fsflags.atim_now`, `fsflags.mtim`,
-    /// and `fsflags.mtim_now`.
+    /// The right to invoke `file_stat_put()` with
+    /// `ATIM`, `ATIM_NOW`, `MTIM`,
+    /// and `MTIM_NOW`.
     const FILE_STAT_PUT_TIMES   = 0x0000000000800000;
-    /// The right to invoke `file_symlink`.
+    /// The right to invoke `file_symlink()`.
     const FILE_SYMLINK          = 0x0000000001000000;
-    /// The right to invoke `file_unlink`.
+    /// The right to invoke `file_unlink()`.
     const FILE_UNLINK           = 0x0000000002000000;
-    /// The right to invoke `mem_map` with `mprot` set to
+    /// The right to invoke `mem_map()` with `mprot` set to
     /// zero.
     const MEM_MAP               = 0x0000000004000000;
-    /// If `rights.mem_map` is set, the right to invoke
-    /// `mem_map` with `mprot.exec`.
+    /// If `MEM_MAP` is set, the right to invoke
+    /// `mem_map()` with `EXEC`.
     const MEM_MAP_EXEC          = 0x0000000008000000;
-    /// If `rights.fd_read` is set, includes the right to
-    /// invoke `poll` to subscribe to `eventtype.fd_read`.
+    /// If `FD_READ` is set, includes the right to
+    /// invoke `poll()` to subscribe to `FD_READ`.
     ///
-    /// If `rights.fd_write` is set, includes the right to
-    /// invoke `poll` to subscribe to `eventtype.fd_write`.
+    /// If `FD_WRITE` is set, includes the right to
+    /// invoke `poll()` to subscribe to `FD_WRITE`.
     const POLL_FD_READWRITE     = 0x0000000010000000;
-    /// The right to invoke `poll` to subscribe to
-    /// `eventtype.proc_terminate`.
+    /// The right to invoke `poll()` to subscribe to
+    /// `PROC_TERMINATE`.
     const POLL_PROC_TERMINATE   = 0x0000000040000000;
-    /// The right to invoke `proc_exec`.
+    /// The right to invoke `proc_exec()`.
     const PROC_EXEC             = 0x0000000100000000;
-    /// The right to invoke `sock_shutdown`.
+    /// The right to invoke `sock_shutdown()`.
     const SOCK_SHUTDOWN         = 0x0000008000000000;
   }
 }
 
 bitflags! {
-  /// Flags returned by `sock_recv`.
+  /// Flags returned by `sock_recv()`.
   pub struct roflags: u16 {
-    /// Returned by `sock_recv`: List of file descriptors
+    /// Returned by `sock_recv()`: List of file descriptors
     /// has been truncated.
     const FDS_TRUNCATED  = 0x0001;
-    /// Returned by `sock_recv`: Message data has been
+    /// Returned by `sock_recv()`: Message data has been
     /// truncated.
     const DATA_TRUNCATED = 0x0008;
   }
@@ -848,7 +848,7 @@ bitflags! {
 }
 
 bitflags! {
-  /// Flags provided to `sock_send`. As there are currently no flags
+  /// Flags provided to `sock_send()`. As there are currently no flags
   /// defined, it must be set to zero.
   pub struct siflags: u16 {
     const DEFAULT = 0;
@@ -968,15 +968,15 @@ pub enum signal {
 
 bitflags! {
   /// Flags determining how the timestamp provided in
-  /// `subscription.clock.timeout` should be interpreted.
+  /// `subscription.union.clock.timeout` should be interpreted.
   pub struct subclockflags: u16 {
     /// If set, treat the timestamp provided in
-    /// `subscription.clock.timeout` as an absolute timestamp
-    /// of clock `subscription.clock.clock_id`.
+    /// `subscription.union.clock.timeout` as an absolute timestamp
+    /// of clock `subscription.union.clock.clock_id`.
     ///
     /// If clear, treat the timestamp provided in
-    /// `subscription.clock.timeout` relative to the current
-    /// time value of clock `subscription.clock.clock_id`.
+    /// `subscription.union.clock.timeout` relative to the current
+    /// time value of clock `subscription.union.clock.clock_id`.
     const ABSTIME = 0x0001;
   }
 }
@@ -999,7 +999,7 @@ bitflags! {
 /// not advised to use these identifiers for any other purpose.
 ///
 /// As the thread identifier is also stored in `lock` when
-/// `lock.wrlocked` is set, the top two bits of the thread
+/// `LOCK_WRLOCKED` is set, the top two bits of the thread
 /// must always be set to zero.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
@@ -1042,7 +1042,7 @@ pub enum whence {
 /// provided to the process on startup. Unlike structures, it is
 /// extensible, as it is possible to add new records later on.
 /// The auxiliary vector is always terminated by an entry having
-/// type `auxtype.null`.
+/// type `NULL`.
 ///
 /// The auxiliary vector is part of the x86-64 ABI, but is used by
 /// this environment on all architectures.
@@ -1234,7 +1234,7 @@ pub struct fdstat {
   pub fs_rights_base: rights,
   /// Maximum set of rights that can be installed on new
   /// file descriptors that are created through this file
-  /// descriptor, e.g., through `file_open`.
+  /// descriptor, e.g., through `file_open()`.
   pub fs_rights_inheriting: rights,
 }
 #[test]
@@ -1355,7 +1355,7 @@ pub type processentry = unsafe extern "C" fn(
   auxv: *const auxv,
 ) -> ();
 
-/// Arguments of `sock_recv`.
+/// Arguments of `sock_recv()`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct recv_in {
@@ -1399,7 +1399,7 @@ fn recv_in_layout_test_64() {
   }
 }
 
-/// Results of `sock_recv`.
+/// Results of `sock_recv()`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct recv_out {
@@ -1441,7 +1441,7 @@ fn recv_out_layout_test_64() {
   }
 }
 
-/// Arguments of `sock_send`.
+/// Arguments of `sock_send()`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct send_in {
@@ -1485,7 +1485,7 @@ fn send_in_layout_test_64() {
   }
 }
 
-/// Results of `sock_send`.
+/// Results of `sock_send()`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct send_out {
@@ -1527,12 +1527,12 @@ pub struct subscription {
   pub unused: u16,
   /// The type of the event to which to subscribe.
   ///
-  /// Currently, `eventtype.condvar`,
-  /// `eventtype.lock_rdlock`, and `eventtype.lock_wrlock`
+  /// Currently, `CONDVAR`,
+  /// `LOCK_RDLOCK`, and `LOCK_WRLOCK`
   /// must be provided as the first subscription and may
   /// only be followed by up to one other subscription,
-  /// having type `eventtype.clock` with
-  /// `subclockflags.abstime`.
+  /// having type `CLOCK` with
+  /// `ABSTIME`.
   pub type_: eventtype,
   pub union: subscription_union
 }
@@ -1680,7 +1680,7 @@ fn subscription_layout_test_64() {
 /// The Thread Control Block (TCB).
 ///
 /// After a thread begins execution (at program startup or when
-/// created through `thread_create`), the CPU's registers
+/// created through `thread_create()`), the CPU's registers
 /// controlling Thread-Local Storage (TLS) will already be
 /// initialized. They will point to an area only containing the
 /// TCB.
@@ -1880,7 +1880,7 @@ pub unsafe fn clock_time_get(clock_id_: clockid, precision_: timestamp, time_: &
 ///
 /// If an invocation of this system call causes all waiting
 /// threads to be woken up, the value of the condition variable
-/// is set to `condvar.has_no_waiters`. As long as the condition
+/// is set to `CONDVAR_HAS_NO_WAITERS`. As long as the condition
 /// variable is set to this value, it is not needed to invoke this
 /// system call.
 ///
@@ -2497,7 +2497,7 @@ pub unsafe fn file_unlink(fd_: fd, path_: &[u8], flags_: ulflags) -> errno {
 /// Unlocks a write-locked userspace lock.
 ///
 /// If a userspace lock is unlocked while having its
-/// `lock.kernel_managed` flag set, the lock cannot be unlocked in
+/// `LOCK_KERNEL_MANAGED` flag set, the lock cannot be unlocked in
 /// userspace directly. This system call needs to be performed
 /// instead, so that any waiting threads can be woken up.
 ///
@@ -2542,7 +2542,7 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// ## Inputs
 ///
 /// **addr**:
-/// If `mflags.fixed` is set, specifies to which
+/// If `FIXED` is set, specifies to which
 /// address the file region is mapped. Otherwise,
 /// the mapping is performed at an unused
 /// location.
@@ -2559,13 +2559,13 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// Memory mapping flags.
 ///
 /// **fd**:
-/// If `mflags.anon` is set, this argument must be
-/// `fd.map_anon_fd`. Otherwise, this argument
+/// If `ANON` is set, this argument must be
+/// `MAP_ANON_FD`. Otherwise, this argument
 /// specifies the file whose contents need to be
 /// mapped.
 ///
 /// **off**:
-/// If `mflags.anon` is set, this argument must be
+/// If `ANON` is set, this argument must be
 /// zero. Otherwise, this argument specifies the
 /// offset within the file at which the mapping
 /// starts.
@@ -2685,7 +2685,7 @@ pub unsafe fn proc_exec(fd_: fd, data_: &[u8], fds_: &[fd]) -> errno {
 /// **rval**:
 /// The exit code returned by the process. The
 /// exit code can be obtained by other processes
-/// through `event.proc_terminate.exitcode`.
+/// through `event.union.proc_terminate.exitcode`.
 #[inline]
 pub unsafe fn proc_exit(rval_: exitcode) -> ! {
   (cloudabi_syscalls.proc_exit)(rval_)
@@ -2696,7 +2696,7 @@ pub unsafe fn proc_exit(rval_: exitcode) -> ! {
 /// After forking, a new process shall be created, having only a
 /// copy of the calling thread. The parent process will obtain a
 /// process descriptor. When closed, the child process is
-/// automatically signaled with `signal.kill`.
+/// automatically signaled with `KILL`.
 ///
 /// ## Outputs
 ///
@@ -2704,7 +2704,7 @@ pub unsafe fn proc_exit(rval_: exitcode) -> ! {
 /// In the parent process: the file descriptor
 /// number of the process descriptor.
 ///
-/// In the child process: `fd.process_child`.
+/// In the child process: `PROCESS_CHILD`.
 ///
 /// **tid**:
 /// In the parent process: undefined.
@@ -2725,7 +2725,7 @@ pub unsafe fn proc_fork(fd_: &mut fd, tid_: &mut tid) -> errno {
 /// If the signal causes the process to terminate,
 /// its condition can be obtained by other
 /// processes through
-/// `event.proc_terminate.signal`.
+/// `event.union.proc_terminate.signal`.
 #[inline]
 pub unsafe fn proc_raise(sig_: signal) -> errno {
   (cloudabi_syscalls.proc_raise)(sig_)
