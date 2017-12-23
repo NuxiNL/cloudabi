@@ -20,6 +20,8 @@ abi = AbiParser().parse_abi_file(
     os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
 
+procs = []
+
 # Pipes output through clang-format to format the C code.
 def open_and_format(filename):
     proc = subprocess.Popen(
@@ -35,6 +37,7 @@ def open_and_format(filename):
         ],
         stdin=subprocess.PIPE,
         stdout=open(filename, 'w'))
+    procs.append(proc)
     return io.TextIOWrapper(proc.stdin, encoding='UTF-8')
 
 
@@ -203,3 +206,6 @@ with open('docs/cloudabi-rust.html', 'wb') as f:
     f.write(html)
     with open('parts/foot.html', 'rb') as p:
         f.write(p.read())
+
+for proc in procs:
+    proc.wait()
