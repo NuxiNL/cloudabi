@@ -218,8 +218,10 @@ class RustGenerator(Generator):
                         print('/// Used when `{}` is {}.'.format(
                             self.naming.fieldname(union.tag.name),
                             format_list('or',
-                                ['`{}`'.format(self.naming.valname(union.tag.type, v))
-                                    for v in x.tag_values])))
+                                ['[`{}`]{}'.format(
+                                    self.naming.valname(union.tag.type, v),
+                                    self.doc_link(union.tag.type, v))
+                                        for v in x.tag_values])))
                         if x.name is None:
                             assert(len(x.type.members) == 1)
                             m = x.type.members[0]
