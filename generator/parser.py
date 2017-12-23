@@ -288,8 +288,6 @@ class AbiParser:
             return PointerType(self.parse_type(abi, decl[1:]))
         elif decl[:1] == ['cptr']:
             return PointerType(self.parse_type(abi, decl[1:]), const=True)
-        elif decl[:1] == ['atomic']:
-            return AtomicType(self.parse_type(abi, decl[1:]))
         else:
             raise Exception('Invalid type: {}'.format(' '.join(decl)))
 

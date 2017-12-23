@@ -30,9 +30,6 @@ class RustNaming:
                 raise Exception('Unknown int type: {}'.format(type.name))
         elif isinstance(type, UserDefinedType):
             return type.name
-        elif isinstance(type, AtomicType):
-            # TODO: Update once rust has generic atomic types
-            return self.typename(type.target_type)
         elif isinstance(type, PointerType):
             if isinstance(type.target_type, FunctionType):
                 return self.typename(type.target_type)
@@ -149,9 +146,10 @@ class RustGenerator(Generator):
             if isinstance(type, OpaqueType):
                 print('#[repr(C)]')
                 print('#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]')
-                print('pub struct {}(pub {});'.format(
-                    self.naming.typename(type),
-                    self.naming.typename(type.int_type)))
+                int_type = self.naming.typename(type.int_type)
+                if isinstance(type, AtomicOpaqueType):
+                    int_type = 'Atomic' + self.naming.typename(type.int_type).capitalize()
+                print('pub struct {}(pub {});'.format(self.naming.typename(type), int_type))
                 const_format = 'pub const {name:{width}}: {type} = {type}({val:{val_format}});'
             else:
                 print('pub type {} = {};'.format(

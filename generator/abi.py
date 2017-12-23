@@ -62,6 +62,10 @@ class OpaqueType(IntLikeType):
     pass
 
 
+class AtomicOpaqueType(OpaqueType):
+    pass
+
+
 class EnumType(IntLikeType):
     pass
 
@@ -73,6 +77,7 @@ class FlagsType(IntLikeType):
 int_like_types = {
     'alias': AliasType,
     'opaque': OpaqueType,
+    'atomic_opaque': AtomicOpaqueType,
     'enum': EnumType,
     'flags': FlagsType
 }
@@ -94,12 +99,6 @@ class PointerType(Type):
 
 class OutputPointerType(PointerType):
     pass
-
-
-class AtomicType(Type):
-    def __init__(self, target_type):
-        super().__init__(None, layout=target_type.layout)
-        self.target_type = target_type
 
 
 class StructType(UserDefinedType):

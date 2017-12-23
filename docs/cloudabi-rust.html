@@ -1687,7 +1687,7 @@ this environment on all architectures.</p>
 </ul>
 
 
-<h4><a href="#condvar" name="condvar"></a><code>condvar</code> (<code>struct(u32)</code>)</h4>
+<h4><a href="#condvar" name="condvar"></a><code>condvar</code> (<code>struct(AtomicU32)</code>)</h4>
 
 <p>A userspace condition variable.</p>
 
@@ -2391,7 +2391,7 @@ file descriptors in ascending order.</p>
 
 <p>Used by <a href="#filestat"><code>filestat</code></a>.</p>
 
-<h4><a href="#lock" name="lock"></a><code>lock</code> (<code>struct(u32)</code>)</h4>
+<h4><a href="#lock" name="lock"></a><code>lock</code> (<code>struct(AtomicU32)</code>)</h4>
 
 <p>A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.</p>

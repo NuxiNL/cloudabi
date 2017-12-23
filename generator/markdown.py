@@ -104,6 +104,8 @@ class MarkdownRustNaming(MarkdownNaming, RustNaming):
             return '{} `enum`'.format(self.link(type.int_type))
         elif isinstance(type, AliasType):
             return '= {}'.format(self.link(type.int_type))
+        elif isinstance(type, AtomicOpaqueType):
+            return '`struct(Atomic{})`'.format(self.typename(type.int_type).capitalize())
         elif isinstance(type, OpaqueType):
             return '`struct({})`'.format(self.typename(type.int_type))
         elif isinstance(type, FlagsType):

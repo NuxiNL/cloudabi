@@ -211,7 +211,7 @@ system call.
 
 Inputs:
 
-- <a href="#condvar_signal.condvar" name="condvar_signal.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
+- <a href="#condvar_signal.condvar" name="condvar_signal.condvar"></a><code>_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
 
     The userspace condition variable that has
     waiting threads.
@@ -890,7 +890,7 @@ be upgraded to a write lock.
 
 Inputs:
 
-- <a href="#lock_unlock.lock" name="lock_unlock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+- <a href="#lock_unlock.lock" name="lock_unlock.lock"></a><code>_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
     The userspace lock that is locked for writing
     by the calling thread.
@@ -1210,7 +1210,7 @@ joining.
 
 Inputs:
 
-- <a href="#thread_exit.lock" name="thread_exit.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+- <a href="#thread_exit.lock" name="thread_exit.lock"></a><code>_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
     Userspace lock that is locked for writing by
     the calling thread.
@@ -2978,12 +2978,12 @@ Members:
 
     - <a href="#subscription.condvar" name="subscription.condvar"></a>**`condvar`**
 
-        - <a href="#subscription.condvar.condvar" name="subscription.condvar.condvar"></a><code>\_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
+        - <a href="#subscription.condvar.condvar" name="subscription.condvar.condvar"></a><code>_Atomic([cloudabi\_condvar\_t](#condvar)) *<strong>condvar</strong></code>
 
             The condition variable on
             which to wait to be woken up.
 
-        - <a href="#subscription.condvar.lock" name="subscription.condvar.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+        - <a href="#subscription.condvar.lock" name="subscription.condvar.lock"></a><code>_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
             The lock that will be
             released while waiting.
@@ -3022,7 +3022,7 @@ Members:
 
     - <a href="#subscription.lock" name="subscription.lock"></a>**`lock`**
 
-        - <a href="#subscription.lock.lock" name="subscription.lock.lock"></a><code>\_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
+        - <a href="#subscription.lock.lock" name="subscription.lock.lock"></a><code>_Atomic([cloudabi\_lock\_t](#lock)) *<strong>lock</strong></code>
 
             The lock that will be acquired
             for reading or writing.

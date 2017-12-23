@@ -14,6 +14,7 @@ syn match abiDocLink '\[[a-zA-Z0-9_.]\+\]' contained
 syn match abiDecl '^syscall\s'
 syn match abiDecl '^alias\s'
 syn match abiDecl '^opaque\s'
+syn match abiDecl '^atomic_opaque\s'
 syn match abiDecl '^enum\s'
 syn match abiDecl '^flags\s'
 syn match abiDecl '^function\s'

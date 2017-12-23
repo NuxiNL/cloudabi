@@ -234,7 +234,7 @@ pub enum clockid {
 /// A userspace condition variable.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
-pub struct condvar(pub u32);
+pub struct condvar(pub AtomicU32);
 /// The condition variable is in its initial state. There
 /// are no threads waiting to be woken up. If the
 /// condition variable has any other value, the kernel
@@ -585,7 +585,7 @@ pub type linkcount = u32;
 /// Linux futex or a FreeBSD umtx.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
-pub struct lock(pub u32);
+pub struct lock(pub AtomicU32);
 /// Value indicating that the lock is in its initial
 /// unlocked state.
 pub const LOCK_UNLOCKED      : lock = lock(0x00000000);

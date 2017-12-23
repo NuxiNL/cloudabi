@@ -189,7 +189,7 @@ enum uint32 clockid
 	4 thread_cputime_id
 		| The CPU-time clock associated with the current thread.
 
-opaque uint32 condvar
+atomic_opaque uint32 condvar
 	| A userspace condition variable.
 	0 has_no_waiters
 		| The condition variable is in its initial state. There
@@ -511,7 +511,7 @@ opaque uint64 inode
 alias uint32 linkcount
 	| Number of hard links to an inode.
 
-opaque uint32 lock
+atomic_opaque uint32 lock
 	| A userspace read-recursive readers-writer lock, similar to a
 	| Linux futex or a FreeBSD umtx.
 	0          unlocked
@@ -1144,10 +1144,10 @@ struct subscription
 					| relative.
 		condvar
 			struct condvar
-				ptr atomic condvar condvar
+				ptr condvar        condvar
 					| The condition variable on
 					| which to wait to be woken up.
-				ptr atomic lock    lock
+				ptr lock           lock
 					| The lock that will be
 					| released while waiting.
 					|
@@ -1172,7 +1172,7 @@ struct subscription
 					| trigger.
 		lock_rdlock lock_wrlock
 			struct lock
-				ptr atomic lock lock
+				ptr lock        lock
 					| The lock that will be acquired
 					| for reading or writing.
 				scope           lock_scope
@@ -1251,7 +1251,7 @@ syscall condvar_signal
 	| variable is set to this value, it is not needed to invoke this
 	| system call.
 	in
-		ptr atomic condvar condvar
+		ptr condvar        condvar
 			| The userspace condition variable that has
 			| waiting threads.
 		scope              scope
@@ -1673,7 +1673,7 @@ syscall lock_unlock
 	| progress. If the lock is acquired for reading, it must first
 	| be upgraded to a write lock.
 	in
-		ptr atomic lock lock
+		ptr lock        lock
 			| The userspace lock that is locked for writing
 			| by the calling thread.
 		scope           scope
@@ -1881,10 +1881,10 @@ syscall thread_exit
 	| after termination, which can be used to implement thread
 	| joining.
 	in
-		ptr atomic lock lock
+		ptr lock lock
 			| Userspace lock that is locked for writing by
 			| the calling thread.
-		scope           scope
+		scope    scope
 			| Whether the lock is stored in private or
 			| shared memory.
 	noreturn

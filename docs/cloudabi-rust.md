@@ -1437,7 +1437,7 @@ Possible values:
 
     The CPU-time clock associated with the current thread.
 
-#### <a href="#condvar" name="condvar"></a>`condvar` (`struct(u32)`)
+#### <a href="#condvar" name="condvar"></a>`condvar` (`struct(AtomicU32)`)
 
 A userspace condition variable.
 
@@ -2205,7 +2205,7 @@ Number of hard links to an inode.
 
 Used by [`filestat`](#filestat).
 
-#### <a href="#lock" name="lock"></a>`lock` (`struct(u32)`)
+#### <a href="#lock" name="lock"></a>`lock` (`struct(AtomicU32)`)
 
 A userspace read-recursive readers-writer lock, similar to a
 Linux futex or a FreeBSD umtx.

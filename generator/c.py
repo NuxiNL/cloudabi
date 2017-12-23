@@ -33,11 +33,6 @@ class CNaming:
             if self.md_prefix is not None and type.layout.machine_dep:
                 prefix = self.md_prefix
             return '{}{}_t'.format(prefix, type.name)
-        elif isinstance(type, AtomicType):
-            if self.c11:
-                return '_Atomic({})'.format(self.typename(type.target_type))
-            else:
-                return self.typename(type.target_type)
         elif isinstance(type, PointerType) or isinstance(type, ArrayType):
             return self.vardecl(type, '')
         else:
@@ -74,6 +69,8 @@ class CNaming:
                 name = '({})'.format(name)
             return self.vardecl(type.element_type, '{}[{}]'.format(
                 name, type.count))
+        elif self.c11 and isinstance(type, AtomicOpaqueType):
+            return '_Atomic({}) {}'.format(self.typename(type), name)
         else:
             return '{} {}'.format(self.typename(type), name)
 
@@ -119,8 +116,6 @@ class CGenerator(Generator):
                 return self.md_type
             elif isinstance(mtype, ArrayType):
                 return ArrayType(mtype.count, self.mi_type(mtype.element_type))
-            elif isinstance(mtype, AtomicType):
-                return AtomicType(self.mi_type(mtype.target_type))
         return mtype
 
     def syscall_params(self, syscall):
