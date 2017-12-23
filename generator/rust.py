@@ -13,11 +13,46 @@ from .rust_naming import *
 
 class RustGenerator(Generator):
 
+    def doc_link(self, *path):
+        if len(path) == 1 and isinstance(path[0], Syscall):
+            return '(fn.{}.html)'.format(path[0].name)
+        elif len(path) == 2 and isinstance(path[0], FlagsType) and isinstance(path[1], SpecialValue):
+            return '(struct.{}.html#associatedconstant.{})'.format(
+                    self.naming.typename(path[0]),
+                    self.naming.valname(path[0], path[1]))
+        elif len(path) == 2 and isinstance(path[0], EnumType) and isinstance(path[1], SpecialValue):
+            return '(enum.{}.html#variant.{})'.format(
+                    self.naming.typename(path[0]),
+                    self.naming.valname(path[0], path[1]))
+        elif len(path) == 2 and isinstance(path[0], OpaqueType) and isinstance(path[1], SpecialValue):
+            return '(constant.{}.html)'.format(
+                    self.naming.valname(path[0], path[1]))
+        elif len(path) == 1 and (
+                isinstance(path[0], StructType) or
+                isinstance(path[0], OpaqueType) or
+                isinstance(path[0], FlagsType)):
+            return '(struct.{}.html)'.format(self.naming.typename(path[0]))
+        elif len(path) == 2 and isinstance(path[0], StructType) and isinstance(path[1], StructMember):
+            return '(struct.{}.html#structfield.{})'.format(
+                    self.naming.typename(path[0]),
+                    self.naming.fieldname(path[1].name))
+        elif len(path) == 3 and (
+                isinstance(path[0], StructType) and
+                isinstance(path[1], VariantMember) and
+                isinstance(path[2], StructMember)):
+            return '(struct.{}_{}.html#structfield.{})'.format(
+                    self.naming.typename(path[0]),
+                    path[1].name,
+                    self.naming.fieldname(path[2].name))
+        else:
+            assert False
+
+
     def print_doc(self, abi, thing, indent = '', prefix = '///'):
         def make_link(match):
             path = abi.resolve_path(match.group(1))
             assert path is not None
-            return '`{}`'.format(MarkdownRustNaming().link_name(*path))
+            return '[`{}`]{}'.format(MarkdownRustNaming().link_name(*path), self.doc_link(*path))
         if hasattr(thing, 'doc'):
             for line in thing.doc.splitlines():
                 line = re.sub(r'\[([\w.]+)\](?!\()', make_link, line)

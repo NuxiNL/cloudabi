@@ -139,15 +139,15 @@ pub enum advice {
   #[doc(hidden)] _NonExhaustive = -1 as isize as u8,
 }
 
-/// Enumeration describing the kind of value stored in `auxv`.
+/// Enumeration describing the kind of value stored in [`auxv`](struct.auxv.html).
 #[repr(u32)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum auxtype {
   /// Base address of the binary argument data provided to
-  /// `proc_exec()`.
+  /// [`proc_exec()`](fn.proc_exec.html).
   ARGDATA      = 256,
   /// Length of the binary argument data provided to
-  /// `proc_exec()`.
+  /// [`proc_exec()`](fn.proc_exec.html).
   ARGDATALEN   = 257,
   /// Base address at which the executable is placed in
   /// memory.
@@ -200,7 +200,7 @@ pub enum auxtype {
   /// system provides native support for CloudABI executables,
   /// it may still implement partial userspace
   /// implementations of these system calls to improve
-  /// performance (e.g., `clock_time_get()`). It also provides
+  /// performance (e.g., [`clock_time_get()`](fn.clock_time_get.html)). It also provides
   /// a more dynamic way of adding, removing or replacing
   /// system calls.
   SYSINFO_EHDR = 262,
@@ -242,7 +242,7 @@ pub struct condvar(pub u32);
 pub const CONDVAR_HAS_NO_WAITERS: condvar = condvar(0);
 
 /// Identifier for a device containing a file system. Can be used
-/// in combination with `inode` to uniquely identify a file on the
+/// in combination with [`inode`](struct.inode.html) to uniquely identify a file on the
 /// local system.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
@@ -421,7 +421,7 @@ pub enum errno {
 
 bitflags! {
   /// The state of the file descriptor subscribed to with
-  /// `FD_READ` or `FD_WRITE`.
+  /// [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
   pub struct eventrwflags: u16 {
     /// The peer of this socket has closed or disconnected.
     const HANGUP = 0x0001;
@@ -432,29 +432,29 @@ bitflags! {
 #[repr(u8)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum eventtype {
-  /// The time value of clock `subscription.union.clock.clock_id`
-  /// has reached timestamp `subscription.union.clock.timeout`.
+  /// The time value of clock [`subscription.union.clock.clock_id`](struct.subscription_clock.html#structfield.clock_id)
+  /// has reached timestamp [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout).
   CLOCK          = 1,
-  /// Condition variable `subscription.union.condvar.condvar` has
-  /// been woken up and `subscription.union.condvar.lock` has been
+  /// Condition variable [`subscription.union.condvar.condvar`](struct.subscription_condvar.html#structfield.condvar) has
+  /// been woken up and [`subscription.union.condvar.lock`](struct.subscription_condvar.html#structfield.lock) has been
   /// acquired for writing.
   CONDVAR        = 2,
-  /// File descriptor `subscription.union.fd_readwrite.fd` has
+  /// File descriptor [`subscription.union.fd_readwrite.fd`](struct.subscription_fd_readwrite.html#structfield.fd) has
   /// data available for reading. This event always triggers
   /// for regular files.
   FD_READ        = 3,
-  /// File descriptor `subscription.union.fd_readwrite.fd` has
+  /// File descriptor [`subscription.union.fd_readwrite.fd`](struct.subscription_fd_readwrite.html#structfield.fd) has
   /// capacity available for writing. This event always
   /// triggers for regular files.
   FD_WRITE       = 4,
-  /// Lock `subscription.union.lock.lock` has been acquired for
+  /// Lock [`subscription.union.lock.lock`](struct.subscription_lock.html#structfield.lock) has been acquired for
   /// reading.
   LOCK_RDLOCK    = 5,
-  /// Lock `subscription.union.lock.lock` has been acquired for
+  /// Lock [`subscription.union.lock.lock`](struct.subscription_lock.html#structfield.lock) has been acquired for
   /// writing.
   LOCK_WRLOCK    = 6,
   /// The process associated with process descriptor
-  /// `subscription.union.proc_terminate.fd` has terminated.
+  /// [`subscription.union.proc_terminate.fd`](struct.subscription_proc_terminate.html#structfield.fd) has terminated.
   PROC_TERMINATE = 7,
   #[doc(hidden)] _NonExhaustive = -1 as isize as u8,
 }
@@ -471,9 +471,9 @@ pub type exitcode = u32;
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub struct fd(pub u32);
-/// Returned to the child process by `proc_fork()`.
+/// Returned to the child process by [`proc_fork()`](fn.proc_fork.html).
 pub const PROCESS_CHILD: fd = fd(0xffffffff);
-/// Passed to `mem_map()` when creating a mapping to
+/// Passed to [`mem_map()`](fn.mem_map.html) when creating a mapping to
 /// anonymous memory.
 pub const MAP_ANON_FD  : fd = fd(0xffffffff);
 
@@ -503,11 +503,11 @@ bitflags! {
   /// Which file descriptor attributes to adjust.
   pub struct fdsflags: u16 {
     /// Adjust the file descriptor flags stored in
-    /// `fdstat.fs_flags`.
+    /// [`fdstat.fs_flags`](struct.fdstat.html#structfield.fs_flags).
     const FLAGS  = 0x0001;
     /// Restrict the rights of the file descriptor to the
-    /// rights stored in `fdstat.fs_rights_base` and
-    /// `fdstat.fs_rights_inheriting`.
+    /// rights stored in [`fdstat.fs_rights_base`](struct.fdstat.html#structfield.fs_rights_base) and
+    /// [`fdstat.fs_rights_inheriting`](struct.fdstat.html#structfield.fs_rights_inheriting).
     const RIGHTS = 0x0002;
   }
 }
@@ -556,19 +556,19 @@ bitflags! {
   /// Which file attributes to adjust.
   pub struct fsflags: u16 {
     /// Adjust the last data access timestamp to the value
-    /// stored in `filestat.st_atim`.
+    /// stored in [`filestat.st_atim`](struct.filestat.html#structfield.st_atim).
     const ATIM     = 0x0001;
     /// Adjust the last data access timestamp to the time
-    /// of clock `REALTIME`.
+    /// of clock [`REALTIME`](enum.clockid.html#variant.REALTIME).
     const ATIM_NOW = 0x0002;
     /// Adjust the last data modification timestamp to the
-    /// value stored in `filestat.st_mtim`.
+    /// value stored in [`filestat.st_mtim`](struct.filestat.html#structfield.st_mtim).
     const MTIM     = 0x0004;
     /// Adjust the last data modification timestamp to the
-    /// time of clock `REALTIME`.
+    /// time of clock [`REALTIME`](enum.clockid.html#variant.REALTIME).
     const MTIM_NOW = 0x0008;
     /// Truncate or extend the file to the size stored in
-    /// `filestat.st_size`.
+    /// [`filestat.st_size`](struct.filestat.html#structfield.st_size).
     const SIZE     = 0x0010;
   }
 }
@@ -628,7 +628,7 @@ bitflags! {
   pub struct mflags: u8 {
     /// Instead of mapping the contents of the file provided,
     /// create a mapping to anonymous memory. The file
-    /// descriptor argument must be set to `MAP_ANON_FD`,
+    /// descriptor argument must be set to [`MAP_ANON_FD`](constant.MAP_ANON_FD.html),
     /// and the offset must be set to zero.
     const ANON    = 0x01;
     /// Require that the mapping is performed at the base
@@ -673,7 +673,7 @@ bitflags! {
 pub type nthreads = u32;
 
 bitflags! {
-  /// Open flags used by `file_open()`.
+  /// Open flags used by [`file_open()`](fn.file_open.html).
   pub struct oflags: u16 {
     /// Create file if it does not exist.
     const CREAT     = 0x0001;
@@ -687,7 +687,7 @@ bitflags! {
 }
 
 bitflags! {
-  /// Flags provided to `sock_recv()`.
+  /// Flags provided to [`sock_recv()`](fn.sock_recv.html).
   pub struct riflags: u16 {
     /// Returns the message without removing it from the
     /// socket's receive queue.
@@ -702,124 +702,124 @@ bitflags! {
   /// File descriptor rights, determining which actions may be
   /// performed.
   pub struct rights: u64 {
-    /// The right to invoke `fd_datasync()`.
+    /// The right to invoke [`fd_datasync()`](fn.fd_datasync.html).
     ///
-    /// If `FILE_OPEN` is set, includes the right to
-    /// invoke `file_open()` with `DSYNC`.
+    /// If [`FILE_OPEN`](struct.rights.html#associatedconstant.FILE_OPEN) is set, includes the right to
+    /// invoke [`file_open()`](fn.file_open.html) with [`DSYNC`](struct.fdflags.html#associatedconstant.DSYNC).
     const FD_DATASYNC           = 0x0000000000000001;
-    /// The right to invoke `fd_read()` and `sock_recv()`.
+    /// The right to invoke [`fd_read()`](fn.fd_read.html) and [`sock_recv()`](fn.sock_recv.html).
     ///
-    /// If `MEM_MAP` is set, includes the right to
-    /// invoke `mem_map()` with memory protection option
-    /// `READ`.
+    /// If [`MEM_MAP`](struct.rights.html#associatedconstant.MEM_MAP) is set, includes the right to
+    /// invoke [`mem_map()`](fn.mem_map.html) with memory protection option
+    /// [`READ`](struct.mprot.html#associatedconstant.READ).
     ///
-    /// If `FD_SEEK` is set, includes the right to invoke
-    /// `fd_pread()`.
+    /// If [`FD_SEEK`](struct.rights.html#associatedconstant.FD_SEEK) is set, includes the right to invoke
+    /// [`fd_pread()`](fn.fd_pread.html).
     const FD_READ               = 0x0000000000000002;
-    /// The right to invoke `fd_seek()`. This flag implies
-    /// `FD_TELL`.
+    /// The right to invoke [`fd_seek()`](fn.fd_seek.html). This flag implies
+    /// [`FD_TELL`](struct.rights.html#associatedconstant.FD_TELL).
     const FD_SEEK               = 0x0000000000000004;
-    /// The right to invoke `fd_stat_put()` with
-    /// `FLAGS`.
+    /// The right to invoke [`fd_stat_put()`](fn.fd_stat_put.html) with
+    /// [`FLAGS`](struct.fdsflags.html#associatedconstant.FLAGS).
     const FD_STAT_PUT_FLAGS     = 0x0000000000000008;
-    /// The right to invoke `fd_sync()`.
+    /// The right to invoke [`fd_sync()`](fn.fd_sync.html).
     ///
-    /// If `FILE_OPEN` is set, includes the right to
-    /// invoke `file_open()` with `RSYNC` and
-    /// `DSYNC`.
+    /// If [`FILE_OPEN`](struct.rights.html#associatedconstant.FILE_OPEN) is set, includes the right to
+    /// invoke [`file_open()`](fn.file_open.html) with [`RSYNC`](struct.fdflags.html#associatedconstant.RSYNC) and
+    /// [`DSYNC`](struct.fdflags.html#associatedconstant.DSYNC).
     const FD_SYNC               = 0x0000000000000010;
-    /// The right to invoke `fd_seek()` in such a way that the
-    /// file offset remains unaltered (i.e., `CUR` with
+    /// The right to invoke [`fd_seek()`](fn.fd_seek.html) in such a way that the
+    /// file offset remains unaltered (i.e., [`CUR`](enum.whence.html#variant.CUR) with
     /// offset zero).
     const FD_TELL               = 0x0000000000000020;
-    /// The right to invoke `fd_write()` and `sock_send()`.
+    /// The right to invoke [`fd_write()`](fn.fd_write.html) and [`sock_send()`](fn.sock_send.html).
     ///
-    /// If `MEM_MAP` is set, includes the right to
-    /// invoke `mem_map()` with memory protection option
-    /// `WRITE`.
+    /// If [`MEM_MAP`](struct.rights.html#associatedconstant.MEM_MAP) is set, includes the right to
+    /// invoke [`mem_map()`](fn.mem_map.html) with memory protection option
+    /// [`WRITE`](struct.mprot.html#associatedconstant.WRITE).
     ///
-    /// If `FD_SEEK` is set, includes the right to
-    /// invoke `fd_pwrite()`.
+    /// If [`FD_SEEK`](struct.rights.html#associatedconstant.FD_SEEK) is set, includes the right to
+    /// invoke [`fd_pwrite()`](fn.fd_pwrite.html).
     const FD_WRITE              = 0x0000000000000040;
-    /// The right to invoke `file_advise()`.
+    /// The right to invoke [`file_advise()`](fn.file_advise.html).
     const FILE_ADVISE           = 0x0000000000000080;
-    /// The right to invoke `file_allocate()`.
+    /// The right to invoke [`file_allocate()`](fn.file_allocate.html).
     const FILE_ALLOCATE         = 0x0000000000000100;
-    /// The right to invoke `file_create()` with
-    /// `DIRECTORY`.
+    /// The right to invoke [`file_create()`](fn.file_create.html) with
+    /// [`DIRECTORY`](enum.filetype.html#variant.DIRECTORY).
     const FILE_CREATE_DIRECTORY = 0x0000000000000200;
-    /// If `FILE_OPEN` is set, the right to invoke
-    /// `file_open()` with `CREAT`.
+    /// If [`FILE_OPEN`](struct.rights.html#associatedconstant.FILE_OPEN) is set, the right to invoke
+    /// [`file_open()`](fn.file_open.html) with [`CREAT`](struct.oflags.html#associatedconstant.CREAT).
     const FILE_CREATE_FILE      = 0x0000000000000400;
-    /// The right to invoke `file_link()` with the file
+    /// The right to invoke [`file_link()`](fn.file_link.html) with the file
     /// descriptor as the source directory.
     const FILE_LINK_SOURCE      = 0x0000000000001000;
-    /// The right to invoke `file_link()` with the file
+    /// The right to invoke [`file_link()`](fn.file_link.html) with the file
     /// descriptor as the target directory.
     const FILE_LINK_TARGET      = 0x0000000000002000;
-    /// The right to invoke `file_open()`.
+    /// The right to invoke [`file_open()`](fn.file_open.html).
     const FILE_OPEN             = 0x0000000000004000;
-    /// The right to invoke `file_readdir()`.
+    /// The right to invoke [`file_readdir()`](fn.file_readdir.html).
     const FILE_READDIR          = 0x0000000000008000;
-    /// The right to invoke `file_readlink()`.
+    /// The right to invoke [`file_readlink()`](fn.file_readlink.html).
     const FILE_READLINK         = 0x0000000000010000;
-    /// The right to invoke `file_rename()` with the file
+    /// The right to invoke [`file_rename()`](fn.file_rename.html) with the file
     /// descriptor as the source directory.
     const FILE_RENAME_SOURCE    = 0x0000000000020000;
-    /// The right to invoke `file_rename()` with the file
+    /// The right to invoke [`file_rename()`](fn.file_rename.html) with the file
     /// descriptor as the target directory.
     const FILE_RENAME_TARGET    = 0x0000000000040000;
-    /// The right to invoke `file_stat_fget()`.
+    /// The right to invoke [`file_stat_fget()`](fn.file_stat_fget.html).
     const FILE_STAT_FGET        = 0x0000000000080000;
-    /// The right to invoke `file_stat_fput()` with
-    /// `SIZE`.
+    /// The right to invoke [`file_stat_fput()`](fn.file_stat_fput.html) with
+    /// [`SIZE`](struct.fsflags.html#associatedconstant.SIZE).
     ///
-    /// If `FILE_OPEN` is set, includes the right to
-    /// invoke `file_open()` with `TRUNC`.
+    /// If [`FILE_OPEN`](struct.rights.html#associatedconstant.FILE_OPEN) is set, includes the right to
+    /// invoke [`file_open()`](fn.file_open.html) with [`TRUNC`](struct.oflags.html#associatedconstant.TRUNC).
     const FILE_STAT_FPUT_SIZE   = 0x0000000000100000;
-    /// The right to invoke `file_stat_fput()` with
-    /// `ATIM`, `ATIM_NOW`, `MTIM`,
-    /// and `MTIM_NOW`.
+    /// The right to invoke [`file_stat_fput()`](fn.file_stat_fput.html) with
+    /// [`ATIM`](struct.fsflags.html#associatedconstant.ATIM), [`ATIM_NOW`](struct.fsflags.html#associatedconstant.ATIM_NOW), [`MTIM`](struct.fsflags.html#associatedconstant.MTIM),
+    /// and [`MTIM_NOW`](struct.fsflags.html#associatedconstant.MTIM_NOW).
     const FILE_STAT_FPUT_TIMES  = 0x0000000000200000;
-    /// The right to invoke `file_stat_get()`.
+    /// The right to invoke [`file_stat_get()`](fn.file_stat_get.html).
     const FILE_STAT_GET         = 0x0000000000400000;
-    /// The right to invoke `file_stat_put()` with
-    /// `ATIM`, `ATIM_NOW`, `MTIM`,
-    /// and `MTIM_NOW`.
+    /// The right to invoke [`file_stat_put()`](fn.file_stat_put.html) with
+    /// [`ATIM`](struct.fsflags.html#associatedconstant.ATIM), [`ATIM_NOW`](struct.fsflags.html#associatedconstant.ATIM_NOW), [`MTIM`](struct.fsflags.html#associatedconstant.MTIM),
+    /// and [`MTIM_NOW`](struct.fsflags.html#associatedconstant.MTIM_NOW).
     const FILE_STAT_PUT_TIMES   = 0x0000000000800000;
-    /// The right to invoke `file_symlink()`.
+    /// The right to invoke [`file_symlink()`](fn.file_symlink.html).
     const FILE_SYMLINK          = 0x0000000001000000;
-    /// The right to invoke `file_unlink()`.
+    /// The right to invoke [`file_unlink()`](fn.file_unlink.html).
     const FILE_UNLINK           = 0x0000000002000000;
-    /// The right to invoke `mem_map()` with `mprot` set to
+    /// The right to invoke [`mem_map()`](fn.mem_map.html) with [`mprot`](struct.mprot.html) set to
     /// zero.
     const MEM_MAP               = 0x0000000004000000;
-    /// If `MEM_MAP` is set, the right to invoke
-    /// `mem_map()` with `EXEC`.
+    /// If [`MEM_MAP`](struct.rights.html#associatedconstant.MEM_MAP) is set, the right to invoke
+    /// [`mem_map()`](fn.mem_map.html) with [`EXEC`](struct.mprot.html#associatedconstant.EXEC).
     const MEM_MAP_EXEC          = 0x0000000008000000;
-    /// If `FD_READ` is set, includes the right to
-    /// invoke `poll()` to subscribe to `FD_READ`.
+    /// If [`FD_READ`](struct.rights.html#associatedconstant.FD_READ) is set, includes the right to
+    /// invoke [`poll()`](fn.poll.html) to subscribe to [`FD_READ`](enum.eventtype.html#variant.FD_READ).
     ///
-    /// If `FD_WRITE` is set, includes the right to
-    /// invoke `poll()` to subscribe to `FD_WRITE`.
+    /// If [`FD_WRITE`](struct.rights.html#associatedconstant.FD_WRITE) is set, includes the right to
+    /// invoke [`poll()`](fn.poll.html) to subscribe to [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
     const POLL_FD_READWRITE     = 0x0000000010000000;
-    /// The right to invoke `poll()` to subscribe to
-    /// `PROC_TERMINATE`.
+    /// The right to invoke [`poll()`](fn.poll.html) to subscribe to
+    /// [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
     const POLL_PROC_TERMINATE   = 0x0000000040000000;
-    /// The right to invoke `proc_exec()`.
+    /// The right to invoke [`proc_exec()`](fn.proc_exec.html).
     const PROC_EXEC             = 0x0000000100000000;
-    /// The right to invoke `sock_shutdown()`.
+    /// The right to invoke [`sock_shutdown()`](fn.sock_shutdown.html).
     const SOCK_SHUTDOWN         = 0x0000008000000000;
   }
 }
 
 bitflags! {
-  /// Flags returned by `sock_recv()`.
+  /// Flags returned by [`sock_recv()`](fn.sock_recv.html).
   pub struct roflags: u16 {
-    /// Returned by `sock_recv()`: List of file descriptors
+    /// Returned by [`sock_recv()`](fn.sock_recv.html): List of file descriptors
     /// has been truncated.
     const FDS_TRUNCATED  = 0x0001;
-    /// Returned by `sock_recv()`: Message data has been
+    /// Returned by [`sock_recv()`](fn.sock_recv.html): Message data has been
     /// truncated.
     const DATA_TRUNCATED = 0x0008;
   }
@@ -848,7 +848,7 @@ bitflags! {
 }
 
 bitflags! {
-  /// Flags provided to `sock_send()`. As there are currently no flags
+  /// Flags provided to [`sock_send()`](fn.sock_send.html). As there are currently no flags
   /// defined, it must be set to zero.
   pub struct siflags: u16 {
     const DEFAULT = 0;
@@ -968,15 +968,15 @@ pub enum signal {
 
 bitflags! {
   /// Flags determining how the timestamp provided in
-  /// `subscription.union.clock.timeout` should be interpreted.
+  /// [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout) should be interpreted.
   pub struct subclockflags: u16 {
     /// If set, treat the timestamp provided in
-    /// `subscription.union.clock.timeout` as an absolute timestamp
-    /// of clock `subscription.union.clock.clock_id`.
+    /// [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout) as an absolute timestamp
+    /// of clock [`subscription.union.clock.clock_id`](struct.subscription_clock.html#structfield.clock_id).
     ///
     /// If clear, treat the timestamp provided in
-    /// `subscription.union.clock.timeout` relative to the current
-    /// time value of clock `subscription.union.clock.clock_id`.
+    /// [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout) relative to the current
+    /// time value of clock [`subscription.union.clock.clock_id`](struct.subscription_clock.html#structfield.clock_id).
     const ABSTIME = 0x0001;
   }
 }
@@ -998,8 +998,8 @@ bitflags! {
 /// written it into locks when acquiring them for writing. It is
 /// not advised to use these identifiers for any other purpose.
 ///
-/// As the thread identifier is also stored in `lock` when
-/// `LOCK_WRLOCKED` is set, the top two bits of the thread
+/// As the thread identifier is also stored in [`lock`](struct.lock.html) when
+/// [`LOCK_WRLOCKED`](constant.LOCK_WRLOCKED.html) is set, the top two bits of the thread
 /// must always be set to zero.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
@@ -1042,7 +1042,7 @@ pub enum whence {
 /// provided to the process on startup. Unlike structures, it is
 /// extensible, as it is possible to add new records later on.
 /// The auxiliary vector is always terminated by an entry having
-/// type `NULL`.
+/// type [`NULL`](enum.auxtype.html#variant.NULL).
 ///
 /// The auxiliary vector is part of the x86-64 ABI, but is used by
 /// this environment on all architectures.
@@ -1158,7 +1158,7 @@ fn dirent_layout_test() {
 #[derive(Copy, Clone)]
 pub struct event {
   /// User-provided value that got attached to
-  /// `subscription.userdata`.
+  /// [`subscription.userdata`](struct.subscription.html#structfield.userdata).
   pub userdata: userdata,
   /// If non-zero, an error that occurred while processing
   /// the subscription request.
@@ -1234,7 +1234,7 @@ pub struct fdstat {
   pub fs_rights_base: rights,
   /// Maximum set of rights that can be installed on new
   /// file descriptors that are created through this file
-  /// descriptor, e.g., through `file_open()`.
+  /// descriptor, e.g., through [`file_open()`](fn.file_open.html).
   pub fs_rights_inheriting: rights,
 }
 #[test]
@@ -1350,12 +1350,12 @@ fn lookup_layout_test() {
 /// Entry point for a process (`_start`).
 ///
 /// **auxv**:
-/// The auxiliary vector. See `auxv`.
+/// The auxiliary vector. See [`auxv`](struct.auxv.html).
 pub type processentry = unsafe extern "C" fn(
   auxv: *const auxv,
 ) -> ();
 
-/// Arguments of `sock_recv()`.
+/// Arguments of [`sock_recv()`](fn.sock_recv.html).
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct recv_in {
@@ -1399,13 +1399,13 @@ fn recv_in_layout_test_64() {
   }
 }
 
-/// Results of `sock_recv()`.
+/// Results of [`sock_recv()`](fn.sock_recv.html).
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct recv_out {
-  /// Number of bytes stored in `recv_in.ri_data`.
+  /// Number of bytes stored in [`recv_in.ri_data`](struct.recv_in.html#structfield.ri_data).
   pub ro_datalen: usize,
-  /// Number of file descriptors stored in `recv_in.ri_fds`.
+  /// Number of file descriptors stored in [`recv_in.ri_fds`](struct.recv_in.html#structfield.ri_fds).
   pub ro_fdslen: usize,
   /// Fields that were used by previous implementations.
   pub ro_unused: [u8; 40],
@@ -1441,7 +1441,7 @@ fn recv_out_layout_test_64() {
   }
 }
 
-/// Arguments of `sock_send()`.
+/// Arguments of [`sock_send()`](fn.sock_send.html).
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct send_in {
@@ -1485,7 +1485,7 @@ fn send_in_layout_test_64() {
   }
 }
 
-/// Results of `sock_send()`.
+/// Results of [`sock_send()`](fn.sock_send.html).
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct send_out {
@@ -1521,18 +1521,18 @@ fn send_out_layout_test_64() {
 pub struct subscription {
   /// User-provided value that is attached to the
   /// subscription in the kernel and returned through
-  /// `event.userdata`.
+  /// [`event.userdata`](struct.event.html#structfield.userdata).
   pub userdata: userdata,
   /// Used by previous implementations. Ignored.
   pub unused: u16,
   /// The type of the event to which to subscribe.
   ///
-  /// Currently, `CONDVAR`,
-  /// `LOCK_RDLOCK`, and `LOCK_WRLOCK`
+  /// Currently, [`CONDVAR`](enum.eventtype.html#variant.CONDVAR),
+  /// [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK), and [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK)
   /// must be provided as the first subscription and may
   /// only be followed by up to one other subscription,
-  /// having type `CLOCK` with
-  /// `ABSTIME`.
+  /// having type [`CLOCK`](enum.eventtype.html#variant.CLOCK) with
+  /// [`ABSTIME`](struct.subclockflags.html#associatedconstant.ABSTIME).
   pub type_: eventtype,
   pub union: subscription_union
 }
@@ -1680,7 +1680,7 @@ fn subscription_layout_test_64() {
 /// The Thread Control Block (TCB).
 ///
 /// After a thread begins execution (at program startup or when
-/// created through `thread_create()`), the CPU's registers
+/// created through [`thread_create()`](fn.thread_create.html)), the CPU's registers
 /// controlling Thread-Local Storage (TLS) will already be
 /// initialized. They will point to an area only containing the
 /// TCB.
@@ -1733,7 +1733,7 @@ fn tcb_layout_test_64() {
 ///
 /// **aux**:
 /// Copy of the value stored in
-/// `threadattr.argument`.
+/// [`threadattr.argument`](struct.threadattr.html#structfield.argument).
 pub type threadentry = unsafe extern "C" fn(
   tid: tid,
   aux: *mut (),
@@ -1880,7 +1880,7 @@ pub unsafe fn clock_time_get(clock_id_: clockid, precision_: timestamp, time_: &
 ///
 /// If an invocation of this system call causes all waiting
 /// threads to be woken up, the value of the condition variable
-/// is set to `CONDVAR_HAS_NO_WAITERS`. As long as the condition
+/// is set to [`CONDVAR_HAS_NO_WAITERS`](constant.CONDVAR_HAS_NO_WAITERS.html). As long as the condition
 /// variable is set to this value, it is not needed to invoke this
 /// system call.
 ///
@@ -2267,18 +2267,18 @@ pub unsafe fn file_link(fd1_: lookup, path1_: &[u8], fd2_: fd, path2_: &[u8]) ->
 /// The method at which the file should be opened.
 ///
 /// **fds**:
-/// `fdstat.fs_rights_base` and
-/// `fdstat.fs_rights_inheriting` specify the
+/// [`fdstat.fs_rights_base`](struct.fdstat.html#structfield.fs_rights_base) and
+/// [`fdstat.fs_rights_inheriting`](struct.fdstat.html#structfield.fs_rights_inheriting) specify the
 /// initial rights of the newly created file
 /// descriptor. The operating system is allowed to
 /// return a file descriptor with fewer rights
 /// than specified, if and only if those rights do
 /// not apply to the type of file being opened.
 ///
-/// `fdstat.fs_flags` specifies the initial flags
+/// [`fdstat.fs_flags`](struct.fdstat.html#structfield.fs_flags) specifies the initial flags
 /// of the file descriptor.
 ///
-/// `fdstat.fs_filetype` is ignored.
+/// [`fdstat.fs_filetype`](struct.fdstat.html#structfield.fs_filetype) is ignored.
 ///
 /// ## Outputs
 ///
@@ -2294,7 +2294,7 @@ pub unsafe fn file_open(dirfd_: lookup, path_: &[u8], oflags_: oflags, fds_: *co
 ///
 /// When successful, the contents of the output buffer consist of
 /// a sequence of directory entries. Each directory entry consists
-/// of a `dirent` object, followed by `dirent.d_namlen` bytes
+/// of a [`dirent`](struct.dirent.html) object, followed by [`dirent.d_namlen`](struct.dirent.html#structfield.d_namlen) bytes
 /// holding the name of the directory entry.
 ///
 /// This system call fills the output buffer as much as possible,
@@ -2497,7 +2497,7 @@ pub unsafe fn file_unlink(fd_: fd, path_: &[u8], flags_: ulflags) -> errno {
 /// Unlocks a write-locked userspace lock.
 ///
 /// If a userspace lock is unlocked while having its
-/// `LOCK_KERNEL_MANAGED` flag set, the lock cannot be unlocked in
+/// [`LOCK_KERNEL_MANAGED`](constant.LOCK_KERNEL_MANAGED.html) flag set, the lock cannot be unlocked in
 /// userspace directly. This system call needs to be performed
 /// instead, so that any waiting threads can be woken up.
 ///
@@ -2542,7 +2542,7 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// ## Inputs
 ///
 /// **addr**:
-/// If `FIXED` is set, specifies to which
+/// If [`FIXED`](struct.mflags.html#associatedconstant.FIXED) is set, specifies to which
 /// address the file region is mapped. Otherwise,
 /// the mapping is performed at an unused
 /// location.
@@ -2559,13 +2559,13 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// Memory mapping flags.
 ///
 /// **fd**:
-/// If `ANON` is set, this argument must be
-/// `MAP_ANON_FD`. Otherwise, this argument
+/// If [`ANON`](struct.mflags.html#associatedconstant.ANON) is set, this argument must be
+/// [`MAP_ANON_FD`](constant.MAP_ANON_FD.html). Otherwise, this argument
 /// specifies the file whose contents need to be
 /// mapped.
 ///
 /// **off**:
-/// If `ANON` is set, this argument must be
+/// If [`ANON`](struct.mflags.html#associatedconstant.ANON) is set, this argument must be
 /// zero. Otherwise, this argument specifies the
 /// offset within the file at which the mapping
 /// starts.
@@ -2685,7 +2685,7 @@ pub unsafe fn proc_exec(fd_: fd, data_: &[u8], fds_: &[fd]) -> errno {
 /// **rval**:
 /// The exit code returned by the process. The
 /// exit code can be obtained by other processes
-/// through `event.union.proc_terminate.exitcode`.
+/// through [`event.union.proc_terminate.exitcode`](struct.event_proc_terminate.html#structfield.exitcode).
 #[inline]
 pub unsafe fn proc_exit(rval_: exitcode) -> ! {
   (cloudabi_syscalls.proc_exit)(rval_)
@@ -2696,7 +2696,7 @@ pub unsafe fn proc_exit(rval_: exitcode) -> ! {
 /// After forking, a new process shall be created, having only a
 /// copy of the calling thread. The parent process will obtain a
 /// process descriptor. When closed, the child process is
-/// automatically signaled with `KILL`.
+/// automatically signaled with [`KILL`](enum.signal.html#variant.KILL).
 ///
 /// ## Outputs
 ///
@@ -2704,7 +2704,7 @@ pub unsafe fn proc_exit(rval_: exitcode) -> ! {
 /// In the parent process: the file descriptor
 /// number of the process descriptor.
 ///
-/// In the child process: `PROCESS_CHILD`.
+/// In the child process: [`PROCESS_CHILD`](constant.PROCESS_CHILD.html).
 ///
 /// **tid**:
 /// In the parent process: undefined.
@@ -2725,7 +2725,7 @@ pub unsafe fn proc_fork(fd_: &mut fd, tid_: &mut tid) -> errno {
 /// If the signal causes the process to terminate,
 /// its condition can be obtained by other
 /// processes through
-/// `event.union.proc_terminate.signal`.
+/// [`event.union.proc_terminate.signal`](struct.event_proc_terminate.html#structfield.signal).
 #[inline]
 pub unsafe fn proc_raise(sig_: signal) -> errno {
   (cloudabi_syscalls.proc_raise)(sig_)
