@@ -215,7 +215,7 @@ class RustGenerator(Generator):
                     print('#[derive(Copy, Clone)]')
                     print('pub union {} {{'.format(name))
                     for x in union.members:
-                        print('/// Used when `{}` is {}.'.format(
+                        print('  /// Used when `{}` is {}.'.format(
                             self.naming.fieldname(union.tag.name),
                             format_list('or',
                                 ['[`{}`]{}'.format(
