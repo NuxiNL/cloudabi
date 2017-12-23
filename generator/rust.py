@@ -95,6 +95,7 @@ class RustGenerator(Generator):
         print('//!')
         self.print_doc(abi, '', '//!')
         print()
+        print('#![no_std]')
         print('#![allow(non_camel_case_types)]')
         print('#[macro_use]')
         print('extern crate bitflags;')
