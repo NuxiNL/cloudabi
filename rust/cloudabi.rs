@@ -1839,13 +1839,11 @@ extern "C" { static cloudabi_syscalls: syscalls; }
 
 /// Obtains the resolution of a clock.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **clock_id**:
 /// The clock for which the resolution needs to be
 /// returned.
-///
-/// ## Outputs
 ///
 /// **resolution**:
 /// The resolution of the clock.
@@ -1856,7 +1854,7 @@ pub unsafe fn clock_res_get(clock_id_: clockid, resolution_: &mut timestamp) -> 
 
 /// Obtains the time value of a clock.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **clock_id**:
 /// The clock for which the time needs to be
@@ -1866,8 +1864,6 @@ pub unsafe fn clock_res_get(clock_id_: clockid, resolution_: &mut timestamp) -> 
 /// The maximum lag (exclusive) that the returned
 /// time value may have, compared to its actual
 /// value.
-///
-/// ## Outputs
 ///
 /// **time**:
 /// The time value of the clock.
@@ -1884,7 +1880,7 @@ pub unsafe fn clock_time_get(clock_id_: clockid, precision_: timestamp, time_: &
 /// variable is set to this value, it is not needed to invoke this
 /// system call.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **condvar**:
 /// The userspace condition variable that has
@@ -1905,7 +1901,7 @@ pub unsafe fn condvar_signal(condvar_: *mut condvar, scope_: scope, nwaiters_: n
 
 /// Closes a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor that needs to be closed.
@@ -1916,11 +1912,9 @@ pub unsafe fn fd_close(fd_: fd) -> errno {
 
 /// Creates a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **type**:
-///
-/// ## Outputs
 ///
 /// **fd**:
 /// The file descriptor that has been created.
@@ -1931,11 +1925,9 @@ pub unsafe fn fd_create1(type_: filetype, fd_: &mut fd) -> errno {
 
 /// Creates a pair of file descriptors.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **type**:
-///
-/// ## Outputs
 ///
 /// **fd1**:
 /// The first file descriptor of the pair.
@@ -1949,7 +1941,7 @@ pub unsafe fn fd_create2(type_: filetype, fd1_: &mut fd, fd2_: &mut fd) -> errno
 
 /// Synchronizes the data of a file to disk.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor of the file whose data
@@ -1961,13 +1953,11 @@ pub unsafe fn fd_datasync(fd_: fd) -> errno {
 
 /// Duplicates a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **from**:
 /// The file descriptor that needs to be
 /// duplicated.
-///
-/// ## Outputs
 ///
 /// **fd**:
 /// The new file descriptor.
@@ -1979,7 +1969,7 @@ pub unsafe fn fd_dup(from_: fd, fd_: &mut fd) -> errno {
 /// Reads from a file descriptor, without using and updating the
 /// file descriptor's offset.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor from which data should be
@@ -1993,8 +1983,6 @@ pub unsafe fn fd_dup(from_: fd, fd_: &mut fd) -> errno {
 /// The offset within the file at which reading
 /// should start.
 ///
-/// ## Outputs
-///
 /// **nread**:
 /// The number of bytes read.
 #[inline]
@@ -2005,7 +1993,7 @@ pub unsafe fn fd_pread(fd_: fd, iovs_: &[iovec], offset_: filesize, nread_: &mut
 /// Writes to a file descriptor, without using and updating the
 /// file descriptor's offset.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor to which data should be
@@ -2019,8 +2007,6 @@ pub unsafe fn fd_pread(fd_: fd, iovs_: &[iovec], offset_: filesize, nread_: &mut
 /// The offset within the file at which writing
 /// should start.
 ///
-/// ## Outputs
-///
 /// **nwritten**:
 /// The number of bytes written.
 #[inline]
@@ -2030,7 +2016,7 @@ pub unsafe fn fd_pwrite(fd_: fd, iovs_: &[ciovec], offset_: filesize, nwritten_:
 
 /// Reads from a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor from which data should be
@@ -2039,8 +2025,6 @@ pub unsafe fn fd_pwrite(fd_: fd, iovs_: &[ciovec], offset_: filesize, nwritten_:
 /// **iovs**:
 /// List of scatter/gather vectors where data
 /// should be stored.
-///
-/// ## Outputs
 ///
 /// **nread**:
 /// The number of bytes read.
@@ -2062,7 +2046,7 @@ pub unsafe fn fd_read(fd_: fd, iovs_: &[iovec], nread_: &mut usize) -> errno {
 /// descriptors, which would disappear if dup2() were to be
 /// removed entirely.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **from**:
 /// The file descriptor that needs to be copied.
@@ -2077,7 +2061,7 @@ pub unsafe fn fd_replace(from_: fd, to_: fd) -> errno {
 
 /// Moves the offset of the file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor whose offset has to be
@@ -2090,8 +2074,6 @@ pub unsafe fn fd_replace(from_: fd, to_: fd) -> errno {
 /// Relative to which position the move should
 /// take place.
 ///
-/// ## Outputs
-///
 /// **newoffset**:
 /// The new offset of the file descriptor,
 /// relative to the start of the file.
@@ -2102,7 +2084,7 @@ pub unsafe fn fd_seek(fd_: fd, offset_: filedelta, whence_: whence, newoffset_: 
 
 /// Gets attributes of a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor whose attributes have to
@@ -2118,7 +2100,7 @@ pub unsafe fn fd_stat_get(fd_: fd, buf_: *mut fdstat) -> errno {
 
 /// Adjusts attributes of a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor whose attributes have to
@@ -2138,7 +2120,7 @@ pub unsafe fn fd_stat_put(fd_: fd, buf_: *const fdstat, flags_: fdsflags) -> err
 
 /// Synchronizes the data and metadata of a file to disk.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor of the file whose data
@@ -2150,7 +2132,7 @@ pub unsafe fn fd_sync(fd_: fd) -> errno {
 
 /// Writes to a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor to which data should be
@@ -2159,8 +2141,6 @@ pub unsafe fn fd_sync(fd_: fd) -> errno {
 /// **iovs**:
 /// List of scatter/gather vectors where data
 /// should be retrieved.
-///
-/// ## Outputs
 ///
 /// **nwritten**:
 /// The number of bytes written.
@@ -2171,7 +2151,7 @@ pub unsafe fn fd_write(fd_: fd, iovs_: &[ciovec], nwritten_: &mut usize) -> errn
 
 /// Provides file advisory information on a file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor for which to provide file
@@ -2194,7 +2174,7 @@ pub unsafe fn file_advise(fd_: fd, offset_: filesize, len_: filesize, advice_: a
 
 /// Forces the allocation of space in a file.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file in which the space should be
@@ -2213,7 +2193,7 @@ pub unsafe fn file_allocate(fd_: fd, offset_: filesize, len_: filesize) -> errno
 
 /// Creates a file of a specified type.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The working directory at which the resolution
@@ -2230,7 +2210,7 @@ pub unsafe fn file_create(fd_: fd, path_: &[u8], type_: filetype) -> errno {
 
 /// Creates a hard link.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd1**:
 /// The working directory at which the resolution
@@ -2254,7 +2234,7 @@ pub unsafe fn file_link(fd1_: lookup, path1_: &[u8], fd2_: fd, path2_: &[u8]) ->
 
 /// Opens a file.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **dirfd**:
 /// The working directory at which the resolution
@@ -2280,8 +2260,6 @@ pub unsafe fn file_link(fd1_: lookup, path1_: &[u8], fd2_: fd, path2_: &[u8]) ->
 ///
 /// [`fdstat.fs_filetype`](struct.fdstat.html#structfield.fs_filetype) is ignored.
 ///
-/// ## Outputs
-///
 /// **fd**:
 /// The file descriptor of the file that has been
 /// opened.
@@ -2303,7 +2281,7 @@ pub unsafe fn file_open(dirfd_: lookup, path_: &[u8], oflags_: oflags, fds_: *co
 /// to fit a single large directory entry, or skip the oversized
 /// directory entry.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The directory from which to read the directory
@@ -2316,8 +2294,6 @@ pub unsafe fn file_open(dirfd_: lookup, path_: &[u8], oflags_: oflags, fds_: *co
 /// The location within the directory to start
 /// reading.
 ///
-/// ## Outputs
-///
 /// **bufused**:
 /// The number of bytes stored in the read buffer.
 /// If less than the size of the read buffer, the
@@ -2329,7 +2305,7 @@ pub unsafe fn file_readdir(fd_: fd, buf_: &mut [u8], cookie_: dircookie, bufused
 
 /// Reads the contents of a symbolic link.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The working directory at which the resolution
@@ -2343,8 +2319,6 @@ pub unsafe fn file_readdir(fd_: fd, buf_: &mut [u8], cookie_: dircookie, bufused
 /// The buffer where the contents of the symbolic
 /// link should be stored.
 ///
-/// ## Outputs
-///
 /// **bufused**:
 /// The number of bytes placed in the buffer.
 #[inline]
@@ -2354,7 +2328,7 @@ pub unsafe fn file_readlink(fd_: fd, path_: &[u8], buf_: &mut [u8], bufused_: &m
 
 /// Renames a file.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd1**:
 /// The working directory at which the resolution
@@ -2378,7 +2352,7 @@ pub unsafe fn file_rename(fd1_: fd, path1_: &[u8], fd2_: fd, path2_: &[u8]) -> e
 
 /// Gets attributes of a file by file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor whose attributes have to
@@ -2394,7 +2368,7 @@ pub unsafe fn file_stat_fget(fd_: fd, buf_: *mut filestat) -> errno {
 
 /// Adjusts attributes of a file by file descriptor.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The file descriptor whose attributes have to
@@ -2414,7 +2388,7 @@ pub unsafe fn file_stat_fput(fd_: fd, buf_: *const filestat, flags_: fsflags) ->
 
 /// Gets attributes of a file by path.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The working directory at which the resolution
@@ -2435,7 +2409,7 @@ pub unsafe fn file_stat_get(fd_: lookup, path_: &[u8], buf_: *mut filestat) -> e
 
 /// Adjusts attributes of a file by path.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The working directory at which the resolution
@@ -2460,7 +2434,7 @@ pub unsafe fn file_stat_put(fd_: lookup, path_: &[u8], buf_: *const filestat, fl
 
 /// Creates a symbolic link.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **path1**:
 /// The contents of the symbolic link.
@@ -2479,7 +2453,7 @@ pub unsafe fn file_symlink(path1_: &[u8], fd_: fd, path2_: &[u8]) -> errno {
 
 /// Unlinks a file, or removes a directory.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// The working directory at which the resolution
@@ -2507,7 +2481,7 @@ pub unsafe fn file_unlink(fd_: fd, path_: &[u8], flags_: ulflags) -> errno {
 /// progress. If the lock is acquired for reading, it must first
 /// be upgraded to a write lock.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **lock**:
 /// The userspace lock that is locked for writing
@@ -2523,7 +2497,7 @@ pub unsafe fn lock_unlock(lock_: *mut lock, scope_: scope) -> errno {
 
 /// Provides memory advisory information on a region of memory.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **mapping**:
 /// The pages for which to provide memory advisory
@@ -2539,7 +2513,7 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// Creates a memory mapping, making the contents of a file
 /// accessible through memory.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **addr**:
 /// If [`FIXED`](struct.mflags.html#associatedconstant.FIXED) is set, specifies to which
@@ -2570,8 +2544,6 @@ pub unsafe fn mem_advise(mapping_: &mut [u8], advice_: advice) -> errno {
 /// offset within the file at which the mapping
 /// starts.
 ///
-/// ## Outputs
-///
 /// **mem**:
 /// The starting address of the memory mapping.
 #[inline]
@@ -2581,7 +2553,7 @@ pub unsafe fn mem_map(addr_: *mut (), len_: usize, prot_: mprot, flags_: mflags,
 
 /// Change the protection of a memory mapping.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **mapping**:
 /// The pages that need their protection changed.
@@ -2595,7 +2567,7 @@ pub unsafe fn mem_protect(mapping_: &mut [u8], prot_: mprot) -> errno {
 
 /// Synchronize a region of memory with its physical storage.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **mapping**:
 /// The pages that need to be synchronized.
@@ -2609,7 +2581,7 @@ pub unsafe fn mem_sync(mapping_: &mut [u8], flags_: msflags) -> errno {
 
 /// Unmaps a region of memory.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **mapping**:
 /// The pages that needs to be unmapped.
@@ -2620,7 +2592,7 @@ pub unsafe fn mem_unmap(mapping_: &mut [u8]) -> errno {
 
 /// Concurrently polls for the occurrence of a set of events.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **in**:
 /// The events to which to subscribe.
@@ -2630,8 +2602,6 @@ pub unsafe fn mem_unmap(mapping_: &mut [u8]) -> errno {
 ///
 /// **nsubscriptions**:
 /// Both the number of subscriptions and events.
-///
-/// ## Outputs
 ///
 /// **nevents**:
 /// The number of events stored.
@@ -2661,7 +2631,7 @@ pub unsafe fn poll(in_: *const subscription, out_: *mut event, nsubscriptions_: 
 /// potential information disclosures about the layout of the
 /// original process.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **fd**:
 /// A file descriptor of the new executable.
@@ -2680,7 +2650,7 @@ pub unsafe fn proc_exec(fd_: fd, data_: &[u8], fds_: &[fd]) -> errno {
 
 /// Terminates the process normally.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **rval**:
 /// The exit code returned by the process. The
@@ -2698,7 +2668,7 @@ pub unsafe fn proc_exit(rval_: exitcode) -> ! {
 /// process descriptor. When closed, the child process is
 /// automatically signaled with [`KILL`](enum.signal.html#variant.KILL).
 ///
-/// ## Outputs
+/// ## Parameters
 ///
 /// **fd**:
 /// In the parent process: the file descriptor
@@ -2718,7 +2688,7 @@ pub unsafe fn proc_fork(fd_: &mut fd, tid_: &mut tid) -> errno {
 
 /// Sends a signal to the process of the calling thread.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **sig**:
 /// The signal condition that should be triggered.
@@ -2737,7 +2707,7 @@ pub unsafe fn proc_raise(sig_: signal) -> errno {
 /// that the random data obtained through this system call is used
 /// as the seed for a userspace pseudo-random number generator.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **buf**:
 /// The buffer that needs to be filled with random
@@ -2749,7 +2719,7 @@ pub unsafe fn random_get(buf_: &mut [u8]) -> errno {
 
 /// Receives a message on a socket.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **sock**:
 /// The socket on which a message should be
@@ -2767,7 +2737,7 @@ pub unsafe fn sock_recv(sock_: fd, in_: *const recv_in, out_: *mut recv_out) -> 
 
 /// Sends a message on a socket.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **sock**:
 /// The socket on which a message should be sent.
@@ -2784,7 +2754,7 @@ pub unsafe fn sock_send(sock_: fd, in_: *const send_in, out_: *mut send_out) -> 
 
 /// Shuts down socket send and receive channels.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **sock**:
 /// The socket that needs its channels shut down.
@@ -2799,12 +2769,10 @@ pub unsafe fn sock_shutdown(sock_: fd, how_: sdflags) -> errno {
 
 /// Creates a new thread within the current process.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **attr**:
 /// The desired attributes of the new thread.
-///
-/// ## Outputs
 ///
 /// **tid**:
 /// The thread ID of the new thread.
@@ -2819,7 +2787,7 @@ pub unsafe fn thread_create(attr_: *mut threadattr, tid_: &mut tid) -> errno {
 /// after termination, which can be used to implement thread
 /// joining.
 ///
-/// ## Inputs
+/// ## Parameters
 ///
 /// **lock**:
 /// Userspace lock that is locked for writing by

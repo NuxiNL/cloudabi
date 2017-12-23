@@ -318,20 +318,17 @@ class RustGenerator(Generator):
     def generate_syscall_wrapper(self, abi, syscall):
         self.print_doc(abi, syscall)
 
-        if syscall.input.members:
+        if syscall.input.members or syscall.output.members:
             print('///')
-            print('/// ## Inputs')
-            for p in syscall.input.members:
-                print('///')
-                print('/// **{}**:'.format(p.name))
-                self.print_doc(abi, p)
-        if syscall.output.members:
+            print('/// ## Parameters')
+        for p in syscall.input.members:
             print('///')
-            print('/// ## Outputs')
-            for p in syscall.output.members:
-                print('///')
-                print('/// **{}**:'.format(p.name))
-                self.print_doc(abi, p)
+            print('/// **{}**:'.format(p.name))
+            self.print_doc(abi, p)
+        for p in syscall.output.members:
+            print('///')
+            print('/// **{}**:'.format(p.name))
+            self.print_doc(abi, p)
 
         if syscall.noreturn:
             return_type = '!';
