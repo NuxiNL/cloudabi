@@ -244,10 +244,54 @@ class RustGenerator(Generator):
 
                 unions = []
 
+            self.generate_struct_tests(type)
+
         else:
             raise Exception('Unknown class of type: {}'.format(type))
 
         print()
+
+    def generate_struct_tests(self, type):
+        configs = [(0, 32), (1, 64)] if type.layout.machine_dep else [(0, None)]
+        for i, bits in configs:
+            print('#[test]')
+            if bits is not None:
+                print('#[cfg(target_pointer_width = "{}")]'.format(bits))
+            print('fn {}_layout_test{}() {{'.format(type.name,
+                '_{}'.format(bits) if bits is not None else ''))
+            print('  assert_eq!(core::mem::size_of::<{}>(), {});'.format(
+                self.naming.typename(type), type.layout.size[i]))
+            print('  assert_eq!(core::mem::align_of::<{}>(), {});'.format(
+                self.naming.typename(type), type.layout.align[i]))
+            print('  unsafe {')
+            print('    let obj: {} = core::mem::uninitialized();'.format(
+                self.naming.typename(type)))
+            print('    let base = &obj as *const _ as usize;')
+            self.generate_offset_asserts(type.members, i)
+            print('  }')
+            print('}')
+
+    def generate_offset_asserts(self, members, machine_index, prefix='', offset=0):
+        for m in members:
+            if isinstance(m, VariantMember):
+                mprefix = prefix + 'union.'
+                if m.name is not None:
+                    mprefix += self.naming.fieldname(m.name) + '.'
+                self.generate_offset_asserts(m.type.members, machine_index, mprefix, offset)
+            elif isinstance(m, RangeStructMember):
+                for i, raw_m in enumerate(m.raw_members):
+                    moffset = offset + raw_m.offset[machine_index]
+                    self.generate_offset_assert(prefix + self.naming.fieldname(m.name) + '.' + str(i), moffset)
+            elif m.offset is not None:
+                moffset = offset + m.offset[machine_index]
+                if isinstance(m, VariantStructMember):
+                    self.generate_offset_asserts(m.members, machine_index, prefix, moffset)
+                else:
+                    self.generate_offset_assert(prefix + self.naming.fieldname(m.name), moffset)
+
+    def generate_offset_assert(self, member_name, offset):
+        print('    assert_eq!(&obj.{} as *const _ as usize - base, {});'.format(
+            member_name, offset))
 
     def generate_syscalls(self, abi, syscalls):
         print('/// The table with pointers to all syscall implementations.')

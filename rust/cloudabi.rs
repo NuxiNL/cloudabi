@@ -1059,6 +1059,32 @@ pub union auxv_union {
   pub a_val: usize,
   pub a_ptr: *mut (),
 }
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn auxv_layout_test_32() {
+  assert_eq!(core::mem::size_of::<auxv>(), 8);
+  assert_eq!(core::mem::align_of::<auxv>(), 4);
+  unsafe {
+    let obj: auxv = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.a_type as *const _ as usize - base, 0);
+    assert_eq!(&obj.union.a_val as *const _ as usize - base, 4);
+    assert_eq!(&obj.union.a_ptr as *const _ as usize - base, 4);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn auxv_layout_test_64() {
+  assert_eq!(core::mem::size_of::<auxv>(), 16);
+  assert_eq!(core::mem::align_of::<auxv>(), 8);
+  unsafe {
+    let obj: auxv = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.a_type as *const _ as usize - base, 0);
+    assert_eq!(&obj.union.a_val as *const _ as usize - base, 8);
+    assert_eq!(&obj.union.a_ptr as *const _ as usize - base, 8);
+  }
+}
 
 /// A region of memory for scatter/gather writes.
 #[repr(C)]
@@ -1066,6 +1092,30 @@ pub union auxv_union {
 pub struct ciovec {
   /// The address and length of the buffer to be written.
   pub buf: (*const (), usize),
+}
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn ciovec_layout_test_32() {
+  assert_eq!(core::mem::size_of::<ciovec>(), 8);
+  assert_eq!(core::mem::align_of::<ciovec>(), 4);
+  unsafe {
+    let obj: ciovec = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.buf.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.buf.1 as *const _ as usize - base, 4);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn ciovec_layout_test_64() {
+  assert_eq!(core::mem::size_of::<ciovec>(), 16);
+  assert_eq!(core::mem::align_of::<ciovec>(), 8);
+  unsafe {
+    let obj: ciovec = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.buf.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.buf.1 as *const _ as usize - base, 8);
+  }
 }
 
 /// A directory entry.
@@ -1083,6 +1133,19 @@ pub struct dirent {
   /// The type of the file referred to by this directory
   /// entry.
   pub d_type: filetype,
+}
+#[test]
+fn dirent_layout_test() {
+  assert_eq!(core::mem::size_of::<dirent>(), 24);
+  assert_eq!(core::mem::align_of::<dirent>(), 8);
+  unsafe {
+    let obj: dirent = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.d_next as *const _ as usize - base, 0);
+    assert_eq!(&obj.d_ino as *const _ as usize - base, 8);
+    assert_eq!(&obj.d_namlen as *const _ as usize - base, 16);
+    assert_eq!(&obj.d_type as *const _ as usize - base, 20);
+  }
 }
 
 /// An event that occurred.
@@ -1132,6 +1195,24 @@ pub struct event_proc_terminate {
   /// the process.
   pub exitcode: exitcode,
 }
+#[test]
+fn event_layout_test() {
+  assert_eq!(core::mem::size_of::<event>(), 32);
+  assert_eq!(core::mem::align_of::<event>(), 8);
+  unsafe {
+    let obj: event = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.userdata as *const _ as usize - base, 0);
+    assert_eq!(&obj.error as *const _ as usize - base, 8);
+    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.union.fd_readwrite.nbytes as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.fd_readwrite.unused as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.fd_readwrite.flags as *const _ as usize - base, 28);
+    assert_eq!(&obj.union.proc_terminate.unused as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.proc_terminate.signal as *const _ as usize - base, 20);
+    assert_eq!(&obj.union.proc_terminate.exitcode as *const _ as usize - base, 24);
+  }
+}
 
 /// File descriptor attributes.
 #[repr(C)]
@@ -1147,6 +1228,19 @@ pub struct fdstat {
   /// file descriptors that are created through this file
   /// descriptor, e.g., through `file_open`.
   pub fs_rights_inheriting: rights,
+}
+#[test]
+fn fdstat_layout_test() {
+  assert_eq!(core::mem::size_of::<fdstat>(), 24);
+  assert_eq!(core::mem::align_of::<fdstat>(), 8);
+  unsafe {
+    let obj: fdstat = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.fs_filetype as *const _ as usize - base, 0);
+    assert_eq!(&obj.fs_flags as *const _ as usize - base, 2);
+    assert_eq!(&obj.fs_rights_base as *const _ as usize - base, 8);
+    assert_eq!(&obj.fs_rights_inheriting as *const _ as usize - base, 16);
+  }
 }
 
 /// File attributes.
@@ -1172,6 +1266,23 @@ pub struct filestat {
   /// Last file status change timestamp.
   pub st_ctim: timestamp,
 }
+#[test]
+fn filestat_layout_test() {
+  assert_eq!(core::mem::size_of::<filestat>(), 56);
+  assert_eq!(core::mem::align_of::<filestat>(), 8);
+  unsafe {
+    let obj: filestat = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.st_dev as *const _ as usize - base, 0);
+    assert_eq!(&obj.st_ino as *const _ as usize - base, 8);
+    assert_eq!(&obj.st_filetype as *const _ as usize - base, 16);
+    assert_eq!(&obj.st_nlink as *const _ as usize - base, 20);
+    assert_eq!(&obj.st_size as *const _ as usize - base, 24);
+    assert_eq!(&obj.st_atim as *const _ as usize - base, 32);
+    assert_eq!(&obj.st_mtim as *const _ as usize - base, 40);
+    assert_eq!(&obj.st_ctim as *const _ as usize - base, 48);
+  }
+}
 
 /// A region of memory for scatter/gather reads.
 #[repr(C)]
@@ -1179,6 +1290,30 @@ pub struct filestat {
 pub struct iovec {
   /// The address and length of the buffer to be filled.
   pub buf: (*mut (), usize),
+}
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn iovec_layout_test_32() {
+  assert_eq!(core::mem::size_of::<iovec>(), 8);
+  assert_eq!(core::mem::align_of::<iovec>(), 4);
+  unsafe {
+    let obj: iovec = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.buf.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.buf.1 as *const _ as usize - base, 4);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn iovec_layout_test_64() {
+  assert_eq!(core::mem::size_of::<iovec>(), 16);
+  assert_eq!(core::mem::align_of::<iovec>(), 8);
+  unsafe {
+    let obj: iovec = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.buf.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.buf.1 as *const _ as usize - base, 8);
+  }
 }
 
 /// Path lookup properties.
@@ -1191,6 +1326,17 @@ pub struct lookup {
   /// Flags determining the method of how the path is
   /// resolved.
   pub flags: lookupflags,
+}
+#[test]
+fn lookup_layout_test() {
+  assert_eq!(core::mem::size_of::<lookup>(), 8);
+  assert_eq!(core::mem::align_of::<lookup>(), 4);
+  unsafe {
+    let obj: lookup = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.fd as *const _ as usize - base, 0);
+    assert_eq!(&obj.flags as *const _ as usize - base, 4);
+  }
 }
 
 /// Entry point for a process (`_start`).
@@ -1214,6 +1360,36 @@ pub struct recv_in {
   /// Message flags.
   pub ri_flags: riflags,
 }
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn recv_in_layout_test_32() {
+  assert_eq!(core::mem::size_of::<recv_in>(), 20);
+  assert_eq!(core::mem::align_of::<recv_in>(), 4);
+  unsafe {
+    let obj: recv_in = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.ri_data.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.ri_data.1 as *const _ as usize - base, 4);
+    assert_eq!(&obj.ri_fds.0 as *const _ as usize - base, 8);
+    assert_eq!(&obj.ri_fds.1 as *const _ as usize - base, 12);
+    assert_eq!(&obj.ri_flags as *const _ as usize - base, 16);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn recv_in_layout_test_64() {
+  assert_eq!(core::mem::size_of::<recv_in>(), 40);
+  assert_eq!(core::mem::align_of::<recv_in>(), 8);
+  unsafe {
+    let obj: recv_in = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.ri_data.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.ri_data.1 as *const _ as usize - base, 8);
+    assert_eq!(&obj.ri_fds.0 as *const _ as usize - base, 16);
+    assert_eq!(&obj.ri_fds.1 as *const _ as usize - base, 24);
+    assert_eq!(&obj.ri_flags as *const _ as usize - base, 32);
+  }
+}
 
 /// Results of `sock_recv`.
 #[repr(C)]
@@ -1227,6 +1403,34 @@ pub struct recv_out {
   pub ro_unused: [u8; 40],
   /// Message flags.
   pub ro_flags: roflags,
+}
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn recv_out_layout_test_32() {
+  assert_eq!(core::mem::size_of::<recv_out>(), 52);
+  assert_eq!(core::mem::align_of::<recv_out>(), 4);
+  unsafe {
+    let obj: recv_out = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.ro_datalen as *const _ as usize - base, 0);
+    assert_eq!(&obj.ro_fdslen as *const _ as usize - base, 4);
+    assert_eq!(&obj.ro_unused as *const _ as usize - base, 8);
+    assert_eq!(&obj.ro_flags as *const _ as usize - base, 48);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn recv_out_layout_test_64() {
+  assert_eq!(core::mem::size_of::<recv_out>(), 64);
+  assert_eq!(core::mem::align_of::<recv_out>(), 8);
+  unsafe {
+    let obj: recv_out = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.ro_datalen as *const _ as usize - base, 0);
+    assert_eq!(&obj.ro_fdslen as *const _ as usize - base, 8);
+    assert_eq!(&obj.ro_unused as *const _ as usize - base, 16);
+    assert_eq!(&obj.ro_flags as *const _ as usize - base, 56);
+  }
 }
 
 /// Arguments of `sock_send`.
@@ -1242,6 +1446,36 @@ pub struct send_in {
   /// Message flags.
   pub si_flags: siflags,
 }
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn send_in_layout_test_32() {
+  assert_eq!(core::mem::size_of::<send_in>(), 20);
+  assert_eq!(core::mem::align_of::<send_in>(), 4);
+  unsafe {
+    let obj: send_in = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.si_data.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.si_data.1 as *const _ as usize - base, 4);
+    assert_eq!(&obj.si_fds.0 as *const _ as usize - base, 8);
+    assert_eq!(&obj.si_fds.1 as *const _ as usize - base, 12);
+    assert_eq!(&obj.si_flags as *const _ as usize - base, 16);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn send_in_layout_test_64() {
+  assert_eq!(core::mem::size_of::<send_in>(), 40);
+  assert_eq!(core::mem::align_of::<send_in>(), 8);
+  unsafe {
+    let obj: send_in = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.si_data.0 as *const _ as usize - base, 0);
+    assert_eq!(&obj.si_data.1 as *const _ as usize - base, 8);
+    assert_eq!(&obj.si_fds.0 as *const _ as usize - base, 16);
+    assert_eq!(&obj.si_fds.1 as *const _ as usize - base, 24);
+    assert_eq!(&obj.si_flags as *const _ as usize - base, 32);
+  }
+}
 
 /// Results of `sock_send`.
 #[repr(C)]
@@ -1249,6 +1483,28 @@ pub struct send_in {
 pub struct send_out {
   /// Number of bytes transmitted.
   pub so_datalen: usize,
+}
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn send_out_layout_test_32() {
+  assert_eq!(core::mem::size_of::<send_out>(), 4);
+  assert_eq!(core::mem::align_of::<send_out>(), 4);
+  unsafe {
+    let obj: send_out = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.so_datalen as *const _ as usize - base, 0);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn send_out_layout_test_64() {
+  assert_eq!(core::mem::size_of::<send_out>(), 8);
+  assert_eq!(core::mem::align_of::<send_out>(), 8);
+  unsafe {
+    let obj: send_out = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.so_datalen as *const _ as usize - base, 0);
+  }
 }
 
 /// Subscription to an event.
@@ -1352,6 +1608,60 @@ pub struct subscription_proc_terminate {
   /// termination.
   pub fd: fd,
 }
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn subscription_layout_test_32() {
+  assert_eq!(core::mem::size_of::<subscription>(), 56);
+  assert_eq!(core::mem::align_of::<subscription>(), 8);
+  unsafe {
+    let obj: subscription = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.userdata as *const _ as usize - base, 0);
+    assert_eq!(&obj.unused as *const _ as usize - base, 8);
+    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.union.clock.identifier as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.clock.clock_id as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.clock.timeout as *const _ as usize - base, 32);
+    assert_eq!(&obj.union.clock.precision as *const _ as usize - base, 40);
+    assert_eq!(&obj.union.clock.flags as *const _ as usize - base, 48);
+    assert_eq!(&obj.union.condvar.condvar as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.condvar.lock as *const _ as usize - base, 20);
+    assert_eq!(&obj.union.condvar.condvar_scope as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.condvar.lock_scope as *const _ as usize - base, 25);
+    assert_eq!(&obj.union.fd_readwrite.fd as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.fd_readwrite.flags as *const _ as usize - base, 20);
+    assert_eq!(&obj.union.lock.lock as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.lock.lock_scope as *const _ as usize - base, 20);
+    assert_eq!(&obj.union.proc_terminate.fd as *const _ as usize - base, 16);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn subscription_layout_test_64() {
+  assert_eq!(core::mem::size_of::<subscription>(), 56);
+  assert_eq!(core::mem::align_of::<subscription>(), 8);
+  unsafe {
+    let obj: subscription = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.userdata as *const _ as usize - base, 0);
+    assert_eq!(&obj.unused as *const _ as usize - base, 8);
+    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.union.clock.identifier as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.clock.clock_id as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.clock.timeout as *const _ as usize - base, 32);
+    assert_eq!(&obj.union.clock.precision as *const _ as usize - base, 40);
+    assert_eq!(&obj.union.clock.flags as *const _ as usize - base, 48);
+    assert_eq!(&obj.union.condvar.condvar as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.condvar.lock as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.condvar.condvar_scope as *const _ as usize - base, 32);
+    assert_eq!(&obj.union.condvar.lock_scope as *const _ as usize - base, 33);
+    assert_eq!(&obj.union.fd_readwrite.fd as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.fd_readwrite.flags as *const _ as usize - base, 20);
+    assert_eq!(&obj.union.lock.lock as *const _ as usize - base, 16);
+    assert_eq!(&obj.union.lock.lock_scope as *const _ as usize - base, 24);
+    assert_eq!(&obj.union.proc_terminate.fd as *const _ as usize - base, 16);
+  }
+}
 
 /// The Thread Control Block (TCB).
 ///
@@ -1379,6 +1689,28 @@ pub struct tcb {
   /// value cannot be interpreted by the application.
   pub parent: *mut (),
 }
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn tcb_layout_test_32() {
+  assert_eq!(core::mem::size_of::<tcb>(), 4);
+  assert_eq!(core::mem::align_of::<tcb>(), 4);
+  unsafe {
+    let obj: tcb = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.parent as *const _ as usize - base, 0);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn tcb_layout_test_64() {
+  assert_eq!(core::mem::size_of::<tcb>(), 8);
+  assert_eq!(core::mem::align_of::<tcb>(), 8);
+  unsafe {
+    let obj: tcb = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.parent as *const _ as usize - base, 0);
+  }
+}
 
 /// Entry point for additionally created threads.
 ///
@@ -1403,6 +1735,34 @@ pub struct threadattr {
   pub stack: (*mut (), usize),
   /// Argument to be forwarded to the entry point function.
   pub argument: *mut (),
+}
+#[test]
+#[cfg(target_pointer_width = "32")]
+fn threadattr_layout_test_32() {
+  assert_eq!(core::mem::size_of::<threadattr>(), 16);
+  assert_eq!(core::mem::align_of::<threadattr>(), 4);
+  unsafe {
+    let obj: threadattr = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.entry_point as *const _ as usize - base, 0);
+    assert_eq!(&obj.stack.0 as *const _ as usize - base, 4);
+    assert_eq!(&obj.stack.1 as *const _ as usize - base, 8);
+    assert_eq!(&obj.argument as *const _ as usize - base, 12);
+  }
+}
+#[test]
+#[cfg(target_pointer_width = "64")]
+fn threadattr_layout_test_64() {
+  assert_eq!(core::mem::size_of::<threadattr>(), 32);
+  assert_eq!(core::mem::align_of::<threadattr>(), 8);
+  unsafe {
+    let obj: threadattr = core::mem::uninitialized();
+    let base = &obj as *const _ as usize;
+    assert_eq!(&obj.entry_point as *const _ as usize - base, 0);
+    assert_eq!(&obj.stack.0 as *const _ as usize - base, 8);
+    assert_eq!(&obj.stack.1 as *const _ as usize - base, 16);
+    assert_eq!(&obj.argument as *const _ as usize - base, 24);
+  }
 }
 
 /// The table with pointers to all syscall implementations.
