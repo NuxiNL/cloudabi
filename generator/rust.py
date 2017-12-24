@@ -56,7 +56,7 @@ class RustGenerator(Generator):
         if hasattr(thing, 'doc'):
             for line in thing.doc.splitlines():
                 line = re.sub(r'\[([\w.]+)\](?!\()', make_link, line)
-                print(indent + prefix + (' ' + line if line != '' else ''))
+                print((indent + prefix + ' ' + line).rstrip())
 
     def __init__(self, naming):
         super().__init__(comment_prefix='// ')
@@ -319,16 +319,17 @@ class RustGenerator(Generator):
         self.print_doc(abi, syscall)
 
         if syscall.input.members or syscall.output.members:
-            print('///')
-            print('/// ## Parameters')
-        for p in syscall.input.members:
-            print('///')
-            print('/// **{}**:'.format(p.name))
+            print('///\n/// ## Parameters')
+        for p in syscall.input.members + syscall.output.members:
+            print('///\n/// **{}**:'.format(p.name))
             self.print_doc(abi, p)
-        for p in syscall.output.members:
-            print('///')
-            print('/// **{}**:'.format(p.name))
-            self.print_doc(abi, p)
+            if getattr(p, 'special_values', None):
+                print('/// Possible values:\n///')
+                for val in p.special_values:
+                    print('///   - [`{}`]{}:'.format(
+                        self.naming.valname(p.type, val),
+                        self.doc_link(p.type, val)))
+                    self.print_doc(abi, val, '', '///    ')
 
         if syscall.noreturn:
             return_type = '!';

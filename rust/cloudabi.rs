@@ -1915,6 +1915,11 @@ pub unsafe fn fd_close(fd_: fd) -> errno {
 /// ## Parameters
 ///
 /// **type**:
+/// Possible values:
+///
+///   - [`SHARED_MEMORY`](enum.filetype.html#variant.SHARED_MEMORY):
+///     Creates an anonymous shared memory
+///     object.
 ///
 /// **fd**:
 /// The file descriptor that has been created.
@@ -1928,6 +1933,13 @@ pub unsafe fn fd_create1(type_: filetype, fd_: &mut fd) -> errno {
 /// ## Parameters
 ///
 /// **type**:
+/// Possible values:
+///
+///   - [`SOCKET_DGRAM`](enum.filetype.html#variant.SOCKET_DGRAM):
+///     Creates a UNIX datagram socket pair.
+///   - [`SOCKET_STREAM`](enum.filetype.html#variant.SOCKET_STREAM):
+///     Creates a UNIX byte-stream socket
+///     pair.
 ///
 /// **fd1**:
 /// The first file descriptor of the pair.
@@ -2203,6 +2215,10 @@ pub unsafe fn file_allocate(fd_: fd, offset_: filesize, len_: filesize) -> errno
 /// The path at which the file should be created.
 ///
 /// **type**:
+/// Possible values:
+///
+///   - [`DIRECTORY`](enum.filetype.html#variant.DIRECTORY):
+///     Creates a directory.
 #[inline]
 pub unsafe fn file_create(fd_: fd, path_: &[u8], type_: filetype) -> errno {
   (cloudabi_syscalls.file_create)(fd_, path_.as_ptr(), path_.len(), type_)
@@ -2463,6 +2479,11 @@ pub unsafe fn file_symlink(path1_: &[u8], fd_: fd, path2_: &[u8]) -> errno {
 /// The path that needs to be unlinked or removed.
 ///
 /// **flags**:
+/// Possible values:
+///
+///   - [`REMOVEDIR`](struct.ulflags.html#associatedconstant.REMOVEDIR):
+///     If set, attempt to remove a directory.
+///     Otherwise, unlink a file.
 #[inline]
 pub unsafe fn file_unlink(fd_: fd, path_: &[u8], flags_: ulflags) -> errno {
   (cloudabi_syscalls.file_unlink)(fd_, path_.as_ptr(), path_.len(), flags_)
