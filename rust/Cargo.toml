@@ -1,7 +1,13 @@
 [package]
 name = "cloudabi"
+description = "Low level interface to CloudABI. Contains all syscalls and related types."
 version = "0.1.0"
-authors = ["Maurice Bos <m-ou.se@m-ou.se>"]
+homepage = "https://nuxi.nl/cloudabi/"
+repository = "https://github.com/nuxinl/cloudabi"
+documentation = "https://docs.rs/cloudabi/"
+keywords = ["cloudabi"]
+authors = ["Nuxi (https://nuxi.nl/) and contributors"]
+license = "BSD-2-Clause"
 
 [lib]
 path = "cloudabi.rs"
