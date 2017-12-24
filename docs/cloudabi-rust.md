@@ -1510,6 +1510,10 @@ Used by [`event`](#event).
 
 Possible values:
 
+- <a href="#errno.success" name="errno.success"></a>**`SUCCESS`**
+
+    No error occurred. System call completed successfully.
+
 - <a href="#errno.2big" name="errno.2big"></a>**`TOOBIG`**
 
     Argument list too long.

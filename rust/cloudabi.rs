@@ -264,6 +264,8 @@ pub const DIRCOOKIE_START: dircookie = dircookie(0);
 #[repr(u16)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum errno {
+  /// No error occurred. System call completed successfully.
+  SUCCESS        =  0,
   /// Argument list too long.
   TOOBIG         =  1,
   /// Permission denied.

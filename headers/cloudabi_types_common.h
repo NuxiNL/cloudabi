@@ -75,6 +75,7 @@ typedef uint64_t cloudabi_dircookie_t;
 #define CLOUDABI_DIRCOOKIE_START 0
 
 typedef uint16_t cloudabi_errno_t;
+#define CLOUDABI_ESUCCESS         0
 #define CLOUDABI_E2BIG            1
 #define CLOUDABI_EACCES           2
 #define CLOUDABI_EADDRINUSE       3

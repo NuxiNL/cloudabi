@@ -215,6 +215,8 @@ enum uint16 errno
 	| provided by this environment, but are either used in userspace
 	| exclusively or merely provided for alignment with POSIX.
 	@cprefix E
+	0  success
+		| No error occurred. System call completed successfully.
 	1  2big
 		| Argument list too long.
 	2  acces
