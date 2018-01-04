@@ -1550,8 +1550,7 @@ pub struct subscription {
   /// [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK), and [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK)
   /// must be provided as the first subscription and may
   /// only be followed by up to one other subscription,
-  /// having type [`CLOCK`](enum.eventtype.html#variant.CLOCK) with
-  /// [`ABSTIME`](struct.subclockflags.html#associatedconstant.ABSTIME).
+  /// having type [`CLOCK`](enum.eventtype.html#variant.CLOCK).
   pub type_: eventtype,
   pub union: subscription_union
 }

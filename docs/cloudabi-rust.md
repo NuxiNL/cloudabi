@@ -2944,8 +2944,7 @@ Members:
     [`LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`LOCK_WRLOCK`](#eventtype.lock_wrlock)
     must be provided as the first subscription and may
     only be followed by up to one other subscription,
-    having type [`CLOCK`](#eventtype.clock) with
-    [`ABSTIME`](#subclockflags.abstime).
+    having type [`CLOCK`](#eventtype.clock).
 
 - When `type` is [`CLOCK`](#eventtype.clock):
 

@@ -1118,8 +1118,7 @@ struct subscription
 		| [eventtype.lock_rdlock], and [eventtype.lock_wrlock]
 		| must be provided as the first subscription and may
 		| only be followed by up to one other subscription,
-		| having type [eventtype.clock] with
-		| [subclockflags.abstime].
+		| having type [eventtype.clock].
 	variant type
 		clock
 			struct clock

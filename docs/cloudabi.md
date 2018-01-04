@@ -2944,8 +2944,7 @@ Members:
     [`CLOUDABI_EVENTTYPE_LOCK_RDLOCK`](#eventtype.lock_rdlock), and [`CLOUDABI_EVENTTYPE_LOCK_WRLOCK`](#eventtype.lock_wrlock)
     must be provided as the first subscription and may
     only be followed by up to one other subscription,
-    having type [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock) with
-    [`CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME`](#subclockflags.abstime).
+    having type [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock).
 
 - When `type` is [`CLOUDABI_EVENTTYPE_CLOCK`](#eventtype.clock):
 
