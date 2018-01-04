@@ -111,8 +111,8 @@
 
 #![no_std]
 #![allow(non_camel_case_types)]
-#[macro_use]
-extern crate bitflags;
+
+include!("bitflags.rs");
 
 /// File or memory access pattern advisory information.
 #[repr(u8)]
@@ -424,6 +424,7 @@ pub enum errno {
 bitflags! {
   /// The state of the file descriptor subscribed to with
   /// [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
+  #[repr(C)]
   pub struct eventrwflags: u16 {
     /// The peer of this socket has closed or disconnected.
     const HANGUP = 0x0001;
@@ -481,6 +482,7 @@ pub const MAP_ANON_FD  : fd = fd(0xffffffff);
 
 bitflags! {
   /// File descriptor flags.
+  #[repr(C)]
   pub struct fdflags: u16 {
     /// Append mode: Data written to the file is always
     /// appended to the file's end.
@@ -503,6 +505,7 @@ bitflags! {
 
 bitflags! {
   /// Which file descriptor attributes to adjust.
+  #[repr(C)]
   pub struct fdsflags: u16 {
     /// Adjust the file descriptor flags stored in
     /// [`fdstat.fs_flags`](struct.fdstat.html#structfield.fs_flags).
@@ -556,6 +559,7 @@ pub enum filetype {
 
 bitflags! {
   /// Which file attributes to adjust.
+  #[repr(C)]
   pub struct fsflags: u16 {
     /// Adjust the last data access timestamp to the value
     /// stored in [`filestat.st_atim`](struct.filestat.html#structfield.st_atim).
@@ -618,6 +622,7 @@ pub const LOCK_BOGUS         : lock = lock(0x80000000);
 
 bitflags! {
   /// Flags determining the method of how paths are resolved.
+  #[repr(C)]
   pub struct lookupflags: u32 {
     /// As long as the resolved path corresponds to a symbolic
     /// link, it is expanded.
@@ -627,6 +632,7 @@ bitflags! {
 
 bitflags! {
   /// Memory mapping flags.
+  #[repr(C)]
   pub struct mflags: u8 {
     /// Instead of mapping the contents of the file provided,
     /// create a mapping to anonymous memory. The file
@@ -648,6 +654,7 @@ bitflags! {
   ///
   /// This implementation enforces the W^X property: Pages cannot be
   /// mapped for execution while also mapped for writing.
+  #[repr(C)]
   pub struct mprot: u8 {
     /// Page can be executed.
     const EXEC  = 0x01;
@@ -660,6 +667,7 @@ bitflags! {
 
 bitflags! {
   /// Methods of synchronizing memory with physical storage.
+  #[repr(C)]
   pub struct msflags: u8 {
     /// Perform asynchronous writes.
     const ASYNC      = 0x01;
@@ -676,6 +684,7 @@ pub type nthreads = u32;
 
 bitflags! {
   /// Open flags used by [`file_open()`](fn.file_open.html).
+  #[repr(C)]
   pub struct oflags: u16 {
     /// Create file if it does not exist.
     const CREAT     = 0x0001;
@@ -690,6 +699,7 @@ bitflags! {
 
 bitflags! {
   /// Flags provided to [`sock_recv()`](fn.sock_recv.html).
+  #[repr(C)]
   pub struct riflags: u16 {
     /// Returns the message without removing it from the
     /// socket's receive queue.
@@ -703,6 +713,7 @@ bitflags! {
 bitflags! {
   /// File descriptor rights, determining which actions may be
   /// performed.
+  #[repr(C)]
   pub struct rights: u64 {
     /// The right to invoke [`fd_datasync()`](fn.fd_datasync.html).
     ///
@@ -817,6 +828,7 @@ bitflags! {
 
 bitflags! {
   /// Flags returned by [`sock_recv()`](fn.sock_recv.html).
+  #[repr(C)]
   pub struct roflags: u16 {
     /// Returned by [`sock_recv()`](fn.sock_recv.html): List of file descriptors
     /// has been truncated.
@@ -841,6 +853,7 @@ pub enum scope {
 
 bitflags! {
   /// Which channels on a socket need to be shut down.
+  #[repr(C)]
   pub struct sdflags: u8 {
     /// Disables further receive operations.
     const RD = 0x01;
@@ -852,6 +865,7 @@ bitflags! {
 bitflags! {
   /// Flags provided to [`sock_send()`](fn.sock_send.html). As there are currently no flags
   /// defined, it must be set to zero.
+  #[repr(C)]
   pub struct siflags: u16 {
     const DEFAULT = 0;
   }
@@ -971,6 +985,7 @@ pub enum signal {
 bitflags! {
   /// Flags determining how the timestamp provided in
   /// [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout) should be interpreted.
+  #[repr(C)]
   pub struct subclockflags: u16 {
     /// If set, treat the timestamp provided in
     /// [`subscription.union.clock.timeout`](struct.subscription_clock.html#structfield.timeout) as an absolute timestamp
@@ -986,6 +1001,7 @@ bitflags! {
 bitflags! {
   /// Flags influencing the method of polling for read or writing on
   /// a file descriptor.
+  #[repr(C)]
   pub struct subrwflags: u16 {
     /// Deprecated. Must be set by callers and ignored by
     /// implementations.
@@ -1013,6 +1029,7 @@ pub type timestamp = u64;
 bitflags! {
   /// Specifies whether files are unlinked or directories are
   /// removed.
+  #[repr(C)]
   pub struct ulflags: u8 {
     /// If set, removes a directory. Otherwise, unlinks any
     /// non-directory file.

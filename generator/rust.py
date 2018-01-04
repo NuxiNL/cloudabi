@@ -81,8 +81,8 @@ class RustGenerator(Generator):
         print()
         print('#![no_std]')
         print('#![allow(non_camel_case_types)]')
-        print('#[macro_use]')
-        print('extern crate bitflags;')
+        print()
+        print('include!("bitflags.rs");')
         print()
 
     def generate_type(self, abi, type):
@@ -90,6 +90,7 @@ class RustGenerator(Generator):
         if isinstance(type, FlagsType):
             print('bitflags! {')
             self.print_doc(abi, type, '  ')
+            print('  #[repr(C)]')
             print('  pub struct {}: {} {{'.format(self.naming.typename(type), self.naming.typename(type.int_type)))
             if len(type.values) > 0:
                 width = max(
