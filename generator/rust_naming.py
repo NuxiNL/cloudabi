@@ -1,8 +1,8 @@
 from .abi import *
 from .markdown_naming import *
 
-class RustNaming:
 
+class RustNaming:
     def __init__(self):
         pass
 
@@ -32,8 +32,7 @@ class RustNaming:
             return '*{} {}'.format(mut, self.typename(type.target_type))
         elif isinstance(type, ArrayType):
             return '[{}; {}]'.format(
-                self.typename(type.element_type),
-                type.count)
+                self.typename(type.element_type), type.count)
         else:
             raise Exception('Unable to generate Rust declaration '
                             'for type: {}'.format(type))
@@ -59,7 +58,6 @@ class RustNaming:
 
 
 class MarkdownRustNaming(MarkdownNaming, RustNaming):
-
     def typename(self, type, link=True, **kwargs):
         if link:
             return self.link(type, code=False)
@@ -69,8 +67,8 @@ class MarkdownRustNaming(MarkdownNaming, RustNaming):
     def memname(self, *path):
         name = self.typename(path[0], link=False) + '.'
         name += '.'.join(
-                self.variantmem(m) if isinstance(m, VariantMember) else self.fieldname(m.name)
-                for m in path[1:])
+            self.variantmem(m) if isinstance(m, VariantMember) else
+            self.fieldname(m.name) for m in path[1:])
         return name
 
     def variantmem(self, member):

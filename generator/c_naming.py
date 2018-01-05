@@ -1,6 +1,7 @@
 from .abi import *
 from .markdown_naming import *
 
+
 class CNaming:
     def __init__(self,
                  prefix,
@@ -95,8 +96,8 @@ class MarkdownCNaming(MarkdownNaming, CNaming):
     def kinddesc(self, type):
         if isinstance(type, IntLikeType):
             return '{}{}'.format(
-                self.link(type.int_type),
-                ' bitfield' if isinstance(type, FlagsType) else '')
+                self.link(type.int_type), ' bitfield'
+                if isinstance(type, FlagsType) else '')
         elif isinstance(type, StructType):
             return '`struct`'
         elif isinstance(type, FunctionType):

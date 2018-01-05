@@ -19,8 +19,8 @@ from generator.syscalls_master import *
 abi = AbiParser().parse_abi_file(
     os.path.join(os.path.dirname(__file__), 'cloudabi.txt'))
 
-
 procs = []
+
 
 # Pipes output through clang-format to format the C code.
 def open_and_format(filename):
@@ -185,9 +185,7 @@ with open('docs/cloudabi.md', 'w') as f:
 
 with open('docs/cloudabi-rust.md', 'w') as f:
     with redirect_stdout(f):
-        MarkdownGenerator(
-            naming=MarkdownRustNaming(),
-        ).generate_abi(abi)
+        MarkdownGenerator(naming=MarkdownRustNaming(), ).generate_abi(abi)
 
 html = subprocess.check_output('markdown docs/cloudabi.md', shell=True)
 with open('docs/cloudabi.html', 'wb') as f:

@@ -11,6 +11,7 @@ from .generator import *
 from .markdown_naming import *
 from .rust_naming import *
 
+
 class MarkdownGenerator(Generator):
     def __init__(self, naming):
         super().__init__(comment_begin='<!--', comment_end='-->')
@@ -71,8 +72,12 @@ class MarkdownGenerator(Generator):
                 print('- {}\n'.format(self.naming.link(type.return_type)))
                 self.generate_doc(abi, type.return_type.doc, '    ')
 
-    def generate_struct_member(
-            self, abi, m, parents, indent='', is_variant_member = False):
+    def generate_struct_member(self,
+                               abi,
+                               m,
+                               parents,
+                               indent='',
+                               is_variant_member=False):
         print(indent, end='')
         if isinstance(m, SimpleStructMember):
             if is_variant_member:
@@ -108,10 +113,10 @@ class MarkdownGenerator(Generator):
                         self.naming.link(m.tag.type, v) for v in vm.tag_values
                     ])))
                 if vm.name is None:
-                    assert(len(vm.type.members) == 1)
+                    assert (len(vm.type.members) == 1)
                     mm = vm.type.members[0]
-                    self.generate_struct_member(
-                        abi, mm, parents, indent + '    ', True)
+                    self.generate_struct_member(abi, mm, parents,
+                                                indent + '    ', True)
                 else:
                     print('    - {}**`{}`**\n'.format(
                         self.anchor(*(parents + [vm])),

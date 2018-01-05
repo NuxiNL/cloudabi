@@ -1,5 +1,6 @@
 from .abi import *
 
+
 class MarkdownNaming:
     def link(self, *path, code=True):
         name = self.link_name(*path)
@@ -37,6 +38,7 @@ class MarkdownNaming:
 
     def variantmem(self, member):
         return member.name
+
 
 def _fix_undescores(text):
     return text.replace('\\_', '_').replace('_', '\\_')
