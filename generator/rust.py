@@ -270,12 +270,12 @@ class RustGenerator(Generator):
                 print('#[cfg(target_pointer_width = "{}")]'.format(bits))
             print('fn {}_layout_test{}() {{'.format(
                 type.name, '_{}'.format(bits) if bits is not None else ''))
-            print('  assert_eq!(core::mem::size_of::<{}>(), {});'.format(
+            print('  assert_eq!(::core::mem::size_of::<{}>(), {});'.format(
                 self.naming.typename(type), type.layout.size[i]))
-            print('  assert_eq!(core::mem::align_of::<{}>(), {});'.format(
+            print('  assert_eq!(::core::mem::align_of::<{}>(), {});'.format(
                 self.naming.typename(type), type.layout.align[i]))
             print('  unsafe {')
-            print('    let obj: {} = core::mem::uninitialized();'.format(
+            print('    let obj: {} = ::core::mem::uninitialized();'.format(
                 self.naming.typename(type)))
             print('    let base = &obj as *const _ as usize;')
             self.generate_offset_asserts(type.members, i)
