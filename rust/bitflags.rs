@@ -22,7 +22,7 @@
 // SUCH DAMAGE.
 
 // Appease Rust's tidy.
-// ignore-tidy-linelength
+// ignore-license
 
 #[cfg(feature = "bitflags")]
 #[macro_use]
