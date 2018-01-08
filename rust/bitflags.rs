@@ -21,6 +21,9 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
+// Appease Rust's tidy.
+// ignore-tidy-linelength
+
 #[cfg(feature = "bitflags")]
 #[macro_use]
 extern crate bitflags;

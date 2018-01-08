@@ -73,6 +73,10 @@ class RustGenerator(Generator):
 
     def generate_head(self, abi):
         super().generate_head(abi)
+        print('// Appease Rust\'s tidy.')
+        print('// ignore-license')
+        print('// ignore-tidy-linelength')
+        print()
         print('//! **PLEASE NOTE: This entire crate including this')
         print('//! documentation is automatically generated from')
         print(

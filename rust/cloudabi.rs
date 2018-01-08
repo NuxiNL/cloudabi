@@ -25,6 +25,10 @@
 //
 // Source: https://github.com/NuxiNL/cloudabi
 
+// Appease Rust's tidy.
+// ignore-license
+// ignore-tidy-linelength
+
 //! **PLEASE NOTE: This entire crate including this
 //! documentation is automatically generated from
 //! [`cloudabi.txt`](https://github.com/NuxiNL/cloudabi/blob/master/cloudabi.txt)**
