@@ -86,9 +86,7 @@ with open_and_format('headers/cloudabi_syscalls.h') as f:
     with redirect_stdout(f):
         CSyscallsGenerator(
             naming=CNaming('cloudabi_'),
-            header_guard='CLOUDABI_SYSCALLS_H',
-            preamble='#include "cloudabi_syscalls_struct.h"\n').generate_abi(
-                abi)
+            header_guard='CLOUDABI_SYSCALLS_H').generate_abi(abi)
 
 with open('headers/cloudabi_syscalls_info.h', 'w') as f:
     with redirect_stdout(f):
