@@ -320,20 +320,16 @@ class RustGenerator(Generator):
 
     def generate_syscalls(self, abi, syscalls):
         print('/// The table with pointers to all syscall implementations.')
-        print('#[repr(C)]')
-        print('#[derive(Clone)]')
-        print('pub struct syscalls {')
-        for s in sorted(abi.syscalls):
-            self.generate_syscall_entry(abi, abi.syscalls[s])
-        print('}')
-        print()
         print('#[allow(improper_ctypes)]')
-        print('extern "C" { static cloudabi_syscalls: syscalls; }')
+        print('extern "C" {')
+        for s in sorted(abi.syscalls):
+            self.generate_syscall_declaration(abi, abi.syscalls[s])
+        print('}')
         for s in sorted(abi.syscalls):
             print()
             self.generate_syscall_wrapper(abi, abi.syscalls[s])
 
-    def generate_syscall_entry(self, abi, syscall):
+    def generate_syscall_declaration(self, abi, syscall):
         if syscall.noreturn:
             return_type = '!'
         else:
@@ -344,7 +340,7 @@ class RustGenerator(Generator):
         for p in syscall.output.raw_members:
             params.append('_: ' + self.naming.typename(
                 OutputPointerType(p.type)))
-        print('  pub {}: unsafe extern "C" fn({}) -> {},'.format(
+        print('  fn cloudabi_sys_{}({}) -> {};'.format(
             syscall.name, ', '.join(params), return_type))
 
     def generate_syscall_wrapper(self, abi, syscall):
@@ -394,7 +390,7 @@ class RustGenerator(Generator):
             assert not isinstance(p, RangeStructMember)
             args.append(p.name + '_')
 
-        print('  (cloudabi_syscalls.{})({})'.format(syscall.name,
+        print('  cloudabi_sys_{}({})'.format(syscall.name,
                                                     ', '.join(args)))
         print('}')
 
