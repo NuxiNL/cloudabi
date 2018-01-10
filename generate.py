@@ -82,17 +82,10 @@ with open('headers/cloudabi64_types.h', 'w') as f:
             md_type=int_types['uint64'],
             preamble='#include "cloudabi_types_common.h"\n').generate_abi(abi)
 
-with open_and_format('headers/cloudabi_syscalls_struct.h') as f:
-    with redirect_stdout(f):
-        CSyscallStructGenerator(
-            naming=CNaming('cloudabi_'),
-            header_guard='CLOUDABI_SYSCALL_STRUCT_H',
-            preamble='#include "cloudabi_types.h"\n').generate_abi(abi)
-
 with open_and_format('headers/cloudabi_syscalls.h') as f:
     with redirect_stdout(f):
-        CSyscallWrappersGenerator(
-            naming=CNaming('cloudabi_', function_keywords='static inline '),
+        CSyscallsGenerator(
+            naming=CNaming('cloudabi_'),
             header_guard='CLOUDABI_SYSCALLS_H',
             preamble='#include "cloudabi_syscalls_struct.h"\n').generate_abi(
                 abi)

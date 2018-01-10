@@ -197,37 +197,6 @@ class CSyscalldefsGenerator(CGenerator):
         pass
 
 
-class CSyscallStructGenerator(CGenerator):
-    def generate_syscalls(self, abi, syscalls):
-        print('typedef struct {')
-        for s in sorted(abi.syscalls):
-            self.generate_syscall(abi, abi.syscalls[s])
-        print('}} {}syscalls_t;'.format(self.naming.prefix))
-        print()
-
-    def generate_syscall(self, abi, syscall):
-        if syscall.noreturn:
-            return_type = VoidType()
-        else:
-            return_type = abi.types['errno']
-        print(
-            '  {} (*{})('.format(
-                self.naming.typename(return_type), syscall.name),
-            end='')
-        params = self.syscall_params(syscall)
-        if params == []:
-            print('void', end='')
-        else:
-            print()
-            for p in params[:-1]:
-                print('    {},'.format(p))
-            print('    {}'.format(params[-1]), end='')
-        print(');')
-
-    def generate_types(self, abi, types):
-        pass
-
-
 class CSyscallsInfoGenerator(CGenerator):
     def print_with_line_continuation(self, text):
         lines = str.splitlines(text)
@@ -300,7 +269,6 @@ class CSyscallsGenerator(CGenerator):
         print()
 
     def generate_syscall_keywords(self, syscall):
-        print(self.naming.function_keywords, end='')
         if syscall.noreturn:
             print('_Noreturn')
 
@@ -309,38 +277,6 @@ class CSyscallsGenerator(CGenerator):
 
     def generate_types(self, abi, types):
         pass
-
-
-class CSyscallWrappersGenerator(CSyscallsGenerator):
-    def generate_syscalls(self, abi, syscalls):
-        print('extern {prefix}syscalls_t {prefix}syscalls;\n'.format(
-            prefix=self.naming.prefix))
-        for s in sorted(abi.syscalls):
-            self.generate_syscall(abi, abi.syscalls[s])
-
-    def generate_syscall_body(self, abi, syscall):
-        print('{')
-
-        if not syscall.noreturn:
-            print('return ', end='')
-
-        print(
-            '{}syscalls.{}('.format(self.naming.prefix, syscall.name), end='')
-
-        params = []
-        for p in syscall.input.raw_members:
-            params.append(p.name)
-        for p in syscall.output.raw_members:
-            params.append(p.name)
-
-        if len(params) > 0:
-            print(','.join(params))
-        print(');')
-
-        if syscall.noreturn:
-            print('for (;;);')
-
-        print('}')
 
 
 class CLinuxSyscallsGenerator(CSyscallsGenerator):

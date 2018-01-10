@@ -30,284 +30,181 @@
 
 #include "cloudabi_syscalls_struct.h"
 
-extern cloudabi_syscalls_t cloudabi_syscalls;
+cloudabi_errno_t cloudabi_sys_clock_res_get(cloudabi_clockid_t clock_id,
+                                            cloudabi_timestamp_t *resolution);
 
-static inline cloudabi_errno_t cloudabi_sys_clock_res_get(
-    cloudabi_clockid_t clock_id, cloudabi_timestamp_t *resolution) {
-  return cloudabi_syscalls.clock_res_get(clock_id, resolution);
-}
+cloudabi_errno_t cloudabi_sys_clock_time_get(cloudabi_clockid_t clock_id,
+                                             cloudabi_timestamp_t precision,
+                                             cloudabi_timestamp_t *time);
 
-static inline cloudabi_errno_t cloudabi_sys_clock_time_get(
-    cloudabi_clockid_t clock_id, cloudabi_timestamp_t precision,
-    cloudabi_timestamp_t *time) {
-  return cloudabi_syscalls.clock_time_get(clock_id, precision, time);
-}
+cloudabi_errno_t cloudabi_sys_condvar_signal(_Atomic(cloudabi_condvar_t) *
+                                                 condvar,
+                                             cloudabi_scope_t scope,
+                                             cloudabi_nthreads_t nwaiters);
 
-static inline cloudabi_errno_t cloudabi_sys_condvar_signal(
-    _Atomic(cloudabi_condvar_t) * condvar, cloudabi_scope_t scope,
-    cloudabi_nthreads_t nwaiters) {
-  return cloudabi_syscalls.condvar_signal(condvar, scope, nwaiters);
-}
+cloudabi_errno_t cloudabi_sys_fd_close(cloudabi_fd_t fd);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_close(cloudabi_fd_t fd) {
-  return cloudabi_syscalls.fd_close(fd);
-}
+cloudabi_errno_t cloudabi_sys_fd_create1(cloudabi_filetype_t type,
+                                         cloudabi_fd_t *fd);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_create1(cloudabi_filetype_t type,
-                                                       cloudabi_fd_t *fd) {
-  return cloudabi_syscalls.fd_create1(type, fd);
-}
+cloudabi_errno_t cloudabi_sys_fd_create2(cloudabi_filetype_t type,
+                                         cloudabi_fd_t *fd1,
+                                         cloudabi_fd_t *fd2);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_create2(cloudabi_filetype_t type,
-                                                       cloudabi_fd_t *fd1,
-                                                       cloudabi_fd_t *fd2) {
-  return cloudabi_syscalls.fd_create2(type, fd1, fd2);
-}
+cloudabi_errno_t cloudabi_sys_fd_datasync(cloudabi_fd_t fd);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_datasync(cloudabi_fd_t fd) {
-  return cloudabi_syscalls.fd_datasync(fd);
-}
+cloudabi_errno_t cloudabi_sys_fd_dup(cloudabi_fd_t from, cloudabi_fd_t *fd);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_dup(cloudabi_fd_t from,
-                                                   cloudabi_fd_t *fd) {
-  return cloudabi_syscalls.fd_dup(from, fd);
-}
+cloudabi_errno_t cloudabi_sys_fd_pread(cloudabi_fd_t fd,
+                                       const cloudabi_iovec_t *iovs,
+                                       size_t iovs_len,
+                                       cloudabi_filesize_t offset,
+                                       size_t *nread);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_pread(
-    cloudabi_fd_t fd, const cloudabi_iovec_t *iovs, size_t iovs_len,
-    cloudabi_filesize_t offset, size_t *nread) {
-  return cloudabi_syscalls.fd_pread(fd, iovs, iovs_len, offset, nread);
-}
+cloudabi_errno_t cloudabi_sys_fd_pwrite(cloudabi_fd_t fd,
+                                        const cloudabi_ciovec_t *iovs,
+                                        size_t iovs_len,
+                                        cloudabi_filesize_t offset,
+                                        size_t *nwritten);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_pwrite(
-    cloudabi_fd_t fd, const cloudabi_ciovec_t *iovs, size_t iovs_len,
-    cloudabi_filesize_t offset, size_t *nwritten) {
-  return cloudabi_syscalls.fd_pwrite(fd, iovs, iovs_len, offset, nwritten);
-}
+cloudabi_errno_t cloudabi_sys_fd_read(cloudabi_fd_t fd,
+                                      const cloudabi_iovec_t *iovs,
+                                      size_t iovs_len, size_t *nread);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_read(
-    cloudabi_fd_t fd, const cloudabi_iovec_t *iovs, size_t iovs_len,
-    size_t *nread) {
-  return cloudabi_syscalls.fd_read(fd, iovs, iovs_len, nread);
-}
+cloudabi_errno_t cloudabi_sys_fd_replace(cloudabi_fd_t from, cloudabi_fd_t to);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_replace(cloudabi_fd_t from,
-                                                       cloudabi_fd_t to) {
-  return cloudabi_syscalls.fd_replace(from, to);
-}
+cloudabi_errno_t cloudabi_sys_fd_seek(cloudabi_fd_t fd,
+                                      cloudabi_filedelta_t offset,
+                                      cloudabi_whence_t whence,
+                                      cloudabi_filesize_t *newoffset);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_seek(
-    cloudabi_fd_t fd, cloudabi_filedelta_t offset, cloudabi_whence_t whence,
-    cloudabi_filesize_t *newoffset) {
-  return cloudabi_syscalls.fd_seek(fd, offset, whence, newoffset);
-}
+cloudabi_errno_t cloudabi_sys_fd_stat_get(cloudabi_fd_t fd,
+                                          cloudabi_fdstat_t *buf);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_stat_get(
-    cloudabi_fd_t fd, cloudabi_fdstat_t *buf) {
-  return cloudabi_syscalls.fd_stat_get(fd, buf);
-}
+cloudabi_errno_t cloudabi_sys_fd_stat_put(cloudabi_fd_t fd,
+                                          const cloudabi_fdstat_t *buf,
+                                          cloudabi_fdsflags_t flags);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_stat_put(
-    cloudabi_fd_t fd, const cloudabi_fdstat_t *buf, cloudabi_fdsflags_t flags) {
-  return cloudabi_syscalls.fd_stat_put(fd, buf, flags);
-}
+cloudabi_errno_t cloudabi_sys_fd_sync(cloudabi_fd_t fd);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_sync(cloudabi_fd_t fd) {
-  return cloudabi_syscalls.fd_sync(fd);
-}
+cloudabi_errno_t cloudabi_sys_fd_write(cloudabi_fd_t fd,
+                                       const cloudabi_ciovec_t *iovs,
+                                       size_t iovs_len, size_t *nwritten);
 
-static inline cloudabi_errno_t cloudabi_sys_fd_write(
-    cloudabi_fd_t fd, const cloudabi_ciovec_t *iovs, size_t iovs_len,
-    size_t *nwritten) {
-  return cloudabi_syscalls.fd_write(fd, iovs, iovs_len, nwritten);
-}
+cloudabi_errno_t cloudabi_sys_file_advise(cloudabi_fd_t fd,
+                                          cloudabi_filesize_t offset,
+                                          cloudabi_filesize_t len,
+                                          cloudabi_advice_t advice);
 
-static inline cloudabi_errno_t cloudabi_sys_file_advise(
-    cloudabi_fd_t fd, cloudabi_filesize_t offset, cloudabi_filesize_t len,
-    cloudabi_advice_t advice) {
-  return cloudabi_syscalls.file_advise(fd, offset, len, advice);
-}
+cloudabi_errno_t cloudabi_sys_file_allocate(cloudabi_fd_t fd,
+                                            cloudabi_filesize_t offset,
+                                            cloudabi_filesize_t len);
 
-static inline cloudabi_errno_t cloudabi_sys_file_allocate(
-    cloudabi_fd_t fd, cloudabi_filesize_t offset, cloudabi_filesize_t len) {
-  return cloudabi_syscalls.file_allocate(fd, offset, len);
-}
+cloudabi_errno_t cloudabi_sys_file_create(cloudabi_fd_t fd, const char *path,
+                                          size_t path_len,
+                                          cloudabi_filetype_t type);
 
-static inline cloudabi_errno_t cloudabi_sys_file_create(
-    cloudabi_fd_t fd, const char *path, size_t path_len,
-    cloudabi_filetype_t type) {
-  return cloudabi_syscalls.file_create(fd, path, path_len, type);
-}
+cloudabi_errno_t cloudabi_sys_file_link(cloudabi_lookup_t fd1,
+                                        const char *path1, size_t path1_len,
+                                        cloudabi_fd_t fd2, const char *path2,
+                                        size_t path2_len);
 
-static inline cloudabi_errno_t cloudabi_sys_file_link(
-    cloudabi_lookup_t fd1, const char *path1, size_t path1_len,
-    cloudabi_fd_t fd2, const char *path2, size_t path2_len) {
-  return cloudabi_syscalls.file_link(fd1, path1, path1_len, fd2, path2,
-                                     path2_len);
-}
+cloudabi_errno_t cloudabi_sys_file_open(cloudabi_lookup_t dirfd,
+                                        const char *path, size_t path_len,
+                                        cloudabi_oflags_t oflags,
+                                        const cloudabi_fdstat_t *fds,
+                                        cloudabi_fd_t *fd);
 
-static inline cloudabi_errno_t cloudabi_sys_file_open(
-    cloudabi_lookup_t dirfd, const char *path, size_t path_len,
-    cloudabi_oflags_t oflags, const cloudabi_fdstat_t *fds, cloudabi_fd_t *fd) {
-  return cloudabi_syscalls.file_open(dirfd, path, path_len, oflags, fds, fd);
-}
+cloudabi_errno_t cloudabi_sys_file_readdir(cloudabi_fd_t fd, void *buf,
+                                           size_t buf_len,
+                                           cloudabi_dircookie_t cookie,
+                                           size_t *bufused);
 
-static inline cloudabi_errno_t cloudabi_sys_file_readdir(
-    cloudabi_fd_t fd, void *buf, size_t buf_len, cloudabi_dircookie_t cookie,
-    size_t *bufused) {
-  return cloudabi_syscalls.file_readdir(fd, buf, buf_len, cookie, bufused);
-}
+cloudabi_errno_t cloudabi_sys_file_readlink(cloudabi_fd_t fd, const char *path,
+                                            size_t path_len, char *buf,
+                                            size_t buf_len, size_t *bufused);
 
-static inline cloudabi_errno_t cloudabi_sys_file_readlink(
-    cloudabi_fd_t fd, const char *path, size_t path_len, char *buf,
-    size_t buf_len, size_t *bufused) {
-  return cloudabi_syscalls.file_readlink(fd, path, path_len, buf, buf_len,
-                                         bufused);
-}
+cloudabi_errno_t cloudabi_sys_file_rename(cloudabi_fd_t fd1, const char *path1,
+                                          size_t path1_len, cloudabi_fd_t fd2,
+                                          const char *path2, size_t path2_len);
 
-static inline cloudabi_errno_t cloudabi_sys_file_rename(
-    cloudabi_fd_t fd1, const char *path1, size_t path1_len, cloudabi_fd_t fd2,
-    const char *path2, size_t path2_len) {
-  return cloudabi_syscalls.file_rename(fd1, path1, path1_len, fd2, path2,
-                                       path2_len);
-}
+cloudabi_errno_t cloudabi_sys_file_stat_fget(cloudabi_fd_t fd,
+                                             cloudabi_filestat_t *buf);
 
-static inline cloudabi_errno_t cloudabi_sys_file_stat_fget(
-    cloudabi_fd_t fd, cloudabi_filestat_t *buf) {
-  return cloudabi_syscalls.file_stat_fget(fd, buf);
-}
+cloudabi_errno_t cloudabi_sys_file_stat_fput(cloudabi_fd_t fd,
+                                             const cloudabi_filestat_t *buf,
+                                             cloudabi_fsflags_t flags);
 
-static inline cloudabi_errno_t cloudabi_sys_file_stat_fput(
-    cloudabi_fd_t fd, const cloudabi_filestat_t *buf,
-    cloudabi_fsflags_t flags) {
-  return cloudabi_syscalls.file_stat_fput(fd, buf, flags);
-}
+cloudabi_errno_t cloudabi_sys_file_stat_get(cloudabi_lookup_t fd,
+                                            const char *path, size_t path_len,
+                                            cloudabi_filestat_t *buf);
 
-static inline cloudabi_errno_t cloudabi_sys_file_stat_get(
-    cloudabi_lookup_t fd, const char *path, size_t path_len,
-    cloudabi_filestat_t *buf) {
-  return cloudabi_syscalls.file_stat_get(fd, path, path_len, buf);
-}
+cloudabi_errno_t cloudabi_sys_file_stat_put(cloudabi_lookup_t fd,
+                                            const char *path, size_t path_len,
+                                            const cloudabi_filestat_t *buf,
+                                            cloudabi_fsflags_t flags);
 
-static inline cloudabi_errno_t cloudabi_sys_file_stat_put(
-    cloudabi_lookup_t fd, const char *path, size_t path_len,
-    const cloudabi_filestat_t *buf, cloudabi_fsflags_t flags) {
-  return cloudabi_syscalls.file_stat_put(fd, path, path_len, buf, flags);
-}
+cloudabi_errno_t cloudabi_sys_file_symlink(const char *path1, size_t path1_len,
+                                           cloudabi_fd_t fd, const char *path2,
+                                           size_t path2_len);
 
-static inline cloudabi_errno_t cloudabi_sys_file_symlink(const char *path1,
-                                                         size_t path1_len,
-                                                         cloudabi_fd_t fd,
-                                                         const char *path2,
-                                                         size_t path2_len) {
-  return cloudabi_syscalls.file_symlink(path1, path1_len, fd, path2, path2_len);
-}
+cloudabi_errno_t cloudabi_sys_file_unlink(cloudabi_fd_t fd, const char *path,
+                                          size_t path_len,
+                                          cloudabi_ulflags_t flags);
 
-static inline cloudabi_errno_t cloudabi_sys_file_unlink(
-    cloudabi_fd_t fd, const char *path, size_t path_len,
-    cloudabi_ulflags_t flags) {
-  return cloudabi_syscalls.file_unlink(fd, path, path_len, flags);
-}
+cloudabi_errno_t cloudabi_sys_lock_unlock(_Atomic(cloudabi_lock_t) * lock,
+                                          cloudabi_scope_t scope);
 
-static inline cloudabi_errno_t cloudabi_sys_lock_unlock(
-    _Atomic(cloudabi_lock_t) * lock, cloudabi_scope_t scope) {
-  return cloudabi_syscalls.lock_unlock(lock, scope);
-}
+cloudabi_errno_t cloudabi_sys_mem_advise(void *mapping, size_t mapping_len,
+                                         cloudabi_advice_t advice);
 
-static inline cloudabi_errno_t cloudabi_sys_mem_advise(
-    void *mapping, size_t mapping_len, cloudabi_advice_t advice) {
-  return cloudabi_syscalls.mem_advise(mapping, mapping_len, advice);
-}
+cloudabi_errno_t cloudabi_sys_mem_map(void *addr, size_t len,
+                                      cloudabi_mprot_t prot,
+                                      cloudabi_mflags_t flags, cloudabi_fd_t fd,
+                                      cloudabi_filesize_t off, void **mem);
 
-static inline cloudabi_errno_t cloudabi_sys_mem_map(
-    void *addr, size_t len, cloudabi_mprot_t prot, cloudabi_mflags_t flags,
-    cloudabi_fd_t fd, cloudabi_filesize_t off, void **mem) {
-  return cloudabi_syscalls.mem_map(addr, len, prot, flags, fd, off, mem);
-}
+cloudabi_errno_t cloudabi_sys_mem_protect(void *mapping, size_t mapping_len,
+                                          cloudabi_mprot_t prot);
 
-static inline cloudabi_errno_t cloudabi_sys_mem_protect(void *mapping,
-                                                        size_t mapping_len,
-                                                        cloudabi_mprot_t prot) {
-  return cloudabi_syscalls.mem_protect(mapping, mapping_len, prot);
-}
+cloudabi_errno_t cloudabi_sys_mem_sync(void *mapping, size_t mapping_len,
+                                       cloudabi_msflags_t flags);
 
-static inline cloudabi_errno_t cloudabi_sys_mem_sync(void *mapping,
-                                                     size_t mapping_len,
-                                                     cloudabi_msflags_t flags) {
-  return cloudabi_syscalls.mem_sync(mapping, mapping_len, flags);
-}
+cloudabi_errno_t cloudabi_sys_mem_unmap(void *mapping, size_t mapping_len);
 
-static inline cloudabi_errno_t cloudabi_sys_mem_unmap(void *mapping,
-                                                      size_t mapping_len) {
-  return cloudabi_syscalls.mem_unmap(mapping, mapping_len);
-}
+cloudabi_errno_t cloudabi_sys_poll(const cloudabi_subscription_t *in,
+                                   cloudabi_event_t *out, size_t nsubscriptions,
+                                   size_t *nevents);
 
-static inline cloudabi_errno_t cloudabi_sys_poll(
-    const cloudabi_subscription_t *in, cloudabi_event_t *out,
-    size_t nsubscriptions, size_t *nevents) {
-  return cloudabi_syscalls.poll(in, out, nsubscriptions, nevents);
-}
+cloudabi_errno_t cloudabi_sys_proc_exec(cloudabi_fd_t fd, const void *data,
+                                        size_t data_len,
+                                        const cloudabi_fd_t *fds,
+                                        size_t fds_len);
 
-static inline cloudabi_errno_t cloudabi_sys_proc_exec(cloudabi_fd_t fd,
-                                                      const void *data,
-                                                      size_t data_len,
-                                                      const cloudabi_fd_t *fds,
-                                                      size_t fds_len) {
-  return cloudabi_syscalls.proc_exec(fd, data, data_len, fds, fds_len);
-}
+_Noreturn void cloudabi_sys_proc_exit(cloudabi_exitcode_t rval);
 
-static inline _Noreturn void cloudabi_sys_proc_exit(cloudabi_exitcode_t rval) {
-  cloudabi_syscalls.proc_exit(rval);
-  for (;;)
-    ;
-}
+cloudabi_errno_t cloudabi_sys_proc_fork(cloudabi_fd_t *fd, cloudabi_tid_t *tid);
 
-static inline cloudabi_errno_t cloudabi_sys_proc_fork(cloudabi_fd_t *fd,
-                                                      cloudabi_tid_t *tid) {
-  return cloudabi_syscalls.proc_fork(fd, tid);
-}
+cloudabi_errno_t cloudabi_sys_proc_raise(cloudabi_signal_t sig);
 
-static inline cloudabi_errno_t cloudabi_sys_proc_raise(cloudabi_signal_t sig) {
-  return cloudabi_syscalls.proc_raise(sig);
-}
+cloudabi_errno_t cloudabi_sys_random_get(void *buf, size_t buf_len);
 
-static inline cloudabi_errno_t cloudabi_sys_random_get(void *buf,
-                                                       size_t buf_len) {
-  return cloudabi_syscalls.random_get(buf, buf_len);
-}
+cloudabi_errno_t cloudabi_sys_sock_recv(cloudabi_fd_t sock,
+                                        const cloudabi_recv_in_t *in,
+                                        cloudabi_recv_out_t *out);
 
-static inline cloudabi_errno_t cloudabi_sys_sock_recv(
-    cloudabi_fd_t sock, const cloudabi_recv_in_t *in,
-    cloudabi_recv_out_t *out) {
-  return cloudabi_syscalls.sock_recv(sock, in, out);
-}
+cloudabi_errno_t cloudabi_sys_sock_send(cloudabi_fd_t sock,
+                                        const cloudabi_send_in_t *in,
+                                        cloudabi_send_out_t *out);
 
-static inline cloudabi_errno_t cloudabi_sys_sock_send(
-    cloudabi_fd_t sock, const cloudabi_send_in_t *in,
-    cloudabi_send_out_t *out) {
-  return cloudabi_syscalls.sock_send(sock, in, out);
-}
+cloudabi_errno_t cloudabi_sys_sock_shutdown(cloudabi_fd_t sock,
+                                            cloudabi_sdflags_t how);
 
-static inline cloudabi_errno_t cloudabi_sys_sock_shutdown(
-    cloudabi_fd_t sock, cloudabi_sdflags_t how) {
-  return cloudabi_syscalls.sock_shutdown(sock, how);
-}
+cloudabi_errno_t cloudabi_sys_thread_create(cloudabi_threadattr_t *attr,
+                                            cloudabi_tid_t *tid);
 
-static inline cloudabi_errno_t cloudabi_sys_thread_create(
-    cloudabi_threadattr_t *attr, cloudabi_tid_t *tid) {
-  return cloudabi_syscalls.thread_create(attr, tid);
-}
+_Noreturn void cloudabi_sys_thread_exit(_Atomic(cloudabi_lock_t) * lock,
+                                        cloudabi_scope_t scope);
 
-static inline _Noreturn void cloudabi_sys_thread_exit(_Atomic(cloudabi_lock_t) *
-                                                          lock,
-                                                      cloudabi_scope_t scope) {
-  cloudabi_syscalls.thread_exit(lock, scope);
-  for (;;)
-    ;
-}
-
-static inline cloudabi_errno_t cloudabi_sys_thread_yield(void) {
-  return cloudabi_syscalls.thread_yield();
-}
+cloudabi_errno_t cloudabi_sys_thread_yield(void);
 
 #endif

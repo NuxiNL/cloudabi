@@ -8,14 +8,12 @@ class CNaming:
                  md_prefix=None,
                  c11=True,
                  syscall_prefix=None,
-                 pointer_prefix='',
-                 function_keywords=''):
+                 pointer_prefix=''):
         self.prefix = prefix
         self.md_prefix = md_prefix
         self.c11 = c11
         self.syscall_prefix = syscall_prefix
         self.pointer_prefix = pointer_prefix
-        self.function_keywords = function_keywords
 
     def typename(self, type):
         if isinstance(type, VoidType):
