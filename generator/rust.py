@@ -390,8 +390,7 @@ class RustGenerator(Generator):
             assert not isinstance(p, RangeStructMember)
             args.append(p.name + '_')
 
-        print('  cloudabi_sys_{}({})'.format(syscall.name,
-                                                    ', '.join(args)))
+        print('  cloudabi_sys_{}({})'.format(syscall.name, ', '.join(args)))
         print('}')
 
     def syscall_param(self, p, output=False):
