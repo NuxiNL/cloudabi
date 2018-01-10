@@ -578,7 +578,7 @@ enum uint8 scope
 flags uint8 mprot
 	| Memory page protection options.
 	|
-	| This implementation enforces the W^X property: Pages cannot be
+	| This implementation enforces the `W^X` property: Pages cannot be
 	| mapped for execution while also mapped for writing.
 	@cprefix PROT_
 	0x01 exec

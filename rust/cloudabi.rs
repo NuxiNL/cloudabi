@@ -656,7 +656,7 @@ bitflags! {
 bitflags! {
   /// Memory page protection options.
   ///
-  /// This implementation enforces the W^X property: Pages cannot be
+  /// This implementation enforces the `W^X` property: Pages cannot be
   /// mapped for execution while also mapped for writing.
   #[repr(C)]
   pub struct mprot: u8 {

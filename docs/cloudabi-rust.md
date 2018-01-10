@@ -2316,7 +2316,7 @@ Possible values:
 
 Memory page protection options.
 
-This implementation enforces the W^X property: Pages cannot be
+This implementation enforces the `W^X` property: Pages cannot be
 mapped for execution while also mapped for writing.
 
 Used by [`mem_map()`](#mem_map) and [`mem_protect()`](#mem_protect).
