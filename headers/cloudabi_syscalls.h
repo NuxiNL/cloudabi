@@ -28,6 +28,8 @@
 #ifndef CLOUDABI_SYSCALLS_H
 #define CLOUDABI_SYSCALLS_H
 
+#include "cloudabi_types.h"
+
 cloudabi_errno_t cloudabi_sys_clock_res_get(cloudabi_clockid_t clock_id,
                                             cloudabi_timestamp_t *resolution);
 
