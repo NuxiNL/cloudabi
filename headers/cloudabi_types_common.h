@@ -37,6 +37,14 @@
 #include <stdint.h>
 #endif
 
+// Make this code build with g++.
+#ifdef __cplusplus && defined(__GNUC__) && !defined(__clang__)
+#define _Alignas alignas
+#define _Alignof alignof
+#define _Atomic(x) x
+#define _Static_assert static_assert
+#endif
+
 typedef uint8_t cloudabi_advice_t;
 #define CLOUDABI_ADVICE_DONTNEED   1
 #define CLOUDABI_ADVICE_NOREUSE    2

@@ -54,7 +54,16 @@ with open('headers/cloudabi_types_common.h', 'w') as f:
             '#else\n'
             '#include <stddef.h>\n'
             '#include <stdint.h>\n'
-            '#endif\n').generate_abi(abi)
+            '#endif\n'
+            '\n'
+            '// Make this code build with g++.\n'
+            '#ifdef __cplusplus && defined(__GNUC__) && !defined(__clang__)\n'
+            '#define _Alignas alignas\n'
+            '#define _Alignof alignof\n'
+            '#define _Atomic(x) x\n'
+            '#define _Static_assert static_assert\n'
+            '#endif\n'
+            ).generate_abi(abi)
 
 with open('headers/cloudabi_types.h', 'w') as f:
     with redirect_stdout(f):
