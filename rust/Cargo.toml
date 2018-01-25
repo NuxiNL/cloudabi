@@ -2,7 +2,7 @@
 name = "cloudabi"
 description = "Low level interface to CloudABI. Contains all syscalls and related types."
 version = "0.0.3"
-homepage = "https://nuxi.nl/cloudabi/"
+homepage = "https://cloudabi.org/"
 repository = "https://github.com/nuxinl/cloudabi"
 documentation = "https://docs.rs/cloudabi/"
 keywords = ["cloudabi"]

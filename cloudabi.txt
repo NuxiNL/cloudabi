@@ -68,11 +68,9 @@
 | Instructions for using CloudABI (including kernel modules/patches,
 | toolchain, and ports) are available for several operating systems:
 |
-| - [Arch Linux](https://nuxi.nl/cloudabi/archlinux/)
-| - [Debian, Ubuntu, and other Debian derivatives](https://nuxi.nl/cloudabi/debian/)
-| - [FreeBSD, PC-BSD and DragonFly BSD](https://nuxi.nl/cloudabi/freebsd/)
-| - [Mac OS X](https://nuxi.nl/cloudabi/mac/)
-| - [NetBSD](https://nuxi.nl/cloudabi/netbsd/)
+| - [FreeBSD](https://cloudabi.org/run/freebsd/)
+| - [Linux](https://cloudabi.org/run/linux/)
+| - [macOS](https://cloudabi.org/run/macos/)
 |
 | ## Specification of the ABI
 |
