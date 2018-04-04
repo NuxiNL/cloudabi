@@ -30,8 +30,16 @@ class CGenerator(Generator):
             print()
         if self.preamble != '':
             print(self.preamble)
+        print('#ifdef __cplusplus')
+        print('extern "C" {')
+        print('#endif')
+        print()
 
     def generate_foot(self, abi):
+        print('#ifdef __cplusplus')
+        print('}  // extern "C"')
+        print('#endif')
+        print()
         if self.postamble != '':
             print(self.postamble)
         if self.header_guard is not None:

@@ -30,6 +30,10 @@
 
 #include "cloudabi64_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cloudabi_errno_t cloudabi64_sys_fd_pread(cloudabi_fd_t fd,
                                          const cloudabi64_iovec_t __user *iovs,
                                          size_t iovs_len,
@@ -62,5 +66,9 @@ cloudabi_errno_t cloudabi64_sys_sock_send(cloudabi_fd_t sock,
 
 cloudabi_errno_t cloudabi64_sys_thread_create(
     cloudabi64_threadattr_t __user *attr, cloudabi_tid_t *tid);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif

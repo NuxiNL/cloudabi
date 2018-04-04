@@ -57,7 +57,7 @@ with open('headers/cloudabi_types_common.h', 'w') as f:
             '#endif\n'
             '\n'
             '// Make this code build with g++.\n'
-            '#ifdef __cplusplus && defined(__GNUC__) && !defined(__clang__)\n'
+            '#if defined(__cplusplus) && defined(__GNUC__) && !defined(__clang__)\n'
             '#define _Alignas alignas\n'
             '#define _Alignof alignof\n'
             '#define _Atomic(x) x\n'

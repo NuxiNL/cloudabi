@@ -30,6 +30,10 @@
 #include "cloudabi64_syscalls.h"
 #include "cloudabi_syscalls.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef __LITTLE_ENDIAN
 #define MEMBER(type, name) _Alignas(8) type name
 #else
@@ -536,3 +540,6 @@ static cloudabi_errno_t (*syscalls[])(const void *, void *) = {
     do_sock_send,     do_sock_shutdown,  do_thread_create,  do_thread_exit,
     do_thread_yield,
 };
+#ifdef __cplusplus
+}  // extern "C"
+#endif

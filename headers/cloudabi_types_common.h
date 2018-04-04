@@ -38,11 +38,15 @@
 #endif
 
 // Make this code build with g++.
-#ifdef __cplusplus && defined(__GNUC__) && !defined(__clang__)
+#if defined(__cplusplus) && defined(__GNUC__) && !defined(__clang__)
 #define _Alignas alignas
 #define _Alignof alignof
 #define _Atomic(x) x
 #define _Static_assert static_assert
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef uint8_t cloudabi_advice_t;
@@ -433,5 +437,9 @@ _Static_assert(offsetof(cloudabi_lookup_t, fd) == 0, "Incorrect layout");
 _Static_assert(offsetof(cloudabi_lookup_t, flags) == 4, "Incorrect layout");
 _Static_assert(sizeof(cloudabi_lookup_t) == 8, "Incorrect layout");
 _Static_assert(_Alignof(cloudabi_lookup_t) == 4, "Incorrect layout");
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif

@@ -30,6 +30,10 @@
 
 #include "cloudabi_types_common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
   _Alignas(4) cloudabi_auxtype_t a_type;
   union {
@@ -185,5 +189,9 @@ _Static_assert(offsetof(cloudabi32_threadattr_t, stack_len) == 8, "Incorrect lay
 _Static_assert(offsetof(cloudabi32_threadattr_t, argument) == 12, "Incorrect layout");
 _Static_assert(sizeof(cloudabi32_threadattr_t) == 16, "Incorrect layout");
 _Static_assert(_Alignof(cloudabi32_threadattr_t) == 4, "Incorrect layout");
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif
