@@ -30,6 +30,10 @@
 
 #include "cloudabi_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cloudabi_errno_t cloudabi_sys_clock_res_get(cloudabi_clockid_t clock_id,
                                             cloudabi_timestamp_t *resolution);
 
@@ -206,5 +210,9 @@ _Noreturn void cloudabi_sys_thread_exit(_Atomic(cloudabi_lock_t) * lock,
                                         cloudabi_scope_t scope);
 
 cloudabi_errno_t cloudabi_sys_thread_yield(void);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif

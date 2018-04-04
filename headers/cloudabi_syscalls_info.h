@@ -28,6 +28,10 @@
 #ifndef CLOUDABI_SYSCALLS_INFO_H
 #define CLOUDABI_SYSCALLS_INFO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CLOUDABI_SYSCALL_NAMES(SYSCALL) \
   SYSCALL(clock_res_get)                \
   SYSCALL(clock_time_get)               \
@@ -579,5 +583,9 @@
 #define CLOUDABI_SYSCALL_RETURNS_thread_create(yes, no) yes
 #define CLOUDABI_SYSCALL_RETURNS_thread_exit(yes, no) no
 #define CLOUDABI_SYSCALL_RETURNS_thread_yield(yes, no) yes
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif
