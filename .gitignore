@@ -1,3 +1,4 @@
 .*
 !.gitignore
+/bazel-*
 __pycache__

@@ -1,0 +1,24 @@
+cc_library(
+    name = "cloudabi_syscalls",
+    hdrs = ["cloudabi_syscalls.h"],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
+    deps = [":cloudabi_types"],
+)
+
+cc_library(
+    name = "cloudabi_syscalls_info",
+    hdrs = ["cloudabi_syscalls_info.h"],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "cloudabi_types",
+    hdrs = [
+        "cloudabi_types.h",
+        "cloudabi_types_common.h",
+    ],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
+)
