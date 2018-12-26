@@ -109,6 +109,8 @@ class CSyscalldefsGenerator(CGenerator):
                         or isinstance(type, OpaqueType)):
                     if len(type.values) == 1 and type.values[0].value == 0:
                         val_format = 'd'
+                    elif type.int_type.name[0] == 'i': # Signed
+                        val_format = 'd'
                     else:
                         val_format = '#0{}x'.format(type.layout.size[0] * 2 +
                                                     2)
