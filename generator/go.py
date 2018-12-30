@@ -115,3 +115,51 @@ class GoGenerator(Generator):
     def generate_layout_assert(self, expression, value):
         print('_ uintptr = {} - {}'.format(expression, value[1]))
         print('_ uintptr = {} - {}'.format(value[1], expression))
+
+
+class GoSyscallWrapperGenerator(Generator):
+    def __init__(self,
+                 naming,
+                 machine_dep=None):
+        super().__init__(comment_prefix='// ')
+        self.naming = naming
+        self.machine_dep = machine_dep
+
+    def generate_head(self, abi):
+        super().generate_head(abi)
+        print('package runtime')
+        print('import (')
+        print('  "internal/syscall/cloudabi"')
+        print('  "unsafe"')
+        print(')')
+        print()
+
+    def generate_syscall(self, abi, syscall):
+        print('func cloudabi_sys_{}('.format(syscall.name))
+        for i, p in enumerate(syscall.input.raw_members):
+            print('  i{} {},'.format(i, self.naming.typename(p.type, package_prefix='cloudabi.')))
+        if not syscall.noreturn:
+            print(') (')
+            for i, p in enumerate(syscall.output.raw_members):
+                print('  o{} {},'.format(i, self.naming.typename(p.type, package_prefix='cloudabi.')))
+            print('  r cloudabi.Errno,')
+        print(') {')
+        print('  args := struct{')
+        for i, p in enumerate(syscall.input.raw_members):
+            print('  i{} {}'.format(i, self.naming.typename(p.type, package_prefix='cloudabi.')))
+        for i, p in enumerate(syscall.output.raw_members):
+            print('  o{} *{}'.format(i, self.naming.typename(p.type, package_prefix='cloudabi.')))
+        print('  }{')
+        for i, p in enumerate(syscall.input.raw_members):
+            print('  i{}: i{},'.format(i, i))
+        for i, p in enumerate(syscall.output.raw_members):
+            print('  o{}: &o{},'.format(i, i))
+        print('  }')
+        if syscall.noreturn:
+            print('  asmcgocall(nil, unsafe.Pointer(&args))')
+            print('  throw("system call should not have returned")')
+        else:
+            print('  r = cloudabi.Errno(asmcgocall(nil, unsafe.Pointer(&args)))')
+            print('  return')
+        print('}')
+        print()

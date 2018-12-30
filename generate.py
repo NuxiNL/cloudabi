@@ -123,6 +123,10 @@ with open_and_gofmt('go/cloudabi.go') as f:
             naming=GoNaming(),
             machine_dep=False).generate_abi(abi)
 
+with open_and_gofmt('go/runtime/syscall_cloudabi.go') as f:
+    with redirect_stdout(f):
+        GoSyscallWrapperGenerator(naming=GoNaming()).generate_abi(abi)
+
 with open('rust/cloudabi.rs', 'w') as f:
     with redirect_stdout(f):
         RustGenerator(naming=RustNaming()).generate_abi(abi)
