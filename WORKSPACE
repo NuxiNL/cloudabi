@@ -1,1 +1,1 @@
-workspace(name = "com_github_nuxinl_cloudabi")
+workspace(name = "org_cloudabi_cloudabi")
