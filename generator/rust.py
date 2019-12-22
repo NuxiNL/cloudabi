@@ -296,45 +296,143 @@ macro_rules! bitflags {
                 self.naming.typename(type), type.layout.size[i]))
             print('  assert_eq!(core::mem::align_of::<{}>(), {});'.format(
                 self.naming.typename(type), type.layout.align[i]))
-            print('  unsafe {')
-            print('    let obj: {} = core::mem::uninitialized();'.format(
-                self.naming.typename(type)))
-            print('    let base = &obj as *const _ as usize;')
-            self.generate_offset_asserts(type.members, i)
-            print('  }')
+            mut = ''
+            if any(isinstance(m, VariantStructMember) for m in type.members):
+                mut = 'mut '
+            print('  let {}obj = '.format(mut), end='')
+            self.generate_test_value(type, '  ')
+            print(';')
+            print('  let base = &obj as *const _ as usize;')
+            self.generate_offset_asserts(type, type.members, i)
             print('}')
 
+    def generate_test_value(self, type, indent='', typename=None):
+        if typename is None:
+            typename = self.naming.typename(type)
+
+        if isinstance(type, VoidType):
+            print('()', end='')
+
+        elif isinstance(type, IntType) or isinstance(type, AliasType):
+            print('0', end='')
+
+        elif isinstance(type, PointerType):
+            if isinstance(type.target_type, FunctionType):
+                print(
+                    '{{ extern "C" fn f({}) -> {} {{'.format(
+                        ', '.join(
+                            '_: {}'.format(self.naming.typename(t.type))
+                            for t in type.target_type.parameters.members
+                        ),
+                        self.naming.typename(type.target_type.return_type),
+                    ),
+                    end = ''
+                )
+                if not isinstance(type.target_type.return_type, VoidType):
+                    print(' ', end='')
+                    self.generate_test_value(type.target_type.return_type, indent + '  ')
+                    print(' ', end='')
+                print('} f }', end = '')
+            else:
+                print('0 as {}'.format(typename), end='')
+
+        elif isinstance(type, FlagsType) or isinstance(type, EnumType):
+            if len(type.values) > 0:
+                valname = self.naming.valname(type, type.values[0])
+            else:
+                valname = 'DEFAULT'
+            print('{}::{}'.format(typename, valname), end='')
+
+        elif isinstance(type, OpaqueType):
+            print('{}(0)'.format(typename), end='')
+
+        elif isinstance(type, ArrayType):
+            print('[', end='')
+            self.generate_test_value(type.element_type, indent + '  ')
+            print('; {}]'.format(type.count), end='')
+
+        elif isinstance(type, FunctionType):
+            print('|| {}', end='')
+
+        elif isinstance(type, StructType):
+            print('{} {{'.format(typename))
+            for m in type.members:
+                if isinstance(m, SimpleStructMember):
+                    print('{}  {}: '.format(indent, self.naming.fieldname(m.name)), end='')
+                    self.generate_test_value(m.type, indent + '  ')
+                elif isinstance(m, RangeStructMember):
+                    print('{}  {}: (0 as *{} _, 0)'.format(
+                        indent,
+                        self.naming.fieldname(m.name),
+                        'const' if m.const else 'mut',
+                    ), end='')
+                else:
+                    print('{}  union: '.format(indent), end='')
+                    self.generate_test_union_value(type, m.members[0], indent + '  ')
+                print(',')
+            print('{}}}'.format(indent), end='')
+
+        else:
+            raise Exception('Unknown class of type: {}'.format(type))
+
+    def generate_test_union_value(self, type, variant, indent=''):
+        typename = self.naming.typename(type)
+        unionname = '{}_union'.format(typename)
+        if variant.name is None:
+            self.generate_test_value(variant.type, indent, typename = unionname)
+        else:
+            print('{} {{'.format(unionname))
+            memname = self.naming.fieldname(variant.name)
+            print('{}  {}: '.format(indent, memname), end='')
+            self.generate_test_value(variant.type, indent + '  ', typename = '{}_{}'.format(typename, memname))
+            print(',')
+            print('{}}}'.format(indent), end='')
+
     def generate_offset_asserts(self,
+                                type,
                                 members,
                                 machine_index,
                                 prefix='',
-                                offset=0):
+                                offset=0,
+                                indent='  '):
         for m in members:
             if isinstance(m, VariantMember):
                 mprefix = prefix + 'union.'
-                if m.name is not None:
-                    mprefix += self.naming.fieldname(m.name) + '.'
-                self.generate_offset_asserts(m.type.members, machine_index,
-                                             mprefix, offset)
+                if m.name is None:
+                    fieldname = self.naming.fieldname(m.type.members[0].name)
+                    fieldtype = m.type.members[0].type
+                    fieldtypename = None
+                else:
+                    fieldname = self.naming.fieldname(m.name)
+                    fieldtype = self.naming.fieldname(m.type)
+                    fieldtypename = '{}_{}'.format(self.naming.typename(type), self.naming.fieldname(m.name))
+                    mprefix += fieldname + '.'
+                print('  obj.{}union.{} = '.format(prefix, fieldname), end='')
+                self.generate_test_value(fieldtype, indent='  ', typename = fieldtypename)
+                print(';')
+                print('  unsafe {')
+                self.generate_offset_asserts(m.type, m.type.members, machine_index,
+                                             mprefix, offset, indent + '  ')
+                print('  }')
             elif isinstance(m, RangeStructMember):
                 for i, raw_m in enumerate(m.raw_members):
                     moffset = offset + raw_m.offset[machine_index]
                     self.generate_offset_assert(
                         prefix + self.naming.fieldname(m.name) + '.' + str(i),
-                        moffset)
+                        moffset, indent)
             elif m.offset is not None:
                 moffset = offset + m.offset[machine_index]
                 if isinstance(m, VariantStructMember):
-                    self.generate_offset_asserts(m.members, machine_index,
+                    self.generate_offset_asserts(type, m.members, machine_index,
                                                  prefix, moffset)
                 else:
                     self.generate_offset_assert(
-                        prefix + self.naming.fieldname(m.name), moffset)
+                        prefix + self.naming.fieldname(m.name), moffset, indent)
 
-    def generate_offset_assert(self, member_name, offset):
+    def generate_offset_assert(self, member_name, offset, indent=''):
         print(
-            '    assert_eq!(&obj.{} as *const _ as usize - base, {});'.format(
-                member_name, offset))
+            '{}assert_eq!(&obj.{} as *const _ as usize - base, {});'.format(
+                indent, member_name, offset))
 
     def generate_syscalls(self, abi, syscalls):
         print('/// The table with pointers to all syscall implementations.')
