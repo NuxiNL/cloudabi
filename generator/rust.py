@@ -347,9 +347,6 @@ macro_rules! bitflags {
             self.generate_test_value(type.element_type, indent + '  ')
             print('; {}]'.format(type.count), end='')
 
-        elif isinstance(type, FunctionType):
-            print('|| {}', end='')
-
         elif isinstance(type, StructType):
             print('{} {{'.format(typename))
             for m in type.members:
