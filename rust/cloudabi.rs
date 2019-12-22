@@ -1207,16 +1207,16 @@ pub struct event {
   /// the subscription request.
   pub error: errno,
   /// The type of the event that occurred.
-  pub type_: eventtype,
+  pub r#type: eventtype,
   pub union: event_union
 }
 /// A union inside `event`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union event_union {
-  /// Used when `type_` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
+  /// Used when `r#type` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
   pub fd_readwrite: event_fd_readwrite,
-  /// Used when `type_` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
+  /// Used when `r#type` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
   pub proc_terminate: event_proc_terminate,
 }
 #[repr(C)]
@@ -1255,7 +1255,7 @@ fn event_layout_test() {
     let base = &obj as *const _ as usize;
     assert_eq!(&obj.userdata as *const _ as usize - base, 0);
     assert_eq!(&obj.error as *const _ as usize - base, 8);
-    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.r#type as *const _ as usize - base, 10);
     assert_eq!(&obj.union.fd_readwrite.nbytes as *const _ as usize - base, 16);
     assert_eq!(&obj.union.fd_readwrite.unused as *const _ as usize - base, 24);
     assert_eq!(&obj.union.fd_readwrite.flags as *const _ as usize - base, 28);
@@ -1575,22 +1575,22 @@ pub struct subscription {
   /// must be provided as the first subscription and may
   /// only be followed by up to one other subscription,
   /// having type [`CLOCK`](enum.eventtype.html#variant.CLOCK).
-  pub type_: eventtype,
+  pub r#type: eventtype,
   pub union: subscription_union
 }
 /// A union inside `subscription`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union subscription_union {
-  /// Used when `type_` is [`CLOCK`](enum.eventtype.html#variant.CLOCK).
+  /// Used when `r#type` is [`CLOCK`](enum.eventtype.html#variant.CLOCK).
   pub clock: subscription_clock,
-  /// Used when `type_` is [`CONDVAR`](enum.eventtype.html#variant.CONDVAR).
+  /// Used when `r#type` is [`CONDVAR`](enum.eventtype.html#variant.CONDVAR).
   pub condvar: subscription_condvar,
-  /// Used when `type_` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
+  /// Used when `r#type` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
   pub fd_readwrite: subscription_fd_readwrite,
-  /// Used when `type_` is [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK) or [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK).
+  /// Used when `r#type` is [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK) or [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK).
   pub lock: subscription_lock,
-  /// Used when `type_` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
+  /// Used when `r#type` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
   pub proc_terminate: subscription_proc_terminate,
 }
 #[repr(C)]
@@ -1674,7 +1674,7 @@ fn subscription_layout_test_32() {
     let base = &obj as *const _ as usize;
     assert_eq!(&obj.userdata as *const _ as usize - base, 0);
     assert_eq!(&obj.unused as *const _ as usize - base, 8);
-    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.r#type as *const _ as usize - base, 10);
     assert_eq!(&obj.union.clock.identifier as *const _ as usize - base, 16);
     assert_eq!(&obj.union.clock.clock_id as *const _ as usize - base, 24);
     assert_eq!(&obj.union.clock.timeout as *const _ as usize - base, 32);
@@ -1701,7 +1701,7 @@ fn subscription_layout_test_64() {
     let base = &obj as *const _ as usize;
     assert_eq!(&obj.userdata as *const _ as usize - base, 0);
     assert_eq!(&obj.unused as *const _ as usize - base, 8);
-    assert_eq!(&obj.type_ as *const _ as usize - base, 10);
+    assert_eq!(&obj.r#type as *const _ as usize - base, 10);
     assert_eq!(&obj.union.clock.identifier as *const _ as usize - base, 16);
     assert_eq!(&obj.union.clock.clock_id as *const _ as usize - base, 24);
     assert_eq!(&obj.union.clock.timeout as *const _ as usize - base, 32);

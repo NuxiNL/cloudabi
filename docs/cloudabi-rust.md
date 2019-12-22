@@ -241,7 +241,7 @@ Creates a file descriptor.
 
 Inputs:
 
-- <a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
+- <a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>r#type</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
@@ -262,7 +262,7 @@ Creates a pair of file descriptors.
 
 Inputs:
 
-- <a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
+- <a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>r#type</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
@@ -574,7 +574,7 @@ Inputs:
 
     The path at which the file should be created.
 
-- <a href="#file_create.type" name="file_create.type"></a><code><strong>type\_</strong>: [filetype](#filetype)</code>
+- <a href="#file_create.type" name="file_create.type"></a><code><strong>r#type</strong>: [filetype](#filetype)</code>
 
     Possible values:
 
@@ -1834,7 +1834,7 @@ Members:
     If non-zero, an error that occurred while processing
     the subscription request.
 
-- <a href="#event.type" name="event.type"></a><code><strong>type\_</strong>: [eventtype](#eventtype)</code>
+- <a href="#event.type" name="event.type"></a><code><strong>r#type</strong>: [eventtype](#eventtype)</code>
 
     The type of the event that occurred.
 
@@ -2934,7 +2934,7 @@ Members:
 
     Used by previous implementations. Ignored.
 
-- <a href="#subscription.type" name="subscription.type"></a><code><strong>type\_</strong>: [eventtype](#eventtype)</code>
+- <a href="#subscription.type" name="subscription.type"></a><code><strong>r#type</strong>: [eventtype](#eventtype)</code>
 
     The type of the event to which to subscribe.
 

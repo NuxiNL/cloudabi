@@ -53,7 +53,7 @@ class RustNaming:
 
     def fieldname(self, name):
         if name == 'type':
-            return 'type_'
+            return 'r#type'
         return name
 
 

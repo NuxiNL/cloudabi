@@ -377,7 +377,7 @@ system call.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>type_</strong>: <a href="#filetype">filetype</a></code></p>
+<li><p><a href="#fd_create1.type" name="fd_create1.type"></a><code><strong>r#type</strong>: <a href="#filetype">filetype</a></code></p>
 
 <p>  Possible values:</p>
 
@@ -407,7 +407,7 @@ system call.</p>
 <p>Inputs:</p>
 
 <ul>
-<li><p><a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>type_</strong>: <a href="#filetype">filetype</a></code></p>
+<li><p><a href="#fd_create2.type" name="fd_create2.type"></a><code><strong>r#type</strong>: <a href="#filetype">filetype</a></code></p>
 
 <p>  Possible values:</p>
 
@@ -764,7 +764,7 @@ removed entirely.</p>
 <li><p><a href="#file_create.path" name="file_create.path"></a><code><strong>path</strong>: *const u8</code> and <a href="#file_create.path_len" name="file_create.path_len"></a><code><strong>path_len</strong>: usize</code></p>
 
 <p>  The path at which the file should be created.</p></li>
-<li><p><a href="#file_create.type" name="file_create.type"></a><code><strong>type_</strong>: <a href="#filetype">filetype</a></code></p>
+<li><p><a href="#file_create.type" name="file_create.type"></a><code><strong>r#type</strong>: <a href="#filetype">filetype</a></code></p>
 
 <p>  Possible values:</p>
 
@@ -2020,7 +2020,7 @@ exclusively or merely provided for alignment with POSIX.</p>
 
 <p>  If non-zero, an error that occurred while processing
   the subscription request.</p></li>
-<li><p><a href="#event.type" name="event.type"></a><code><strong>type_</strong>: <a href="#eventtype">eventtype</a></code></p>
+<li><p><a href="#event.type" name="event.type"></a><code><strong>r#type</strong>: <a href="#eventtype">eventtype</a></code></p>
 
 <p>  The type of the event that occurred.</p></li>
 <li><p>When <code>type</code> is <a href="#eventtype.fd_read"><code>FD_READ</code></a> or <a href="#eventtype.fd_write"><code>FD_WRITE</code></a>:</p>
@@ -3102,7 +3102,7 @@ a file descriptor.</p>
 <li><p><a href="#subscription.unused" name="subscription.unused"></a><code><strong>unused</strong>: u16</code></p>
 
 <p>  Used by previous implementations. Ignored.</p></li>
-<li><p><a href="#subscription.type" name="subscription.type"></a><code><strong>type_</strong>: <a href="#eventtype">eventtype</a></code></p>
+<li><p><a href="#subscription.type" name="subscription.type"></a><code><strong>r#type</strong>: <a href="#eventtype">eventtype</a></code></p>
 
 <p>  The type of the event to which to subscribe.</p>
 
