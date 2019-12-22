@@ -53,21 +53,21 @@ class CNaming:
 
     def vardecl(self, type, name, array_need_parens=False):
         if isinstance(type, OutputPointerType):
-            return self.vardecl(
-                type.target_type, '*{}'.format(name), array_need_parens=True)
+            return self.vardecl(type.target_type,
+                                '*{}'.format(name),
+                                array_need_parens=True)
         elif isinstance(type, PointerType):
-            decl = self.vardecl(
-                type.target_type,
-                '{}*{}'.format(self.pointer_prefix, name),
-                array_need_parens=True)
+            decl = self.vardecl(type.target_type,
+                                '{}*{}'.format(self.pointer_prefix, name),
+                                array_need_parens=True)
             if type.const:
                 decl = 'const ' + decl
             return decl
         elif isinstance(type, ArrayType):
             if array_need_parens:
                 name = '({})'.format(name)
-            return self.vardecl(type.element_type, '{}[{}]'.format(
-                name, type.count))
+            return self.vardecl(type.element_type,
+                                '{}[{}]'.format(name, type.count))
         else:
             return '{} {}'.format(self.typename(type), name)
 
@@ -94,8 +94,8 @@ class MarkdownCNaming(MarkdownNaming, CNaming):
     def kinddesc(self, type):
         if isinstance(type, IntLikeType):
             return '{}{}'.format(
-                self.link(type.int_type), ' bitfield'
-                if isinstance(type, FlagsType) else '')
+                self.link(type.int_type),
+                ' bitfield' if isinstance(type, FlagsType) else '')
         elif isinstance(type, StructType):
             return '`struct`'
         elif isinstance(type, FunctionType):

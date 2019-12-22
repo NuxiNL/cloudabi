@@ -40,9 +40,10 @@ class AsmVdsoGenerator(Generator):
     def generate_syscall(self, abi, syscall):
         print()
         print('ENTRY(cloudabi_sys_{})'.format(syscall.name))
-        self.generate_syscall_body(
-            abi.syscall_number(syscall), syscall.input.raw_members,
-            syscall.output.raw_members, syscall.noreturn)
+        self.generate_syscall_body(abi.syscall_number(syscall),
+                                   syscall.input.raw_members,
+                                   syscall.output.raw_members,
+                                   syscall.noreturn)
         print('END(cloudabi_sys_{})'.format(syscall.name))
 
     def generate_foot(self, abi):
@@ -113,8 +114,8 @@ class AsmVdsoCommonGenerator(AsmVdsoGenerator):
 
                     # Copy the value from one or more registers.
                     for j in range(0, self.register_count(member)):
-                        self.print_store_output(member,
-                                                regs_returns.pop(0), reg, j)
+                        self.print_store_output(member, regs_returns.pop(0),
+                                                reg, j)
 
                 self.print_retval_success()
 
@@ -237,8 +238,8 @@ class AsmVdsoArmv6Generator(AsmVdsoCommonGenerator):
         print('  strcc {}{}, [r{}{}]'.format({
             4: 'r',
             8: 'r'
-        }[size], reg_from, reg_to, ', #{}'.format(index * 4)
-                                             if size > 4 else ''))
+        }[size], reg_from, reg_to, ', #{}'.format(index *
+                                                  4) if size > 4 else ''))
 
     @staticmethod
     def print_retval_success():
@@ -330,8 +331,8 @@ class AsmVdsoArmv6On64bitGenerator(AsmVdsoGenerator):
                     assert size % 4 == 0
                     print('  ldrcc r1, [sp, #{}]'.format(slot))
                     for i in range(0, howmany(size, 4)):
-                        print(
-                            '  ldrcc r2, [sp, #{}]'.format(offset_in + i * 4))
+                        print('  ldrcc r2, [sp, #{}]'.format(offset_in +
+                                                             i * 4))
                         print('  strcc r2, [r1, #{}]'.format(i * 4))
                     offset_in += roundup(member.type.layout.size[1], 8)
                     offset_out += 4

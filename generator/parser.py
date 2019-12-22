@@ -187,9 +187,8 @@ class AbiParser:
 
         if len(children) > 0 and children[0].text == 'in':
             param_spec = children.pop(0)
-            parameters = StructType(None,
-                                    self.parse_struct_members(
-                                        abi, param_spec.children))
+            parameters = StructType(
+                None, self.parse_struct_members(abi, param_spec.children))
 
         if len(children) > 0 and children[0].text == 'out':
             out_spec = children.pop(0)
@@ -218,16 +217,14 @@ class AbiParser:
 
         if len(children) > 0 and children[0].text == 'in':
             in_spec = children.pop(0)
-            input = StructType(None,
-                               self.parse_struct_members(
-                                   abi, in_spec.children))
+            input = StructType(
+                None, self.parse_struct_members(abi, in_spec.children))
 
         if len(children) > 0:
             if children[0].text == 'out':
                 out_spec = children.pop(0)
-                output = StructType(None,
-                                    self.parse_struct_members(
-                                        abi, out_spec.children))
+                output = StructType(
+                    None, self.parse_struct_members(abi, out_spec.children))
 
             elif children[0].text == 'noreturn':
                 noreturn_spec = children.pop(0)

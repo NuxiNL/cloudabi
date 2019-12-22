@@ -31,8 +31,8 @@ class RustNaming:
             mut = 'const' if type.const else 'mut'
             return '*{} {}'.format(mut, self.typename(type.target_type))
         elif isinstance(type, ArrayType):
-            return '[{}; {}]'.format(
-                self.typename(type.element_type), type.count)
+            return '[{}; {}]'.format(self.typename(type.element_type),
+                                     type.count)
         else:
             raise Exception('Unable to generate Rust declaration '
                             'for type: {}'.format(type))
@@ -67,8 +67,8 @@ class MarkdownRustNaming(MarkdownNaming, RustNaming):
     def memname(self, *path):
         name = self.typename(path[0], link=False) + '.'
         name += '.'.join(
-            self.variantmem(m) if isinstance(m, VariantMember) else
-            self.fieldname(m.name) for m in path[1:])
+            self.variantmem(m) if isinstance(m, VariantMember) else self.
+            fieldname(m.name) for m in path[1:])
         return name
 
     def variantmem(self, member):

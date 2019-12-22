@@ -42,10 +42,9 @@ class MarkdownGenerator(Generator):
                 # Documentation string already refers to all uses.
                 pass
             else:
-                by = sorted(
-                    type.used_by,
-                    key=lambda x: ('A' if isinstance(x, Type) else 'B') + x.name
-                )
+                by = sorted(type.used_by,
+                            key=lambda x:
+                            ('A' if isinstance(x, Type) else 'B') + x.name)
                 print('Used by {}.\n'.format(
                     format_list('and', [self.naming.link(x) for x in by])))
         if isinstance(type, IntLikeType):
@@ -55,8 +54,9 @@ class MarkdownGenerator(Generator):
                 else:
                     print('Possible values:\n')
                 for v in type.values:
-                    print('- {}**`{}`**\n'.format(
-                        self.anchor(type, v), self.naming.valname(type, v)))
+                    print('- {}**`{}`**\n'.format(self.anchor(type, v),
+                                                  self.naming.valname(type,
+                                                                      v)))
                     self.generate_doc(abi, v, '    ')
         elif isinstance(type, StructType):
             print('Members:\n')
@@ -86,8 +86,8 @@ class MarkdownGenerator(Generator):
                 name = self.naming.fieldname(m.name)
             print('- {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m])),
-                self.naming.vardecl(m.type, '<strong>{}</strong>'.format(
-                    _escape(name)))))
+                self.naming.vardecl(
+                    m.type, '<strong>{}</strong>'.format(_escape(name)))))
             self.generate_doc(abi, m, indent + '    ')
             if m.special_values:
                 print('    Possible values:\n')
@@ -97,13 +97,13 @@ class MarkdownGenerator(Generator):
         elif isinstance(m, RangeStructMember):
             print('- {}<code>{}</code> and {}<code>{}</code>\n'.format(
                 self.anchor(*(parents + [m.raw_members[0]])),
-                self.naming.vardecl(m.raw_members[0].type,
-                                    '<strong>{}</strong>'.format(
-                                        _escape(m.raw_members[0].name))),
+                self.naming.vardecl(
+                    m.raw_members[0].type, '<strong>{}</strong>'.format(
+                        _escape(m.raw_members[0].name))),
                 self.anchor(*(parents + [m.raw_members[1]])),
-                self.naming.vardecl(m.raw_members[1].type,
-                                    '<strong>{}</strong>'.format(
-                                        _escape(m.raw_members[1].name)))))
+                self.naming.vardecl(
+                    m.raw_members[1].type, '<strong>{}</strong>'.format(
+                        _escape(m.raw_members[1].name)))))
             self.generate_doc(abi, m, indent + '    ')
         elif isinstance(m, VariantStructMember):
             for vm in m.members:
@@ -133,8 +133,8 @@ class MarkdownGenerator(Generator):
         super().generate_syscalls(abi, syscalls)
 
     def generate_syscall(self, abi, syscall):
-        print('#### {}`{}`\n'.format(
-            self.anchor(syscall), self.naming.syscallname(syscall)))
+        print('#### {}`{}`\n'.format(self.anchor(syscall),
+                                     self.naming.syscallname(syscall)))
         self.generate_doc(abi, syscall)
 
         if syscall.input.members:

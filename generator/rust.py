@@ -98,8 +98,8 @@ class RustGenerator(Generator):
             self.print_doc(abi, type, '  ')
             print('  #[repr(C)]')
             print('  pub struct {}: {} {{'.format(
-                self.naming.typename(type), self.naming.typename(
-                    type.int_type)))
+                self.naming.typename(type),
+                self.naming.typename(type.int_type)))
             if len(type.values) > 0:
                 width = max(
                     len(self.naming.valname(type, v)) for v in type.values)
@@ -107,11 +107,10 @@ class RustGenerator(Generator):
                 for v in type.values:
                     self.print_doc(abi, v, '    ')
                     print('    const {name:{width}} = {val:{val_format}};'.
-                          format(
-                              name=self.naming.valname(type, v),
-                              width=width,
-                              val=v.value,
-                              val_format=val_format))
+                          format(name=self.naming.valname(type, v),
+                                 width=width,
+                                 val=v.value,
+                                 val_format=val_format))
             else:
                 print('    const DEFAULT = 0;')
             print('  }')
@@ -162,7 +161,7 @@ class RustGenerator(Generator):
                         or isinstance(type, OpaqueType)):
                     if len(type.values) == 1 and type.values[0].value == 0:
                         val_format = 'd'
-                    elif type.int_type.name[0] == 'i': # Signed
+                    elif type.int_type.name[0] == 'i':  # Signed
                         val_format = 'd'
                     else:
                         val_format = '#0{}x'.format(type.layout.size[0] * 2 +
@@ -173,12 +172,11 @@ class RustGenerator(Generator):
                 for v in type.values:
                     self.print_doc(abi, v)
                     print(
-                        const_format.format(
-                            name=self.naming.valname(type, v),
-                            width=width,
-                            type=self.naming.typename(type),
-                            val=v.value,
-                            val_format=val_format))
+                        const_format.format(name=self.naming.valname(type, v),
+                                            width=width,
+                                            type=self.naming.typename(type),
+                                            val=v.value,
+                                            val_format=val_format))
 
         elif isinstance(type, FunctionType):
             self.print_doc(abi, type)
@@ -268,8 +266,8 @@ class RustGenerator(Generator):
         print()
 
     def generate_struct_tests(self, type):
-        configs = [(0, 32), (1, 64)] if type.layout.machine_dep else [(0,
-                                                                       None)]
+        configs = [(0, 32),
+                   (1, 64)] if type.layout.machine_dep else [(0, None)]
         for i, bits in configs:
             print('#[test]')
             if bits is not None:
@@ -340,10 +338,11 @@ class RustGenerator(Generator):
         for p in syscall.input.raw_members:
             params.append('_: ' + self.naming.typename(p.type))
         for p in syscall.output.raw_members:
-            params.append('_: ' + self.naming.typename(
-                OutputPointerType(p.type)))
-        print('  fn cloudabi_sys_{}({}) -> {};'.format(
-            syscall.name, ', '.join(params), return_type))
+            params.append('_: ' +
+                          self.naming.typename(OutputPointerType(p.type)))
+        print('  fn cloudabi_sys_{}({}) -> {};'.format(syscall.name,
+                                                       ', '.join(params),
+                                                       return_type))
 
     def generate_syscall_wrapper(self, abi, syscall):
         self.print_doc(abi, syscall)
@@ -373,8 +372,9 @@ class RustGenerator(Generator):
             params.append(self.syscall_param(p, True))
 
         print('#[inline]')
-        print('pub unsafe fn {}({}) -> {} {{'.format(
-            syscall.name, ', '.join(params), return_type))
+        print('pub unsafe fn {}({}) -> {} {{'.format(syscall.name,
+                                                     ', '.join(params),
+                                                     return_type))
 
         args = []
         for p in syscall.input.members:
@@ -383,8 +383,8 @@ class RustGenerator(Generator):
                 cast = ''
                 if isinstance(p.target_type, VoidType):
                     cast = ' as *const ()' if p.const else ' as *mut ()'
-                args.append(n + ('.as_ptr()'
-                                 if p.const else '.as_mut_ptr()') + cast)
+                args.append(n + ('.as_ptr()' if p.const else '.as_mut_ptr()') +
+                            cast)
                 args.append(n + '.len()')
             else:
                 args.append(n)
@@ -398,11 +398,10 @@ class RustGenerator(Generator):
     def syscall_param(self, p, output=False):
         name = p.name + '_'
         if isinstance(p, RangeStructMember):
-            return '{}: {}&{}[{}]'.format(name, '&mut ' if output else '', ''
-                                          if p.const else 'mut ', 'u8'
-                                          if isinstance(
-                                              p.target_type, VoidType) else
-                                          self.naming.typename(p.target_type))
+            return '{}: {}&{}[{}]'.format(
+                name, '&mut ' if output else '', '' if p.const else 'mut ',
+                'u8' if isinstance(p.target_type, VoidType) else
+                self.naming.typename(p.target_type))
         else:
             return '{}: {}{}'.format(name, '&mut ' if output else '',
                                      self.naming.typename(p.type))

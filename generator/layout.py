@@ -30,8 +30,8 @@ class Layout:
 
         offset = (0, 0)
         for m in members:
-            m.offset = (_align(offset[0], m.layout.align[0]), _align(
-                offset[1], m.layout.align[1]))
+            m.offset = (_align(offset[0], m.layout.align[0]),
+                        _align(offset[1], m.layout.align[1]))
             offset = (m.offset[0] + m.layout.size[0],
                       m.offset[1] + m.layout.size[1])
 
@@ -61,8 +61,8 @@ class Layout:
         if any(m.layout is None for m in members):
             return None
 
-        size = (max(m.layout.size[0] for m in members),
-                max(m.layout.size[1] for m in members))
+        size = (max(m.layout.size[0]
+                    for m in members), max(m.layout.size[1] for m in members))
 
         align = (max(m.layout.align[0] for m in members),
                  max(m.layout.align[1] for m in members))
