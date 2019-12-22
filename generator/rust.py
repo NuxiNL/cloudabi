@@ -35,8 +35,7 @@ class RustGenerator(Generator):
         elif len(path) == 2 and isinstance(path[0], StructType) and isinstance(
                 path[1], StructMember):
             return '(struct.{}.html#structfield.{})'.format(
-                self.naming.typename(path[0]),
-                path[1].name)
+                self.naming.typename(path[0]), path[1].name)
         elif len(path) == 3 and (isinstance(path[0], StructType)
                                  and isinstance(path[1], VariantMember)
                                  and isinstance(path[2], StructMember)):
@@ -252,8 +251,7 @@ macro_rules! bitflags {
                     print('pub union {} {{'.format(name))
                     for x in union.members:
                         print('  /// Used when [`{}`]{} is {}.'.format(
-                            union.tag.name,
-                            self.doc_link(type, union.tag),
+                            union.tag.name, self.doc_link(type, union.tag),
                             format_list('or', [
                                 '[`{}`]{}'.format(
                                     self.naming.valname(union.tag.type, v),
@@ -319,21 +317,18 @@ macro_rules! bitflags {
 
         elif isinstance(type, PointerType):
             if isinstance(type.target_type, FunctionType):
-                print(
-                    '{{ extern "C" fn f({}) -> {} {{'.format(
-                        ', '.join(
-                            '_: {}'.format(self.naming.typename(t.type))
-                            for t in type.target_type.parameters.members
-                        ),
-                        self.naming.typename(type.target_type.return_type),
-                    ),
-                    end = ''
-                )
+                print('{{ extern "C" fn f({}) -> {} {{'.format(
+                    ', '.join('_: {}'.format(self.naming.typename(t.type))
+                              for t in type.target_type.parameters.members),
+                    self.naming.typename(type.target_type.return_type),
+                ),
+                      end='')
                 if not isinstance(type.target_type.return_type, VoidType):
                     print(' ', end='')
-                    self.generate_test_value(type.target_type.return_type, indent + '  ')
+                    self.generate_test_value(type.target_type.return_type,
+                                             indent + '  ')
                     print(' ', end='')
-                print('} f }', end = '')
+                print('} f }', end='')
             else:
                 print('0 as {}'.format(typename), end='')
 
@@ -359,17 +354,21 @@ macro_rules! bitflags {
             print('{} {{'.format(typename))
             for m in type.members:
                 if isinstance(m, SimpleStructMember):
-                    print('{}  {}: '.format(indent, self.naming.fieldname(m.name)), end='')
+                    print('{}  {}: '.format(indent,
+                                            self.naming.fieldname(m.name)),
+                          end='')
                     self.generate_test_value(m.type, indent + '  ')
                 elif isinstance(m, RangeStructMember):
                     print('{}  {}: (0 as *{} _, 0)'.format(
                         indent,
                         self.naming.fieldname(m.name),
                         'const' if m.const else 'mut',
-                    ), end='')
+                    ),
+                          end='')
                 else:
                     print('{}  union: '.format(indent), end='')
-                    self.generate_test_union_value(type, m.members[0], indent + '  ')
+                    self.generate_test_union_value(type, m.members[0],
+                                                   indent + '  ')
                 print(',')
             print('{}}}'.format(indent), end='')
 
@@ -380,12 +379,15 @@ macro_rules! bitflags {
         typename = self.naming.typename(type)
         unionname = '{}_union'.format(typename)
         if variant.name is None:
-            self.generate_test_value(variant.type, indent, typename = unionname)
+            self.generate_test_value(variant.type, indent, typename=unionname)
         else:
             print('{} {{'.format(unionname))
             memname = self.naming.fieldname(variant.name)
             print('{}  {}: '.format(indent, memname), end='')
-            self.generate_test_value(variant.type, indent + '  ', typename = '{}_{}'.format(typename, memname))
+            self.generate_test_value(variant.type,
+                                     indent + '  ',
+                                     typename='{}_{}'.format(
+                                         typename, memname))
             print(',')
             print('{}}}'.format(indent), end='')
 
@@ -406,14 +408,19 @@ macro_rules! bitflags {
                 else:
                     fieldname = self.naming.fieldname(m.name)
                     fieldtype = self.naming.fieldname(m.type)
-                    fieldtypename = '{}_{}'.format(self.naming.typename(type), self.naming.fieldname(m.name))
+                    fieldtypename = '{}_{}'.format(
+                        self.naming.typename(type),
+                        self.naming.fieldname(m.name))
                     mprefix += fieldname + '.'
                 print('  obj.{}union.{} = '.format(prefix, fieldname), end='')
-                self.generate_test_value(fieldtype, indent='  ', typename = fieldtypename)
+                self.generate_test_value(fieldtype,
+                                         indent='  ',
+                                         typename=fieldtypename)
                 print(';')
                 print('  unsafe {')
-                self.generate_offset_asserts(m.type, m.type.members, machine_index,
-                                             mprefix, offset, indent + '  ')
+                self.generate_offset_asserts(m.type, m.type.members,
+                                             machine_index, mprefix, offset,
+                                             indent + '  ')
                 print('  }')
             elif isinstance(m, RangeStructMember):
                 for i, raw_m in enumerate(m.raw_members):
@@ -424,16 +431,17 @@ macro_rules! bitflags {
             elif m.offset is not None:
                 moffset = offset + m.offset[machine_index]
                 if isinstance(m, VariantStructMember):
-                    self.generate_offset_asserts(type, m.members, machine_index,
-                                                 prefix, moffset)
+                    self.generate_offset_asserts(type, m.members,
+                                                 machine_index, prefix,
+                                                 moffset)
                 else:
                     self.generate_offset_assert(
-                        prefix + self.naming.fieldname(m.name), moffset, indent)
+                        prefix + self.naming.fieldname(m.name), moffset,
+                        indent)
 
     def generate_offset_assert(self, member_name, offset, indent=''):
-        print(
-            '{}assert_eq!(&obj.{} as *const _ as usize - base, {});'.format(
-                indent, member_name, offset))
+        print('{}assert_eq!(&obj.{} as *const _ as usize - base, {});'.format(
+            indent, member_name, offset))
 
     def generate_syscalls(self, abi, syscalls):
         print('/// The table with pointers to all syscall implementations.')
