@@ -142,6 +142,7 @@ macro_rules! bitflags {
             self.print_doc(abi, type)
             print('#[repr({})]'.format(self.naming.typename(type.int_type)))
             print('#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]')
+            print('#[non_exhaustive]')
             print('pub enum {} {{'.format(self.naming.typename(type)))
             if len(type.values) > 0:
                 width = max(
@@ -155,11 +156,6 @@ macro_rules! bitflags {
                         width=width,
                         val=v.value,
                         val_format=val_format))
-            #TODO: use #[non_exhaustive] once it's in the rust release version:
-            # https://github.com/rust-lang/rust/issues/44109
-            print(
-                '  #[doc(hidden)] _NonExhaustive = -1 as isize as {},'.format(
-                    self.naming.typename(type.int_type)))
             print('}')
 
         elif isinstance(type, OpaqueType) or isinstance(type, AliasType):
