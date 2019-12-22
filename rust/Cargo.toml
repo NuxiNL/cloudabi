@@ -8,6 +8,7 @@ documentation = "https://docs.rs/cloudabi/"
 keywords = ["cloudabi"]
 authors = ["Nuxi (https://nuxi.nl/) and contributors"]
 license = "BSD-2-Clause"
+edition = "2018"
 
 [lib]
 path = "cloudabi.rs"
@@ -16,4 +17,4 @@ path = "cloudabi.rs"
 default = ["bitflags"]
 
 [dependencies]
-bitflags = { version = "1.0", optional = true }
+bitflags = { version = "1.2.1", optional = true }
