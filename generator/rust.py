@@ -417,9 +417,9 @@ macro_rules! bitflags {
         name = p.name + '_'
         if isinstance(p, RangeStructMember):
             return '{}: {}&{}[{}]'.format(
-                name, '&mut ' if output else '', '' if p.const else 'mut ',
+                name, '*mut ' if output else '', '' if p.const else 'mut ',
                 'u8' if isinstance(p.target_type, VoidType) else
                 self.naming.typename(p.target_type))
         else:
-            return '{}: {}{}'.format(name, '&mut ' if output else '',
+            return '{}: {}{}'.format(name, '*mut ' if output else '',
                                      self.naming.typename(p.type))
