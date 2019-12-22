@@ -262,7 +262,7 @@ macro_rules! bitflags {
                         if x.name is None:
                             assert (len(x.type.members) == 1)
                             m = x.type.members[0]
-                            self.print_doc(abi, m)
+                            self.print_doc(abi, m, '  ')
                             print('  pub {}: {},'.format(
                                 self.naming.fieldname(m.name),
                                 self.naming.typename(m.type)))

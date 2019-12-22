@@ -1101,10 +1101,10 @@ pub struct auxv {
 #[derive(Copy, Clone)]
 pub union auxv_union {
   /// Used when `a_type` is [`ARGDATALEN`](enum.auxtype.html#variant.ARGDATALEN), [`CANARYLEN`](enum.auxtype.html#variant.CANARYLEN), [`NCPUS`](enum.auxtype.html#variant.NCPUS), [`PAGESZ`](enum.auxtype.html#variant.PAGESZ), [`PHNUM`](enum.auxtype.html#variant.PHNUM), or [`TID`](enum.auxtype.html#variant.TID).
-/// A numerical value.
+  /// A numerical value.
   pub a_val: usize,
   /// Used when `a_type` is [`ARGDATA`](enum.auxtype.html#variant.ARGDATA), [`BASE`](enum.auxtype.html#variant.BASE), [`CANARY`](enum.auxtype.html#variant.CANARY), [`PHDR`](enum.auxtype.html#variant.PHDR), [`PID`](enum.auxtype.html#variant.PID), or [`SYSINFO_EHDR`](enum.auxtype.html#variant.SYSINFO_EHDR).
-/// A pointer value.
+  /// A pointer value.
   pub a_ptr: *mut (),
 }
 #[test]
