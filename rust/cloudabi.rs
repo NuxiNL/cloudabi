@@ -1100,10 +1100,10 @@ pub struct auxv {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union auxv_union {
-  /// Used when `a_type` is [`ARGDATALEN`](enum.auxtype.html#variant.ARGDATALEN), [`CANARYLEN`](enum.auxtype.html#variant.CANARYLEN), [`NCPUS`](enum.auxtype.html#variant.NCPUS), [`PAGESZ`](enum.auxtype.html#variant.PAGESZ), [`PHNUM`](enum.auxtype.html#variant.PHNUM), or [`TID`](enum.auxtype.html#variant.TID).
+  /// Used when [`a_type`](struct.auxv.html#structfield.a_type) is [`ARGDATALEN`](enum.auxtype.html#variant.ARGDATALEN), [`CANARYLEN`](enum.auxtype.html#variant.CANARYLEN), [`NCPUS`](enum.auxtype.html#variant.NCPUS), [`PAGESZ`](enum.auxtype.html#variant.PAGESZ), [`PHNUM`](enum.auxtype.html#variant.PHNUM), or [`TID`](enum.auxtype.html#variant.TID).
   /// A numerical value.
   pub a_val: usize,
-  /// Used when `a_type` is [`ARGDATA`](enum.auxtype.html#variant.ARGDATA), [`BASE`](enum.auxtype.html#variant.BASE), [`CANARY`](enum.auxtype.html#variant.CANARY), [`PHDR`](enum.auxtype.html#variant.PHDR), [`PID`](enum.auxtype.html#variant.PID), or [`SYSINFO_EHDR`](enum.auxtype.html#variant.SYSINFO_EHDR).
+  /// Used when [`a_type`](struct.auxv.html#structfield.a_type) is [`ARGDATA`](enum.auxtype.html#variant.ARGDATA), [`BASE`](enum.auxtype.html#variant.BASE), [`CANARY`](enum.auxtype.html#variant.CANARY), [`PHDR`](enum.auxtype.html#variant.PHDR), [`PID`](enum.auxtype.html#variant.PID), or [`SYSINFO_EHDR`](enum.auxtype.html#variant.SYSINFO_EHDR).
   /// A pointer value.
   pub a_ptr: *mut (),
 }
@@ -1235,9 +1235,9 @@ pub struct event {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union event_union {
-  /// Used when `r#type` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
+  /// Used when [`type`](struct.event.html#structfield.type) is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
   pub fd_readwrite: event_fd_readwrite,
-  /// Used when `r#type` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
+  /// Used when [`type`](struct.event.html#structfield.type) is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
   pub proc_terminate: event_proc_terminate,
 }
 #[repr(C)]
@@ -1651,15 +1651,15 @@ pub struct subscription {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union subscription_union {
-  /// Used when `r#type` is [`CLOCK`](enum.eventtype.html#variant.CLOCK).
+  /// Used when [`type`](struct.subscription.html#structfield.type) is [`CLOCK`](enum.eventtype.html#variant.CLOCK).
   pub clock: subscription_clock,
-  /// Used when `r#type` is [`CONDVAR`](enum.eventtype.html#variant.CONDVAR).
+  /// Used when [`type`](struct.subscription.html#structfield.type) is [`CONDVAR`](enum.eventtype.html#variant.CONDVAR).
   pub condvar: subscription_condvar,
-  /// Used when `r#type` is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
+  /// Used when [`type`](struct.subscription.html#structfield.type) is [`FD_READ`](enum.eventtype.html#variant.FD_READ) or [`FD_WRITE`](enum.eventtype.html#variant.FD_WRITE).
   pub fd_readwrite: subscription_fd_readwrite,
-  /// Used when `r#type` is [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK) or [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK).
+  /// Used when [`type`](struct.subscription.html#structfield.type) is [`LOCK_RDLOCK`](enum.eventtype.html#variant.LOCK_RDLOCK) or [`LOCK_WRLOCK`](enum.eventtype.html#variant.LOCK_WRLOCK).
   pub lock: subscription_lock,
-  /// Used when `r#type` is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
+  /// Used when [`type`](struct.subscription.html#structfield.type) is [`PROC_TERMINATE`](enum.eventtype.html#variant.PROC_TERMINATE).
   pub proc_terminate: subscription_proc_terminate,
 }
 #[repr(C)]

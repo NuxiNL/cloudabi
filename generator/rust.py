@@ -36,7 +36,7 @@ class RustGenerator(Generator):
                 path[1], StructMember):
             return '(struct.{}.html#structfield.{})'.format(
                 self.naming.typename(path[0]),
-                self.naming.fieldname(path[1].name))
+                path[1].name)
         elif len(path) == 3 and (isinstance(path[0], StructType)
                                  and isinstance(path[1], VariantMember)
                                  and isinstance(path[2], StructMember)):
@@ -44,7 +44,7 @@ class RustGenerator(Generator):
                 self.naming.typename(path[0]), path[1].name,
                 self.naming.fieldname(path[2].name))
         else:
-            assert False
+            raise Exception('Unknown link target: {}'.format(repr(path)))
 
     def print_doc(self, abi, thing, indent='', prefix='///'):
         def make_link(match):
@@ -251,8 +251,9 @@ macro_rules! bitflags {
                     print('#[derive(Copy, Clone)]')
                     print('pub union {} {{'.format(name))
                     for x in union.members:
-                        print('  /// Used when `{}` is {}.'.format(
-                            self.naming.fieldname(union.tag.name),
+                        print('  /// Used when [`{}`]{} is {}.'.format(
+                            union.tag.name,
+                            self.doc_link(type, union.tag),
                             format_list('or', [
                                 '[`{}`]{}'.format(
                                     self.naming.valname(union.tag.type, v),
